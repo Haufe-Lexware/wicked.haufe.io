@@ -1,0 +1,120 @@
+extends layout
+
+block content
+  //
+    Carousel
+    ==================================================
+  #myCarousel.carousel.slide(data-ride='carousel')
+    // Indicators
+    ol.carousel-indicators
+      li.active(data-target='#myCarousel', data-slide-to='0')
+      li(data-target='#myCarousel', data-slide-to='1')
+      li(data-target='#myCarousel', data-slide-to='2')
+    .carousel-inner(role='listbox')
+      .item.active
+        img.first-slide(src='images/gelatine-group-1024.jpg', alt='First slide')
+        .container
+          .carousel-caption
+            h1 Open Source API Management
+            p
+              | A full stack open source solution to API Management, based on Mashape's Kong, node.js, and docker.
+            p
+              a.btn.btn-lg.btn-primary(href='#', role='button') Getting Started
+      .item
+        img.second-slide(src='images/gelatine-group-1024.jpg', alt='Second slide')
+        .container
+          .carousel-caption
+            h1 Fully dockerized and automatable
+            p
+              | Deploy your API Portal and API Gateway using docker, fully automated, from your own build pipelines, onto whatever infrastructure you want.
+            p
+              a.btn.btn-lg.btn-primary(href='#', role='button') Deployment
+      .item
+        img.third-slide(src='images/gelatine-group-1024.jpg', alt='Third slide')
+        .container
+          .carousel-caption
+            h1 Integration with ADFS, Github and Google
+            p
+              | Let your users sign up with your own ADFS, using Github or Google, or using an email address and password.
+            p
+              a.btn.btn-lg.btn-primary(href='#', role='button') Authentication
+    a.left.carousel-control(href='#myCarousel', role='button', data-slide='prev')
+      span.glyphicon.glyphicon-chevron-left(aria-hidden='true')
+      span.sr-only Previous
+    a.right.carousel-control(href='#myCarousel', role='button', data-slide='next')
+      span.glyphicon.glyphicon-chevron-right(aria-hidden='true')
+      span.sr-only Next
+  // /.carousel
+  //
+    Marketing messaging and featurettes
+    ==================================================
+  // Wrap the rest of the page in another container to center all the content.
+  .container.marketing
+    .row
+      .col-lg-4
+        img(src='images/gelatine-red-140.jpg', alt='Generic placeholder image', width='85', height='140')
+        h2 Feature List
+        p
+          | gelatine.haufe.io can do quite somethings, all with the focus on making things easy to deploy. You can read up on the feature list on this page. Missing a feature? We gladly accept pull requests on github.
+        p
+          a.btn.btn-default(href='features.html', role='button') View details »
+      .col-lg-4
+        img(src='images/gelatine-green-140.jpg', alt='Green Gummybear. Yum.', width='85', height='140')
+        h2 Who's behind?
+        p
+          | The API portal gelatine.haufe.io was developed at Haufe-Lexware GmbH & Co. KG in beautiful Freiburg, Germany. Haufe is a great place to work at; you can find our developer blog at dev.haufe.com.
+        p
+          a.btn.btn-default(href='http://dev.haufe.com', target='_blank', role='button') Haufe Dev Blog »
+      .col-lg-4
+        img(src='images/gelatine-blue-140.jpg', alt='Generic placeholder image', width='85', height='140')
+        h2 The Code
+        p
+          | We did mention gelatine.haufe.io is open source, right? It's all on github, including guides on how to set it up to make it work for you. Missing guidelines? Have suggestions? File an issue or submit a pull request!
+        p
+          a.btn.btn-default(href='https://github.com/Haufe-Lexware/gelatine.haufe.io', target='_blank', role='button') View details »
+    // START THE FEATURETTES
+    hr.featurette-divider
+    .row.featurette
+      .col-md-7
+        h2.featurette-heading
+          | APIops from the ground up! 
+          span.text-muted Developing and Deploying APIs the way it should be.
+        p.lead
+          | Most API Management solutions focus on a single deployment, where you usually are told to poke around at the live configuration. Do you really want to do that? Without a deployment pipeline? No? Thought so. Gelatine helps you in automating.
+      .col-md-5
+        img.featurette-image.img-responsive.center-block(src='images/gelatine-red-500.jpg', alt='Red Gummybear')
+    hr.featurette-divider
+    .row.featurette
+      .col-md-7.col-md-push-5
+        h2.featurette-heading
+          | Deploy it on any Docker host. 
+          span.text-muted Small footprint, fast setup.
+        p.lead
+          | The gelatine kickstarter helps you in setting up the configuration for your API portal. You need to specify DNS names and provide an SSL certificate, but other than that, just provide your own content (APIs) and get going!
+      .col-md-5.col-md-pull-7
+        img.featurette-image.img-responsive.center-block(src='images/gelatine-blue-500.jpg', alt='Blue Gummybear')
+    hr.featurette-divider
+    .row.featurette
+      .col-md-7
+        h2.featurette-heading
+          | Use your own pipelines. 
+          span.text-muted No need to adapt your processes.
+        p.lead
+          | Use your own build infrastructure to deploy your API portal; just inject your information via environment variables and a configuration repository, that's all there is. APIops!
+      .col-md-5
+        img.featurette-image.img-responsive.center-block(src='images/gelatine-green-500.jpg', alt='Green Gummybear')
+    hr.featurette-divider
+    // /END THE FEATURETTES
+    // FOOTER
+    footer
+      p.pull-right
+        a(href='#') Back to top
+      p
+        | © 2016 Haufe-Lexware GmbH & Co. KG, 
+        a(href='http://www.haufe-lexware.com') www.haufe-lexware.com
+        | , 
+        a(href='http://www.haufe.de') www.haufe.de
+        | , 
+        a(href='http://www.lexware.de') www.lexware.de
+        | , 
+        a(href='http://www.haufe-akademie.de') www.haufe-akademie.de
