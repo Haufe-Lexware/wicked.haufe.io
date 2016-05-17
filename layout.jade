@@ -59,14 +59,32 @@ html(lang='en')
                   </ul>
                   </li>
     block content
+
+
+    .container
+      hr
+      // FOOTER
+      footer
+      p.pull-right
+        a(href='#') Back to top
+      p
+        | © 2016 Haufe-Lexware GmbH & Co. KG, 
+        a(href='http://www.haufe-lexware.com') www.haufe-lexware.com
+        | , 
+        a(href='http://www.haufe.de') www.haufe.de
+        | , 
+        a(href='http://www.lexware.de') www.lexware.de
+        | , 
+        a(href='http://www.haufe-akademie.de') www.haufe-akademie.de
+        
     // /.container
     //
-      Bootstrap core JavaScript
-      ==================================================
+        Bootstrap core JavaScript
+        ==================================================
     // Placed at the end of the document so the pages load faster
     script(src='https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js')
     script.
-      window.jQuery || document.write('<script src="../../assets/js/vendor/jquery.min.js"><\\/script>')
+        window.jQuery || document.write('<script src="../../assets/js/vendor/jquery.min.js"><\\/script>')
     script(src='js/bootstrap.min.js')
     // Just to make our placeholder images work. Don't actually copy the next line!
     script(src='js/holder.min.js')

@@ -1,33 +1,68 @@
 extends layout
 
+mixin feature(featureObject, index)
+  - var thisClass = (index % 2) == 0 ? "grey" : "white"
+  div(class="col-md-4 feature-block #{thisClass}")
+    if !featureObject.gummybear
+      h5.feature= featureObject.title
+      p.feature!= featureObject.text
+    else
+      br
+      img(src="images/gelatine-#{featureObject.color}-100.png").center-block
+
 block content
+
+  -
+    var featureList = [
+      { title: "Authenticate with email and password", 
+        text: "fdfdfd" },
+      { title: "Authenticate with ADFS",
+        text: "Djskldjlksdjlsd" },
+      { gummybear: true, color: "blue" },
+      { title: "Authentication with GitHub or Google",
+        text: "fdksfjlkdf" },
+      { title: "Group based rights to APIs",
+        text: "" },
+      { title: "Group based rights to custom content",
+        text: "" },
+      { title: "Automatic group assignment",
+        text: "" },
+      { gummybear: true, color: "red" },
+      { title: "Application Concept",
+        text: "Share applications among users" },
+      { title: "Application Owner Roles",
+        text: "" },
+      { title: "Hand over Applications",
+        text: "" },
+      { title: "Easy API Gateway configuration",
+        text: "" },
+      { gummybear: true, color: "green" },
+      { title: "API Key or OAuth 2",
+        text: "" },
+      { title: "Swagger UI integration",
+        text: "" },
+      { title: "Docker Deployment",
+        text: "One-line deployments using <code>docker-compose</code>" },
+      { title: "More awesome features",
+        text: "SDjslkdjsd" },
+      { title: "Jaw-dropping somethings",
+        text: "fDKLfjdlfdl f" },
+      { title: "Feature Template",
+        text: "Copy this" },
+    ]
+    
   .jumbotron
     .container(style='padding-top:70px').marketing
-      h1 Woo woo woo
+      h1 Feature List
     
-  .container.marketing
-    .row.featurette
-      .col-md-7
-        h2.featurette-heading
-          | APIops from the ground up! 
-          span.text-muted Developing and Deploying APIs the way it should be.
-        p.lead
-          | Most API Management solutions focus on a single deployment, where you usually are told to poke around at the live configuration. Do you really want to do that? Without a deployment pipeline? No? Thought so. Gelatine helps you in automating.
-      .col-md-5
-        img.featurette-image.img-responsive.center-block(src='images/gelatine-red-500.jpg', alt='Red Gummybear')
-    hr.featurette-divider
+      p Read some of the things gelatine.haufe.io could do for you!
     
-    .container
-      // FOOTER
-      footer
-      p.pull-right
-        a(href='#') Back to top
-      p
-        | © 2016 Haufe-Lexware GmbH & Co. KG, 
-        a(href='http://www.haufe-lexware.com') www.haufe-lexware.com
-        | , 
-        a(href='http://www.haufe.de') www.haufe.de
-        | , 
-        a(href='http://www.lexware.de') www.lexware.de
-        | , 
-        a(href='http://www.haufe-akademie.de') www.haufe-akademie.de
+  .container
+      each feat, i in featureList
+        if (i % 3 == 0)
+          .row
+            +feature(feat, i)
+            if ((i+1) < featureList.length)
+              +feature(featureList[i+1], i+1)
+            if ((i+2) < featureList.length)
+              +feature(featureList[i+2], i+2)

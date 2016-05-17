@@ -50,7 +50,7 @@ body {
 /* Declare heights because of positioning of img element */
 .carousel .item {
   height: 500px;
-  background-color: #777;
+  background-color: #9e9e9e;
 }
 .carousel-inner > .item > img {
   position: absolute;
@@ -58,6 +58,7 @@ body {
   left: 0;
   min-width: 100%;
   height: 500px;
+  object-fit: contain;
 }
 
 
@@ -133,3 +134,39 @@ body {
   }
 }
 
+.reddish {
+  background-color: #ffcccc
+}
+
+.greenish {
+  background-color: #ccffcc
+}
+
+.blueish {
+  background-color: #ccccff
+}
+
+.white {
+  background-color: #ffffff
+}
+
+.grey {
+  background-color: #eeeeee
+}
+
+.feature-thing {
+  height: 150px;
+}
+
+p.feature {
+  color: #666666
+}
+
+h5.feature {
+  color: #000000
+}
+
+.feature-block {
+  height: 150px;
+  /* text-align: center; */
+}
