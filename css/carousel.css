@@ -170,3 +170,20 @@ h5.feature {
   height: 150px;
   /* text-align: center; */
 }
+
+.feature-heading {
+  background-color: #9e9e9e;
+}
+
+.feature-container > h1 {
+  text-align: center;
+  color: #ffffff;
+  text-shadow: 2px 2px #555555;
+}
+
+.feature-container > p {
+  font-size: 18pt;
+  text-align: center;
+  color: #ffffff;
+  text-shadow: 1px 1px #555555;
+}

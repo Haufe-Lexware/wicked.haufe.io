@@ -38,9 +38,9 @@
             </div>
             <div id="navbar" class="navbar-collapse collapse">
               <ul class="nav navbar-nav">
-                <li class="active"><a href="index.html">Home</a></li>
-                <li><a href="#about">About</a></li>
-                <li><a href="#contact">Contact</a></li>
+                <li><a href="index.html">Home</a></li>
+                <li class="active"><a href="features.html">Features</a></li>
+                <li><a href="http://dev.haufe.com" target="_blank">Contact</a></li>
                 <!--
                 <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Dropdown <span class="caret"></span></a>
@@ -61,95 +61,118 @@
         </nav>
       </div>
     </div>
-    <div class="jumbotron">
-      <div style="padding-top:70px" class="container marketing">
-        <h1>Feature List</h1>
-        <p>Read some of the things gelatine.haufe.io could do for you!</p>
+    <!--       { title: "Feature Template",-->
+    <!--         text: "Copy this" },-->
+    
+    <div class="jumbotron feature-heading">
+      <div style="padding-top:70px" class="container feature-container">
+        <h1>Features</h1>
+        <p>These are some of the things gelatine.haufe.io could do for you.</p>
       </div>
     </div>
     <div class="container">
       <div class="row">
+        <div class="col-md-12"><img src="images/gelatine-feature-header.jpg" class="center-block"></div>
+      </div><br>
+      <div class="row">
         <div class="col-md-4 feature-block grey">
           <h5 class="feature">Authenticate with email and password</h5>
-          <p class="feature">fdfdfd</p>
+          <p class="feature">Let your users sign up with their email address and a password. Email addresses will be automatically validated by sending out verification emails.</p>
         </div>
         <div class="col-md-4 feature-block white">
           <h5 class="feature">Authenticate with ADFS</h5>
-          <p class="feature">Djskldjlksdjlsd</p>
+          <p class="feature">Integrate the login process with your own ADFS 3.0 server. Register the API portal with ADFS and use your local users.</p>
         </div>
-        <div class="col-md-4 feature-block grey"><br/><img src="images/gelatine-blue-100.png" class="center-block"/>
+        <div class="col-md-4 feature-block grey">
+          <h5 class="feature">Authentication with GitHub or Google</h5>
+          <p class="feature">You may also configure signup and login using OAuth2 with GitHub and/or Google. These identities will be treated as 'verified' automatically.</p>
         </div>
       </div>
       <div class="row">
         <div class="col-md-4 feature-block white">
-          <h5 class="feature">Authentication with GitHub or Google</h5>
-          <p class="feature">fdksfjlkdf</p>
+          <h5 class="feature">Group based rights to APIs</h5>
+          <p class="feature">Define custom user groups and assign those groups to users in order to limit access to specific APIs to specific groups. The Admin group can also be assigned.</p>
         </div>
         <div class="col-md-4 feature-block grey">
-          <h5 class="feature">Group based rights to APIs</h5>
-          <p class="feature"></p>
-        </div>
-        <div class="col-md-4 feature-block white">
           <h5 class="feature">Group based rights to custom content</h5>
-          <p class="feature"></p>
+          <p class="feature">The content section also supports group based access, e.g. to How-tos or tutorials.</p>
+        </div>
+        <div class="col-md-4 feature-block white"><br/><img src="images/gelatine-blue-100.png" class="center-block"/>
         </div>
       </div>
       <div class="row">
         <div class="col-md-4 feature-block grey">
           <h5 class="feature">Automatic group assignment</h5>
-          <p class="feature"></p>
+          <p class="feature">Users with a verified email address can be automatically assigned a user group, and ADFS groups may be mapped automatically to gelatine user groups.</p>
         </div>
-        <div class="col-md-4 feature-block white"><br/><img src="images/gelatine-red-100.png" class="center-block"/>
+        <div class="col-md-4 feature-block white">
+          <h5 class="feature">Subscription Plans</h5>
+          <p class="feature">API definitions can be associated with subscription plans, which can carry additional settings, e.g. different rate limits for different users.</p>
         </div>
         <div class="col-md-4 feature-block grey">
           <h5 class="feature">Application Concept</h5>
-          <p class="feature">Share applications among users</p>
+          <p class="feature">In order to subscribe to an API, a user needs to create an application (which is the client of the API); APIs are coupled with applications, not users.</p>
         </div>
       </div>
       <div class="row">
         <div class="col-md-4 feature-block white">
           <h5 class="feature">Application Owner Roles</h5>
-          <p class="feature"></p>
+          <p class="feature">Applications can be shared among users, using different roles on the application: Admin/Owner, Collaborator and Reader.</p>
         </div>
-        <div class="col-md-4 feature-block grey">
-          <h5 class="feature">Hand over Applications</h5>
-          <p class="feature"></p>
+        <div class="col-md-4 feature-block grey"><br/><img src="images/gelatine-red-100.png" class="center-block"/>
         </div>
         <div class="col-md-4 feature-block white">
-          <h5 class="feature">Easy API Gateway configuration</h5>
-          <p class="feature"></p>
+          <h5 class="feature">Hand over Applications</h5>
+          <p class="feature">By assigning Owner rights to an application to a different user, applications can be handed over to different developers/users without recreating them.</p>
         </div>
       </div>
       <div class="row">
-        <div class="col-md-4 feature-block grey"><br/><img src="images/gelatine-green-100.png" class="center-block"/>
+        <div class="col-md-4 feature-block grey">
+          <h5 class="feature">Easy API Gateway configuration</h5>
+          <p class="feature">gelatine makes it easier to configure the API Gateway correctly. The Kickstarter helps configuring e.g. Rate Limiting or CORS.</p>
         </div>
         <div class="col-md-4 feature-block white">
           <h5 class="feature">API Key or OAuth 2</h5>
-          <p class="feature"></p>
+          <p class="feature">Out of the box, gelatine enables fast securing of your API using API Key authentication or OAuth 2 Client Credentials Flow.</p>
         </div>
         <div class="col-md-4 feature-block grey">
           <h5 class="feature">Swagger UI integration</h5>
-          <p class="feature"></p>
+          <p class="feature">In order to view the APIs in more detail, gelatine has integrated Swagger UI, with configurable direct access to the backend services.</p>
         </div>
       </div>
       <div class="row">
+        <div class="col-md-4 feature-block white"><br/><img src="images/gelatine-green-100.png" class="center-block"/>
+        </div>
+        <div class="col-md-4 feature-block grey">
+          <h5 class="feature">Subscription Approval Workflow</h5>
+          <p class="feature">API Plans can be configured to require approval of subscription; you will be sent an email to a predefined email address to the approval request.</p>
+        </div>
         <div class="col-md-4 feature-block white">
+          <h5 class="feature">Chatbot Integration</h5>
+          <p class="feature">gelatine can post interesting events (you decide which are interesting) to either a Rocket.Chat or a Slack Chat instance. Just register a Hook URL with Slack, and configure it for gelatine.</p>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-4 feature-block grey">
           <h5 class="feature">Docker Deployment</h5>
-          <p class="feature">One-line deployments using <code>docker-compose</code></p>
-        </div>
-        <div class="col-md-4 feature-block grey">
-          <h5 class="feature">More awesome features</h5>
-          <p class="feature">SDjslkdjsd</p>
+          <p class="feature">The entire APIm solution is deployed using docker; everything runs in docker, enabling deployments to whatever infrastructure supports it.</p>
         </div>
         <div class="col-md-4 feature-block white">
-          <h5 class="feature">Jaw-dropping somethings</h5>
-          <p class="feature">fDKLfjdlfdl f</p>
+          <h5 class="feature">Simple scaling of deployment</h5>
+          <p class="feature">By using docker-compose, the deployment of your API Management solution can be easily scaled to use multiple instances of Kong, behind a powerful HAproxy. All pre-configured for you to use.</p>
         </div>
-      </div>
-      <div class="row">
         <div class="col-md-4 feature-block grey">
-          <h5 class="feature">Feature Template</h5>
-          <p class="feature">Copy this</p>
+          <h5 class="feature">Battle-proven API Gateway</h5>
+          <p class="feature">Behind the scenes, gelatine uses battle-proven, enterprise grade API Gateway <a href='http://getkong.org' target='_blank'>KONG by Mashape</a>. Open Source does not get much better than that.</p>
+        </div>
+      </div><br><br>
+      <div class="row">
+        <div class="col-md-12">
+          <table width="100%">
+            <tr>
+              <td style="text-align:center">For full documentation, head over to the <a href='https://github.com/Haufe-Lexware/gelatine.haufe.io' target='_blank'>GitHub repository of gelatine.haufe.io</a>.</td>
+            </tr>
+          </table>
         </div>
       </div>
     </div>

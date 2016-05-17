@@ -1,0 +1,31 @@
+{
+  "name": "gelatine.haufe.io",
+  "version": "1.0.0",
+  "description": "Marketing Web page for gelatine.haufe.io",
+  "main": "index.html",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Haufe-Lexware/gelatine.haufe.io.git"
+  },
+  "keywords": [
+    "API",
+    "Management",
+    "HTML",
+    "Marketing"
+  ],
+  "author": "Martin Danielsson",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Haufe-Lexware/gelatine.haufe.io/issues"
+  },
+  "homepage": "https://github.com/Haufe-Lexware/gelatine.haufe.io#readme",
+  "dependencies": {
+    "grunt": "^1.0.1",
+    "grunt-contrib-jade": "^1.0.0",
+    "grunt-contrib-watch": "^1.0.0",
+    "jade": "^1.11.0"
+  }
+}
