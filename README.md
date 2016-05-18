@@ -1,4 +1,4 @@
-# gelatine.haufe.io
+# wicked.haufe.io
 
 Work in progress. Coming fairly soon to a github repository near you.
 
