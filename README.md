@@ -1,6 +1,6 @@
-# gelatine.haufe.io
+# wicked.haufe.io
 
 APIops, anyone?
 
-This branch contains the web site for [gelatine.haufe.io](http://gelatine.haufe.io).
+This branch contains the web site for [wicked.haufe.io](http://wicked.haufe.io).
 

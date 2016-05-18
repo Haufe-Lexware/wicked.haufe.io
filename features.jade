@@ -11,7 +11,7 @@ mixin feature(featureObject, index)
       p.feature!= featureObject.text
     else
       br
-      img(src="images/gelatine-#{featureObject.color}-100.png").center-block
+      img(src="images/wicked-#{featureObject.color}-100.png").center-block
 
 
 block content
@@ -30,7 +30,7 @@ block content
         text: "The content section also supports group based access, e.g. to How-tos or tutorials." },
       { gummybear: true, color: "blue" },
       { title: "Automatic group assignment",
-        text: "Users with a verified email address can be automatically assigned a user group, and ADFS groups may be mapped automatically to gelatine user groups." },
+        text: "Users with a verified email address can be automatically assigned a user group, and ADFS groups may be mapped automatically to wicked user groups." },
       { title: "Subscription Plans",
         text: "API definitions can be associated with subscription plans, which can carry additional settings, e.g. different rate limits for different users." },
       { title: "Application Concept",
@@ -41,22 +41,22 @@ block content
       { title: "Hand over Applications",
         text: "By assigning Owner rights to an application to a different user, applications can be handed over to different developers/users without recreating them." },
       { title: "Easy API Gateway configuration",
-        text: "gelatine makes it easier to configure the API Gateway correctly. The Kickstarter helps configuring e.g. Rate Limiting or CORS." },
+        text: "wicked makes it easier to configure the API Gateway correctly. The Kickstarter helps configuring e.g. Rate Limiting or CORS." },
       { title: "API Key or OAuth 2",
-        text: "Out of the box, gelatine enables fast securing of your API using API Key authentication or OAuth 2 Client Credentials Flow." },
+        text: "Out of the box, wicked enables fast securing of your API using API Key authentication or OAuth 2 Client Credentials Flow." },
       { title: "Swagger UI integration",
-        text: "In order to view the APIs in more detail, gelatine has integrated Swagger UI, with configurable direct access to the backend services." },
+        text: "In order to view the APIs in more detail, wicked has integrated Swagger UI, with configurable direct access to the backend services." },
       { gummybear: true, color: "green" },
       { title: "Subscription Approval Workflow",
         text: "API Plans can be configured to require approval of subscription; you will be sent an email to a predefined email address to the approval request." },
       { title: "Chatbot Integration",
-        text: "gelatine can post interesting events (you decide which are interesting) to either a Rocket.Chat or a Slack Chat instance. Just register a Hook URL with Slack, and configure it for gelatine." },
+        text: "wicked can post interesting events (you decide which are interesting) to either a Rocket.Chat or a Slack Chat instance. Just register a Hook URL with Slack, and configure it for wicked." },
       { title: "Docker Deployment",
         text: "The entire APIm solution is deployed using docker; everything runs in docker, enabling deployments to whatever infrastructure supports it." },
       { title: "Simple scaling of deployment",
         text: "By using docker-compose, the deployment of your API Management solution can be easily scaled to use multiple instances of Kong, behind a powerful HAproxy. All pre-configured for you to use." },
       { title: "Battle-proven API Gateway",
-        text: "Behind the scenes, gelatine uses battle-proven, enterprise grade API Gateway <a href='http://getkong.org' target='_blank'>KONG by Mashape</a>. Open Source does not get much better than that." },
+        text: "Behind the scenes, wicked uses battle-proven, enterprise grade API Gateway <a href='http://getkong.org' target='_blank'>KONG by Mashape</a>. Open Source does not get much better than that." },
     ]
     
   //       { title: "Feature Template",
@@ -67,12 +67,12 @@ block content
     .container(style='padding-top:70px').feature-container
       h1 Features
     
-      p These are some of the things gelatine.haufe.io could do for you.
+      p These are some of the things wicked.haufe.io could do for you.
     
   .container
       .row
         .col-md-12
-          img(src="images/gelatine-feature-header.jpg").center-block
+          img(src="images/wicked-feature-header.jpg").center-block
 
       br
         
@@ -92,4 +92,4 @@ block content
           table(width='100%')
             tr
               td(style='text-align:center')
-                | For full documentation, head over to the <a href='https://github.com/Haufe-Lexware/gelatine.haufe.io' target='_blank'>GitHub repository of gelatine.haufe.io</a>.
+                | For full documentation, head over to the <a href='https://github.com/Haufe-Lexware/wicked.haufe.io' target='_blank'>GitHub repository of wicked.haufe.io</a>.

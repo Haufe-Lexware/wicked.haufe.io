@@ -1,14 +1,14 @@
 {
-  "name": "gelatine.haufe.io",
+  "name": "wicked.haufe.io",
   "version": "1.0.0",
-  "description": "Marketing Web page for gelatine.haufe.io",
+  "description": "Marketing Web page for wicked.haufe.io",
   "main": "index.html",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Haufe-Lexware/gelatine.haufe.io.git"
+    "url": "git+https://github.com/Haufe-Lexware/wicked.haufe.io.git"
   },
   "keywords": [
     "API",
@@ -19,9 +19,9 @@
   "author": "Martin Danielsson",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/Haufe-Lexware/gelatine.haufe.io/issues"
+    "url": "https://github.com/Haufe-Lexware/wicked.haufe.io/issues"
   },
-  "homepage": "https://github.com/Haufe-Lexware/gelatine.haufe.io#readme",
+  "homepage": "https://github.com/Haufe-Lexware/wicked.haufe.io#readme",
   "dependencies": {
     "grunt": "^1.0.1",
     "grunt-contrib-jade": "^1.0.0",
