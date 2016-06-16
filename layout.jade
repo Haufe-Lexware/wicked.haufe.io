@@ -27,6 +27,7 @@ html(lang='en')
     ==================================================
   body
     block vars
+
     .navbar-wrapper
       .container
         nav.navbar.navbar-inverse.navbar-static-top
@@ -52,6 +53,24 @@ html(lang='en')
                 else
                   li
                     a(href='features.html') Features
+                if (thisPage == 'gettingstarted')
+                  li.active
+                    a(href='gettingstarted.html') Getting Started
+                else
+                  li
+                    a(href='gettingstarted.html') Getting Started
+                if (thisPage == 'deployment')
+                  li.active
+                    a(href='deployment.html') Deployment
+                else
+                  li
+                    a(href='deployment.html') Deployment
+                if (thisPage == 'authentication')
+                  li.active
+                    a(href='authentication.html') Authentication
+                else
+                  li
+                    a(href='authentication.html') Authentication
                 li
                   a(href='http://dev.haufe.com' target='_blank') Contact
                 //

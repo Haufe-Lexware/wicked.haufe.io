@@ -16,32 +16,32 @@ block content
       li(data-target='#myCarousel', data-slide-to='2')
     .carousel-inner(role='listbox')
       .item.active
-        img.first-slide(src='images/wicked-group-1024.jpg', alt='First slide')
+        img.first-slide(src='images/header-1-500.jpg', alt='First slide')
         .container
           .carousel-caption
             h1 Open Source API Management
             p
               | A full stack open source solution to API Management, based on Mashape's Kong, node.js, and docker.
             p
-              a.btn.btn-lg.btn-primary(href='#', role='button') Getting Started
+              a.btn.btn-lg.btn-primary(href='gettingstarted.html', role='button') Getting Started
       .item
-        img.second-slide(src='images/wicked-group-1024.jpg', alt='Second slide')
+        img.second-slide(src='images/header-2-500.jpg', alt='Second slide')
         .container
           .carousel-caption
             h1 Fully dockerized and automatable
             p
               | Deploy your API Portal and API Gateway using docker, fully automated, from your own build pipelines, onto whatever infrastructure you want.
             p
-              a.btn.btn-lg.btn-primary(href='#', role='button') Deployment
+              a.btn.btn-lg.btn-primary(href='deployment.html', role='button') Deployment
       .item
-        img.third-slide(src='images/wicked-group-1024.jpg', alt='Third slide')
+        img.third-slide(src='images/header-3-500.jpg', alt='Third slide')
         .container
           .carousel-caption
             h1 Integration with ADFS, Github and Google
             p
               | Let your users sign up with your own ADFS, using Github or Google, or using an email address and password.
             p
-              a.btn.btn-lg.btn-primary(href='#', role='button') Authentication
+              a.btn.btn-lg.btn-primary(href='authentication.html', role='button') Authentication
     a.left.carousel-control(href='#myCarousel', role='button', data-slide='prev')
       span.glyphicon.glyphicon-chevron-left(aria-hidden='true')
       span.sr-only Previous
@@ -56,26 +56,27 @@ block content
   .container.marketing
     .row
       .col-lg-4
-        img(src='images/wicked-red-140.jpg', alt='Generic placeholder image', width='85', height='140')
+        img(src='images/logo-140.png' alt='Wicked')
         h2 Feature List
         p
           | wicked.haufe.io can do quite somethings, all with the focus on making things easy to deploy. You can read up on the feature list on this page. Missing a feature? We gladly accept pull requests on github.
         p
-          a.btn.btn-default(href='features.html', role='button') View details »
+          a.btn.btn-default(href='features.html', role='button') View details &raquo;
       .col-lg-4
-        img(src='images/wicked-green-140.jpg', alt='Green Gummybear. Yum.', width='85', height='140')
+        img(src='images/logo-140.png' alt='Wicked')
         h2 Who's behind?
         p
-          | The API portal wicked.haufe.io was developed at Haufe-Lexware GmbH & Co. KG in beautiful Freiburg, Germany. Haufe is a great place to work at; you can find our developer blog at dev.haufe.com.
+          | The API portal wicked.haufe.io was developed at Haufe-Lexware GmbH &amp; Co. KG in beautiful Freiburg, Germany. Haufe is a great place to work at; you can find our developer blog at dev.haufe.com.
         p
-          a.btn.btn-default(href='http://dev.haufe.com', target='_blank', role='button') Haufe Dev Blog »
+          a.btn.btn-default(href='http://dev.haufe.com', target='_blank', role='button') Haufe Dev Blog &raquo;
       .col-lg-4
-        img(src='images/wicked-blue-140.jpg', alt='Generic placeholder image', width='85', height='140')
+        img(src='images/logo-140.png' alt='Generic placeholder image')
         h2 The Code
         p
           | We did mention wicked.haufe.io is open source, right? It's all on github, including guides on how to set it up to make it work for you. Missing guidelines? Have suggestions? File an issue or submit a pull request!
         p
-          a.btn.btn-default(href='https://github.com/Haufe-Lexware/wicked.haufe.io', target='_blank', role='button') View details »
+          a.btn.btn-default(href='https://github.com/Haufe-Lexware/wicked.haufe.io', target='_blank', role='button') View details &raquo;
+
     // START THE FEATURETTES
     hr.featurette-divider
     .row.featurette
@@ -86,7 +87,8 @@ block content
         p.lead
           | Most API Management solutions focus on a single deployment, where you usually are told to poke around at the live configuration. Do you really want to do that? Without a deployment pipeline? No? Thought so. wicked helps you in automating.
       .col-md-5
-        img.featurette-image.img-responsive.center-block(src='images/wicked-red-500.jpg', alt='Red Gummybear')
+        a(href='deployment.html')
+          img.featurette-image.img-responsive.center-block(src='images/logo-s-500.png', alt='Red Gummybear')
     hr.featurette-divider
     .row.featurette
       .col-md-7.col-md-push-5
@@ -96,7 +98,7 @@ block content
         p.lead
           | The wicked kickstarter helps you in setting up the configuration for your API portal. You need to specify DNS names and provide an SSL certificate, but other than that, just provide your own content (APIs) and get going!
       .col-md-5.col-md-pull-7
-        img.featurette-image.img-responsive.center-block(src='images/wicked-blue-500.jpg', alt='Blue Gummybear')
+        img.featurette-image.img-responsive.center-block(src='images/logo-s-500.png', alt='Blue Gummybear')
     hr.featurette-divider
     .row.featurette
       .col-md-7
@@ -106,6 +108,6 @@ block content
         p.lead
           | Use your own build infrastructure to deploy your API portal; just inject your information via environment variables and a configuration repository, that's all there is. APIops!
       .col-md-5
-        img.featurette-image.img-responsive.center-block(src='images/wicked-green-500.jpg', alt='Green Gummybear')
+        img.featurette-image.img-responsive.center-block(src='images/logo-s-500.png', alt='Green Gummybear')
     hr.featurette-divider
     // /END THE FEATURETTES

@@ -10,8 +10,8 @@ mixin feature(featureObject, index)
       h5.feature= featureObject.title
       p.feature!= featureObject.text
     else
-      br
-      img(src="images/wicked-#{featureObject.color}-100.png").center-block
+      //img(src="images/wicked-#{featureObject.color}-100.png").center-block
+      img(src="images/logo-140.png").center-block
 
 
 block content
@@ -62,8 +62,7 @@ block content
   //       { title: "Feature Template",
   //         text: "Copy this" },
 
-    
-  .jumbotron.feature-heading
+  .jumbotron(style='background: url("images/header-2-500.jpg"); background-size:cover;')
     .container(style='padding-top:70px').feature-container
       h1 Features
     
@@ -72,7 +71,7 @@ block content
   .container
       .row
         .col-md-12
-          img(src="images/wicked-feature-header.jpg").center-block
+          img(src="images/feature-header-300.jpg").center-block
 
       br
         
