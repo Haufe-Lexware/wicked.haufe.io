@@ -73,6 +73,14 @@ html(lang='en')
                     a(href='authentication.html') Authentication
                 li
                   a(href='http://dev.haufe.com' target='_blank') Contact
+              ul.nav.navbar-nav.navbar-right
+                if (thisPage == 'impressum')
+                  li.active
+                    a(href='impressum.html') Impressum
+                else
+                  li
+                    a(href='impressum.html') Impressum
+
                 //
                   <li class="dropdown">
                   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Dropdown <span class="caret"></span></a>
