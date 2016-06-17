@@ -1,0 +1,16 @@
+.pad20 {
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
+
+.pad70 {
+    padding-top: 70px;
+}
+
+.grey {
+    background-color: #eee;
+}
+
+.white {
+    background-color: #fff;
+}

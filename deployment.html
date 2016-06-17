@@ -23,6 +23,7 @@
     -->
     <!-- Custom styles for this template-->
     <link href="css/carousel.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
   </head>
   <!--
   NAVBAR
@@ -74,7 +75,60 @@
       </div>
     </div>
     <div class="container">
-      <p>(insert content here)</p>
+      <div class="row">
+        <div class="col-md-6 pad20">
+          <h3>Deployment Architecture</h3>
+          <p>
+            The API Portal relies on proven technology to manage traffic: The actual portal
+            sits behind a HAproxy, and the actual API traffic is proxied by the excellent
+            <a href="https://getkong.org" target="_blank">API Gateway Kong by Mashape</a>.
+          </p>
+          <p>
+            The portal itself is implemented as lightweight as possible, using node.js.
+            
+          </p>
+        </div>
+        <div class="col-md-6 pad20"><img src="images/architecture-highlevel.png" class="center-block img-responsive"></div>
+      </div>
+    </div>
+    <div class="grey">
+      <div class="container pad20">
+        <div class="row">
+          <div class="col-md-6 pad20"><a href="https://www.docker.com/products/docker-swarm" target="_blank"><img src="https://www.docker.com/sites/default/files/docker-swarm-hero2.png" style="height:300px;" class="center-block"></a></div>
+          <div class="col-md-6 pad20">
+            <h3>Runs on any Docker Host/Swarm</h3>
+            <p>
+              The API Portal can be deployed to any environment which runs a docker host.
+              This can be a single VM, or a Swarm environment, as long as it is compatible
+              with <code>docker-compose</code>.
+            </p>
+            <p>
+              Depending on your requirements regarding high availability and your SLAs
+              towards your clients, you are free to choose how to deploy the API Portal
+              and Gateway.
+              
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="container pad20">
+      <div class="row">
+        <div class="col-md-6 pad20">
+          <h3>Modular and Extensible</h3>
+          <p>
+            Behind the scenes, the API Portal runs in several small containers, as microservices
+            inside a service. It is simple to extend the portal functionality using the Portal
+            API, which is also how the "Mailer", "Chatbot" and "Kong Adapter" work in the
+            background.
+          </p>
+          <p>
+            If you deploy to Docker Swarm, scaling out your API Gateway is also super simple;
+            the deployment scripts support this scenario (clustered Kong) out of the box.
+          </p>
+        </div>
+        <div class="col-md-6 pad20"><img src="images/architecture-components.png" class="center-block img-responsive"></div>
+      </div>
     </div>
     <div class="container">
       <hr>

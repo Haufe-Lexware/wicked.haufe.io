@@ -23,6 +23,7 @@
     -->
     <!-- Custom styles for this template-->
     <link href="css/carousel.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
   </head>
   <!--
   NAVBAR
@@ -73,9 +74,73 @@
         <p>Authentication Options of the API Portal</p>
       </div>
     </div>
-    <div class="container">
-      <p>(insert content here)</p>
+    <div class="container pad20">
+      <div class="row">
+        <div class="col-md-6">
+          <h3>Portal Authentication</h3>
+        </div>
+        <div class="col-md-6">&nbsp;</div>
+      </div>
+      <div class="row">
+        <div class="col-md-6">
+          <p>
+            In order to let your developers log in to your API Portal, you can choose from the
+            following means of authentication:
+            
+          </p>
+          <ul>
+            <li>Email and password signup and login</li>
+            <li>ADFS 3.0 Federation using your own ADFS instance (SAML)</li>
+            <li>Github Social Login (OAuth 2.0)</li>
+            <li>Google Login (OAuth 2.0)</li>
+          </ul>
+          <p>
+            For email and password log in, the portal supports reCAPTCHA for avoiding robots
+            signing up to your portal; additionally, you can configure the portal to validate
+            email addresses.
+          </p>
+          <p>
+            Sending lost password reset requests are also supported; you only have to supply
+            the API Portal with SMTP credentials.
+          </p>
+        </div>
+        <div class="col-md-6"><img src="images/auth-portal.png" class="center-block"></div>
+      </div>
+      <div class="row pad20">
+        <div class="col-md-12">&nbsp;</div>
+      </div>
+      <div class="row">
+        <div class="col-md-6">&nbsp;</div>
+        <div class="col-md-6">
+          <h3>API Authentication</h3>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-6"><img src="images/auth-kong.png" class="center-block"></div>
+        <div class="col-md-6">
+          <p>
+            Besides the portal authentication, your developers can register applications with the
+            API Portal and subscribe to your APIs. You can choose to authenticate those applications
+            using one of the following methods (more to come):
+            
+          </p>
+          <ul>
+            <li>Static API Keys (using a header)</li>
+            <li>OAuth 2.0 Client Credentials Flow</li>
+          </ul>
+          <p>
+            Credentials, i.e. API Keys or Client ID and Client Secret are generated for each applications
+            and per API subscription automatically, depending on how you choose to secure your API.
+            
+          </p>
+          <p>
+            More ways of authenticating applications are to come; Kong supports additional ones.
+            
+          </p>
+        </div>
+      </div>
     </div>
+    <div class="grey"></div>
     <div class="container">
       <hr>
       <!-- FOOTER-->

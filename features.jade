@@ -6,18 +6,27 @@ block vars
 mixin feature(featureObject, index)
   - var thisClass = (index % 2) == 0 ? "grey" : "white"
   div(class="col-md-4 feature-block #{thisClass}")
-    if !featureObject.gummybear
+    if featureObject.title
       h5.feature= featureObject.title
       p.feature!= featureObject.text
-    else
+    else if featureObject.gummybear 
       //img(src="images/wicked-#{featureObject.color}-100.png").center-block
-      img(src="images/logo-140.png").center-block
+      img(src="images/logo-140.png" style="height:120px; padding-top:20px;").center-block
+    else if featureObject.kong
+      a(href="https://getkong.org" target="_blank")
+        img(src="https://getkong.org/assets/images/companies/mashape-marketplace.png" style="padding-top:30px").center-block
 
 
 block content
 
   -
     var featureList = [
+      { title: "Leverage Kong as API Gateway", 
+        text: "Use Mashape Kong to protect and proxy your backend APIs, securing them via API Keys or OAuth 2.0 Client Credentials flow." },
+      { title: "Implement Rate Limiting",
+        text: "Using Mashape Kong's rich functionality, implement rate limiting for your APIs, wherever needed." },
+      { title: "Full support of Kong's Plugins",
+        text: "Whatever Mashape Kong can do, you may configure it using the wicked Kickstarter application." },
       { title: "Authenticate with email and password", 
         text: "Let your users sign up with their email address and a password. Email addresses will be automatically validated by sending out verification emails." },
       { title: "Authenticate with ADFS",
@@ -37,7 +46,7 @@ block content
         text: "In order to subscribe to an API, a user needs to create an application (which is the client of the API); APIs are coupled with applications, not users." },
       { title: "Application Owner Roles",
         text: "Applications can be shared among users, using different roles on the application: Admin/Owner, Collaborator and Reader." },
-      { gummybear: true, color: "red" },
+      { kong: true, color: "red" },
       { title: "Hand over Applications",
         text: "By assigning Owner rights to an application to a different user, applications can be handed over to different developers/users without recreating them." },
       { title: "Easy API Gateway configuration",
@@ -71,7 +80,7 @@ block content
   .container
       .row
         .col-md-12
-          img(src="images/feature-header-300.jpg").center-block
+          img(src="images/feature-header-300.jpg" style="height:200px;").center-block
 
       br
         

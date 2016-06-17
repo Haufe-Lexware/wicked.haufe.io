@@ -23,6 +23,7 @@
     -->
     <!-- Custom styles for this template-->
     <link href="css/carousel.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
   </head>
   <!--
   NAVBAR
@@ -96,15 +97,21 @@
             <li>and Operate</li>
           </ul>
         </div>
-        <div style="text-align:right" class="col-md-4"><a href="https://docker.com" target="_blank"><img src="https://www.docker.com/sites/all/themes/docker/assets/images/Logo-Docker.svg" width="250"></a></div>
+        <div class="col-md-4"><a href="https://docker.com" target="_blank"><img src="https://www.docker.com/sites/all/themes/docker/assets/images/Logo-Docker.svg" width="250" class="center-block"></a></div>
       </div>
       <p>your API Portal and the API Gateway (<a href='https://getkong.org' target='_blank'>Mashape Kong</a>) which is used to proxy the APIs.</p>
       <p>&nbsp;</p>
     </div>
-    <div style="background-color:#eee">
-      <div class="container">
-        <h2>Step 1: Prerequisites - Docker</h2>
+    <div class="grey">
+      <div class="container pad20">
         <div class="row">
+          <div class="col-md-4">&nbsp;</div>
+          <div class="col-md-8">
+            <h2>Step 1: Prerequisites - Docker</h2>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-4"><a href="https://www.docker.com/products/docker-compose" target="_blank"><img src="https://www.docker.com/sites/default/files/Compose.png" style="width:250px;" class="center-block"></a></div>
           <div class="col-md-8">
             <p>
               The only prerequisites for this getting started guide is that you have access to a the docker command
@@ -124,11 +131,10 @@
               
             </p><a href="https://docker.com" target="_blank" class="btn btn-primary btn-lg">Get Docker &raquo;</a>
           </div>
-          <div style="text-align:right;" class="col-md-4"><a href="https://www.docker.com/products/docker-compose" target="_blank"><img src="https://www.docker.com/sites/default/files/Compose.png" style="width:250px;"></a><br><br></div>
         </div>
       </div>
     </div>
-    <div style="background-color: #fff;">
+    <div class="white pad20">
       <div class="container">   
         <h2>Step 2: Clone the Sample Deployment Repository</h2>
         <div class="row">
@@ -159,15 +165,16 @@ $
 </pre>
             <p>&nbsp;</p>
           </div>
-          <div style="text-align:right" class="col-md-4"><a href="https://github.com/Haufe-Lexware/wicked.sample.deploy" target="_blank"><img src="https://assets-cdn.github.com/images/modules/logos_page/Octocat.png" style="width:250px;"></a></div>
+          <div class="col-md-4"><a href="https://github.com/Haufe-Lexware/wicked.sample.deploy" target="_blank"><img src="https://assets-cdn.github.com/images/modules/logos_page/Octocat.png" style="width:250px;" class="center-block"></a></div>
         </div>
       </div>
     </div>
-    <div style="background-color:#eee">
+    <div class="grey pad20">
       <div class="container">
-        <h2>Step 3: Creating SSL Certificates</h2>
         <div class="row">
+          <div class="col-md-4">&nbsp;</div>
           <div class="col-md-8">
+            <h2>Step 3: Creating SSL Certificates</h2>
             <p>
               For our sample deployment, we will create self-signed SSL certificates which the Portal requires to run
               using TLS (<code>https</code>). If you are on Linux or Mac OS X, chances are good you already have
@@ -204,7 +211,7 @@ $ mkdir api.portal.local
         </div>
       </div>
     </div>
-    <div style="background-color: #fff;">
+    <div class="white pad20">
       <div class="container">   
         <h2>Step 4: Create <code>/etc/hosts</code> entries</h2>
         <div class="row">
@@ -252,11 +259,12 @@ PING api.portal.local (192.168.99.100): 56 data bytes
         </div>
       </div>
     </div>
-    <div style="background-color:#eee">
+    <div class="grey pad20">
       <div class="container">
-        <h2>Step 5: Deploy</h2>
         <div class="row">
+          <div class="col-md-4">&nbsp;</div>
           <div class="col-md-8">
+            <h2>Step 5: Deploy</h2>
             <p>We are now all set to deploy the API Portal.</p>
             <pre>$ docker-compose up
 $ docker ps
@@ -272,7 +280,7 @@ $ docker ps
         </div>
       </div>
     </div>
-    <div style="background-color:#fff">
+    <div class="white pad20">
       <div class="container">
         <h2>Step 6: Log in</h2>
         <div class="row">
@@ -291,7 +299,7 @@ $ docker ps
               <div style="text-align:center" class="panel-body"><img src="images/screenshot-640.png" class="img-responsive"></div>
             </div>
           </div>
-          <div style="text-align:right" class="col-md-4"><img src="images/logo-200.png"></div>
+          <div class="col-md-4"><img src="images/logo-s-500.png" style="height:350px" class="center-block"></div>
         </div>
       </div>
     </div>
