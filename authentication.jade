@@ -39,30 +39,30 @@ block content
 
     .row.pad20
       .col-md-12 &nbsp;
-      
-    .row
-      .col-md-6
-        | &nbsp;
-      .col-md-6
-        h3 API Authentication
-    .row
-      .col-md-6
-        img(src='images/auth-kong.png').center-block
-      .col-md-6
-        p.
-          Besides the portal authentication, your developers can register applications with the
-          API Portal and subscribe to your APIs. You can choose to authenticate those applications
-          using one of the following methods (more to come):
-        
-        ul
-          li Static API Keys (using a header)
-          li OAuth 2.0 Client Credentials Flow
-
-        p.
-          Credentials, i.e. API Keys or Client ID and Client Secret are generated for each applications
-          and per API subscription automatically, depending on how you choose to secure your API.
-
-        p.
-          More ways of authenticating applications are to come; Kong supports additional ones.
-
+  
   .grey
+    .container
+      .row
+        .col-md-6
+          | &nbsp;
+        .col-md-6
+          h3 API Authentication
+      .row
+        .col-md-6(style='padding-bottom:20px')
+          img(src='images/auth-kong.png').center-block
+        .col-md-6
+          p.
+            Besides the portal authentication, your developers can register applications with the
+            API Portal and subscribe to your APIs. You can choose to authenticate those applications
+            using one of the following methods (more to come):
+          
+          ul
+            li Static API Keys (using a header)
+            li OAuth 2.0 Client Credentials Flow
+
+          p.
+            Credentials, i.e. API Keys or Client ID and Client Secret are generated for each applications
+            and per API subscription automatically, depending on how you choose to secure your API.
+
+          p.
+            More ways of authenticating applications are to come; Kong supports additional ones.
