@@ -7,7 +7,7 @@ Some information can already be seen at the wicked microsite over at [wicked.hau
 Things we are currently finishing currently:
 
 * CI and Build processes, setting up official repositories
-* Documentation
+* [Documentation (work in progress)](doc/index.md)
 
 Feel free to reach out if you have any questions.
 

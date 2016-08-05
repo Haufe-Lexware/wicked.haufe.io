@@ -8,7 +8,7 @@ This is the repository for the Open Source API Management system **wicked.haufe.
 * Setting up a development environment for your API Portal
 * Developing the Portal itself (contributing)
 
-![wicked Logo](../portal/public/images/wicked-256.png)
+![wicked Logo](images/wicked-256.png)
 
 ## What do you want to do?
 

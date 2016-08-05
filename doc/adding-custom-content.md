@@ -137,11 +137,11 @@ The next two images are not optional, and need to be present:
 
 * `wicked-40.png`: This is the logo which is displayed in the top left corner of every web page the API Portal serves. If you replace this image with something else, make sure it has the same dimensions as this image.
 
-![Top left logo](../portal-env/initial-config/static/content/images/wicked-40.png)
+![Top left logo](images/wicked-40.png)
 
 * `wicked-auth-page-120.png`: This file is used as a logo image on the login and signup pages. You may replace this logo, but it should have the same dimensions as this file to make sure the web pages still look good.
 
-![Authentication logo](../portal-env/initial-config/static/content/images/wicked-auth-page-120.png)
+![Authentication logo](images/wicked-auth-page-120.png)
 
 ## Run time
 

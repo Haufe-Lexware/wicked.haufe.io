@@ -30,11 +30,11 @@ We have chosen to publish the "classic" Petstore API which is used for demo purp
 
 The first Petstore API is secured via API Keys, which is indicated by the following icon:
 
-![API Key Icon](../portal/public/images/key-icon-64.png)
+![API Key Icon](images/key-icon-64.png)
 
 The second API is called Petstore OAuth, and is secured via OAuth, which is indicated by the following icon:
 
-![OAuth Icon](../portal/public/images/oauth2-icon-64.png)
+![OAuth Icon](images/oauth2-icon-64.png)
 
 In order to subscribe to one of those APIs, you will first need to tell the Portal which Application (or, "Client") will use the API. This is done by registering an application.
 
