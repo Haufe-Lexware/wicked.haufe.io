@@ -17,13 +17,6 @@ block content
     br
     br
 
-    h1 WORK IN PROGRESS - THIS WILL CURRENTLY NOT (YET) WORK!
-
-    br
-    br
-    br
-    br
-
     h2 Introduction
 
     .row
@@ -68,16 +61,16 @@ block content
             The only prerequisites for this getting started guide is that you have access to a the docker command
             line and a Docker host. If you haven't already installed Docker, go ahead and
             <a href='https://docker.com' target='_blank'>do that first</a>.
-            It will work both on Windows and Mac OS X machines without problems.
+            It will work both on Windows and Mac OS X machines without problems, best using docker 1.12 or later.
 
           p.
             The API Portal will - for evaluation purposes - happily run on your local machine, or on any docker
             host which you have set up <code>docker-machine</code> to talk to. Make sure you are using version
-            greater than or equal to 1.11 when deploying the API Portal, as we are using features of Docker which
+            greater than or equal to 1.12 (compose 1.8.0) when deploying the API Portal, as we are using features of Docker which
             are not available before that. Also make sure you have a recent 
             <a href='https://www.docker.com/products/docker-compose' target='_blank'><code>docker-compose</code></a>
             installed; if you haven't, click the link above and get it before proceeding. If you are using the
-            Docker Toolbox for Mac OS X or Windows, <code>docker-compose</code> will already be installed on your machine.
+            Docker Toolbox &geq;1.12 for Mac OS X or Windows, <code>docker-compose</code> will already be installed on your machine.
 
           a(href='https://docker.com' target='_blank').btn.btn-primary.btn-lg Get Docker &raquo;
 
@@ -93,86 +86,46 @@ block content
             file from the Haufe-Lexware Github Repository. 
 
           pre.
-            $ git clone https://github.com/Haufe-Lexware/wicked.sample.deploy
-            Cloning into 'wicked.sample-deploy'...
+            $ git clone https://github.com/Haufe-Lexware/wicked.deploy.sample
+            Cloning into 'wicked.deploy.sample'...
             ...
-            $ cd wicked.sample-deploy
+            $ cd wicked.deploy.sample
 
           p.
-            The make sure you have a docker host at hand you can deploy to. If you have just installed docker on
+            Make sure you have a docker host at hand you can deploy to. If you have just installed docker on
             your local machine, this will be the case, and you just have to call either the "Docker Quickstart Terminal"
             or - with more recent installations - simply the Terminal. Check that everything works:
 
           pre.
             $ docker --version
-            Docker version 1.11.2, build b9f10c9
+            Docker version 1.12.0, build 8eab29e
             $ docker ps
             CONTAINER ID        IMAGE               COMMAND             CREATED             STATUS              PORTS               NAMES
             $ docker-compose --version
-            docker-compose version 1.7.1, build 0a9ab35
+            docker-compose version 1.8.0, build f3628c7
             $
           
           p &nbsp;
         .col-md-4
-          a(href='https://github.com/Haufe-Lexware/wicked.sample.deploy' target='_blank')
+          a(href='https://github.com/Haufe-Lexware/wicked.deploy.sample' target='_blank')
             img(src='https://assets-cdn.github.com/images/modules/logos_page/Octocat.png' style='width:250px;').center-block
-
+       
   .grey.pad20
     .container
       .row
         .col-md-4
-          | &nbsp;
-        .col-md-8
-          h2 Step 3: Creating SSL Certificates
-
-          p.
-            For our sample deployment, we will create self-signed SSL certificates which the Portal requires to run
-            using TLS (<code>https</code>). If you are on Linux or Mac OS X, chances are good you already have
-            OpenSSL installed, on Windows you will need to download and install first.
-          p
-            a(href='http://slproweb.com/products/Win32OpenSSL.html' target='_blank').btn.btn-default Get OpenSSL for Windows &raquo;
-          
-          p.
-            Issue the following commands to create a directory for the needed key and certificate files:
-
-          pre.
-            $ mkdir certs
-            $ cd certs
-            $ mkdir portal.local
-            $ mkdir api.portal.local
-          
-          p.
-            Now we will issue the OpenSSL command which will create the self signed certificate for the Portal. OpenSSL
-            will ask a number of questions, the most important one is the one for the FQDN (Fully Qualified Domain Name).
-            Use the FQDN name <code>portal.local</code> for this local testing deployment.
-          
-          pre.
-            $ openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout portal.local/key.pem -out portal.local/cert.pem
-            ...
-          
-          p.
-            Repeat the process for the API Gateway certificate (which is different from the Portal UI certificate):
-          
-          pre.
-            $ openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout api.portal.local/key.pem -out api.portal.local/cert.pem
-            ...
-
           p &nbsp;
-        
-  .white.pad20
-    .container    
-      h2 Step 4: Create <code>/etc/hosts</code> entries
+        .col-md-8
+          h2 Step 4: Create <code>/etc/hosts</code> entries
 
       .row
+        .col-md-4
+          p &nbsp;
         .col-md-8
           p.
-            In a first step, you need to find out which IP address your docker host is running on. If you are using the Docker
-            Toolbox on Windows or Mac (not the Beta), this will be the output of 
-            <code>docker-machine ip default</code>. If you are using a different docker host, the IP address you need for
-            the next step is either the IP address of your docker host (<code>docker-machine ip (name of your machine)</code>),
-            or the DNS name of that machine. If you are using the <strong>Docker Beta</strong>, the IP address you need is
-            the IP address of your own computer; do not use <code>localhost</code>, but the fully qualified IP address or
-            DNS name of your computer.  
+            In a first step, you need to find out your local IP address. This is needed to make the round trip from
+            docker to your local machine work. If you can't find it out, assume <code>127.0.0.1</code> (most things will 
+            work with that, too). 
           p.
             Open up your <code>/etc/hosts</code> file in an editor (this step will be different on Linux, Mac OS X and
             Windows, please google if unclear) and add the following two lines:
@@ -194,12 +147,23 @@ block content
             64 bytes from 192.168.99.100: icmp_seq=0 ttl=64 time=0.098 ms
             ...
 
+          p &nbsp;
+
+  .white.pad20
+    .container
+      .row
+        .col-md-8
+          h2 Step 5: Deploy
           p.
-            <strong>Important Note:</strong> We only need to do this in order to access the machine using DNS names. If you
-            can create real DNS names for your IP address, this will work as well. In that case, replace <code>portal.local</code>
-            and <code>api.portal.local</code> with the FQDN you provide. If you use the <code>/etc/hosts</code> files, it is
-            obvious that everybody who wants to try out the API Portal also needs these entries to be able to access it. For local
-            testing, it will do like described above though.
+            We are now all set to deploy the API Portal.
+          pre.
+            $ docker-compose up -d
+            ...
+
+          p.
+            This will take a little while, mostly because docker has to download the container images used for the portal.
+            Depending on your internet connection speed, you can expect this to take from two to ten minutes (the images
+            are around 1.5 GB in size in total).
 
           p &nbsp;
 
@@ -209,25 +173,11 @@ block content
         .col-md-4
           | &nbsp;
         .col-md-8
-          h2 Step 5: Deploy
-          p.
-            We are now all set to deploy the API Portal.
-          pre.
-            $ docker-compose up
-            $ docker ps
-          
-          p.
-            This will take a little while, mostly because docker has to download the container images used for the portal.
-            Depending on your internet connection speed, you can expect this to take from two to ten minutes (the images
-            are around 1.5 GB in size in total).
-
-          p &nbsp;
-
-  .white.pad20
-    .container
-      h2 Step 6: Log in
+          h2 Step 6: Log in
 
       .row
+        .col-md-4
+          img(src='images/logo-s-500.png' style='height:350px').center-block
         .col-md-8
           p.
             Navigate to your API Portal at <a href='https://portal.local' target='_blank'><code>https://portal.local</code></a>
@@ -243,5 +193,8 @@ block content
               | Screenshot
             .panel-body(style='text-align:center')
               img(src='images/screenshot-640.png').img-responsive
-        .col-md-4
-          img(src='images/logo-s-500.png' style='height:350px').center-block
+
+          p.
+            Read more in the <a href="https://github.com/Haufe-Lexware/wicked.haufe.io" target="_blank">documentation</a>, e.g.
+            on how to <a href="https://github.com/Haufe-Lexware/wicked.haufe.io/blob/master/doc/using-the-sample-portal.md">use
+            the sample portal</a>.
