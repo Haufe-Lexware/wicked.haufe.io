@@ -13,9 +13,6 @@ block content
   .container
 
     br
-    br
-    br
-    br
 
     h2 Introduction
 
@@ -35,13 +32,14 @@ block content
           li Deploy
           li Update
           li and Operate
+        p.
+          your API Portal and the API Gateway (<a href='https://getkong.org' target='_blank'>Mashape Kong</a>) which is used to proxy the APIs.
+        p &nbsp;
+
       .col-md-4
         a(href='https://docker.com' target='_blank')
           img(src='https://www.docker.com/sites/all/themes/docker/assets/images/Logo-Docker.svg' width='250').center-block
 
-    p.
-      your API Portal and the API Gateway (<a href='https://getkong.org' target='_blank'>Mashape Kong</a>) which is used to proxy the APIs.
-    p &nbsp;
 
   .grey
     .container.pad20
@@ -74,6 +72,8 @@ block content
 
           a(href='https://docker.com' target='_blank').btn.btn-primary.btn-lg Get Docker &raquo;
 
+          br
+          br
 
   .white.pad20
     .container    
@@ -83,7 +83,7 @@ block content
         .col-md-8
           p.
             Deploying the API Portal is equivalent to running a <code>docker-compose.yml</code> file. Get a sample
-            file from the Haufe-Lexware Github Repository. 
+            configuration repository from the Haufe-Lexware Github Repository: 
 
           pre.
             $ git clone https://github.com/Haufe-Lexware/wicked.deploy.sample
