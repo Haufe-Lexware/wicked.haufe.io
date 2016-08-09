@@ -77,6 +77,7 @@ block content
         .col-md-6
           form(role="form" method="post" action="https://formspree.io/martin.danielsson@haufe-lexware.com" onsubmit="return validateForm();")
             input(type="hidden" name="_subject" value="wicked.haufe.io - Inquiry")
+            input(type="hidden" name="_next" value="http://wicked.haufe.io/thanks.html")
             input(type="text" name="_gotcha" style="display:none")
             .form-group
               label Your Name:
