@@ -96,6 +96,12 @@
             <li>and Operate</li>
           </ul>
           <p>your API Portal and the API Gateway (<a href='https://getkong.org' target='_blank'>Mashape Kong</a>) which is used to proxy the APIs.</p>
+          <p>
+            The following steps assume that you are familiar in using a <code>bash</code> type shell, and that you
+            have a running <code>git</code> installation. On Linux/Mac OS X this should be present out of the box (if
+            you are a developer). On Windows, using either the Ubuntu bash Windows subsystem, or plain "Git bash" (cygwin)
+            should work fine.
+          </p>
           <p>&nbsp;</p>
         </div>
         <div class="col-md-4"><a href="https://docker.com" target="_blank"><img src="https://www.docker.com/sites/all/themes/docker/assets/images/Logo-Docker.svg" width="250" class="center-block"></a></div>
@@ -126,7 +132,7 @@
               are not available before that. Also make sure you have a recent 
               <a href='https://www.docker.com/products/docker-compose' target='_blank'><code>docker-compose</code></a>
               installed; if you haven't, click the link above and get it before proceeding. If you are using the
-              Docker Toolbox &geq;1.12 for Mac OS X or Windows, <code>docker-compose</code> will already be installed on your machine.
+              Docker &geq;1.12 for Mac OS X or Windows, <code>docker-compose</code> will already be installed on your machine.
               
             </p><a href="https://docker.com" target="_blank" class="btn btn-primary btn-lg">Get Docker &raquo;</a><br><br>
           </div>
@@ -184,29 +190,27 @@ $
           </div>
           <div class="col-md-8">
             <p>
-              In a first step, you need to find out your local IP address. This is needed to make the round trip from
-              docker to your local machine work. If you can't find it out, assume <code>127.0.0.1</code> (most things will 
-              work with that, too). 
-            </p>
-            <p>
-              Open up your <code>/etc/hosts</code> file in an editor (this step will be different on Linux, Mac OS X and
+              Open up your <code>/etc/hosts</code> (Linux/Mac OS X, on Windows: <code>C:\Windows\System32\drivers\etc\hosts</code>) 
+              file in an editor (this step will be different on Linux, Mac OS X and
               Windows, please google if unclear) and add the following two lines:
               
             </p>
-            <pre>(the IP address from above)   portal.local
-(the IP address from above)   api.portal.local
+            <pre>127.0.0.1   portal.local
+127.0.0.1   api.portal.local
 </pre>
             <p>
-              Check that you can ping your machine using both DNS names:
+              <b>Note:</b> You may need to <code>sudo</code> to change that file; on Windows you will need
+              to edit the <code>hosts</code> file as Administrator. Check that you can ping your machine using
+              both DNS names:
               
             </p>
             <pre>$ ping portal.local
-PING portal.local (192.168.99.100): 56 data bytes
-64 bytes from 192.168.99.100: icmp_seq=0 ttl=64 time=0.098 ms
+PING portal.local (127.0.0.1): 56 data bytes
+64 bytes from 127.0.0.1: icmp_seq=0 ttl=64 time=0.098 ms
 ...
 $ ping api.portal.local
-PING api.portal.local (192.168.99.100): 56 data bytes
-64 bytes from 192.168.99.100: icmp_seq=0 ttl=64 time=0.098 ms
+PING api.portal.local (127.0.0.1): 56 data bytes
+64 bytes from 127.0.0.1: icmp_seq=0 ttl=64 time=0.098 ms
 ...
 </pre>
             <p>&nbsp;</p>
@@ -262,7 +266,11 @@ PING api.portal.local (192.168.99.100): 56 data bytes
               Read more in the <a href="https://github.com/Haufe-Lexware/wicked.haufe.io" target="_blank">documentation</a>, e.g.
               on how to <a href="https://github.com/Haufe-Lexware/wicked.haufe.io/blob/master/doc/using-the-sample-portal.md">use
               the sample portal</a>.
+              
             </p>
+            <p>To stop the local API Portal, issue the following commands:</p>
+            <pre>$ docker-compose stop
+$ docker-compose rm -fv</pre>
           </div>
         </div>
       </div>
