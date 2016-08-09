@@ -23,6 +23,8 @@ The following repositories contain the actual source code (this repo contains mo
 * [wicked.portal-mailer](https://github.com/Haufe-Lexware/wicked.portal-mailer): The API Portal's Mailer service
 * [wicked.portal-chatbot](https://github.com/Haufe-Lexware/wicked.portal-chatbot): The API Portal' Chatbot service
 * [wicked.portal-kickstarter](https://github.com/Haufe-Lexware/wicked.portal-kickstarter): The API Portal's Configuration Editor and Kickstarter
+* [wicked.portal-tools](https://github.com/Haufe-Lexware/wicked.portal-tools): Tooling and sample integration code
+* [wicked.portal-test](https://github.com/Haufe-Lexware/wicked.portal-test): The Integration Test Suite
 * [wicked.kong](https://github.com/Haufe-Lexware/wicked.kong): The Kong Docker image used by the API Portal
 * [wicked.mashape.kong](https://github.com/Haufe-Lexware/wicked.mashape.kong): The official Kong Docker image, fork from Mashape
 
