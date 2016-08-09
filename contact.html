@@ -24,6 +24,35 @@
     <!-- Custom styles for this template-->
     <link href="css/carousel.css" rel="stylesheet">
     <link href="css/style.css" rel="stylesheet">
+    <script type="text/javascript">
+      function validateForm() {
+      
+        var yourName = $('#yourname').val();
+        if (yourName)
+          yourName = yourName.trim();
+        var yourEmail = $('#youremail').val();
+        if (yourEmail)
+          yourEmail = yourEmail.trim();
+      
+        if (!yourName) {
+          alert("Please supply your name. Thanks!");
+          return false;
+        }
+      
+        if (!yourEmail) {
+          alert("Please supply your email address. Thanks!");
+          return false;
+        }
+      
+        if (!/.+@.+/.test(yourEmail)) {
+          alert("Please supply a valid email address. Thanks!");
+          return false;
+        }
+      
+        return true;
+      }
+      
+    </script>
   </head>
   <!--
   NAVBAR
@@ -44,10 +73,10 @@
                 <li><a href="gettingstarted.html">Getting Started</a></li>
                 <li><a href="deployment.html">Deployment</a></li>
                 <li><a href="authentication.html">Authentication</a></li>
-                <li><a href="contact.html">Contact</a></li>
+                <li class="active"><a href="contact.html">Contact</a></li>
               </ul>
               <ul class="nav navbar-nav navbar-right">
-                <li class="active"><a href="impressum.html">Impressum</a></li>
+                <li><a href="impressum.html">Impressum</a></li>
                 <!--
                 <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Dropdown <span class="caret"></span></a>
@@ -68,43 +97,69 @@
         </nav>
       </div>
     </div>
-    <div style="background: url(&quot;images/header-4-500.jpg&quot;); background-size:cover;" class="jumbotron">
+    <div style="background: url(&quot;images/header-5-500.jpg&quot;); background-size:cover;" class="jumbotron">
       <div style="padding-top: 70px" class="container feature-container">
-        <h1>Impressum</h1>
+        <h1>Contact Us!</h1>
+        <p>Want to get in touch with us? Send us an email or file an issue on github.</p>
       </div>
     </div>
-    <div class="container">
-      <p>
-        Martin Danielsson (verantwortlich i.S.d. § 55 Abs. 2 RStV)
-        
-      </p>
-      <h4>Anschrift:</h4>Haufe-Lexware GmbH & Co. KG<br>Ein Unternehmen der Haufe Gruppe<br>Munzinger Straße 9 <br>79111 Freiburg
-      <p>&nbsp;</p>
-      <p>Telefon: 0761 898-0 Telefax: 0761 898-3990</p>
-      <p>Kommanditgesellschaft, Sitz Freiburg Registergericht Freiburg, HRA 4408</p>
-      <p>Komplementäre: Haufe-Lexware Verwaltungs GmbH, Sitz Freiburg, Registergericht Freiburg, HRB 5557; Martin Laqua</p>
-      <p>Geschäftsführung: Isabel Blank, Markus Dränert, Jörg Frey, Birte Hackenjos, Randolf Jessl, Markus Reithwiesner, Joachim Rotzinger, Dr. Carsten Thies</p>
-      <p>Beiratsvorsitzende: Andrea Haufe</p>
-      <p>Steuernummer: 06392/11008</p>
-      <p>Umsatzsteuer-Identifikationsnummer: DE 812398835</p>
-      <p>&nbsp;</p>
-      <h4>
-        Public Relations:
-        
-      </h4>Haufe-Lexware GmbH & Co. KG<br>Public Relations<br>Munzinger Straße 9<br>79111 Freiburg
-      <p>&nbsp;</p>
-      <p>Telefon: 0761 898 3940 Telefax: 0761 898 3900 E-Mail: presse(at)haufe-lexware.com</p>
-      <p>&nbsp;</p>
-      <h4>
-        Bitte wenden Sie sich bei Fragen an:
-        
-      </h4>Haufe Service Center GmbH<br>Munzinger Straße 9<br>79111 Freiburg
-      <p>
-        Telefon: 0800 50 50 445 (kostenlos) Telefax: 0800 50 50 446 E-Mail: service(@)haufe-lexware.com
-        
-      </p>
-      <p>&nbsp;</p>
-      <p>Alle Rechte, auch die des auszugsweisen Nachdrucks, der fotomechanischen Wiedergabe (einschließlich Mikrokopie) sowie der Auswertung durch Datenbanken, auch der Einspeisung, Verarbeitung in elektronischen Systemen vorbehalten, gleiches gilt auch für Multimedia-Daten (Ton, Bilder, Programme etc.). Alle Angaben / Daten nach bestem Wissen, jedoch ohne Gewähr für Vollständigkeit und Richtigkeit. Die Verwendung Ihrer Adressdaten und die Verarbeitung bei neutralen Dienstleistern erfolgt unter strikter Beachtung des Datenschutzgesetzes durch die Haufe-Lexware GmbH & Co. KG und die angeschlossenen und befreundeten Unternehmen ausschließlich zu diesem Zweck.</p>
+    <div class="white pad20">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-8">
+            <h2>Github Repositories</h2>
+          </div>
+          <div class="col-md-4">&nbsp;</div>
+        </div>
+        <div class="row">
+          <div class="col-md-8">
+            <p>
+              These are two most interesting Github repositories containing all the documentation for
+              the API Portal:
+              
+            </p>
+            <ul>
+              <li><a href="https://github.com/Haufe-Lexware/wicked.haufe.io" target="_blank">Main Repository wicked.haufe.io</a></li>
+              <li><a href="https://github.com/Haufe-Lexware/wicked.deploy.sample" target="_blank">Sample Configuration Repository</a></li>
+            </ul>
+          </div>
+          <div class="col-md-4"><a href="https://github.com/Haufe-Lexware/wicked.deploy.sample" target="_blank"><img src="https://assets-cdn.github.com/images/modules/logos_page/Octocat.png" style="width:250px;" class="center-block"></a></div>
+        </div>
+      </div>
+    </div>
+    <div class="grey pad20">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-3">&nbsp;</div>
+          <div class="col-md-6">
+            <h2>Write us an Email!</h2>
+          </div>
+          <div class="col-md-3">&nbsp;</div>
+        </div>
+        <div class="row">
+          <div class="col-md-3">&nbsp;</div>
+          <div class="col-md-6">
+            <form role="form" method="post" action="https://formspree.io/martin.danielsson@haufe-lexware.com" onsubmit="return validateForm();">
+              <input type="hidden" name="_subject" value="wicked.haufe.io - Inquiry">
+              <input type="text" name="_gotcha" style="display:none">
+              <div class="form-group">
+                <label>Your Name:</label>
+                <input type="text" id="yourname" name="name" class="form-control">
+              </div>
+              <div class="form-group">
+                <label>Your Email Address:</label>
+                <input type="email" id="youremail" name="_replyto" class="form-control">
+              </div>
+              <div class="form-group">
+                <label>Your Message to us:</label>
+                <textarea name="message" style="height:250px;" class="form-control">Hello Haufe-Lexware,...</textarea>
+              </div>
+              <button type="submit" class="btn btn-success">Send Email</button>
+            </form>
+          </div>
+          <div class="col-md-3">&nbsp;</div>
+        </div>
+      </div>
     </div>
     <div class="container">
       <hr>

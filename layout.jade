@@ -23,6 +23,8 @@ html(lang='en')
     // Custom styles for this template
     link(href='css/carousel.css' rel='stylesheet')
     link(href='css/style.css' rel='stylesheet')
+
+    block scripts
   //
     NAVBAR
     ==================================================
@@ -72,8 +74,12 @@ html(lang='en')
                 else
                   li
                     a(href='authentication.html') Authentication
-                li
-                  a(href='http://dev.haufe.com' target='_blank') Contact
+                if (thisPage == 'contact')
+                  li.active
+                    a(href='contact.html') Contact
+                else
+                  li
+                    a(href='contact.html') Contact
               ul.nav.navbar-nav.navbar-right
                 if (thisPage == 'impressum')
                   li.active

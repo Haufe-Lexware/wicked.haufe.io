@@ -21,8 +21,10 @@ module.exports = function (grunt) {
                     'gettingstarted.html': 'gettingstarted.jade',
                     'deployment.html': 'deployment.jade',
                     'authentication.html': 'authentication.jade',
-                    'impressum.html': 'impressum.jade'
-
+                    'impressum.html': 'impressum.jade',
+                    'contact.html': 'contact.jade',
+                    'thanks.html': 'thanks.jade',
+                    
                 }
             }
         }
