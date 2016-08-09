@@ -69,9 +69,3 @@ Now click "Try it out", and the request will go through to the API, via the API 
 Now change the last character in your `X-ApiKey` header and retry the request. What will happen is that the API Gateway (remember, Kong), rejects the request with a `403` response (Unauthorized), due to the fact that the API key is wrong.
 
 Take back the change and re-enter your actual API key. Now press "Try it out" again, once or twice quite fast after each other. Depending on the time you took between the last request and the following request, Kong will reject your request with a `429` response code, as your quota of API calls is full (remember: We selected the "Stupid Plan", with a rate limit of 1 call per minute).
-
-# TODOs
-
-- [ ] Create a step-by-step guide to subscribing to an API
-- [ ] Set up continuous deployment of wicked for the demo
-- [ ] Describe restrictions and implications of the demo portal
