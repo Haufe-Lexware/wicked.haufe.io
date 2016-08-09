@@ -37,3 +37,8 @@ The following repositories contain the actual source code (this repo contains mo
 ### API screen
 
 ![](public/apis.png)
+
+## More documentation
+
+* [Version History](VERSION.md)
+* [Todo List](TODO.md) (will go into the Issues backlog)
