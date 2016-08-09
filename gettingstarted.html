@@ -223,8 +223,12 @@ PING api.portal.local (127.0.0.1): 56 data bytes
         <div class="row">
           <div class="col-md-8">
             <h2>Step 4: Deploy</h2>
-            <p>We are now all set to deploy the API Portal.</p>
-            <pre>$ docker-compose up -d
+            <p>
+              We are now almost set to deploy the API Portal. We just have to define some environment variables and
+              call <code>docker-compose</code>.
+            </p>
+            <pre>$ source ./env.sh
+$ docker-compose up -d
 ...
 </pre>
             <p>

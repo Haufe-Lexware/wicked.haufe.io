@@ -159,8 +159,10 @@ block content
         .col-md-8
           h2 Step 4: Deploy
           p.
-            We are now all set to deploy the API Portal.
+            We are now almost set to deploy the API Portal. We just have to define some environment variables and
+            call <code>docker-compose</code>.
           pre.
+            $ source ./env.sh
             $ docker-compose up -d
             ...
 
