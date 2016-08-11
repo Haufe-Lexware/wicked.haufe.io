@@ -52,22 +52,22 @@ $ docker pull haufelexware/wicked.portal-kickstarter
 
 ### Step 2: Create an empty repository directory
 
-On your local machine, create an empty directory named `static` at the location you want to store the repository configuration locally.
+On your local machine, create an empty directory `<repo>` at the location you want to store the repository configuration locally.
 
-**Note**: We will mount this directory into the `docker` image for kickstarter, so this has to be technically possible. Depending on the `docker` type you are using, you will want to stick to a subdirectory of your user folder (`C:\Documents\<your user>` on Windows, `/Users/<your user>` on Mac OS X). This path will be referred to as `/path/to/static` in the following sections.
+**Note**: We will mount this directory into the `docker` image for kickstarter, so this has to be technically possible. Depending on the `docker` type you are using, you will want to stick to a subdirectory of your user folder (`C:\Documents\<your user>` on Windows, `/Users/<your user>` on Mac OS X). This path will be referred to as `/path/to/repo` in the following sections.
 
 ### Step 3: Running the kickstarter
 
 We are now ready to start the kickstarter:
 
 ```bash
-$ docker run -it --rm -v /path/to/static:/var/portal-api/static -p 3333:3333 haufelexware/wicked.portal-kickstarter --new 
+$ docker run -it --rm -v /path/to/repo:/var/portal-api -p 3333:3333 haufelexware/wicked.portal-kickstarter --new 
 ```
 
 The above docker command does the following things:
 
 * Starts the kickstarter image interactively (`-it`) and will remove it after it has finished (`--rm`)
-* Mounts `/path/to/static` (your new repository configuration directory) to `/var/portal-api/static`, which is the directory where the kickstarter expects the configuration to be by default
+* Mounts `/path/to/repo` (your new repository configuration directory) to `/var/portal-api`, which is the directory where the kickstarter expects the configuration to be by default
 * Opens the port `3333` from the container to the docker hosts port `3333`
 * Tells kickstarter to create a new configuration (`--new`) 
 
@@ -75,9 +75,9 @@ Depending on your docker setup, you may now browse to [http://localhost:3333](ht
 
 ### Step 4: Inspecting the repository
 
-Inside the `/path/to/static` directory, kickstarter has now put quite a large amount of files which can be used for deploying an API Portal to your premises. 
+Inside the `/path/to/repo` directory, kickstarter has now put quite a large amount of files which can be used for deploying an API Portal to your premises. 
 
-The mostpart of these files can be directly committed to a git repository, but there is a special file which was created which needs special attention: `deploy.envkey`. This file contains a random string which is used to encrypt secrets inside the configuration files. This file **MUST NEVER BE CHECKED IN TO VERSION CONTROL**. This is the key which you need on your deployment system ([CI/CD system](continuous-deployment.md)) in order to "unlock" the encrypted secrets inside your configuration.
+The mostpart of these files reside inside the `static` directory and can be directly committed to a git repository, but there is a special file which was created which needs special attention: `deploy.envkey`. This file contains a random string which is used to encrypt secrets inside the configuration files. This file **MUST NEVER BE CHECKED IN TO VERSION CONTROL**. This is the key which you need on your deployment system ([CI/CD system](continuous-deployment.md)) in order to "unlock" the encrypted secrets inside your configuration.
 
 By default, a `.gitignore` file is created which explicitly takes out the `deploy.envkey` from source control. Nonetheless, when you edit a configuration using the kickstarter, you will need this file to be in place. If it is now, a new one will be created, but previously created secret environment variables can not be successfullly decrypted. For a more thorough discussion on secret environment variables, see [Using Deployment Environments](deployment-environments.md) and [Handling Credentials](handling-credentials.md).
 
@@ -93,7 +93,7 @@ Note down the git repository and credentials needed to clone the repository; the
 
 ### Conclusion
 
-We have now created a new initial configuration for an API Portal; all the files are stored locally in `/path/to/static`, and should now be stored inside a git repository.
+We have now created a new initial configuration for an API Portal; all the files are stored locally in `/path/to/repo`, and should now be stored inside a git repository.
 
 ### Next steps
 
@@ -115,7 +115,7 @@ The encryption is normally called `deploy.envkey` and is automatically created w
 
 In case you have stored the encryption key somewhere else, you will need to create a new file called `deploy.envkey` containing the encryption key; please take care that the file does not contain any kinds of line breaks (#10 or #13).
 
-Then clone the repository, the path to the `static` will be referred to as `/path/to/static`. The `deploy.envkey` file has to reside inside the `static` directory (besides the `globals.json` file).
+Then clone the repository, the path to the configuration repository will be referred to as `/path/to/repo`. The `deploy.envkey` file has to reside inside the `static` directory (besides the `globals.json` file).
 
 ### Step 1: Pull the kickstarter docker image
 
@@ -130,13 +130,13 @@ $ docker pull haufelexware/wicked.portal-kickstarter
 
 ### Step 2: Start the kickstarter
 
-With the `/path/to/static` at your cloned repository, issue the following command:
+With the `/path/to/repo` at your cloned repository, issue the following command:
 
 ```bash
-$ docker run -it --rm -v /path/to/static:/var/portal-api/static -p 3333:3333 haufelexware/wicked.portal-kickstarter
+$ docker run -it --rm -v /path/to/repo:/var/portal-api -p 3333:3333 haufelexware/wicked.portal-kickstarter
 ```
 
-It is essentially the same command line as when creating a new configuration, just omitting `--new`. The kickstarter in docker will assume that the static configuration resides in `/var/portal-api/static`, which will be the case if you mount your `/path/to/static` to that path inside the container with the above `-v` command line switch.
+It is essentially the same command line as when creating a new configuration, just omitting `--new`. The kickstarter in docker will assume that the static configuration resides in `/var/portal-api/static`, which will be the case if you mount your `/path/to/repo` to that path inside the container with the above `-v` command line switch.
 
 ### Step 3: Edit the configuration
 
