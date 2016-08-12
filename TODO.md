@@ -125,7 +125,7 @@
 
 - [ ] Artifactory as npmjs mirror? How does that work? 
 
-- [ ] Local setup with Docker, all in docker (portal development)
+- [x] Local setup with Docker, all in docker (portal development)
 - [ ] Local setup with Kong in Docker, node native; different compose file needed?
 - [ ] Let's Encrypt?
 - [ ] Howtos:
@@ -155,18 +155,18 @@
 - [x] Does all this actually work on Windows?
 - [x] With start.sh, after a partial deploy (of static config), Kong seems to hiccup (only returns 503) (irrelevant)
 
-- [ ] Deployment Tools docker image? ==> No, wicked-tools repository.
+- [x] Deployment Tools docker image? ==> No, wicked.portal-tools repository.
 
 ### Integration Testing
 
-- [ ] Integration system; simple integration tests
-    - [ ] For pure portal development (tool build pipeline)
-    - [ ] Login
-    - [ ] Create application
-    - [ ] Create subscription for a sample API 
-    - [ ] Retrieve API key
+- [x] Integration system; simple integration tests
+    - [x] For pure portal development (tool build pipeline)
+    - [x] Login
+    - [x] Create application
+    - [x] Create subscription for a sample API 
+    - [x] Retrieve API key
     - [ ] Make an API call using the new key
-    - [ ] Simpler variant: predefined user, key for a specific API, check that Gateway responds correctly after being deployed
+    - [x] Simpler variant: predefined user, key for a specific API, check that Gateway responds correctly after being deployed
 - [ ] Integration tests locally
     - [x] For portal; document portal API?
     - [x] See above for simple test cases/the most basic ones
@@ -189,8 +189,8 @@
    - [x] Implementation in kong-adapter (%%Forwarded)
    - [x] Support in kickstarter
 
-- [ ] Create SSL certificates for testing purposes in the kickstarter?
-   - [ ] How to get certificates into the deployment process?
+- [x] Create SSL certificates for testing purposes in the kickstarter?
+   - [x] How to get certificates into the deployment process?
 
 ## Kickstarter
 
@@ -206,7 +206,7 @@
 - [x] Check marks when config is missing?
 - [x] Admin password in globals.json
 - [ ] desc.md for /apis cannot be edited
-- [ ] Some explanatory text on the SSL page
+- [x] Some explanatory text on the SSL page
 - [x] Support for local/DNS-less configurations?
 - [ ] fluentd configuration?
 - [x] Static Config versioning; 
@@ -217,7 +217,7 @@
 - [x] Template Configuration
 - [x] Add/remove Header configuration for Plugins
 - [ ] Add possibility to re-key the deployment secret
-- [ ] Add button to add default 'localhost' configuration
+- [ ] Add button to add default 'localhost' configuration (no, but doc on it)
 - [ ] Content Tag support
 
 ## Social Components
