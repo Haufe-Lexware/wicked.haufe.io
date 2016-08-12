@@ -10,6 +10,18 @@ Initial Release of the API Portal.
 
 **Docker Tag**: tba
 
+## 0.9.1 (beta)
+
+**Date**: August 12th 2016 (2016-08-12)
+
+**Docker Tag** `0.9.1`
+
+* Internal refactoring of git repositories (one repository per service now)
+* Work on documentation
+* Extended Kickstarter to be able to write `docker-compose.yml` and `Dockerfile` for the static config
+* Experimental SSL helper page in Kickstarter
+* No new features in Portal
+
 ## 0.9.0 (beta)
 
 **Date**: August 3rd 2016 (2016-08-03)
