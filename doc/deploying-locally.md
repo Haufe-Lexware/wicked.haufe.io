@@ -78,7 +78,7 @@ Issue the following commands into a bash shell:
 
 ```
 $ cd /path/to/repo # Change this to point to your configuration repo
-$ source ./certs/localhost.sh # Set some environment vars we need
+$ pushd certs && source ./localhost.sh && popd # Set some environment vars
 $ docker-compose up -d
 ```
 
