@@ -1,8 +1,8 @@
-# WORK IN PROGRESS
+# Wicked (Good) API Management
 
-**This is currently work in progress. We will announce here when we think we have reached a state which makes sense looking closer at.**
+**This is currently work in progress. We have not yet released version 1.0, but we think it's already well worth having a look at. Feel free to file any issues our requests here on GitHub.**
 
-Some information can already be seen at the wicked microsite over at [wicked.haufe.io](http://wicked.haufe.io).
+General information can be seen at the wicked microsite over at [wicked.haufe.io](http://wicked.haufe.io).
 
 Things we are currently finishing currently:
 
