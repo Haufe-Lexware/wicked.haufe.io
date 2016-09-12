@@ -7,7 +7,7 @@ General information can be seen at the wicked microsite over at [wicked.haufe.io
 Things we are currently finishing currently:
 
 * CI and Build processes, setting up official repositories
-* [Documentation (work in progress)](doc/index.md), [Read the docs](http://wickedhaufeio.readthedocs.io/en/latest/).
+* [Documentation (work in progress)](/Haufe-Lexware/wicked.haufe.io/blob/master/doc/index.md), [Read the docs](http://wickedhaufeio.readthedocs.io/en/latest/).
 
 Feel free to reach out if you have any questions.
 
