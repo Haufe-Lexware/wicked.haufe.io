@@ -10,6 +10,16 @@ Initial Release of the API Portal.
 
 **Docker Tag**: tba
 
+## 0.9.2 (beta)
+
+**Date**: September 14th (206-09-14)
+
+**Docker Tag**: `0.9.2`
+
+* Developer Experience: Make setup of development environment a lot easier (Haufe-Lexware/wicked.haufe.io#5)
+* Enhancement: Allow (recursive) environment variables in `PORTAL_API_DYNAMIC_CONFIG` and `PORTAL_API_STATIC_CONFIG`.
+* Work on documentation
+
 ## 0.9.1 (beta)
 
 **Date**: August 12th 2016 (2016-08-12)

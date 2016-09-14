@@ -1,4 +1,4 @@
-# Contributing to wicked
+# Contributing to Wicked
 
 Feel free to contribute. Please follow the guidelines on this page, then file a pull request. If the PR does not run through the checks and tests, it will not be considered for merging.
 
@@ -28,10 +28,8 @@ Unit tests for kickstarter (only some so far).
 
 TODO: Write unit tests for tricky bits of `portal-kong-adapter` (the matching parts).
 
+See Haufe-Lexware/wicked.haufe.io#6, running the unit tests locally is currently far too difficult.
+
 ## JSHint
 
 All files are using `'using strict';` and are regularly (at container build) run past JSHint. Any errors in JSHint will cause the build to fail.
-
-# TODOs
-
-- [ ] Create a first draft of the page
