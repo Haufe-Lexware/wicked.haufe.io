@@ -143,3 +143,9 @@ $ docker-compose down
 ```
 
 In case you started `docker-compose` without the `-d`, you will have to run the `docker-compose down` command from a different terminal window, or you can stop the processes by pressing `Ctrl-C` (this will not take the virtual network down though).
+
+#### Kong configuration
+
+Note that you don't need to configure Kong at all currently. This happens as soon as (a) the Portal API, and (b) the Kong Adapter have successfully bootstrapped. The Kong Adapter will investigate how Kong is configured and will adapt accordingly. 
+
+**BEWARE:** If you wire an existing Kong installation to Wicked, Wicked **will overwrite the entire Kong configuration**. Wicked assumes it can do as it pleases with Kong!
