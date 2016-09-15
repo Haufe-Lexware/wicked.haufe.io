@@ -1,17 +1,20 @@
 # Wicked (Good) API Management
 
-**This is currently work in progress. We have not yet released version 1.0, but we think it's already well worth having a look at. Feel free to file any issues or requests here on GitHub.**
-
 General information can be seen at the wicked microsite over at [wicked.haufe.io](http://wicked.haufe.io).
 
 Things we are currently finishing currently:
 
 * CI and Build processes, setting up official repositories
-* [Documentation (work in progress)](/Haufe-Lexware/wicked.haufe.io/blob/master/doc/index.md), [Read the docs](http://wickedhaufeio.readthedocs.io/en/latest/).
+* [Documentation](/Haufe-Lexware/wicked.haufe.io/blob/master/doc/index.md)
 
 Feel free to reach out if you have any questions.
 
 /Martin
+
+## Getting Started
+
+* Read the [Getting Started Guide](http://wicked.haufe.io/gettingstarted.html) to try out how easy it is to deploy an API Portal and Gateway
+* To start incorporating your own APIs, head over to the [documentation](/Haufe-Lexware/wicked.haufe.io/blob/master/doc/index.md), and read the how-to on [creating a portal configuration](/Haufe-Lexware/wicked.haufe.io/blob/master/doc/creating-a-portal-configuration.md)
 
 ## Related repositories
 
@@ -44,3 +47,5 @@ The following repositories contain the actual source code (this repo contains mo
 
 * [Version History](VERSION.md)
 * [Todo List](TODO.md) (will go into the Issues backlog)
+* [Blog post: Why we implemented our own API Portal](http://dev.haufe.com/introducing-wicked-haufe-io/)
+* [Blog post: State of our API strategy (by our CTO Holger)](http://dev.haufe.com/state-of-our-api-strategy/)
