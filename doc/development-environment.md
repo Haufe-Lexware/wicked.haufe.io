@@ -122,6 +122,7 @@ To run Kong locally (in order to test the Kong adapter for example), clone the `
 $ git clone https://github.com/Haufe-Lexware/wicked.portal-tools
 ...
 $ cd wicked.portal-tools
+$ cd local-kong
 $ docker-compose up -d
 ...
 $
@@ -140,3 +141,5 @@ To stop Kong, switch into the `local-kong` directory of the `wicked.portal-tools
 ```
 $ docker-compose down
 ```
+
+In case you started `docker-compose` without the `-d`, you will have to run the `docker-compose down` command from a different terminal window, or you can stop the processes by pressing `Ctrl-C` (this will not take the virtual network down though).
