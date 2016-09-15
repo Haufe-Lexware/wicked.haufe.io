@@ -5,7 +5,7 @@ General information can be seen at the wicked microsite over at [wicked.haufe.io
 Things we are currently finishing currently:
 
 * CI and Build processes, setting up official repositories
-* [Documentation](/Haufe-Lexware/wicked.haufe.io/blob/master/doc/index.md)
+* [Documentation](doc/index.md)
 
 Feel free to reach out if you have any questions.
 
@@ -14,7 +14,7 @@ Feel free to reach out if you have any questions.
 ## Getting Started
 
 * Read the [Getting Started Guide](http://wicked.haufe.io/gettingstarted.html) to try out how easy it is to deploy an API Portal and Gateway
-* To start incorporating your own APIs, head over to the [documentation](/Haufe-Lexware/wicked.haufe.io/blob/master/doc/index.md), and read the how-to on [creating a portal configuration](/Haufe-Lexware/wicked.haufe.io/blob/master/doc/creating-a-portal-configuration.md)
+* To start incorporating your own APIs, head over to the [documentation](doc/index.md), and read the how-to on [creating a portal configuration](doc/creating-a-portal-configuration.md)
 
 ## Related repositories
 
