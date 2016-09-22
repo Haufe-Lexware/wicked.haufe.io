@@ -56,6 +56,8 @@ On your local machine, create an empty directory `<repo>` at the location you wa
 
 **Note**: We will mount this directory into the `docker` image for kickstarter, so this has to be technically possible. Depending on the `docker` type you are using, you will want to stick to a subdirectory of your user folder (`C:\Documents\<your user>` on Windows, `/Users/<your user>` on Mac OS X). This path will be referred to as `/path/to/repo` in the following sections.
 
+**Note for Windows**: As of docker 1.12, you will need to grant access to Docker to the drive you want to use for your configuration repository. When docker is running, right click the task bar icon, select "Settings...", then "Shared Drives" and tick the corresponding check box (see also issue #4).
+
 ### Step 3: Running the kickstarter
 
 We are now ready to start the kickstarter:
