@@ -1,6 +1,6 @@
 # Wicked (Good) API Management
 
-General information can be seen at the wicked microsite over at [wicked.haufe.io](http://wicked.haufe.io).
+General information can be seen at the wicked microsite over at [wicked.haufe.io](http://wicked.haufe.io). If you want to see how the API Portal looks like, check out [wicked-demo.haufe.io](https://wicked-demo.haufe.io).
 
 Things we are currently finishing currently:
 
