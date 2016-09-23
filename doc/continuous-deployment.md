@@ -42,7 +42,7 @@ This section assumes that you have successfully deployed your API Portal to a do
     * The API Portal itself
     * The Kong API Gateway
 
-As described in the [deployment guideline](deploying-to-production.md), you will have a `docker-compose.deploy.yml` file you use to
+As described in the [deployment guideline](deploying-to-production.md), you will have a `docker-compose.yml` file you use to
  
 * Build the static configuration [container](docker-images.md),
 * Deploy the API Portal and Gateway to a Docker host
@@ -53,10 +53,10 @@ This file is the base for each deployment or update/upgrade of the API Portal.
 
 In order to update the static configuration, you will have to perform the following steps using `docker-compose` against your Docker host (which runs your API Portal):
 
-1. `docker-compose -f docker-compose.deploy.yml build`: This will build the [static configuration image](docker-images.md), this is the same step as described in the [deployment guide](deploying-to-production.md). You will need to set the `REPO_HOST`, `REPO_CREDS` and `REPO_PATH` environment variables correctly for this to work. Please note that the configuration is only build into the docker host, it is NOT pushed to a registry (and should not be either!)
-2. `docker-compose -f docker-compose.deploy.yml rm -fv portal-api-data-static`: This removes the previous static configuration container (which is mounted into the `portal-api` container)
-3. `docker-compose -f docker-compose.deploy.yml up -d --remove-orphans portal-api-data-static`: This creates and starts the configuration container so that it's available for the `portal-api` during the next step. Note that this container immediately stops (the entrypoint is `/bin/true`), as it's a data only container.
-4. `docker-compose -f docker-compose.deploy.yml up -d --remove-orphans --force-recreate`: This restarts the API Portal using the new configuration container; as soon as this command has finished (plus a couple of seconds), your API Portal should be back up again.
+1. `docker-compose build`: This will build the [static configuration image](docker-images.md), this is the same step as described in the [deployment guide](deploying-to-production.md). You will need to set the `REPO_HOST`, `REPO_CREDS` and `REPO_PATH` environment variables correctly for this to work. Please note that the configuration is only build into the docker host, it is NOT pushed to a registry (and should not be either!)
+2. `docker-compose rm -fv portal-api-data-static`: This removes the previous static configuration container (which is mounted into the `portal-api` container)
+3. `docker-compose up -d --remove-orphans portal-api-data-static`: This creates and starts the configuration container so that it's available for the `portal-api` during the next step. Note that this container immediately stops (the entrypoint is `/bin/true`), as it's a data only container.
+4. `docker-compose up -d --remove-orphans --force-recreate`: This restarts the API Portal using the new configuration container; as soon as this command has finished (plus a couple of seconds), your API Portal should be back up again.
 
 All `docker-compose` calls assume that you have set all the necessary environment variables as described in [deploying to production](deploying-to-production.md).
 
@@ -67,7 +67,7 @@ This method will cause a downtime of 15-120 seconds for both the API Portal and 
 An update of the API Portal components is actually very straightforward, as you only have to make sure the latest [docker images](docker-images.md) are pulled prior to redeploying the API Portal as in the above section. This can easily be done using
 
 ```
-docker-compose -f docker-compose.deploy.yml pull
+docker-compose pull
 ```
 
 Continue as in "Updating the static configuration" above. Like in the above case, this is an update which entails a certain amount of downtime, and as such should perhaps not be used for production deployments.
