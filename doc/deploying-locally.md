@@ -29,7 +29,7 @@ Hit "Save" to save the configuration. Now you will be able to see that there are
 
 Within the kickstarter, go to the [Environments Page](http://localhost:3333/) and create a new Environment called `localhost`:
 
-![Create localhost](images/deploy-env-localhost.png)
+![Create localhost](images/deploy-env-localdev.png)
 
 Open up that environment and override the two hosts environment variables we defined above:
 
