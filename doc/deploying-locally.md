@@ -25,11 +25,11 @@ Enable using environment variables for the host names you want to deploy to. To 
 
 Hit "Save" to save the configuration. Now you will be able to see that there are two new environment variables.
 
-## Create a `localhost` environment
+## Create a `localdev` environment
 
-Within the kickstarter, go to the [Environments Page](http://localhost:3333/) and create a new Environment called `localhost`:
+Within the kickstarter, go to the [Environments Page](http://localhost:3333/) and create a new Environment called `localdev` (you may also choose any other name, just NOT `localhost`, see [setting up a development environment](development-environment.md); `localhost` is a special name which triggers some special behaviour):
 
-![Create localhost](images/deploy-env-localhost.png)
+![Create localdev](images/deploy-env-localhost.png)
 
 Open up that environment and override the two hosts environment variables we defined above:
 
@@ -78,7 +78,7 @@ Issue the following commands into a bash shell:
 
 ```
 $ cd /path/to/repo # Change this to point to your configuration repo
-$ pushd certs && source ./localhost.sh && popd # Set some environment vars
+$ pushd certs && source ./localdev.sh && popd # Set some environment vars
 $ docker-compose up -d
 ```
 
