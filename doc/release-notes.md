@@ -10,9 +10,19 @@ Initial Release of the API Portal.
 
 **Docker Tag**: tba
 
+
+## 0.9.3 (beta)
+
+**Date**: October 14th (2016-10-14)
+
+**Docker Tag**: `0.9.2`
+
+* Integration tests in docker can now be run locally in a much simpler way
+* Fixed issue #18 (sending mails fails if user has been deleted in the meantime)
+
 ## 0.9.2 (beta)
 
-**Date**: September 14th (206-09-14)
+**Date**: September 14th (2016-09-14)
 
 **Docker Tag**: `0.9.2`
 
