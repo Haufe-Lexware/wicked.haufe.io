@@ -2,8 +2,8 @@
 
 ### Latest Release
 
-Latest release is currently `0.9.2` (September 14th 2016).
+Latest release is currently `0.9.3` (October 14th 2016).
 
 ### Next Release
 
-Next release will most probably be `0.9.3` (no date announced yet).
+Next release will most probably be `0.9.4` (no date announced yet).
