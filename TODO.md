@@ -101,11 +101,11 @@
 ## Kong-Adapter issues
 
 - [x] Optimize Kong Adapter, just a little at least, so that it doesn't react e.g. on user changes
-    - [ ] Optimize listeners/we hooks, allow filtering of events (for entity probably?) - Prio 3 - needed?
+    - [x] Optimize listeners/we hooks, allow filtering of events (for entity probably?) - Prio 3 - needed?
 - [ ] Enable Kong Adapter to talk to a different Kong instance (in case you already have one)
     - [ ] Enable passing a header to the Kong backend (e.g. Basic Auth credentials)
     - [ ] Pass white lists of consumers and APIs which are not touched 
-- [ ] Kong-Adapter Unit Testing
+- [x] Kong-Adapter Unit Testing
 - [x] /deploy API must be routed to /api/deploy (with rate limiting)
 
 ## Refactorings
@@ -165,12 +165,12 @@
     - [x] Create application
     - [x] Create subscription for a sample API 
     - [x] Retrieve API key
-    - [ ] Make an API call using the new key
+    - [x] Make an API call using the new key
     - [x] Simpler variant: predefined user, key for a specific API, check that Gateway responds correctly after being deployed
 - [ ] Integration tests locally
     - [x] For portal; document portal API?
     - [x] See above for simple test cases/the most basic ones
-    - [ ] Testing of Kong adapter?
+    - [x] Testing of Kong adapter?
     - [ ] Mailer/Chatbot?
     
 ### Logging
@@ -217,7 +217,7 @@
 - [x] Template Configuration
 - [x] Add/remove Header configuration for Plugins
 - [ ] Add possibility to re-key the deployment secret
-- [ ] Add button to add default 'localhost' configuration (no, but doc on it)
+- [x] Add button to add default 'localhost' configuration (no, but doc on it)
 - [ ] Content Tag support
 
 ## Social Components
