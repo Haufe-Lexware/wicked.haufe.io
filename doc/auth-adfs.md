@@ -65,6 +65,12 @@ As a last step, make sure all (if applicable) users are allowed to retrieve this
 
 ![Permit Access](images/adfs-trust-permit-access-to-claim-rule.png)
 
+## Verifying ADFS Callbacks
+
+It is recommended that you verify the profile returned by the identity server using its public certificate. This can also be defined in the ADFS settings using the kickstarter. The public certificate can be given to you from your ADFS administrator.
+
+Without this setting, it would in principle be possible to spoof a login via ADFS.
+
 ## Testing
 
 In order to troubleshoot any issues, you may define the following diagnostic settings for the `portal` container: Make sure the container starts with the following environment variable set:
