@@ -68,6 +68,7 @@ The following repositories contain the actual source code (this repo contains mo
 * [wicked.portal-tools](https://github.com/Haufe-Lexware/wicked.portal-tools): Tooling and sample integration code
 * [wicked.portal-test](https://github.com/Haufe-Lexware/wicked.portal-test): The Integration Test Suite
 * [wicked.kong](https://github.com/Haufe-Lexware/wicked.kong): The Kong Docker image used by the API Portal, based directly on the official Kong docker image, `kong`
+* [wicked.auth-google](https://github.com/Haufe-Lexware/wicked.auth-google): A sample Authorization Server implementation, using Google Login to authorize API usage
 
 ## More documentation
 
