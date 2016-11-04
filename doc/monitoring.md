@@ -23,4 +23,4 @@ Setting up monitoring is fairly straightforward, using the mechanisms of the API
 * Optionally also subscribe to all other APIs which are to be monitored by this application
 * Use the API Keys or Client Credentials to set up monitoring
 
-The [description of the Health API](../portal-api/routes/internal_apis/portal-health/desc.md) also contains more information on this topic.
+The [description of the Health API](https://github.com/Haufe-Lexware/wicked.portal-api/blob/master/routes/internal_apis/portal-health/desc.md) also contains more information on this topic.

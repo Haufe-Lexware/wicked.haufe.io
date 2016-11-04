@@ -10,7 +10,7 @@ On the other hand, having all credentials which you need to deploy and run an AP
 
 ## The Solution
 
-There are various different solutions to this problem, and most of them involve environment variables which can be inserted at runtime, so that only the reference to an environment variable is stored in the actual configuration repository; e.g. `$SECRET_PASSWORD`.
+There are various different solutions to this problem, and most of them involve environment variables which can be inserted at runtime, so that only the reference to an environment variable is stored in the actual configuration repository; e.g. `${SECRET_PASSWORD}`.
 
 This is supported by the API Portal, but as an addition to that, by using encrypted variables, the content of these environment variables can be stored in the git repository together with the rest. What **MUST NOT** be stored in the configuration repository is the key to the secrets.
 
@@ -19,4 +19,3 @@ This is supported by the API Portal, but as an addition to that, by using encryp
 For those cases where you need a credential/a secret in the configuration, the kickstarter usually always provides a check box underneath the setting which allows you to use an environment variable instead of passing in the text "as is". This environment variable can in turn be encrypted using the "Environments" settings page.
 
 For more information, see [Using Deployment Environments](deployment-environments.md).
-  

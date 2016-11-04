@@ -1,6 +1,6 @@
 # Deploying to Production
 
-# WORK IN PROGRESS
+## Deployment using `docker-compose`
 
 In principle, it's similar to [deploying locally](deploying-locally.md), with the following differences:
 
@@ -15,3 +15,11 @@ But otherwise, it's the same:
 * Per environment, create a portal "Environment" with the kickstarter
 * Override host names, and perhaps also backend API host names
 * Make sure `NODE_ENV` is set to the correct thing when starting the production server
+
+## Deployment using `docker swarm`
+
+Help wanted to write this guide.
+
+## Deployment using Rancher.io
+
+Help wanted to write this guide.

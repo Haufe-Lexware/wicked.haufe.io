@@ -10,25 +10,9 @@ Apache 2.0 License.
 
 ## Service and Integration Tests
 
-### Service Tests
+See [wicked.portal-test](https://github.com/Haufe-Lexware/wicked.portal-test) for information on how to run the integration test suite.
 
-Service tests for API Portal.
-
-### Integration Tests
-
-Integration Tests for Portal (using a running API).
-
-### Code Coverage (with `istanbul`)
-
-Is done for `portal` and `portal-api` so far.
-
-## Unit Tests
-
-Unit tests for kickstarter (only some so far).
-
-TODO: Write unit tests for tricky bits of `portal-kong-adapter` (the matching parts).
-
-See Haufe-Lexware/wicked.haufe.io#6, running the unit tests locally is currently far too difficult.
+Any contributions must not break the integration test suites, and new test cases should cover the new code. 
 
 ## JSHint
 

@@ -25,12 +25,12 @@ If you feel something important is missing that should be documented, feel free 
 ## Further topics
 
 * [Deployment architecture](deployment-architecture.md)
+* [Using Authorization Servers with OAuth 2.0](authorization-servers.md)
 * [Defining APIs in the API Portal](defining-an-api.md)
 * [Using Deployment Environments](deployment-environments.md)
 * [Handling Credentials](handling-credentials.md)
 * [Defining User Groups](defining-user-groups.md)
 * [Setting up API Plans](setting-up-plans.md)
-* [Contents of a Configuration Repository](static-configuration.md)
 * [Adding Custom Content to the API Portal](adding-custom-content.md)
 * [Monitoring the API Portal](monitoring.md)
 * [Configuration Versioning Strategies](versioning-strategies.md)

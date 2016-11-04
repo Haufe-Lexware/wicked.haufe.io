@@ -80,4 +80,16 @@ For more information, see the [wicked SDK for node.js](https://www.npmjs.com/pac
 
 ## Example Implementations
 
-(will follow).
+### Implicit Grant Flow
+
+For the implicit grant flow, there is a full fledged sample implementation here:
+
+* [https://github.com/Haufe-Lexware/wicked.auth-google](https://github.com/Haufe-Lexware/wicked.auth-google)
+
+### Resource Owner Password Flow
+
+(Will follow)
+
+### Authorization Code Grant
+
+(Will follow)

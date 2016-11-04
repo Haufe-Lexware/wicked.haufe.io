@@ -126,14 +126,14 @@
 - [ ] Artifactory as npmjs mirror? How does that work? 
 
 - [x] Local setup with Docker, all in docker (portal development)
-- [ ] Local setup with Kong in Docker, node native; different compose file needed?
+- [x] Local setup with Kong in Docker, node native; different compose file needed?
 - [ ] Let's Encrypt?
 - [ ] Howtos:
     - [x] Completely new setup
     - [x] Update kong
     - [x] Update PGSQL
     - [x] Update wicked portal
-    - [ ] Development/contribute
+    - [x] Development/contribute
 - [x] How to run kickstarter? npm Module? Docker? With tooling script? --> Docker
 - [x] travis.ci? github build engine? How to build images? --> AWS go.cd (Markus)
 - [x] Optimization of Dockerfiles

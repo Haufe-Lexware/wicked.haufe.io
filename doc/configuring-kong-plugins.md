@@ -44,6 +44,7 @@ This mechanism ensures that each API key can only be used for one subscription t
 
 The API Portal kickstarter has support for selected Kong Plugins, for which there exists a simple way to configure them. These are the following plugins:
 
+* Correlation ID
 * Logging (only API level)
 * Rate Limiting
 * CORS (only API level)
@@ -53,6 +54,10 @@ To some extent, also the `request-transformer` plugin is supported, which makes 
 The plugin configuration can be found for both Plans and API Kong Configurations. This is supported in the kickstarter:
 
 ![Plugin Configuration](images/plugin-configuration.png)
+
+### Correlation ID
+
+Use this plugin to insert a correlation ID (`Correlation-Id`) header into the proxied request. If such a header is already present, simply pass it on. Otherwise create a new one, based on a UUID.
 
 ### Logging
 
@@ -67,6 +72,8 @@ The rate limiting plugin documentation is partly self documenting in the kicksta
 ### CORS
 
 ![CORS Plugin](images/plugin-cors.png)
+
+TODO: Currently, there is no way to use registered application's hosts as `Origin` in this setting. This is due to a limitation of the Kong Plugin, which is not able to use more than a single origin host currently. This is about to change (see e.g. [PR #1774 in Mashape/Kong](https://github.com/Mashape/kong/pull/1774), and then a varying origin header may be supported here.
 
 ### Other Plugins
 

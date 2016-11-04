@@ -96,7 +96,7 @@ The UI/Web Component is inside the `wicked.portal` repository. It relies 100% on
 Using a fresh terminal, `cd` into the `wicked.portal` directory (issue `npm install` if you haven't already). Type the following command to start the UI:
 
 ```
-$ NODE_ENV=localhost node bin/www
+$ node bin/www
 ```
 
 If everything is successful, you will now be able to access the API Portal at [`http://localhost:3000`](http://localhost:3000).
@@ -110,7 +110,7 @@ Starting other components is done in exactly the same way as starting the Portal
 * Start a new terminal, 
 * `cd` in to the corresponding directory,
 * Run `npm install` (if you haven't done that already)
-* Run `NODE_ENV=localhost node bin/[kong-adapter | mailer | chatbot]`.
+* Run `node bin/[kong-adapter | mailer | chatbot]`.
 
 All of the (webhook) components require the API to run. When running the `kong-adapter`, Kong also needs to run before starting the Kong adapter.
 
@@ -149,3 +149,17 @@ In case you started `docker-compose` without the `-d`, you will have to run the 
 Note that you don't need to configure Kong at all currently. This happens as soon as (a) the Portal API, and (b) the Kong Adapter have successfully bootstrapped. The Kong Adapter will investigate how Kong is configured and will adapt accordingly. 
 
 **BEWARE:** If you wire an existing Kong installation to Wicked, Wicked **will overwrite the entire Kong configuration**. Wicked assumes it can do as it pleases with Kong!
+
+## Debugging messages
+
+The following debugging scopes (`DEBUG=`) can be useful to know:
+
+* `portal:*`: For all portal related debugging messages
+* `portal:auth:*`: For all authentication related messages
+* `portal-api:*`: Portal API debugging
+* `kong-adapter:*`: Kong Adapter debugging
+* `portal-mailer:*`: Mailer debugging
+* `portal-chatbot:*`: Chatbot debugging
+* `wicked-sdk`: Debugging messages from the [wicked SDK](https://www.npmjs.com/package/wicked-sdk), which is the base for kong adapter, mailer and chatbot (and partly the portal)
+
+Make sure you define the `DEBUG` variable everywhere you need the debugging output. 

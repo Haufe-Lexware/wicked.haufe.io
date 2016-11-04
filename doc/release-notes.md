@@ -6,9 +6,16 @@ The Release Notes state changes from release to release, possibly also giving up
 
 ## 1.0.0
 
-Initial Release of the API Portal.
+Official Release of the API Portal.
 
 **Docker Tag**: tba
+
+## 0.10.0 (beta)
+
+**Date**: November 7th 2016 (2016-11-07)
+
+**Docker Tag**: `0.10.0`
+
 
 
 ## 0.9.3 (beta)

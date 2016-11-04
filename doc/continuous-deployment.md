@@ -236,3 +236,12 @@ Due to the fact that the API Portal is deployed totally from scratch (phoenix de
 * **Rate limiting quotas are reset**: Currently used rate limits on specific APIs are reset at a Blue/Green deployment, or better said: Are not present in the new deployment of the database. To remedy this, try to use as short time periods as possible (minutes/hours instead of weeks/months) when specifying rate limiting plugins on APIs or Plans.
 
 This is list is subject to change as the implementation of the API Portal continues. It is not ruled out that the deployment process in the future will be able to also migrate OAuth tokens, and/or other types of deployments are supported, e.g. where Kong/Postgres/Cassandra is treated in a more standalone kind of way (as a microservice in itself), and not as a part of the API Portal. In those cases, both the OAuth issue and the Rate Limiting issue could be remedied, as the Postgres instance is long-running (except in very special cases). Work on this topic would be happily merged into this repository (in the form of code and/or documentation/guidelines).
+
+# Future work
+
+Alternatives in deployment
+
+* Using Rancher
+* And/or using `docker swarm`
+
+If you have any experience with running wicked.haufe.io in any of the above environments (or others, such as Kubernetes), I will gladly accept pull requests.

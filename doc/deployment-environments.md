@@ -60,6 +60,11 @@ How a deployment works is described in more detail on the following pages:
 * [Deploying Locally](deploying-locally.md)
 * [Deploying to Production](deploying-to-production.md)
 
+## Tips and tricks
+
+* In most places where it's possible to use an environment variable instead of the "real" value, it's possible to just replace a part of the string with an environment variable, such as `"This is the ${PORTAL_TITLE}'s authorization server"`, or (more useful) in URLs: `https://${PORTAL_NETWORK_APIHOST}/auth-server`. This way you may re-use URL parts or other things.
+* If you introduce an environment variable manually (anywhere in any JSON file almost), you will just have to re-load the `default` "Environment" page for the Kickstarter to pick up the variable; this is especially useful when e.g. configuring custom plugins or authorization server settings
+
 # Using a `localhost` environment for local testing
 
-To be written. Useful technique to separate settings which are only used for local development to settings used for actual deployments.
+See [development environemt](development-environment.md) for more information on how to set up a local development environment for local testing.
