@@ -1,4 +1,4 @@
-[Release Notes](/Haufe-Lexware/wicked.haufe.io/blob/master/doc/release-notes.md)
+[Release Notes](https://github.com/Haufe-Lexware/wicked.haufe.io/blob/master/doc/release-notes.md)
 
 ### Latest Release
 
