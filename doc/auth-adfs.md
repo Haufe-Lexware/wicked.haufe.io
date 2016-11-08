@@ -16,8 +16,25 @@ It is assumed that you have a running Kickstarter instance; open the [Authentica
 * **Client Secret**: This is not used for this scenario, fill in anything
 * **Callback URL**: The URL under which the portal is to be called back; this depends on your DNS settings, but using `https://${PORTAL_NETWORK_PORTALHOST}/callback` will work most of the times (this will resolve to the URL of the API Portal, and its `/callback` end point).
 * **ADFS Resource (Claims)**: The identifier (as a URI) of the resource claims the ADFS server should return. This can be used for multiple ADFS OAuth2 clients; select an ID you can identify as belonging to your API Portal. This will be the "relying party trust identifier". E.g,. `https://portal.yourcompany.com/adfs/trust`
+* **Public Certificate to verify Callbacks with**: This is the certificate used to sign JWT tokens with; the portal uses this signature to verify that the callback actually comes from the ADFS instance it claims to come from. Has to be in PEM format. See below for information how to retrieve.
 
 Save the configuration and redeploy your configuration. The ADFS signin and signup buttons should now be visible, but will not work just yet.
+
+### Getting the signing certificate
+
+#### Converting from `.CER` format
+
+In case you have the certificate as a Microsoft `.CER` file (which is in DER binary format), you can use `openssl` to transform it into the PEM format with the following command:
+
+```bash
+$ openssl x509 -in /path/to/signing-cert.cer -inform der -out /path/to/signing-cert.pem -outform pem
+```
+
+#### Getting from a running ADFS instance
+
+In case you have a valid SAML metadata.xml configuration endpoint at hand, you can use the tool `adfs/get-adfs-signing-cert.js` to extract the signing certificate from that end point:
+
+* See [https://github.com/Haufe-Lexware/wicked.portal-tools](https://github.com/Haufe-Lexware/wicked.portal-tools)
 
 ## ADFS Server Configuration
 
