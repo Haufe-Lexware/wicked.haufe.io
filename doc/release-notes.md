@@ -12,7 +12,7 @@ Official Release of the API Portal.
 
 ## 0.10.1 (beta)
 
-**Date**: November 27th 2016 (2016-11-07)
+**Date**: November 27th 2016 (2016-11-27)
 
 Mostly minor bug fixes and one major addition to the OAuth2 support; the Kong Adapter now also makes it easier to implement the Authorization Code Flow. Still missing is support for Scopes and persisting Scope grants, which will possibly be done over the next couple of weeks. Let's see.
 
