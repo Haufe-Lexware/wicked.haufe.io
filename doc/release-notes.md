@@ -10,6 +10,24 @@ Official Release of the API Portal.
 
 **Docker Tag**: tba
 
+## 0.10.1 (beta)
+
+**Date**: November 27th 2016 (2016-11-07)
+
+Mostly minor bug fixes and one major addition to the OAuth2 support; the Kong Adapter now also makes it easier to implement the Authorization Code Flow. Still missing is support for Scopes and persisting Scope grants, which will possibly be done over the next couple of weeks. Let's see.
+
+Detailed list of changes:
+
+* Move to `kong:0.9.5` as API Gateway
+* [Remove standard configuration of `file-log` plugin for new APIs](https://github.com/Haufe-Lexware/wicked.haufe.io/issues/32)
+* [Support mutual SSL by making the used proxy certificate configurable](https://github.com/Haufe-Lexware/wicked.haufe.io/issues/13)
+* [For new projects, the default value for `PORTAL_CHATBOT_URL` was wrong](https://github.com/Haufe-Lexware/wicked.haufe.io/issues/31)
+* [wicked 0.10.0 did not start without an `auth-servers` directory (introduced by calling kickstarter once)](https://github.com/Haufe-Lexware/wicked.haufe.io/issues/30)
+* [Make it less difficult to create new multi-line environment variables](https://github.com/Haufe-Lexware/wicked.haufe.io/issues/33)
+
+**Docker Tag**: `0.10.1`
+
+
 ## 0.10.0 (beta)
 
 **Date**: November 7th 2016 (2016-11-07)

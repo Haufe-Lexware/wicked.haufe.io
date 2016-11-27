@@ -34,6 +34,7 @@ If you feel something important is missing that should be documented, feel free 
 * [Adding Custom Content to the API Portal](adding-custom-content.md)
 * [Monitoring the API Portal](monitoring.md)
 * [Configuration Versioning Strategies](versioning-strategies.md)
+* [Mutual Upstream SSL Authentication](mutual-ssl.md)
 
 ### Authentication
 
