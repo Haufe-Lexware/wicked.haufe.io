@@ -2,7 +2,7 @@
 
 ![wicked.haufe.io Logo](public/wicked-logo-300px.png)
 
-General information can be seen at the wicked microsite over at [wicked.haufe.io](http://wicked.haufe.io). If you want to see how the API Portal looks like, check out [wicked-demo.haufe.io](https://wicked-demo.haufe.io).
+General information can be seen at the wicked microsite over at [wicked.haufe.io](http://wicked.haufe.io). If you want to see how the API Portal looks like, check out [wicked-demo.haufe.io](https://wicked-demo.haufe.io). You may also want to try out our [Gitter Chatroom](https://gitter.im/wicked-haufe-io/Lobby).
 
 # What's this?
 
