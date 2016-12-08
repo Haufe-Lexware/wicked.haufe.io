@@ -10,6 +10,16 @@ Official Release of the API Portal.
 
 **Docker Tag**: tba
 
+## 0.11.0 (beta)
+
+**Date**: December 12th 2016 (2016-12-12)
+
+Some substantial improvements to running in production. Many small details which enable deployments to other runtime environments than a pure docker host, such as Kubernetes. All components of wicked now check their configuration status and quit (trigger restart, depending on your orchestration) whenever a configuration change is detected. This means that the different components can be treated more like individual microservices. The wicked core components (`portal`, `kong-adapter`, `mailer`, `chatbot`) will still require a version which is equal to the version the portal API (`portal-api`) is running.
+
+Detailed list of changes:
+
+  
+
 ## 0.10.1 (beta)
 
 **Date**: November 27th 2016 (2016-11-27)

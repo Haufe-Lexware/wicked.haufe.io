@@ -91,3 +91,9 @@ $ docker-compose down
 ```
 
 Please note that this will also **delete all local data**, such as test applications you have registered, users names you have create and so on.
+
+## Deployment Architecture locally
+
+The local deployment does not get the static configuration from a git repository (which is the recommended way of getting it inside the portal API), but rather uses the data-only container approach as described in [deployment architecture](deployment-architecture.md).
+
+When taking this configuration to production, it is highly advisable to change the way the static configuration is injected into the portal API container to the git clone approach.

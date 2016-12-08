@@ -2,7 +2,7 @@
 
 ## Introduction
 
-The API Portal is currently purely intended to be deployed to a docker host or swarm, using `docker-compose`.
+The API Portal is intended to be deployed to using Docker. The default configuration is suitable for deployment to a single Docker Host (or Docker Swarm) using `docker-compose`. Alternatives are: [Docker Swarm](deploying-to-swarm.md), [Kubernetes](deploying-to-kubernetes.md), [Apache Mesos](deploying-to-mesos.md) and other orchestration layers supporting running Docker Containers.
 
 The deployment architecture is usually as follows:
 
@@ -13,6 +13,8 @@ The next sections briefly describes the functionality of each deployment artifac
 ### HAproxy
 
 The HAPROXY component routes the incoming traffic via virtual hosts (vhosts) either to the Portal or directly to Kong. HAproxy is also able to load balance Kong if you decide to deploy multiple instances of Kong.
+
+Depending on your deployment setup, the HAproxy can be replaced with a different type of load balancer, e.g. an Elastic Load Balancer on AWS, an Azure Load Balancer, or an ingress controller on Kubernetes. It just has to fulfill the same requirements as the HAproxy, i.e. to do SSL termination and route the two VHOSTs to the backends.
 
 ### Portal
 
@@ -26,11 +28,13 @@ The PORTAL API is the heart of the API Portal. It is effectively the only compon
 
 PORTAL API is implemented completely in node.js.
 
-### Static Config
+#### Static Config
 
-The STATIC CONFIG is created at deployment time by building a static configuration container directly on the docker host which is to host the API Portal. This is usually done by keeping a special `Dockerfile` inside the deployment repository, which in turn clones the configuration repository into this container.
+The base for each deployment is the static configuration. The static configuration is usually stored inside a git repository on your premises, and is cloned into the portal API container at container startup (at every startup). This is done by supplying both a `GIT_REPO` and `GIT_CREDENTIALS` to the portal API container (and optionally a `GIT_BRANCH`) so that it can clone the configuration from there.
 
-The data inside STATIC CONFIG is static and will not change over time once the API Portal has been started after a deployment. STATIC CONFIG is a "data only" container which does not actually run, but only exposes a data volume which is mounted by the PORTAL API container at runtime. When redeploying, this container always has to be destroyed and rebuilt.
+Alternatively (to the git repository), the STATIC CONFIG can be created at deployment time by building a static configuration container directly on the docker host which is to host the API Portal. This is usually done by keeping a special `Dockerfile` inside the deployment repository, which in turn clones the configuration repository into this container.
+
+The data inside STATIC CONFIG is static and will not change over time once the API Portal has been started after a deployment. STATIC CONFIG is a "data only" container which does not actually run, but only exposes a data volume which is mounted by the PORTAL API container at runtime. When redeploying, this container always has to be destroyed and rebuilt, if you choose the data-only volume approach. In case you choose the git clone approach, recreating the portal API container is enough to retrieve the new version of the configuration.
 
 ### Dynamic Config
 
