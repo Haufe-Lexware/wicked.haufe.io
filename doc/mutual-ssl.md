@@ -20,6 +20,10 @@ export PROXY_SSL_KEY=$(cat /path/to/proxy-key.pem)
 export PROXY_SSL_CERT=$(cat /path/to/proxy-cert.pem)
 ```
 
-### When deploying to Kubernetes
+### Kubernetes
 
-(TODO)
+TODO.
+
+### Apache Mesos
+
+TODO.

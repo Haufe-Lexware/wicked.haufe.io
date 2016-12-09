@@ -1,6 +1,6 @@
 # Deploying an API Portal locally
 
-In order to deploy an API portal locally on your development machine, you may follow these steps. These steps will hopefully lead to success, but be aware that there are alternate possibilities of deploying, specifically when you have multiple environments. This is not taken into consideration for this simplistic tutorial.
+In order to deploy an API portal locally on your development machine, you may follow these steps.
 
 ## Create a configuration
 
@@ -27,7 +27,7 @@ Hit "Save" to save the configuration. Now you will be able to see that there are
 
 ## Create a `localdev` environment
 
-Within the kickstarter, go to the [Environments Page](http://localhost:3333/) and create a new Environment called `localdev` (you may also choose any other name, just NOT `localhost`, see [setting up a development environment](development-environment.md); `localhost` is a special name which triggers some special behaviour):
+Within the kickstarter, go to the [Environments Page](http://localhost:3333/envs) and create a new Environment called `localdev` (you may also choose any other name, just NOT `localhost`, see [setting up a development environment](development-environment.md); `localhost` is a special name which triggers some special behaviour):
 
 ![Create localdev](images/deploy-env-localdev.png)
 

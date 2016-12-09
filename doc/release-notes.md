@@ -18,7 +18,8 @@ Some substantial improvements to running in production. Many small details which
 
 Detailed list of changes:
 
-  
+* Improved documentation, preparation of documentation for running in Kubernetes
+* 
 
 ## 0.10.1 (beta)
 
