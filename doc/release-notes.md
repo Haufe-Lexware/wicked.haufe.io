@@ -12,14 +12,26 @@ Official Release of the API Portal.
 
 ## 0.11.0 (beta)
 
-**Date**: December 12th 2016 (2016-12-12)
+**Date**: December 9th 2016 (2016-12-09)
 
-Some substantial improvements to running in production. Many small details which enable deployments to other runtime environments than a pure docker host, such as Kubernetes. All components of wicked now check their configuration status and quit (trigger restart, depending on your orchestration) whenever a configuration change is detected. This means that the different components can be treated more like individual microservices. The wicked core components (`portal`, `kong-adapter`, `mailer`, `chatbot`) will still require a version which is equal to the version the portal API (`portal-api`) is running.
+Some substantial improvements to running in production. Many small details which enable deployments to other runtime environments than a pure docker host, such as Kubernetes. All components of wicked now check their configuration status and quit (trigger restart, depending on your orchestration) whenever a configuration change is detected. This means that the different components can be treated more like individual microservices. The wicked core components (`portal`, `kong-adapter`, `mailer`, `chatbot`) will still require a version which is equal to the version the portal API (`portal-api`) is running. Anyone using a newer node SDK version for wicked is benefiting from this feature, as it's implemented in the node SDK which is used by all the core components (and also by [wicked.auth-passport](https://github.com/Haufe-Lexware/wicked.auth-passport) and [wicked.auth-saml](https://github.com/Haufe-Lexware/wicked.auth-saml))
+
+The documentation has been updated to reflect the changes. A very notable changes is the possibility to now retrieve the configuration automatically from a git repository instead on having to clone it in and building a data-only container to mount into the portal API container. This is still possible, but the recommended way is injecting the static configuration via the [git clone method](static-config-git-clone.md).
 
 Detailed list of changes:
 
+**Features and Improvements:**
+
 * Improved documentation, preparation of documentation for running in Kubernetes
-* 
+* [How to read static configuration from git repository without building data only container?](https://github.com/Haufe-Lexware/wicked.haufe.io/issues/34)
+* [Let Kong Adapter, Mailer, Chatbot check for changed configuration](https://github.com/Haufe-Lexware/wicked.haufe.io/issues/36)
+* [Implement sanity check regarding versions for depending components (Mailer, Chatbot,...)](https://github.com/Haufe-Lexware/wicked.haufe.io/issues/38)
+
+**Bugfixes:**
+
+* [Portal doesn't reject fragment in redirect URI (#)](https://github.com/Haufe-Lexware/wicked.haufe.io/issues/35)
+* [Kickstarter: Drop down boxes should be marked as such (using a » or similar)](https://github.com/Haufe-Lexware/wicked.haufe.io/issues/19)
+
 
 ## 0.10.1 (beta)
 
