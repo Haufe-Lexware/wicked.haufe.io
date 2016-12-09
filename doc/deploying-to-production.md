@@ -24,3 +24,19 @@ There are two common ways of accomplishing this:
 * [Using/building a data-only container prior to deploying the portal API](static-config-dataonly-container.md) (for local/playground deployments, also works with Docker Host and Docker Swarm deployments)
 
 These two methods should meet most needs. In case your runtime makes this difficult for you, feel free to reach out and we'll search for a specific solution (and document that).
+
+## Creating a private `portal-api` service
+
+A third possibility involves the use of a private docker registry: Extend the `haufelexware/wicked.portal-api` image by copying in your static configuration to the `/var/portal-api/static` folder using a `Dockerfile`, then use this image instead of the `haufelexware/wicked.portal-api` image for your `portal-api` service (use `npm start` as a command).
+
+The advantages are:
+
+* You do not need to inject credentials to your git repository into your API container
+* Deployments are always reproducible if you template your compose/deployment files to use a speecific tag of this image
+
+The disadvantages are:
+
+* You need a private docker image repository you can use
+* Deploying a new configuration requires building a new image for the `portal-api`, including pushing and pulling it to/from the private repository
+* Either you use `latest` as tag for the image, or you need to re-template your deployment configuration files at each new deployment
+
