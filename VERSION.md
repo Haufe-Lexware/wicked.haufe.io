@@ -2,7 +2,7 @@
 
 ### Latest Release
 
-Latest release is `0.11.0` (December 12th 2016).
+Latest release is `0.11.0` (December 9th 2016).
 
 ### Next Release
 
