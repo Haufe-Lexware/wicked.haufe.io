@@ -9,10 +9,10 @@
 
 ## Runtimes
 
-* [Deploying to Kubernetes](deploying-to-kubernetes.md)
-* [Deploying to Docker Swarm](deploying-to-swarm.md)
-* [Deploying to Apache Mesos](deploying-to-mesos.md)
 * [Deploying to a single Docker Host](deploying-to-docker-host.md)
+* [Deploying to Docker Swarm](deploying-to-swarm.md)
+* [Deploying to Kubernetes](deploying-to-kubernetes.md)
+* [Deploying to Apache Mesos](deploying-to-mesos.md)
 
 ## Static configuration deployments
 
