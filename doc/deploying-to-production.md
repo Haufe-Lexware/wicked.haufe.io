@@ -27,7 +27,7 @@ These two methods should meet most needs. In case your runtime makes this diffic
 
 ## Creating a private `portal-api` service
 
-A third possibility involves the use of a private docker registry: Extend the `haufelexware/wicked.portal-api` image by copying in your static configuration to the `/var/portal-api/static` folder using a `Dockerfile`, then use this image instead of the `haufelexware/wicked.portal-api` image for your `portal-api` service (use `npm start` as a command).
+A third possibility involves the use of a private docker registry: Extend the `haufelexware/wicked.portal-api` image by copying in your static configuration to the `/var/portal-api/static` folder using a `Dockerfile`, then use this image instead of the `haufelexware/wicked.portal-api` image for your `portal-api` service. You should still use the same entry point/command as the base container, as this is where the configuration revision hash is calculated.
 
 The advantages are:
 
@@ -39,4 +39,3 @@ The disadvantages are:
 * You need a private docker image repository you can use
 * Deploying a new configuration requires building a new image for the `portal-api`, including pushing and pulling it to/from the private repository
 * Either you use `latest` as tag for the image, or you need to re-template your deployment configuration files at each new deployment
-
