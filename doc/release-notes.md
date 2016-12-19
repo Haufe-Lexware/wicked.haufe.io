@@ -19,6 +19,7 @@ Very minor update just to get an annoying behaviour of the `portal-api` containe
 Oh, coming soon: Guidance on running wicked on Kubernetes. Stay tuned on [deploying to kubernetes](deploying-to-kubernetes.md).
 
 * [`portal-api` does not react on SIGTERM, should shut down](https://github.com/Haufe-Lexware/wicked.haufe.io/issues/48)
+* Upgrade to Kong 0.9.6
 
 ## 0.11.0 (beta)
 
