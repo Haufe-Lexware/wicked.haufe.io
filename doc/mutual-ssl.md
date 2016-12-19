@@ -22,7 +22,7 @@ export PROXY_SSL_CERT=$(cat /path/to/proxy-cert.pem)
 
 ### Kubernetes
 
-TODO.
+Use a secret to get the certificates into Kubernetes in a pre-step, then take out the content of the certificate and private key via `valueFrom`.
 
 ### Apache Mesos
 
