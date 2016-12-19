@@ -10,6 +10,17 @@ Official Release of the API Portal.
 
 **Docker Tag**: tba
 
+## 0.11.1 (beta)
+
+**Date**: December 19th 2016 (2016-12-19)
+
+Very minor update just to get an annoying behaviour of the `portal-api` container out: The `portal-api` did not react to SIGTERM, and thus had to be "killed" by `docker stop` after a certain grace period. This was due to the fact that `portal-api` has a shell script as `CMD`, which gets PID 1, but does not forward the SIGTERM to the actual node process. This is now fixed by using [`dumb-init`](https://github.com/Yelp/dumb-init) in the entrypoint, which propagates signals to child processes.
+
+Oh, coming soon: Guidance on running wicked on Kubernetes. Stay tuned on [deploying to kubernetes](deploying-to-kubernetes.md).
+
+* [`portal-api` does not react on SIGTERM, should shut down](https://github.com/Haufe-Lexware/wicked.haufe.io/issues/48)
+* Upgrade to Kong 0.9.6
+
 ## 0.11.0 (beta)
 
 **Date**: December 9th 2016 (2016-12-09)
