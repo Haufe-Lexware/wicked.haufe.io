@@ -10,6 +10,16 @@ Official Release of the API Portal.
 
 **Docker Tag**: tba
 
+## 0.11.2 (beta)
+
+**Date**: January 9th, 2017 (2017-01-09)
+
+Minor release containing some bugfixes and further a minor feature which enables redirection after login in case a user tries to open a page which renders a 403 and is not logged in.
+
+* [Error handling in kickstarter is a bit rough](https://github.com/Haufe-Lexware/wicked.haufe.io/issues/29)
+* [The confighash does not change after only deploying a new static configuration](https://github.com/Haufe-Lexware/wicked.haufe.io/issues/50)
+* [Usability: When logged out, accessing a page should redirect back after logging in](https://github.com/Haufe-Lexware/wicked.haufe.io/issues/51)
+
 ## 0.11.1 (beta)
 
 **Date**: December 19th 2016 (2016-12-19)
