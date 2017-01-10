@@ -1,5 +1,5 @@
 # Deploying wicked to Kubernetes
 
-We are currently investigating how to run wicked on Kubernetes, and so far it looks very promising.
+General description to be added here.
 
-As soon as we have a set of Deployment and Service descriptions, further information will be added to this page.
+For Kubernetes deployment scripts, see here: [kubernetes](kubernetes).
