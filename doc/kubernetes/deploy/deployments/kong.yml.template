@@ -1,0 +1,32 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: kong
+spec:
+  replicas: 2
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        service: kong
+        wicked: "true"
+    spec:
+      containers:
+      - image: ${DOCKER_PREFIX}kong:${DOCKER_TAG}
+        imagePullPolicy: Always
+        name: kong
+        ports:
+        - name: "gateway"
+          containerPort: 8000
+          protocol: TCP
+        - name: "admin"
+          containerPort: 8001
+          protocol: TCP
+        - name: "advertise"
+          containerPort: 7946
+          protocol: TCP
+        - name: "advertiseudp"
+          containerPort: 7946
+          protocol: UDP
+      restartPolicy: Always

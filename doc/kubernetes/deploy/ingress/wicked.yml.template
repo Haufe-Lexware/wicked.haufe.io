@@ -1,0 +1,28 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: wicked-ingress
+spec:
+  tls:
+  - hosts:
+    - ${PORTAL_NETWORK_APIHOST}
+    secretName: api-tls
+  - hosts:
+    - ${PORTAL_NETWORK_PORTALHOST}
+    secretName: portal-tls
+
+  rules:
+  - host: ${PORTAL_NETWORK_PORTALHOST}
+    http:
+      paths:
+      - path:
+        backend:
+          serviceName: portal
+          servicePort: 3000
+  - host: ${PORTAL_NETWORK_APIHOST}
+    http:
+      paths:
+      - path:
+        backend:
+          serviceName: kong-gw
+          servicePort: 8000

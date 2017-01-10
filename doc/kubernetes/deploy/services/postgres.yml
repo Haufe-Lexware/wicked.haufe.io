@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    service: kong-database
+    wicked: "true"
+  name: kong-database
+spec:
+  ports:
+  - name: "psql"
+    port: 5432
+    protocol: TCP
+  selector:
+    service: kong-database

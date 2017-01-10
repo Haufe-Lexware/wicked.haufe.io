@@ -1,0 +1,28 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: portal-kong-adapter
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        service: portal-kong-adapter
+        wicked: "true"
+    spec:
+      containers:
+      - image: ${DOCKER_PREFIX}portal-kong-adapter:${DOCKER_TAG}
+        name: portal-kong-adapter
+        imagePullPolicy: Always
+        env:
+        - name: DEBUG
+          valueFrom:
+            configMapKeyRef:
+              name: apim-config
+              key: DEBUG
+        ports:
+        - containerPort: 3002
+          protocol: TCP
+      restartPolicy: Always
