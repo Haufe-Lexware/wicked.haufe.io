@@ -94,48 +94,63 @@ $ docker run --rm --env-file variables.env apim_deploy:latest
 
 ### Config Maps
 
-...
+The configmap `apim-config` contains the following settings:
+
+Name | Description
+-----|-------------
+`GIT_REPO` | See above
+`GIT_BRANCH` | See above
+`DEBUG` | See above
+
+The config map is just used to persist some settings which are used as environment variables in the different deployment definitions. The deployment updates the config map, e.g. to use a specific git repository, and this is in turn injected into the running containers via the configmap/secret configuration means of Kubernetes.
 
 ### Used secrets
 
-...
+In addition to the certificate (`tls`) secrets, there is a secret called `apim-secrets` created by the deployment script, which contains the following data:
 
-#### git Credentials
+Name | Description
+-----|-------------
+`GIT_CREDENTIALS` | Username and password used for retrieving the git repository for the static APIm configuration
+`PORTAL_CONFIG_KEY` | The deployment key used for encrypting/decrypting secret environment variables in the APIm static configuration (the content of the `deploy.envkey` created by the Kickstarter when you first created the portal APIm static configuration repository)
 
-...
-
-#### TLS secrets
-
-...
+This secret is automatically created by the script from the corresponding environment variables and is used by the `portal-api` container at initialization.
 
 ### Deployments
 
 #### Postgres
 
-...
+The Postgres instance is deployed in a non-H/A fashion as a plain `postgres:9.4` container. This version is known to run well with Kong.
+
+Postgres needs persistent storage, which is claimed in the [`persistent-data-postgres.yml`](volume-claims/persistent-data-postgres.yml) storage claim.
+
+The Postgres service exposes `http://kong-database:5432` which is used by the Kong containers to talk to the database.
 
 #### Kong
 
-...
+The Kong Pods can be scaled as much as you need (and your cluster and database instance can take). The [sample deployment](deployments/kong.yml.template) deploys two replicas of the Kong Pods.
 
 #### Wicked components
 
-...
+The following wicked components are deployed:
 
-### Service Definitions
+* Portal
+* Portal API
+* Kong Adapter
+* Chatbot
+* Mailer
 
-...
+Each of these Pods can currently only run exactly once (this may change in the future), and if they need to be recreated, the previous instance needs to be shut down first. This is also ensured by using the setting `Recreate` for the creation strategy.
+
+In future deployments, it may become possible to scale certain parts of the API Portal as well (such as the Portal, the API and parts of the Kong Adapter). Mailer, chatbot and the core functionality of the Kong Adapter will never be able to scale to more than one instance, but they are not intended to be used for real time access anyway.
 
 ### Ingress Definition
 
-...
+The ingress definition defines a host route for `PORTAL_NETWORK_APIHOST` (to the Kong Gateway service) and `PORTAL_NETWORK_PORTALHOST` (to the portal service).
+
+In case you need this done differently, you will need to adapt the ingress configuration.
 
 ## Scaling and Performance tuning
 
-### Scaling the Kong instances
-
-...
-
 ### Using a `redis` instance for caching (Kong)
 
-...
+TBD.
