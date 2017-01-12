@@ -1,0 +1,28 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: portal
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        service: portal
+        wicked: "true"
+    spec:
+      containers:
+      - name: portal
+        image: ${DOCKER_PREFIX}portal:${DOCKER_TAG}
+        imagePullPolicy: Always
+        env:
+        - name: DEBUG
+          valueFrom:
+            configMapKeyRef:
+              name: apim-config
+              key: DEBUG
+        ports:
+        - containerPort: 3000
+          protocol: TCP
+          
