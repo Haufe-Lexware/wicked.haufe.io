@@ -62,8 +62,16 @@ On your local machine, create an empty directory `<repo>` at the location you wa
 
 We are now ready to start the kickstarter:
 
+**For Windows and Mac OS X**:
+
 ```bash
 $ docker run -it --rm -v /path/to/repo:/var/portal-api -p 3333:3333 haufelexware/wicked.portal-kickstarter --new 
+```
+
+**For Linux**:
+
+```bash
+$ docker run -it --rm -v /path/to/repo:/var/portal-api -e LOCAL_UID=$(id -u) -e LOCAL_GID=$(id -g) -p 3333:3333 haufelexware/wicked.portal-kickstarter --new 
 ```
 
 The above docker command does the following things:
@@ -71,7 +79,8 @@ The above docker command does the following things:
 * Starts the kickstarter image interactively (`-it`) and will remove it after it has finished (`--rm`)
 * Mounts `/path/to/repo` (your new repository configuration directory) to `/var/portal-api`, which is the directory where the kickstarter expects the configuration to be by default
 * Opens the port `3333` from the container to the docker hosts port `3333`
-* Tells kickstarter to create a new configuration (`--new`) 
+* Tells kickstarter to create a new configuration (`--new`)
+* **Linux**: Pass in your local user's UID and GID (user and group IDs) so that the created files will carry your own user's ID and Group ID
 
 Depending on your docker setup, you may now browse to [http://localhost:3333](http://localhost:3333) and view the kickstarters configuration pages.
 
@@ -134,8 +143,16 @@ $ docker pull haufelexware/wicked.portal-kickstarter
 
 With the `/path/to/repo` at your cloned repository, issue the following command:
 
+**For Windows and Mac OS X/macOS:**
+
 ```bash
 $ docker run -it --rm -v /path/to/repo:/var/portal-api -p 3333:3333 haufelexware/wicked.portal-kickstarter
+```
+
+**For Linux**:
+
+```bash
+$ docker run -it --rm -v /path/to/repo:/var/portal-api -e LOCAL_UID=$(id -u) -e LOCAL_GID=$(id -g) -p 3333:3333 haufelexware/wicked.portal-kickstarter
 ```
 
 It is essentially the same command line as when creating a new configuration, just omitting `--new`. The kickstarter in docker will assume that the static configuration resides in `/var/portal-api/static`, which will be the case if you mount your `/path/to/repo` to that path inside the container with the above `-v` command line switch.

@@ -5,7 +5,7 @@ When deploying either locally or to production, things always start with creatin
 ## Prerequisites
 
 * You will need a configuration repository; you may also just create a new one (see [creating a portal configuration](creating-a-portal-configuration.md))
-* A working node.js environment (currently, Wicked is built on 4.x, but will also work on 6.x)
+* A working node.js environment (Node 6 LTS, please)
 
 ### Development Setups
 
