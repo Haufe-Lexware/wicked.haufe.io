@@ -10,6 +10,18 @@ Official Release of the API Portal.
 
 **Docker Tag**: tba
 
+## 0.11.3 (beta)
+
+**Date**: February 14th, 2017 (2017-02-14)
+
+Minor release with two parts, running wicked as non-root inside Docker, and surfacing the Kong version and cluster information inside the system health page. Other minor things in the kickstarter, like enabling Ctrl-C for stopping it (by leveraging [`dumb-init`](https://github.com/Yelp/dumb-init) again).
+
+* [Surface Kong version and cluster Status in System health](https://github.com/Haufe-Lexware/wicked.haufe.io/issues/55)
+* [wicked containers should not run as "root"](https://github.com/Haufe-Lexware/wicked.haufe.io/issues/56)
+* [kickstarter - volume permission problem inside container](https://github.com/Haufe-Lexware/wicked.haufe.io/issues/53)
+
+Did you see our [Kubernetes Documentation](deploying-to-kubernetes.md)?
+
 ## 0.11.2 (beta)
 
 **Date**: January 9th, 2017 (2017-01-09)
