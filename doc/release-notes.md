@@ -19,6 +19,7 @@ Minor release with two parts, running wicked as non-root inside Docker, and surf
 * [Surface Kong version and cluster Status in System health](https://github.com/Haufe-Lexware/wicked.haufe.io/issues/55)
 * [wicked containers should not run as "root"](https://github.com/Haufe-Lexware/wicked.haufe.io/issues/56)
 * [kickstarter - volume permission problem inside container](https://github.com/Haufe-Lexware/wicked.haufe.io/issues/53)
+* Upgrade Kong to 0.9.9
 
 Did you see our [Kubernetes Documentation](deploying-to-kubernetes.md)?
 
