@@ -12,9 +12,12 @@ Make sure you have created a configuration repository and/or cloned the reposito
 
 Make sure a `portal-kickstarter` is running at [http://localhost:3333](http://localhost:3333) (described in detail in the above document):
 
-```
+```bash
 $ cd /path/to/repository
+$ # For Windows and Mac OS X:
 $ docker run -it --rm -v `pwd`:/var/portal-api -p 3333:3333 haufelexware/wicked.portal-kickstarter
+$ # For Linux:
+$ $ docker run -it --rm -v /path/to/repo:/var/portal-api -e LOCAL_UID=$(id -u) -e LOCAL_GID=$(id -g) -p 3333:3333 haufelexware/wicked.portal-kickstarter
 ```
 
 ## Enable env vars for portal and API hosts
