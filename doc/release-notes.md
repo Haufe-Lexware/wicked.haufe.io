@@ -12,7 +12,9 @@ Official Release of the API Portal.
 
 ## 0.11.3 (beta)
 
-**Date**: February 14th, 2017 (2017-02-14)
+**Date**: February 15th, 2017 (2017-02-15)
+
+**Docker Tag**: `0.11.3`
 
 Minor release with two parts, running wicked as non-root inside Docker, and surfacing the Kong version and cluster information inside the system health page. Other minor things in the kickstarter, like enabling Ctrl-C for stopping it (by leveraging [`dumb-init`](https://github.com/Yelp/dumb-init) again).
 
@@ -23,9 +25,13 @@ Minor release with two parts, running wicked as non-root inside Docker, and surf
 
 Did you see our [Kubernetes Documentation](deploying-to-kubernetes.md)?
 
+When updating, please first update the `wicked.kong` containers, then continue with the rest of the containers.
+
 ## 0.11.2 (beta)
 
 **Date**: January 9th, 2017 (2017-01-09)
+
+**Docker Tag**: `0.11.2`
 
 Minor release containing some bugfixes and further a minor feature which enables redirection after login in case a user tries to open a page which renders a 403 and is not logged in.
 
@@ -37,6 +43,8 @@ Minor release containing some bugfixes and further a minor feature which enables
 
 **Date**: December 19th 2016 (2016-12-19)
 
+**Docker Tag**: `0.11.1`
+
 Very minor update just to get an annoying behaviour of the `portal-api` container out: The `portal-api` did not react to SIGTERM, and thus had to be "killed" by `docker stop` after a certain grace period. This was due to the fact that `portal-api` has a shell script as `CMD`, which gets PID 1, but does not forward the SIGTERM to the actual node process. This is now fixed by using [`dumb-init`](https://github.com/Yelp/dumb-init) in the entrypoint, which propagates signals to child processes.
 
 Oh, coming soon: Guidance on running wicked on Kubernetes. Stay tuned on [deploying to kubernetes](deploying-to-kubernetes.md).
@@ -47,6 +55,8 @@ Oh, coming soon: Guidance on running wicked on Kubernetes. Stay tuned on [deploy
 ## 0.11.0 (beta)
 
 **Date**: December 9th 2016 (2016-12-09)
+
+**Docker Tag**: `0.11.0`
 
 Some substantial improvements to running in production. Many small details which enable deployments to other runtime environments than a pure docker host, such as Kubernetes. All components of wicked now check their configuration status and quit (trigger restart, depending on your orchestration) whenever a configuration change is detected. This means that the different components can be treated more like individual microservices. The wicked core components (`portal`, `kong-adapter`, `mailer`, `chatbot`) will still require a version which is equal to the version the portal API (`portal-api`) is running. Anyone using a newer node SDK version for wicked is benefiting from this feature, as it's implemented in the node SDK which is used by all the core components (and also by [wicked.auth-passport](https://github.com/Haufe-Lexware/wicked.auth-passport) and [wicked.auth-saml](https://github.com/Haufe-Lexware/wicked.auth-saml))
 
