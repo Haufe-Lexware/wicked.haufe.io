@@ -96,11 +96,11 @@
         <div class="row">
           <div class="col-md-6 pad20"><a href="https://www.docker.com/products/docker-swarm" target="_blank"><img src="https://www.docker.com/sites/default/files/docker-swarm-hero2.png" style="height:300px;" class="center-block"></a></div>
           <div class="col-md-6 pad20">
-            <h3>Runs on any Docker Host/Swarm</h3>
+            <h3>Runs on any Docker Host/Swarm or on Kubernetes</h3>
             <p>
               The API Portal can be deployed to any environment which runs a docker host.
-              This can be a single VM, or a Swarm environment, as long as it is compatible
-              with <code>docker-compose</code>.
+              This can be a single VM, or a Swarm environment. You can either deploy using
+              a <code>docker-compose</code> file, or using an orchestrator like Kubernetes.
             </p>
             <p>
               Depending on your requirements regarding high availability and your SLAs
@@ -123,8 +123,8 @@
             background.
           </p>
           <p>
-            If you deploy to Docker Swarm, scaling out your API Gateway is also super simple;
-            the deployment scripts support this scenario (clustered Kong) out of the box.
+            Scaling your API Gateway is supported out of the box, and depending on your runtime
+            orchestration, setting up high availability is as well (for the Gateway).
           </p>
         </div>
         <div class="col-md-6 pad20"><img src="images/architecture-components.png" class="center-block img-responsive"></div>
@@ -135,7 +135,7 @@
       <!-- FOOTER-->
       <footer></footer>
       <p class="pull-right"><a href="#">Back to top</a></p>
-      <p>© 2016 Haufe-Lexware GmbH & Co. KG, <a href="http://www.haufe-lexware.com">www.haufe-lexware.com</a>, <a href="http://www.haufe.de">www.haufe.de</a>, <a href="http://www.lexware.de">www.lexware.de</a>, <a href="http://www.haufe-akademie.de">www.haufe-akademie.de</a></p>
+      <p>© 2016-2017 Haufe-Lexware GmbH & Co. KG, <a href="http://www.haufe-lexware.com">www.haufe-lexware.com</a>, <a href="http://www.haufe.de">www.haufe.de</a>, <a href="http://www.lexware.de">www.lexware.de</a>, <a href="http://www.haufe-akademie.de">www.haufe-akademie.de</a></p>
     </div>
     <!-- /.container-->
     <!--

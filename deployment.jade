@@ -32,12 +32,12 @@ block content
           a(href='https://www.docker.com/products/docker-swarm' target='_blank')
             img(src='https://www.docker.com/sites/default/files/docker-swarm-hero2.png' style='height:300px;').center-block
         .col-md-6.pad20
-          h3 Runs on any Docker Host/Swarm
+          h3 Runs on any Docker Host/Swarm or on Kubernetes
 
           p.
             The API Portal can be deployed to any environment which runs a docker host.
-            This can be a single VM, or a Swarm environment, as long as it is compatible
-            with <code>docker-compose</code>.
+            This can be a single VM, or a Swarm environment. You can either deploy using
+            a <code>docker-compose</code> file, or using an orchestrator like Kubernetes.
           p.
             Depending on your requirements regarding high availability and your SLAs
             towards your clients, you are free to choose how to deploy the API Portal
@@ -54,7 +54,7 @@ block content
           API, which is also how the "Mailer", "Chatbot" and "Kong Adapter" work in the
           background.
         p.
-          If you deploy to Docker Swarm, scaling out your API Gateway is also super simple;
-          the deployment scripts support this scenario (clustered Kong) out of the box.
+          Scaling your API Gateway is supported out of the box, and depending on your runtime
+          orchestration, setting up high availability is as well (for the Gateway).
       .col-md-6.pad20
         img(src='images/architecture-components.png').center-block.img-responsive
