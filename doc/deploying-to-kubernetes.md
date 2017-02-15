@@ -9,6 +9,8 @@ If you are impatient and just want to get going with Kubernetes, see here:
 * [Deploying wicked to Kubernetes](kubernetes/deploy)
 * [Updating a running wicked configuration](kubernetes/update)
 
+When using Kubernetes, we **strongly suggest** you use explicit wicked versions (like 0.11.3) to make updates explicit. The Kong adapter has an explicit tie to the Kong version, and thus Kong has to match the Adapter.
+
 ## Deployment Architecture on Kubernetes
 
 The following section describes the deployment architecture the sample deployment script builds up on k8s. This can be considered to be a suggestion or template, but some things will need to be adapted to fit your own infrastructure (especially concerning persistent storage).
