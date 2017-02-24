@@ -1,0 +1,52 @@
+extends layout
+
+block vars
+  - var thisPage = 'enduser-to-api'
+
+block content
+  .jumbotron(style='background: url("images/header-2-500.jpg"); background-size:cover;')
+    .container(style='padding-top: 70px').feature-container
+      h1 End User Authentication and Authorization
+
+      p End user authentication via an external identity provider for confidential clients
+
+  .container.pad20
+      .row
+        .col-md-8
+          h4 Use Case Description
+          p.
+            Describe a scenario for the OAuth 2.0 Authorization Code grant.
+
+          img(src="images/uc-enduser-to-api.png").center-block
+
+  .grey
+    .container.pad20
+      .row
+        .col-md-4
+          p &nbsp;
+        .col-md-8
+          h4 Development Time Workflow
+
+          p.
+            Scopes, storing scopes,... this is not well supported yet. You can do it yourself, but you will not get that much help.
+          p.
+            Also important regarding this is the Kong Issue 454 (for which there is a pull request).
+    
+  .container.pad20
+      .row
+        .col-md-8
+          h4 Runtime Workflow
+
+          p.
+            Trusted apps, third party apps,...
+
+  .grey
+    .container.pad20
+      .row
+        .col-md-4
+          p &nbsp;
+        .col-md-8
+          h4 How do I implement this with wicked?
+
+          p.
+            To be written.

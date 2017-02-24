@@ -1,0 +1,121 @@
+extends layout
+
+block vars
+  - var thisPage = 'mobile-apps'
+
+block content
+  .jumbotron(style='background: url("images/header-2-500.jpg"); background-size:cover;')
+    .container(style='padding-top: 70px').feature-container
+      h1 Mobile API Gateway
+
+      p Securing Mobile APIs using the OAuth2 Resource Owner Password Flow
+
+  .container.pad20
+    .row
+      .col-md-8
+        h4 Use Case Description
+        p.
+          For mobile applications (on smartphones/tablets) a typical use case is that you let a user log in to your service,
+          or create some kind of unique identifier for the user's device, which is considered the identity of the user,
+          and that you then allow access only in the context of this user to your backend API.
+        p.
+          In order to prevent fraud or excessive usage of your API, it's also typical to apply rate limiting by number
+          of calls per authorized user and application.
+        p.
+          In this use case we assume that your user base is already contained in some external system (LDAP/SAML/other IdP), 
+          and you want to leverage this user base in a new mobile application, which is to make use of your mobile backend
+          API. The only constraint is that your Identity Provider needs to provide a headless means (e.g. an API) to verify
+          an end user's credentials, e.g. username and password.
+
+        img(src="images/uc-mobile-api-gateway.png").center-block
+
+  .grey
+    .container.pad20
+      .row
+        .col-md-4
+          p &nbsp;
+        .col-md-8
+          h4 Development Time Workflow
+
+          p.
+            For development time, the following workflow is typical:
+          ol
+            li The developer signs up for the API Portal and registers the mobile application in the portal
+            li By creating a subscription to the Mobile API, the developer obtains client credentials for the mobile application, a client ID and a client secret; for this use case, only the client ID is significant
+            li The developer incorporates the client ID into the mobile application and implements the needed bits for the OAuth2.0 Resource Owner Password Grant Flow.
+          
+          p.
+            For the OAuth2.0 Resource Owner Password Grant, it is not necessary and advised against to also incorporate the client
+            secret into the mobile app; in case the API also supports the client credentials flow, this would enable attackers to
+            reverse engineer the app and extract the credentials. The client ID on the other hand is only helpful in combination with
+            an end user identity, which the end user will also try to protect.
+    
+  .container.pad20
+    .row
+      .col-md-8
+        h4 Runtime Workflow
+
+        p.
+          At runtime, the authentication and authorization of the API usage for the end user inside the mobile app will work as follows.
+          When the end user opens the application for the first time, this happens:
+        ol
+          li The mobile app presents a login screen which asks for username and password of the end user
+          li.
+            Using the client ID, the username and password, the mobile app uses the OAuth 2.0 Resource Owner Password Grant Flow to 
+            ask an Authorization Server for an access token to the backend API
+          li.
+            The Authorization Server verifies the username and password, and if successful, issues both an Access Token and a Refresh Token
+            for the mobile App to use
+          li.
+            Whenever the mobile app now uses the access token, all requests to the backend API will be enriched with the identity
+            (and possibly scope) of the request
+
+        p.
+          The mobile app can (and should) now discard the end user username and password, and instead make use of the access token;
+          in case the access token expires, the mobile app cann use the refresh token to obtain a new access token (and refresh token).
+        p.
+          This means that the mobile app does not need to keep the user's actual secrets; it has exchanged them for a purpose-tied
+          pair of access and refresh tokens; even if the mobile app is hacked, the user's username and password are no longer
+          present in the memory/storage of the mobile app, which obviously increases security.
+
+  .grey
+    .container.pad20
+      .row
+        .col-md-4
+          p &nbsp;
+        .col-md-8
+          h4 How do I implement this with wicked?
+
+          p.
+            In order to implement this use case with wicked.haufe.io, you will need one additional componenet which is not 
+            available in a standard deployment of wicked: An Authorization Server. The task of the Authorization Server for the 
+            Mobile Backend API Gateway use case is:
+
+          ol
+            li.
+              Establish a user's identity by verifying the user's username and password, based on a call according to the
+              OAuth2.0 Resource Owner Password Grant (<b>authenticate</b> the user)
+            li.
+              Decide whether this user is entitled to use the backend API, and if he his, which scope he is entitled to use
+              (<b>authorize</b> the user). Depending on your use case, authentication may equal authorization (if you know the user,
+              that's enough to the user through to the API), or may include e.g. some license checking
+            li.
+              Decide on token renewal (via the Refresh Token) after the Access Token has expired and the mobile app needs a new
+              Access Token.
+          
+          p.
+            It's important to understand that wicked does neither impose any restrictions on how you verify user identity,
+            nor on how the user is authorized. This can be done in a completely custom way, if needed.
+
+          p.
+            An example implementation of an Authorization Server can be found at 
+            <a href="https://github.com/Haufe-Lexware/wicked.mobile-auth-template">wicked.mobile-auth-template</a>.
+            This is a template for implementing exactly such a mobile backend Authorization Server, with 
+            <code>TODO</code> sections to fill in.
+
+          p.
+            If you decide to implement an Authorization Server based on node.js, the following wicked SDK libraries
+            may help:
+          ul
+            li <a href="https://github.com/Haufe-Lexware/wicked.node-sdk">wicked node.js SDK</a>
+            li <a href="https://github.com/Haufe-Lexware/wicked.node-saml-sdk">wicked node.js SAML SDK</a>

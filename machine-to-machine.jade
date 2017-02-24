@@ -1,0 +1,84 @@
+extends layout
+
+block vars
+  - var thisPage = 'machine-to-machine'
+
+block content
+  .jumbotron(style='background: url("images/header-2-500.jpg"); background-size:cover;')
+    .container(style='padding-top: 70px').feature-container
+      h1 Machine to Machine
+
+      p Handling machine to machine communication with wicked.haufe.io
+
+  .container.pad20
+    .row
+      .col-md-8
+        h4 Use Case Description
+        p.
+          One of the most basic use cases for an API Gateway is to enable simple machine to machine API access, including self
+          service aspects for the developers needing access to a specific service. The special case for machine to machine
+          communication is that usually no end user is part of the communication, or that the an end user's identity and rights
+          have been established up front.
+        p.
+          Typical examples of services which leverage machine to machine type communication are backend services which deliver
+          value for other applications, such as licensing services, product management services or other types of data management
+          systems which are either intended for pure backend purposes or for which the client applications are trusted to have
+          already authorized an end user for using it.
+        
+        p.
+          These types of APIs can either be secured using
+        ul
+          li API Keys, or
+          li OAuth2 Client Credentials 
+          
+        p.
+          From a security perspective, the methods are more or less identical, and it's a matter of taste whether you want
+          to leverage the very simplistic "API Keys" approach, or the standard OAuth2.0 flow, which exchanges client credentials
+          for an access key.
+
+        img(src="images/uc-machine-to-machine.png").center-block
+
+  .grey
+    .container.pad20
+      .row
+        .col-md-4
+          p &nbsp;
+        .col-md-8
+          h4 Workflow Description
+          p.
+            A typical <b>development time</b> usage workflow will be like this:
+          ol
+            li A developer needs, for a specific application, access to an API which is surfaced using the API Gateway
+            li The developer registers the application in the API Portal
+            li For this application, the developer subscribes to the backend API for which access is needed
+            li The API Portal returns (if the developer has sufficient rights) either an API Key, or Client Credentials, depending on the type of authentication of the API
+            li The developer adds these <i>credentials</i> to his application (server side!) to get access to the API
+          
+          p.
+            At <b>runtime</b>, this means that the maintainer of the backend API can immediately see which applications are
+            accessing his API, and has a means of contacting the maintainers of these applications, and/or create statistics
+            on the usage of his API.
+
+          p.
+            Please note, that this authentication and authorization method is only suitable for <b>trusted server-side
+            applications</b>. The issued credentials (API Key or client id and client secret) must at all times be kept safe
+            by the client application.
+
+  .container.pad20
+    .row
+      .col-md-8
+        h4 How do I implement this with wicked?
+
+        p.
+          Securing APIs via API Keys or the OAuth2.0 Client Credentials Flow is both possible "out of the box" using
+          wicked.haufe.io, no additional components are needed:
+        ol
+          li Register your API with the API Portal in its static configuration, and specify the backend end point
+          li.
+            Make sure that only the API Gateway is able to directly call the API backend end point, e.g. by fencing 
+            off network traffic, or by implementing other means of securing the backend access (client certificates,
+            basic authentication, not exposing the end point to the public internet etc.)
+          li Deploy the changed/updated static configuration to your environment.
+        p.
+          Now your developers can sign up for the API using the standard wicked.haufe.io functionality, as described
+          in the section above on "development time" usage.

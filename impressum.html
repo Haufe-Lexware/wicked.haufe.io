@@ -40,10 +40,29 @@
             <div id="navbar" class="navbar-collapse collapse">
               <ul class="nav navbar-nav">
                 <li><a href="index.html">Home</a></li>
-                <li><a href="features.html">Features</a></li>
                 <li><a href="gettingstarted.html">Getting Started</a></li>
-                <li><a href="deployment.html">Deployment</a></li>
-                <li><a href="authentication.html">Authentication</a></li>
+                <li class="dropdown">
+                  <!-- data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Dropdown <span class="caret"></span></a>--><a href="#" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" class="dropdown-toggle">Features <span class='caret'/></a>
+                  <ul class="dropdown-menu">
+                    <li><a href="features.html">Features</a></li>
+                    <li><a href="deployment.html">Deployment</a></li>
+                    <li><a href="authentication.html">Authentication</a></li>
+                  </ul>
+                </li>
+                <li class="dropdown">
+                  <!-- data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Dropdown <span class="caret"></span></a>--><a href="#" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" class="dropdown-toggle">Use Cases <span class='caret'/></a>
+                  <ul class="dropdown-menu">
+                    <li><a href="machine-to-machine.html">Machine to Machine Communication</a></li>
+                    <!--if (thisPage == 'enduser-to-api')-->
+                    <!--  li.active-->
+                    <!--    a(href='enduser-to-api.html') End User Authentication and Authorization-->
+                    <!--else-->
+                    <!--  li-->
+                    <!--    a(href='enduser-to-api.html') End User Authentication and Authorization-->
+                    <li><a href="mobile-apps.html">Mobile API Gateway</a></li>
+                    <li><a href="single-page-apps.html">Single Page Application API Gateway</a></li>
+                  </ul>
+                </li>
                 <li><a href="contact.html">Contact</a></li>
               </ul>
               <ul class="nav navbar-nav navbar-right">

@@ -46,7 +46,7 @@
                   <ul class="dropdown-menu">
                     <li><a href="features.html">Features</a></li>
                     <li><a href="deployment.html">Deployment</a></li>
-                    <li class="active"><a href="authentication.html">Authentication</a></li>
+                    <li><a href="authentication.html">Authentication</a></li>
                   </ul>
                 </li>
                 <li class="dropdown">
@@ -60,7 +60,7 @@
                     <!--  li-->
                     <!--    a(href='enduser-to-api.html') End User Authentication and Authorization-->
                     <li><a href="mobile-apps.html">Mobile API Gateway</a></li>
-                    <li><a href="single-page-apps.html">Single Page Application API Gateway</a></li>
+                    <li class="active"><a href="single-page-apps.html">Single Page Application API Gateway</a></li>
                   </ul>
                 </li>
                 <li><a href="contact.html">Contact</a></li>
@@ -87,100 +87,125 @@
         </nav>
       </div>
     </div>
-    <div style="background: url(&quot;images/header-4-500.jpg&quot;); background-size:cover;" class="jumbotron">
+    <div style="background: url(&quot;images/header-2-500.jpg&quot;); background-size:cover;" class="jumbotron">
       <div style="padding-top: 70px" class="container feature-container">
-        <h1>Authentication</h1>
-        <p>Authentication Options of the API Portal</p>
+        <h1>Single Page Applications</h1>
+        <p>Securing Single Page Apps using the OAuth2 Implicit Grant Flow</p>
       </div>
     </div>
     <div class="container pad20">
       <div class="row">
-        <div class="col-md-6">
-          <h3>Portal Authentication</h3>
-        </div>
-        <div class="col-md-6">&nbsp;</div>
-      </div>
-      <div class="row">
-        <div class="col-md-6">
+        <div class="col-md-8">
+          <h4>Use Case Description</h4>
           <p>
-            To let your developers log in to your API Portal, you can choose from the
-            following means of authentication:
+            Modern Single Page Applications are typically powered by a backend REST API, which needs to be
+            secured against misuse. As the application lives entirely in the browser (user agent) of the
+            end user, and does typically not have a server session, traditional approaches for this (server
+            side sessions) are not desired.
+          </p>
+          <p>
+            In order to decouple the backend API and frontend application, an API Gateway can be put in place
+            to implement the OAuth 2.0 Implicit Grant Flow, which is the recommended way of solving giving
+            a "public" client (as opposed to a <a href="enduser-to-api.html">&quot;confidential&quot; client</a>)
+            access to an API.
             
-          </p>
-          <ul>
-            <li>E-mail and password signup and login</li>
-            <li>ADFS 3.0 Federation using your own ADFS instance (SAML)</li>
-            <li>Github Social Login (OAuth 2.0)</li>
-            <li>Google Login (OAuth 2.0)</li>
-          </ul>
-          <p>
-            For e-mail and password log in, the portal supports reCAPTCHA to avoid robots
-            signing up to your portal; additionally, you can configure the portal to validate
-            email addresses.
-          </p>
-          <p>
-            Sending lost password reset requests is also supported; you only have to supply
-            the API Portal with SMTP credentials.
-          </p>
+          </p><img src="images/uc-single-page-app.png" class="center-block">
         </div>
-        <div class="col-md-6"><img src="images/auth-portal.png" class="center-block"></div>
-      </div>
-      <div class="row pad20">
-        <div class="col-md-12">&nbsp;</div>
       </div>
     </div>
     <div class="grey">
-      <div class="container">
+      <div class="container pad20">
         <div class="row">
-          <div class="col-md-6">&nbsp;</div>
-          <div class="col-md-6">
-            <h3>API Authentication</h3>
+          <div class="col-md-4">
+            <p>&nbsp;</p>
           </div>
-        </div>
-        <div class="row">
-          <div style="padding-bottom:20px" class="col-md-6"><img src="images/auth-kong.png" class="center-block"></div>
-          <div class="col-md-6">
+          <div class="col-md-8">
+            <h4>Development Time Workflow</h4>
+            <p>For development time, the following workflow is typical:</p>
+            <ol>
+              <li>The developer signs up for the API Portal and registers the single page application in the portal; the developer specifies exactly under which URL the SPA will be reachable from (tick the "OAuth 2.0 Redirect URI" check box for the application)</li>
+              <li>By creating a subscription to the Backend API, the developer obtains client credentials for the single page application, a client ID and a client secret; for this use case, only the client ID is significant</li>
+              <li>The developer incorporates the client ID into the single page application:
+                <ul>
+                  <li>If the SPA does not have a valid access token (e.g. in the HTML5 local storage), redirect to the Authorization Server (the URL of which is stated on the API page in the API Portal), specifying which application is calling by passing on the <code>client_id=...</code> and <code>grant_type=implicit</code> in the redirect parameters</li>
+                  <li>Expect to get called back being passed an access token in the fragment of the URL of your own application (e.g. `https://my.spa.com/#access_token=abc928987dffabe9273`)</li>
+                </ul>
+              </li>
+            </ol>
             <p>
-              Besides the portal authentication, your developers can register applications with the
-              API Portal and subscribe to your APIs. You can choose to authenticate these applications
-              using one of the following methods:
-              
-            </p>
-            <ul>
-              <li>Static API Keys (using a header)</li>
-              <li>OAuth 2.0, including Client Credentials Flow, Authorization Code Flow, Implicit Flow and Resource Owner Password Grant</li>
-            </ul>
-            <p>
-              Credentials, i.e. API Keys or Client ID and Client Secret are generated for each application
-              and per API subscription automatically, depending on how you choose to secure your API.
-              
-            </p>
-            <p>
-              Need other means of authentication? Kong supports additional ones, such as JWT. File an issue
-              on GitHub and tell us.
+              For the OAuth2.0 Implicit Flow Grant, it is not necessary and actually "forbidden" to also incorporate the client
+              secret into the single page app; in case the API also supports the client credentials flow, this would enable attackers to
+              reverse engineer the app and extract the credentials. The client ID helps the authorization server to know exactly to
+              which URL it will deliver the access token.
               
             </p>
           </div>
         </div>
       </div>
     </div>
-    <div class="container">
+    <div class="container pad20">
       <div class="row">
-        <div class="col-md-3">
-          <p>&nbsp;</p>
-        </div>
-        <div class="col-md-6 pad20">
+        <div class="col-md-8">
+          <h4>Runtime Workflow</h4>
           <p>
-            For more information, either see the documentation on <a href='https://github.com/Haufe-Lexware/wicked.haufe.io'>GitHub</a>
-            or the use case descriptions on this microsite:
+            To illustrate the runtime flow of such an authentication and authorization process using the OAuth 2.0
+            Implicit Flow Grant, see this picture:
+            
+          </p><img src="images/oauth2-implicit-flow.png" class="center-block">
+          <p>
+            Usually, the SPA will try to store an access token inside its local storage; in case there is none to use, or
+            if it has expired, the SPA should redirect to the Authorization Server to get a new token. How the Authorization
+            Server decides whether or not to issue a (new) token to the single page application is an implemnetation detail
+            and inherently part of the business logic of your single page application.
+            
           </p>
-          <ul>
-            <li><a href="machine-to-machine.html">Machine to Machine Communication</a></li>
-            <!--li-->
-            <!--  a(href='enduser-to-api.html') End User Authentication and Authorization-->
-            <li><a href="mobile-apps.html">Mobile API Gateway</a></li>
-            <li><a href="single-page-apps.html">Single Page Application API Gateway</a></li>
-          </ul>
+          <p>
+            The Authorization normally delegates finding the identity of the end user (authenticate the user) to an external
+            Identity Provider, which can be most anything, e.g. a SAML SSO IdP, Google, Github or any other Provider which allows
+            for integrations.
+            
+          </p>
+        </div>
+      </div>
+    </div>
+    <div class="grey">
+      <div class="container pad20">
+        <div class="row">
+          <div class="col-md-4">
+            <p>&nbsp;</p>
+          </div>
+          <div class="col-md-8">
+            <h4>How do I implement this with wicked?</h4>
+            <p>
+              wicked.haufe.io supports the OAuth 2.0 Implicit Flow, even though not entirely out of the box: You will need
+              to provide an Authorization Server on your own.
+            </p>
+            <p>
+              To illustrate how such Authorization Servers can be implemented, there are two sample projects assosicated
+              with wicked which integrate with different Identity Providers:
+              
+            </p>
+            <ul>
+              <li>The project <a href="https://github.com/Haufe-Lexware/wicked.auth-passport">wicked.auth-passport</a> leverages the node.js PassportJS library to provide the following social logins:
+                <ul>
+                  <li>Google (Plus) login</li>
+                  <li>Github login</li>
+                  <li>Facebook login, and</li>
+                  <li>Twitter login</li>
+                </ul>
+              </li>
+              <li>In <a href="https://github.com/Haufe-Lexware/wicked.auth-saml">wicked.auth-saml</a> you will find an Authorization Server which can be used to integrate with SAML type Identity Providers; this Authorization Server will let you federate a SAML SSO session to an OAuth 2.0 Implicit Flow, which can be really useful if you need to integrate in Enterprise Scenarios.</li>
+            </ul>
+            <p>
+              Both sample projects will allow some parameterizing out of the box, but both do not provide any kind of additional
+              authorization -- if the user was able to authenticate with the desired identity provider, this is considered enough
+              to also be <b>authorized</b>.
+            </p>
+            <p>
+              For wicked.auth-saml, you will find a stub in <code>authorize.js</code> which shows where to put custom authorization code,
+              in case you need or want that.
+            </p>
+          </div>
         </div>
       </div>
     </div>

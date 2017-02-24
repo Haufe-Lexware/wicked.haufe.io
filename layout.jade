@@ -50,30 +50,62 @@ html(lang='en')
                 else
                   li
                     a(href='index.html') Home
-                if (thisPage == 'features')
-                  li.active
-                    a(href='features.html') Features
-                else
-                  li
-                    a(href='features.html') Features
                 if (thisPage == 'gettingstarted')
                   li.active
                     a(href='gettingstarted.html') Getting Started
                 else
                   li
                     a(href='gettingstarted.html') Getting Started
-                if (thisPage == 'deployment')
-                  li.active
-                    a(href='deployment.html') Deployment
-                else
-                  li
-                    a(href='deployment.html') Deployment
-                if (thisPage == 'authentication')
-                  li.active
-                    a(href='authentication.html') Authentication
-                else
-                  li
-                    a(href='authentication.html') Authentication
+                li.dropdown
+                  // data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Dropdown <span class="caret"></span></a>
+                  a(href='#' data-toggle='dropdown' role='button' aria-haspopup='true' aria-expanded='false').dropdown-toggle Features <span class='caret'/>
+                  ul.dropdown-menu
+                    if (thisPage == 'features')
+                      li.active
+                        a(href='features.html') Features
+                    else
+                      li
+                        a(href='features.html') Features
+                    if (thisPage == 'deployment')
+                      li.active
+                        a(href='deployment.html') Deployment
+                    else
+                      li
+                        a(href='deployment.html') Deployment
+                    if (thisPage == 'authentication')
+                      li.active
+                        a(href='authentication.html') Authentication
+                    else
+                      li
+                        a(href='authentication.html') Authentication
+                li.dropdown
+                  // data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Dropdown <span class="caret"></span></a>
+                  a(href='#' data-toggle='dropdown' role='button' aria-haspopup='true' aria-expanded='false').dropdown-toggle Use Cases <span class='caret'/>
+                  ul.dropdown-menu
+                    if (thisPage == 'machine-to-machine')
+                      li.active
+                        a(href='machine-to-machine.html') Machine to Machine Communication
+                    else
+                      li
+                        a(href='machine-to-machine.html') Machine to Machine Communication
+                    //if (thisPage == 'enduser-to-api')
+                    //  li.active
+                    //    a(href='enduser-to-api.html') End User Authentication and Authorization
+                    //else
+                    //  li
+                    //    a(href='enduser-to-api.html') End User Authentication and Authorization
+                    if (thisPage == 'mobile-apps')
+                      li.active
+                        a(href='mobile-apps.html') Mobile API Gateway
+                    else
+                      li
+                        a(href='mobile-apps.html') Mobile API Gateway
+                    if (thisPage == 'single-page-apps')
+                      li.active
+                        a(href='single-page-apps.html') Single Page Application API Gateway
+                    else
+                      li
+                        a(href='single-page-apps.html') Single Page Application API Gateway
                 if (thisPage == 'contact')
                   li.active
                     a(href='contact.html') Contact

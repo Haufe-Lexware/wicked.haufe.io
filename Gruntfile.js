@@ -24,7 +24,10 @@ module.exports = function (grunt) {
                     'impressum.html': 'impressum.jade',
                     'contact.html': 'contact.jade',
                     'thanks.html': 'thanks.jade',
-                    
+                    'machine-to-machine.html': 'machine-to-machine.jade',
+                    'mobile-apps.html': 'mobile-apps.jade',
+                    'enduser-to-api.html': 'enduser-to-api.jade',
+                    'single-page-apps.html': 'single-page-apps.jade'
                 }
             }
         }

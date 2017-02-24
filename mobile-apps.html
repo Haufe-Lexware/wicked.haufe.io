@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags-->
+    <meta name="description" content="wicked.haufe.io">
+    <meta name="author" content="donmartin76">
+    <title>wicked.haufe.io - Open Source API Portal</title>
+    <!-- Bootstrap core CSS-->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug-->
+    <link href="css/ie10-viewport-bug-workaround.css" rel="stylesheet">
+    <!-- Just for debugging purposes. Don't actually copy these 2 lines!-->
+    <!--if lt IE 9script(src='../../assets/js/ie8-responsive-file-warning.js')
+    -->
+    <!-- <script src="js/ie-emulation-modes-warning.js"></script>-->
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries-->
+    <!--if lt IE 9
+    script(src='https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js')
+    script(src='https://oss.maxcdn.com/respond/1.4.2/respond.min.js')
+    -->
+    <!-- Custom styles for this template-->
+    <link href="css/carousel.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+  </head>
+  <!--
+  NAVBAR
+  ==================================================
+  -->
+  <body>
+    <div class="navbar-wrapper">
+      <div class="container">
+        <nav class="navbar navbar-inverse navbar-static-top">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar" class="navbar-toggle collapsed"><span class="sr-only">Toggle navigation</span><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></button><a href="https://github.com/Haufe-Lexware/wicked.haufe.io" class="navbar-brand">wicked.haufe.io</a>
+            </div>
+            <div id="navbar" class="navbar-collapse collapse">
+              <ul class="nav navbar-nav">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="gettingstarted.html">Getting Started</a></li>
+                <li class="dropdown">
+                  <!-- data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Dropdown <span class="caret"></span></a>--><a href="#" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" class="dropdown-toggle">Features <span class='caret'/></a>
+                  <ul class="dropdown-menu">
+                    <li><a href="features.html">Features</a></li>
+                    <li><a href="deployment.html">Deployment</a></li>
+                    <li><a href="authentication.html">Authentication</a></li>
+                  </ul>
+                </li>
+                <li class="dropdown">
+                  <!-- data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Dropdown <span class="caret"></span></a>--><a href="#" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" class="dropdown-toggle">Use Cases <span class='caret'/></a>
+                  <ul class="dropdown-menu">
+                    <li><a href="machine-to-machine.html">Machine to Machine Communication</a></li>
+                    <!--if (thisPage == 'enduser-to-api')-->
+                    <!--  li.active-->
+                    <!--    a(href='enduser-to-api.html') End User Authentication and Authorization-->
+                    <!--else-->
+                    <!--  li-->
+                    <!--    a(href='enduser-to-api.html') End User Authentication and Authorization-->
+                    <li class="active"><a href="mobile-apps.html">Mobile API Gateway</a></li>
+                    <li><a href="single-page-apps.html">Single Page Application API Gateway</a></li>
+                  </ul>
+                </li>
+                <li><a href="contact.html">Contact</a></li>
+              </ul>
+              <ul class="nav navbar-nav navbar-right">
+                <li><a href="impressum.html">Impressum</a></li>
+                <!--
+                <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Dropdown <span class="caret"></span></a>
+                <ul class="dropdown-menu">
+                <li><a href="#">Action</a></li>
+                <li><a href="#">Another action</a></li>
+                <li><a href="#">Something else here</a></li>
+                <li role="separator" class="divider"></li>
+                <li class="dropdown-header">Nav header</li>
+                <li><a href="#">Separated link</a></li>
+                <li><a href="#">One more separated link</a></li>
+                </ul>
+                </li>
+                -->
+              </ul>
+            </div>
+          </div>
+        </nav>
+      </div>
+    </div>
+    <div style="background: url(&quot;images/header-2-500.jpg&quot;); background-size:cover;" class="jumbotron">
+      <div style="padding-top: 70px" class="container feature-container">
+        <h1>Mobile API Gateway</h1>
+        <p>Securing Mobile APIs using the OAuth2 Resource Owner Password Flow</p>
+      </div>
+    </div>
+    <div class="container pad20">
+      <div class="row">
+        <div class="col-md-8">
+          <h4>Use Case Description</h4>
+          <p>
+            For mobile applications (on smartphones/tablets) a typical use case is that you let a user log in to your service,
+            or create some kind of unique identifier for the user's device, which is considered the identity of the user,
+            and that you then allow access only in the context of this user to your backend API.
+          </p>
+          <p>
+            In order to prevent fraud or excessive usage of your API, it's also typical to apply rate limiting by number
+            of calls per authorized user and application.
+          </p>
+          <p>
+            In this use case we assume that your user base is already contained in some external system (LDAP/SAML/other IdP), 
+            and you want to leverage this user base in a new mobile application, which is to make use of your mobile backend
+            API. The only constraint is that your Identity Provider needs to provide a headless means (e.g. an API) to verify
+            an end user's credentials, e.g. username and password.
+            
+          </p><img src="images/uc-mobile-api-gateway.png" class="center-block">
+        </div>
+      </div>
+    </div>
+    <div class="grey">
+      <div class="container pad20">
+        <div class="row">
+          <div class="col-md-4">
+            <p>&nbsp;</p>
+          </div>
+          <div class="col-md-8">
+            <h4>Development Time Workflow</h4>
+            <p>For development time, the following workflow is typical:</p>
+            <ol>
+              <li>The developer signs up for the API Portal and registers the mobile application in the portal</li>
+              <li>By creating a subscription to the Mobile API, the developer obtains client credentials for the mobile application, a client ID and a client secret; for this use case, only the client ID is significant</li>
+              <li>The developer incorporates the client ID into the mobile application and implements the needed bits for the OAuth2.0 Resource Owner Password Grant Flow.</li>
+            </ol>
+            <p>
+              For the OAuth2.0 Resource Owner Password Grant, it is not necessary and advised against to also incorporate the client
+              secret into the mobile app; in case the API also supports the client credentials flow, this would enable attackers to
+              reverse engineer the app and extract the credentials. The client ID on the other hand is only helpful in combination with
+              an end user identity, which the end user will also try to protect.
+              
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="container pad20">
+      <div class="row">
+        <div class="col-md-8">
+          <h4>Runtime Workflow</h4>
+          <p>
+            At runtime, the authentication and authorization of the API usage for the end user inside the mobile app will work as follows.
+            When the end user opens the application for the first time, this happens:
+          </p>
+          <ol>
+            <li>The mobile app presents a login screen which asks for username and password of the end user</li>
+            <li>
+              Using the client ID, the username and password, the mobile app uses the OAuth 2.0 Resource Owner Password Grant Flow to 
+              ask an Authorization Server for an access token to the backend API
+            </li>
+            <li>
+              The Authorization Server verifies the username and password, and if successful, issues both an Access Token and a Refresh Token
+              for the mobile App to use
+            </li>
+            <li>
+              Whenever the mobile app now uses the access token, all requests to the backend API will be enriched with the identity
+              (and possibly scope) of the request
+              
+            </li>
+          </ol>
+          <p>
+            The mobile app can (and should) now discard the end user username and password, and instead make use of the access token;
+            in case the access token expires, the mobile app cann use the refresh token to obtain a new access token (and refresh token).
+          </p>
+          <p>
+            This means that the mobile app does not need to keep the user's actual secrets; it has exchanged them for a purpose-tied
+            pair of access and refresh tokens; even if the mobile app is hacked, the user's username and password are no longer
+            present in the memory/storage of the mobile app, which obviously increases security.
+            
+          </p>
+        </div>
+      </div>
+    </div>
+    <div class="grey">
+      <div class="container pad20">
+        <div class="row">
+          <div class="col-md-4">
+            <p>&nbsp;</p>
+          </div>
+          <div class="col-md-8">
+            <h4>How do I implement this with wicked?</h4>
+            <p>
+              In order to implement this use case with wicked.haufe.io, you will need one additional componenet which is not 
+              available in a standard deployment of wicked: An Authorization Server. The task of the Authorization Server for the 
+              Mobile Backend API Gateway use case is:
+              
+            </p>
+            <ol>
+              <li>
+                Establish a user's identity by verifying the user's username and password, based on a call according to the
+                OAuth2.0 Resource Owner Password Grant (<b>authenticate</b> the user)
+              </li>
+              <li>
+                Decide whether this user is entitled to use the backend API, and if he his, which scope he is entitled to use
+                (<b>authorize</b> the user). Depending on your use case, authentication may equal authorization (if you know the user,
+                that's enough to the user through to the API), or may include e.g. some license checking
+              </li>
+              <li>
+                Decide on token renewal (via the Refresh Token) after the Access Token has expired and the mobile app needs a new
+                Access Token.
+                
+              </li>
+            </ol>
+            <p>
+              It's important to understand that wicked does neither impose any restrictions on how you verify user identity,
+              nor on how the user is authorized. This can be done in a completely custom way, if needed.
+              
+            </p>
+            <p>
+              An example implementation of an Authorization Server can be found at 
+              <a href="https://github.com/Haufe-Lexware/wicked.mobile-auth-template">wicked.mobile-auth-template</a>.
+              This is a template for implementing exactly such a mobile backend Authorization Server, with 
+              <code>TODO</code> sections to fill in.
+              
+            </p>
+            <p>
+              If you decide to implement an Authorization Server based on node.js, the following wicked SDK libraries
+              may help:
+            </p>
+            <ul>
+              <li><a href="https://github.com/Haufe-Lexware/wicked.node-sdk">wicked node.js SDK</a></li>
+              <li><a href="https://github.com/Haufe-Lexware/wicked.node-saml-sdk">wicked node.js SAML SDK</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="container">
+      <hr>
+      <!-- FOOTER-->
+      <footer></footer>
+      <p class="pull-right"><a href="#">Back to top</a></p>
+      <p>© 2016-2017 Haufe-Lexware GmbH & Co. KG, <a href="http://www.haufe-lexware.com">www.haufe-lexware.com</a>, <a href="http://www.haufe.de">www.haufe.de</a>, <a href="http://www.lexware.de">www.lexware.de</a>, <a href="http://www.haufe-akademie.de">www.haufe-akademie.de</a></p>
+    </div>
+    <!-- /.container-->
+    <!--
+    Bootstrap core JavaScript
+    ==================================================
+    -->
+    <!-- Placed at the end of the document so the pages load faster-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery.min.js"><\\/script>')</script>
+    <script src="js/bootstrap.min.js"></script>
+    <!-- Just to make our placeholder images work. Don't actually copy the next line!-->
+    <script src="js/holder.min.js"></script>
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug-->
+    <script src="js/ie10-viewport-bug-workaround.js"></script>
+  </body>
+</html>
