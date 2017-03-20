@@ -10,6 +10,20 @@ Official Release of the API Portal.
 
 **Docker Tag**: tba
 
+## 0.11.4 (beta)
+
+**Date**: March 20th, 2017 (2017-03-20)
+
+**Docker Tag**: `0.11.4`
+
+Another minor release with two relevant changes: Firstly make sure that all calls to wicked's `portal-api` timeout quickly; this posed a a problem when e.g. running in Kubernetes, and the `portal-api` container was updated. Most depending containers check for the state of the portal API every ten seconds, and if the container is down, the call to the API will time out. The standard timeout is 120 seconds on Debian, which meant that e.g. the portal itself could hang for around two minutes before recovering. This should happen a lot faster now.
+
+Another measure to increase deployment safety is that the portal API now checks whether the `PORTAL_CONFIG_KEY` is correctly configured. To make use of this new feature, open your static configuration once with the updated (0.11.4+) kickstarter; this will introduce a new property in the `globals.json` containing a check for the valid configuration key.
+
+* [Deploying with faulty PORTAL_CONFIG_KEY renders strange results](https://github.com/Haufe-Lexware/wicked.haufe.io/issues/59)
+* [Portal starts slow in Kubernetes sometimes](https://github.com/Haufe-Lexware/wicked.haufe.io/issues/57)
+* [/docker-entrypoint.sh: line 7: exec: dockerize: not found on wicked.kong container](https://github.com/Haufe-Lexware/wicked.haufe.io/issues/58)
+
 ## 0.11.3 (beta)
 
 **Date**: February 15th, 2017 (2017-02-15)
