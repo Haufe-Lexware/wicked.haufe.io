@@ -10,6 +10,16 @@ Official Release of the API Portal.
 
 **Docker Tag**: tba
 
+## 0.11.5 (beta)
+
+**Date**: March 31st, 2017 (2017-03-31)
+
+**Docker Tag**: `0.11.5`
+
+Minor bugfix release mainly concerning the Kickstarter. The template for the `docker-compose.yml` created by the Kickstarter container an error (double `environment` sections) which prevented HAproxy (in the default configuration) to pick up the portal end point. Except for the YAML being syntactically wrong, this always just rendered a 503 return code for the portal end point.
+
+* [Error when Deploying API portal locally](https://github.com/Haufe-Lexware/wicked.haufe.io/issues/61)
+
 ## 0.11.4 (beta)
 
 **Date**: March 20th, 2017 (2017-03-20)

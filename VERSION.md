@@ -2,8 +2,8 @@
 
 ### Latest Release
 
-Latest release is `0.11.4` (March 20th 2017).
+Latest release is `0.11.5` (March 31st 2017).
 
 ### Next Release
 
-Next release will probably be `0.11.5` (no date defined yet).
+Next release will probably be `0.11.6` (no date defined yet).
