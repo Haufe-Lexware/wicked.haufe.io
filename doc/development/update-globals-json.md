@@ -58,30 +58,18 @@ To test on your local configuration, if you have followed https://github.com/Hau
 ```
 
 
-1. Go to its folder and temporarily edit `packages.json` `portal-env` package to look for your local folder of `wicked.portal-env`:
+1. Go to the `wicked.portal-env` directory, and start the script `./local-update-portal-env.sh`, which will transport the portal environment into both `wicked.portal-kickstart` and `wicked.portal-api`, mimicking the way the docker images build up on each other, but just locally
 
-```json
-{
-  // ...
-  "dependencies": {
-    // ...
-    "portal-env": "../wicked.portal-env",
-  },
-  // ...
-}
-```
-
-2. Attention ! Save your local static `wicked-config` before executing the next command
+2. Attention! Save your local static `wicked-config` before executing the next command
 
 Go to your local `wicked-config` folder and commit any changes to avoid breaking or loosing it.
 
 3. Launch the Kickstarter localy (in edition mode) with the path to you local configuration (here `wicked-config` is the name of my local configuration:
 
-```shell
-node bin/kickstart ../wicked-config
+```bash
+$ node bin/kickstart ../wicked-config
 ```
 
 4. Check your `wicked-config/static/globals.json`
 
 The `version` setting should be equal to the new number and your changes present
-
