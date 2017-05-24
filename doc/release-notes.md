@@ -10,6 +10,21 @@ Official Release of the API Portal.
 
 **Docker Tag**: tba
 
+## 0.11.6 (beta)
+
+**Date**: May 24th, 2017 (2017-05-24)
+
+**Docker Tag**: `0.11.6`
+
+Lots of minor and medium changes, including a very appreciated Pull Request from [pifleo](https://github.com/pifleo) (thanks again!), dealing with customization options of the portal UI. Additionally, we now build (experimental) Alpine based images (based on `node:6-alpine`) in addition to the usual Debian based `node:6` images we have had so far. The demo portal already runs on Alpine, and it seems smooth. If you want to give it a spin, go ahead, append `-alpine` to the image tags to pull the Alpine images. Please note that `wicked.kong` does **not** have an Alpine image, it's quite small as is anyway.
+
+Another notable change is that the Kong Adapter now can revoke access tokens, which can be useful for logout functionality. Last, but not least, wicked now allows for application IDs of up to 50 characters (instead of 20 before).
+
+* [Portal UI Customization](https://github.com/Haufe-Lexware/wicked.haufe.io/issues/66)
+* [Provide Alpine Images](https://github.com/Haufe-Lexware/wicked.haufe.io/issues/62)
+* [It should be possible to revoke access tokens](https://github.com/Haufe-Lexware/wicked.haufe.io/issues/70)
+* [Allow a longer name in the kickstarter for applications](https://github.com/Haufe-Lexware/wicked.haufe.io/issues/68)
+
 ## 0.11.5 (beta)
 
 **Date**: March 31st, 2017 (2017-03-31)
