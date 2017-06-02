@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
       - name: {{ template "fullname" . }}-api
-        image: {{ .Values.image.repository }}portal-api:{{ default "latest" .Values.image.tag }}
+        image: {{ .Values.image.repository }}portal-api:{{ default "latest" .Values.image.tag }}{{ if .Values.image.alpine }}-alpine{{ end }}
         imagePullPolicy: {{ default "Always" .Values.image.pullPolicy }}
         env:
         - name: HELM_NAME

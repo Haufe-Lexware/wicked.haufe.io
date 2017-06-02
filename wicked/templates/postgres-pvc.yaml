@@ -1,3 +1,4 @@
+{{- if .Values.postgres.deployPostgres }}
 {{- if and .Values.postgres.persistence.enabled (not .Values.postgres.persistence.existingClaim) -}}
 kind: PersistentVolumeClaim
 apiVersion: v1
@@ -20,4 +21,5 @@ spec:
   resources:
     requests:
       storage: {{ .Values.postgres.persistence.size | quote }}
+{{- end -}}
 {{- end -}}

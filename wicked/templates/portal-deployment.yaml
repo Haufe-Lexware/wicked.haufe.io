@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
       - name: {{ template "fullname" . }}-portal
-        image: "{{ .Values.image.repository }}portal:{{ default "latest" .Values.image.tag }}"
+        image: "{{ .Values.image.repository }}portal:{{ default "latest" .Values.image.tag }}{{ if .Values.image.alpine }}-alpine{{ end }}"
         imagePullPolicy: {{ default "Always" .Values.image.pullPolicy }}
         env:
         - name: DEBUG
