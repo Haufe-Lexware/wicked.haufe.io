@@ -1,0 +1,77 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: {{ template "fullname" . }}-kong-database
+  namespace: {{ default "default" .Values.namespace }}
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        service: {{ template "fullname" . }}-kong-database
+        wicked: "true"
+    spec:
+      containers:
+      - env:
+        - name: POSTGRES_USER
+          valueFrom:
+            secretKeyRef:
+              name: {{ template "fullname" . }}-postgres
+              key: pgUser
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: {{ template "fullname" . }}-postgres
+              key: pgPassword
+        - name: POD_IP
+          valueFrom: { fieldRef: { fieldPath: status.podIP } }
+        image: postgres:9.6
+        name: {{ template "fullname" . }}-kong-database
+        ports:
+        - name: "psql"
+          containerPort: 5432
+          protocol: TCP
+        livenessProbe:
+          exec:
+            command:
+            - sh
+            - -c
+            - exec pg_isready --host $POD_IP
+          initialDelaySeconds: 60
+          timeoutSeconds: 5
+          failureThreshold: 6
+        readinessProbe:
+          exec:
+            command:
+            - sh
+            - -c
+            - exec pg_isready --host $POD_IP
+          initialDelaySeconds: 5
+          timeoutSeconds: 3
+          periodSeconds: 5
+        volumeMounts:
+        - mountPath: /var/lib/postgresql/data
+          name: kong-db-data
+{{- if .Values.postgres.persistence.subPath }}
+          subPath: {{ .Values.postgres.persistence.subPath }}
+{{- end }}
+        resources:
+{{ toYaml .Values.postgres.resources | indent 10 }}
+      restartPolicy: Always
+      volumes:
+      - name: kong-db-data
+{{- if not .Values.postgres.persistence.enabled }}
+        emptyDir: {}
+{{- else if and .Values.postgres.persistence.enabled (not .Values.postgres.persistence.existingClaim) }}
+        persistentVolumeClaim:
+          claimName: {{ template "fullname" . }}-postgres
+{{- else }}
+        persistentVolumeClaim:
+          claimName: {{ .Values.postgres.persistence.existingClaim }}
+{{- end }}
+{{- if .Values.imagePullSecrets }}
+      imagePullSecrets:
+{{ toYaml .Values.imagePullSecrets | indent 8 }}
+{{- end -}}

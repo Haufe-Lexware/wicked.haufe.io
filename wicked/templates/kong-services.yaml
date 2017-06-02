@@ -1,0 +1,29 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    service: {{ template "fullname" . }}-kong
+    wicked: "true"
+  name: {{ template "fullname" . }}-kong
+  namespace: {{ default "default" .Values.namespace }}
+spec:
+  ports:
+  - name: "admin"
+    port: 8001
+    protocol: TCP
+  selector:
+    service: {{ template "fullname" . }}-kong
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    service: {{ template "fullname" . }}-kong
+  name: {{ template "fullname" . }}-kong-gw
+spec:
+  ports:
+  - name: "gateway"
+    port: 8000
+    protocol: TCP
+  selector:
+    service: {{ template "fullname" . }}-kong

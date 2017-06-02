@@ -1,0 +1,57 @@
+{{- if .Values.deployMailer -}}
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: {{ template "fullname" . }}-mailer
+  namespace: {{ default "default" .Values.namespace }}
+  labels:
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}"
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        service: {{ template "fullname" . }}-mailer
+        wicked: "true"
+    spec:
+      containers:
+      - name: {{ template "fullname" . }}-mailer
+        image: "{{ .Values.image.repository }}portal-mailer:{{ default "latest" .Values.image.tag }}"
+        imagePullPolicy: {{ default "Always" .Values.image.pullPolicy }}
+        env:
+        - name: DEBUG
+          valueFrom:
+            configMapKeyRef:
+              name: {{ template "fullname" . }}-apim-config
+              key: DEBUG
+        - name: PORTAL_API_URL
+          value: "http://{{ template "fullname" . }}-api:3001/"
+        ports:
+        - containerPort: 3003
+          protocol: TCP
+        readinessProbe:
+          httpGet:
+            path: /ping
+            port: 3003
+          initialDelaySeconds: 5
+          periodSeconds: 15
+          timeoutSeconds: 2
+        livenessProbe:
+          httpGet:
+            path: /ping
+            port: 3003
+          initialDelaySeconds: 5
+          periodSeconds: 15
+          timeoutSeconds: 2
+        resources:
+          requests:
+            memory: 128Mi
+            cpu: 50m
+      restartPolicy: Always
+{{- if .Values.imagePullSecrets }}
+      imagePullSecrets:
+{{ toYaml .Values.imagePullSecrets | indent 8 }}
+{{- end -}}
+{{- end -}}

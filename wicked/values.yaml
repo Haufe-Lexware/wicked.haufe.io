@@ -1,0 +1,133 @@
+# Default values for wicked.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+kongReplicas: 2
+
+# namespace to deploy wicked to:
+namespace: default
+
+# Specify true to deploy the chatbot
+deployChatbot: false
+# Specify true to deploy the mailer
+deployMailer: false
+
+image:
+  # Use the Alpine images (works as of 0.11.6, experimental)
+  alpine: true
+  # Use "haufelexware/wicked." for the official ones, otherwise use the prefix you
+  # need to pull your company's version of wicked.
+  repository: "haufelexware/wicked."
+  tag: "0.11.6"
+  pullPolicy: IfNotPresent
+
+# Add imagePullSecrets like this in an override.yaml to pass in with helm install
+#imagePullSecrets:
+#- name: your.registry.io
+
+config:
+  # The default password of the user admin@foo.com
+  adminPassword: wicked
+  # It's not advisable to use the default environment; please create a dedicated
+  # environment for your deployment; this is for the sample repository.
+  envName: default
+  # This is the deployment key for the sample repository; it needs to be
+  # overridden with your deployment key
+  deployKey: 2c94d4ffce4b631a776289dca18bc9afec60f667
+  # Override with your own git repository, as reachable from your k8s cluster.
+  repository: "github.com/apim-haufe-io/wicked-sample-config"
+  # Replace with your git (read only) credentials, "username:password", or leave empty 
+  # if the repo is readable to the public (like the sample repo above)
+  credentials: ""
+  # Specify this (a git SHA1 revision, full length) if you want to pull a specific
+  # configuration version. Use either this or branch, or none to pull HEAD of master
+  revision: ""
+  # Specify a branch to pull for the APIm configuration. Use either this or revision,
+  # or none of both to pull HEAD of master.
+  branch: ""
+  # Node debugging filter
+  debug: "*"
+
+# Ingress specification
+ingress:
+  enabled: true
+  # Value for ingress class, defaults to nginx
+  class: nginx
+  # Used to create Ingress record (should used with service.type: ClusterIP).
+  apiHost: api.portal.local
+  portalHost: portal.local
+
+  useKubeLego: false
+  # If useKubeLego is false, set this to true to use the secret names in the tls
+  # property for the ingresses. Otherwise the standard secrets for "portal.local" and
+  # "api.portal.local" are used.
+  existingTls: false
+  # If existingTls is true, specify the secret names for the certificates here
+  tls:
+    apiHostSecret: gateway-ingress-tls
+    portalHostSecret: portal-ingress-tls
+
+persistence:
+  # Use a PVC to persist data
+  enabled: false
+  # Provide an existing PersistentVolumeClaim	nil
+  existingClaim: nil
+  # Storage class of backing PVC (uses alpha storage class annotation)
+  storageClass: nil
+  # Use volume as ReadOnly, ReadWrite or ReadWriteOnce
+  accessMode:	ReadWriteOnce
+  # Size of data volume
+  size: 1Gi	
+  # Subdirectory of the volume to mount at (useful for NFS mounts with hidden files in base)
+  subPath: ""
+
+# Specify the resource for Kong here
+kong:
+  resources:
+    requests:
+      memory: 256Mi
+      cpu: 200m
+
+# Postgres configuration
+postgres:
+  # Deploy a Kong Postgres storage with this application? If you specify false here,
+  # you will need to take care of your Postgres instance yourself
+  deployPostgres: true
+
+  # In case you choose not to deploy Postgres along with Kong, you must specify the
+  # following values. The Postgres port is fixed at 5432, can currently not be changed.
+  pgHost: postgres.host.com
+  
+  # These values are used both to prime your local database (deployPostgres=true) or
+  # if you choose to run a custom postgres instance.
+  pgDatabase: kong
+  pgUser: kong
+  pgPassword: kong
+
+  resources:
+    requests:
+      memory: 256Mi
+      cpu: 100m
+
+  # Persist Postgres storage? This is mandatory for production scenarios, in case you
+  # do not decide to roll your own Postgres (i.e. deployPostgres=false)
+  persistence:
+    # Use a PVC to persist data	true
+    enabled: false
+    # Provide an existing PersistentVolumeClaim
+    existingClaim: ""
+    # Storage class of backing PVC (uses alpha storage class annotation)
+    storageClass: ""
+    # Use volume as ReadOnly, ReadWrite or ReadWriteOnce
+    accessMode:	ReadWriteOnce
+    # Size of data volume
+    size: 2Gi	
+    # Subdirectory of the volume to mount at (useful for NFS mounts with hidden files in base)
+    subPath: ""
+
+#resources:
+#  limits:
+#    cpu: 100m
+#    memory: 128Mi
+#  requests:
+#    cpu: 100m
+#    memory: 128Mi

@@ -1,0 +1,116 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: {{ template "fullname" . }}-api
+  namespace: {{ default "default" .Values.namespace }}
+  labels:
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}"
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        service: {{ template "fullname" . }}-api
+        wicked: "true"
+    spec:
+      containers:
+      - name: {{ template "fullname" . }}-api
+        image: {{ .Values.image.repository }}portal-api:{{ default "latest" .Values.image.tag }}
+        imagePullPolicy: {{ default "Always" .Values.image.pullPolicy }}
+        env:
+        - name: HELM_NAME
+          valueFrom:
+            configMapKeyRef:
+              name: {{ template "fullname" . }}-apim-config
+              key: HELM_NAME
+        - name: NODE_ENV
+          value: {{ default "default" .Values.envName }}
+        - name: GIT_REPO
+          valueFrom:
+            configMapKeyRef:
+              name: {{ template "fullname" . }}-apim-config
+              key: GIT_REPO
+        - name: GIT_REVISION
+          valueFrom:
+            configMapKeyRef:
+              name: {{ template "fullname" . }}-apim-config
+              key: GIT_REVISION
+        - name: GIT_BRANCH
+          valueFrom:
+            configMapKeyRef:
+              name: {{ template "fullname" . }}-apim-config
+              key: GIT_BRANCH
+        - name: GIT_CREDENTIALS
+          valueFrom:
+            secretKeyRef:
+              name: {{ template "fullname" . }}-apim-secrets
+              key: GIT_CREDENTIALS
+        - name: PORTAL_CONFIG_KEY
+          valueFrom:
+            secretKeyRef:
+              name: {{ template "fullname" . }}-apim-secrets
+              key: PORTAL_CONFIG_KEY
+        - name: DEBUG
+          valueFrom:
+            configMapKeyRef:
+              name: {{ template "fullname" . }}-apim-config
+              key: DEBUG
+        - name: PORTAL_NETWORK_PORTALHOST
+          valueFrom:
+            configMapKeyRef:
+              name: {{ template "fullname" . }}-apim-config
+              key: PORTAL_NETWORK_PORTALHOST
+        - name: PORTAL_NETWORK_APIHOST
+          valueFrom:
+            configMapKeyRef:
+              name: {{ template "fullname" . }}-apim-config
+              key: PORTAL_NETWORK_APIHOST
+        - name: ADMIN_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: {{ template "fullname" . }}-apim-secrets
+              key: ADMIN_PASSWORD
+        ports:
+        - containerPort: 3001
+          protocol: TCP
+        volumeMounts:
+        - mountPath: /var/portal-api/dynamic
+          name: portal-api-data-dynamic
+{{- if .Values.persistence.subPath }}
+          subPath: {{ .Values.persistence.subPath }}
+{{- end }}
+        readinessProbe:
+          httpGet:
+            path: /ping
+            port: 3001
+          initialDelaySeconds: 15
+          periodSeconds: 15
+          timeoutSeconds: 2
+        livenessProbe:
+          httpGet:
+            path: /ping
+            port: 3001
+          initialDelaySeconds: 5
+          periodSeconds: 15
+          timeoutSeconds: 2
+        resources:
+          requests:
+            memory: 256Mi
+            cpu: 100m
+      volumes:
+      - name: portal-api-data-dynamic
+{{- if not .Values.persistence.enabled }}
+        emptyDir: {}
+{{- else if and .Values.persistence.enabled (not .Values.persistence.existingClaim) }}
+        persistentVolumeClaim:
+          claimName: {{ template "fullname" . }}-api
+{{- else }}
+        persistentVolumeClaim:
+          claimName: {{ .Values.persistence.existingClaim }}
+{{- end }}
+{{- if .Values.imagePullSecrets }}
+      imagePullSecrets:
+{{ toYaml .Values.imagePullSecrets | indent 8 }}
+{{- end -}}

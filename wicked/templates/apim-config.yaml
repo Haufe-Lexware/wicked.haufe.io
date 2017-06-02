@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "fullname" . }}-apim-config
+  namespace: {{ default "default" .Values.namespace }}
+  labels:
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}"
+data:
+  HELM_NAME: {{ template "fullname" . }}
+  GIT_REPO: {{ .Values.config.repository | quote }}
+  GIT_REVISION: {{ default "" .Values.config.revision | quote }}
+  GIT_BRANCH: {{ default "" .Values.config.branch | quote }}
+  DEBUG: {{ default "" .Values.config.debug | quote }}
+  PORTAL_NETWORK_APIHOST: {{ default "api.portal.local" .Values.ingress.apiHost | quote }}
+  PORTAL_NETWORK_PORTALHOST: {{ default "portal.local" .Values.ingress.portalHost | quote }}

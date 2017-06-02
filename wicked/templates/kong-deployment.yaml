@@ -1,0 +1,68 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: {{ template "fullname" . }}-kong
+  namespace: {{ default "default" .Values.namespace }}
+  labels:
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}"
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        service: {{ template "fullname" . }}-kong
+        wicked: "true"
+    spec:
+      containers:
+      - name: {{ template "fullname" . }}-kong
+        image: "{{ .Values.image.repository }}kong:{{ default "latest" .Values.image.tag }}"
+        imagePullPolicy: {{ default "Always" .Values.image.pullPolicy }}
+        env:
+        - name: KONG_PG_HOST
+{{- if .Values.postgres.deployPostgres }}
+          value: {{ template "fullname" . }}-kong-database.{{ default "default" .Values.namespace }}.svc.cluster.local
+{{- else }}
+          value: {{ .Values.postgres.pgHost }}
+{{- end }}
+        - name: KONG_PG_USER
+          valueFrom:
+            secretKeyRef:
+              name: {{ template "fullname" . }}-postgres
+              key: pgUser
+        - name: KONG_PG_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: {{ template "fullname" . }}-postgres
+              key: pgPassword
+        - name: KONG_PG_DATABASE
+          valueFrom:
+            secretKeyRef:
+              name: {{ template "fullname" . }}-postgres
+              key: pgDatabase
+        readinessProbe:
+          exec:
+            command:
+              - kong
+              - health
+        ports:
+        - name: "gateway"
+          containerPort: 8000
+          protocol: TCP
+        - name: "admin"
+          containerPort: 8001
+          protocol: TCP
+        - name: "advertise"
+          containerPort: 7946
+          protocol: TCP
+        - name: "advertiseudp"
+          containerPort: 7946
+          protocol: UDP
+        resources:
+{{ toYaml .Values.kong.resources | indent 10 }}
+      restartPolicy: Always
+{{- if .Values.imagePullSecrets }}
+      imagePullSecrets:
+{{ toYaml .Values.imagePullSecrets | indent 8 }}
+{{- end -}}

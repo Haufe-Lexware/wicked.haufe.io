@@ -1,0 +1,55 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: {{ template "fullname" . }}-kong-adapter
+  namespace: {{ default "default" .Values.namespace }}
+  labels:
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}"
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        service: {{ template "fullname" . }}-kong-adapter
+        wicked: "true"
+    spec:
+      containers:
+      - name: {{ template "fullname" . }}-kong-adapter
+        image: "{{ .Values.image.repository }}portal-kong-adapter:{{ default "latest" .Values.image.tag }}"
+        imagePullPolicy: {{ default "Always" .Values.image.pullPolicy }}
+        env:
+        - name: DEBUG
+          valueFrom:
+            configMapKeyRef:
+              name: {{ template "fullname" . }}-apim-config
+              key: DEBUG
+        - name: PORTAL_API_URL
+          value: "http://{{ template "fullname" . }}-api:3001/"
+        ports:
+        - containerPort: 3002
+          protocol: TCP
+        readinessProbe:
+          httpGet:
+            path: /ping
+            port: 3002
+          initialDelaySeconds: 5
+          periodSeconds: 15
+          timeoutSeconds: 2
+        livenessProbe:
+          httpGet:
+            path: /ping
+            port: 3002
+          initialDelaySeconds: 5
+          periodSeconds: 15
+          timeoutSeconds: 2
+        resources:
+          requests:
+            memory: 256Mi
+            cpu: 200m
+      restartPolicy: Always
+{{- if .Values.imagePullSecrets }}
+      imagePullSecrets:
+{{ toYaml .Values.imagePullSecrets | indent 8 }}
+{{- end -}}

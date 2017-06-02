@@ -1,0 +1,59 @@
+{{- if .Values.ingress.enabled -}}
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: {{ template "fullname" . }}-portal-ingress
+  namespace: {{ default "default" .Values.namespace }}
+  annotations:
+    kubernetes.io/ingress.class: {{ default "nginx" .Values.ingress.class }}
+{{- if .Values.ingress.useKubeLego }}
+    kubernetes.io/tls-acme: "true"
+{{- end }}
+  labels:
+    app: {{ template "fullname" . }}
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}"
+    release: "{{ .Release.Name }}"
+    heritage: "{{ .Release.Service }}"
+spec:
+  tls:
+  - hosts:
+    - {{ default "portal.local" .Values.ingress.portalHost }}
+    secretName: {{ if .Values.ingress.useKubeLego }}{{ template "fullname" . }}-portal-ingress-tls{{ else if .Values.ingress.existingTls }}{{ .Values.ingress.tls.portalHostSecret }}{{ else }}{{ template "fullname" . }}-portal-ingress-tls{{ end }}
+  rules:
+  - host: {{ default "portal.local" .Values.ingress.portalHost }}
+    http:
+      paths:
+      - path:
+        backend:
+          serviceName: {{ template "fullname" . }}-portal
+          servicePort: 3000
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: {{ template "fullname" . }}-gateway-ingress
+  namespace: {{ default "default" .Values.namespace }}
+  annotations:
+    kubernetes.io/ingress.class: {{ default "nginx" .Values.ingress.class }}
+{{- if .Values.ingress.useKubeLego }}
+    kubernetes.io/tls-acme: "true"
+{{- end }}
+  labels:
+    app: {{ template "fullname" . }}
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}"
+    release: "{{ .Release.Name }}"
+    heritage: "{{ .Release.Service }}"
+spec:
+  tls:
+  - hosts:
+    - {{ default "api.portal.local" .Values.ingress.apiHost }}
+    secretName: {{ if .Values.ingress.useKubeLego }}{{ template "fullname" . }}-gateway-ingress-tls{{ else if .Values.ingress.existingTls }}{{ .Values.ingress.tls.apiHostSecret }}{{ else }}{{ template "fullname" . }}-gateway-ingress-tls{{ end }}
+  rules:
+  - host: {{ default "api.portal.local" .Values.ingress.apiHost }}
+    http:
+      paths:
+      - path:
+        backend:
+          serviceName: {{ template "fullname" . }}-kong-gw
+          servicePort: 8000
+{{- end -}}
