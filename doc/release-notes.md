@@ -10,6 +10,21 @@ Official Release of the API Portal.
 
 **Docker Tag**: tba
 
+## 0.11.7 (beta)
+
+**Date**: July 18th, 2017 (2017-07-18)
+
+**Docker Tag**: `0.11.7`
+
+The main topic for this release is the bug fix for a [login problem some installations of wicked](https://github.com/Haufe-Lexware/wicked.haufe.io/issues/72) have experienced in the last couple of weeks. This turned out to be due to an upstream change in a dependency of a dependency, and that was rather unexpected. We have addressed the topic for fixing, and meanwhile reverted to an older version. Further some minor things in the Kickstarter have been fixed, and a lot of work has gone into writing a Helm Chart for wicked. This is still in an experimental phase and perhaps not yet production ready, but we will continue to focus on that. Contributions are more than welcome.
+
+* [Login/registration broken in localdev](https://github.com/Haufe-Lexware/wicked.haufe.io/issues/72)
+* [Kickstarter: removing the last chat webhook breaks the editor.](https://github.com/Haufe-Lexware/wicked.haufe.io/issues/73)
+* [Kickstarter: Adding Authorization Server with "auth-server" in name break the API! dialog](https://github.com/Haufe-Lexware/wicked.haufe.io/issues/77)
+* [Remove run-unit-tests.sh from wicked.portal-api](https://github.com/Haufe-Lexware/wicked.haufe.io/issues/76)
+* [Enables GIT_REPOs with other protocols (`http` instead of `https`)](https://github.com/Haufe-Lexware/wicked.portal-api/pull/3) (thanks, @ehirsch)
+* [Fixing docker-start to actually find the new create-git-url script](https://github.com/Haufe-Lexware/wicked.portal-api/pull/4)
+
 ## 0.11.6 (beta)
 
 **Date**: May 24th, 2017 (2017-05-24)
