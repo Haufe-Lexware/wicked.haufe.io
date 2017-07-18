@@ -38,7 +38,37 @@ $ helm install --set minikubeIP=$(minikube ip) wicked
 ...
 ```
 
-Then run `minikube ip` once more, and edit your own `/etc/hosts` (or corresponding file on Windows) to add the names `portal.local` and `api.portal.local` to point to this IP address.
+**IMPORTANT**: Then run `minikube ip` once more, and edit your own `/etc/hosts` (or corresponding file on Windows) to add the names `portal.local` and `api.portal.local` to point to this IP address.
+
+*Hint:* If you want to assign a non-random name to your release of wicked to your cluster, supply a name using the `--name some-name` argument when doing the `helm install`.
+
+### Wait until all pods run
+
+Check the status of the pods to check whether they run correctly:
+
+```
+$ kubectl get pods
+NAME                                                  READY     STATUS              RESTARTS   AGE
+jazzed-donkey-wicked-api-3476386645-gpl9b             0/1       ContainerCreating   0          7s
+jazzed-donkey-wicked-kong-1721255491-tnwh7            0/1       ContainerCreating   0          7s
+jazzed-donkey-wicked-kong-adapter-1643021111-gsbbr    0/1       ContainerCreating   0          7s
+jazzed-donkey-wicked-kong-database-1720894969-3mp4c   0/1       Running             0          7s
+jazzed-donkey-wicked-portal-2044492266-97t6m          0/1       ContainerCreating   0          7s
+```
+
+After a while it should look like this (depends on your local bandwidth; the images need to be pulled from docker hub):
+
+```
+$ kubectl get pods
+NAME                                                  READY     STATUS    RESTARTS   AGE
+jazzed-donkey-wicked-api-3476386645-gpl9b             1/1       Running   0          1m
+jazzed-donkey-wicked-kong-1721255491-tnwh7            1/1       Running   0          1m
+jazzed-donkey-wicked-kong-adapter-1643021111-gsbbr    1/1       Running   0          1m
+jazzed-donkey-wicked-kong-database-1720894969-3mp4c   1/1       Running   0          1m
+jazzed-donkey-wicked-portal-2044492266-97t6m          1/1       Running   0          1m
+```
+
+Now we're ready to...
 
 ### Open the wicked portal
 
