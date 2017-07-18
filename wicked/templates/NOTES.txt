@@ -1,1 +1,12 @@
-This has to be done. It is not yet.
+This is still work in progress. You can use this chart to experimentally
+deploy wicked to a Kubernetes cluster. It has not yet been tested for
+production purposes, and is to be considered alpha or early beta. The work
+on this will continue though, and if you feel like helping out with this,
+any help is definitely welcome.
+
+If you didn't change anything in the chart configuration, point the FQDNs
+"portal.local" and "api.portal.local" to the IP address of the ingress
+controller('s load balancer), depending on where you deploy to.
+
+In case you are running on minikube, point the above FQDNs to the output
+of `minikube ip`.

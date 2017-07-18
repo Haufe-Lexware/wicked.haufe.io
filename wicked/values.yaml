@@ -11,13 +11,17 @@ deployChatbot: false
 # Specify true to deploy the mailer
 deployMailer: false
 
+# If you are trying out wicked on minikube, please supply
+# the `minikube ip` address here:
+minikubeIP: ""
+
 image:
   # Use the Alpine images (works as of 0.11.6, experimental)
   alpine: true
   # Use "haufelexware/wicked." for the official ones, otherwise use the prefix you
   # need to pull your company's version of wicked.
   repository: "haufelexware/wicked."
-  tag: "0.11.6"
+  tag: "0.11.7"
   pullPolicy: IfNotPresent
 
 # Add imagePullSecrets like this in an override.yaml to pass in with helm install

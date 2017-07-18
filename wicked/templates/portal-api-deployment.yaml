@@ -25,6 +25,12 @@ spec:
             configMapKeyRef:
               name: {{ template "fullname" . }}-apim-config
               key: HELM_NAME
+        - name: K8S_NAMESPACE
+          value: {{ default "default" .Values.namespace }}
+{{ if .Values.minikubeIP }}
+        - name: MINIKUBE_IP
+          value: {{ .Values.minikubeIP }}
+{{ end }}
         - name: NODE_ENV
           value: {{ default "default" .Values.envName }}
         - name: GIT_REPO
