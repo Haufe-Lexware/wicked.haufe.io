@@ -45,3 +45,11 @@ wicked.haufe.io will have a standard Authorization Server, which takes over all 
 The Authorization Server (https://github.com/Haufe-Lexware/wicked.portal-auth) will support local users out of the box, a registration process (see [registration process design document](registration-process.md)), and after registration with other IdPs, also various social logins. 
 
 ## Enabling custom authorization servers (like before)
+
+...
+
+<a name="trusted_apps" />
+
+## "Trusted" vs. other applications
+
+...
