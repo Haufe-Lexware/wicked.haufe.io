@@ -43,6 +43,8 @@ For access to the API, a set of scopes will be defined which the user can grant 
 
 The scopes are documented in the Swagger documentation of the portal API (see [LINK NEEDED](https://github.com/Haufe-Lexware/wicked.portal-api)).
 
-## "Trusted" vs. other applications
+## "Trusted" application Portal UI
 
-See [OAuth2 Support - trusted applications](oauth2-support.md#trusted_apps).
+See [OAuth2 Support - trusted applications](oauth2-support.md#trusted_apps) - the Portal UI (`wicked.portal`) will automatically get a trusted subscription to the Portal API, and as such will automatically get access to all scopes it asks for from the Authorization Server.
+
+Read the [design document on OAuth 2 support](oauth2-support.md) for more information on this topic.

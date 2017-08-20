@@ -283,6 +283,10 @@ Example Auth Method JSON:
 
 After the usual scope negotiating (checking grants, trusted applications,...), the scopes endpoint (which has to be implemented by you) is called with the available profile (what would be returned by the `/profile` end point) and the authenticated user id, which lets you change or add scopes (e.g. licenses) to the authenticated scope programmatically.
 
+Any scopes which were present before (either because the application is trusted or because it requested and was granted scopes by the end user) will be merged with these scopes.
+
+**Important**: All scopes which are added to the token/grant also need to be registered with the API, otherwise the API Gateway will reject creating such an authenticated scope.
+
 ## Enabling custom authorization servers (like before)
 
 It is also possibly to create fully custom authoriazation servers (like before) in addition to the wicked default authorization server (which as of wicked 1.0 **always** has to be part of the deployment of wicked).
@@ -299,8 +303,27 @@ The only requirement is that the authorization server fulfills the JSON "interfa
     * The `tokenEndpoint` URI (template)
     * Optionally, if the Auth Server supports OIDC (OpenID Connect), the `profileEndpoint`. If this property is set, it is assumed that the Auth Server has full support for OIDC, otherwise it's assumed to be a standard plain OAuth 2 Authorization Server.
 
-<a name="trusted_apps" />
+<a name="trusted_apps"></a>
 
 ## "Trusted" vs. other applications
 
-...
+Usually, when requesting access to an API on behalf of a user, the end user has to grant access to his/her data to the requesting application (allow access to scopes). This is (as of wicked 1.0) the default behavior, and grants are stored within the API (the `/grants` endpoint) so that the end user does not have to grant access repeatedly after doing it once (for a single application).
+
+For some applications, notably for main applications of the API, usually maintained by the API maintainer (such as the UI for the API Portal) should by default have full access to all scopes of the API without the need of the end user granting access to it - such applications are defined to be "trusted".
+
+To be more precise, it's not the application which is "trusted", but the subscription of the application to an API which is trusted. API Portal Admins can create trusted subscriptions, or can assign the flag "trusted" to a subscription via the "Approval" workflow which is already in place.
+
+### Creating access tokens for trusted applications
+
+If an application with a trusted subscription wants to create an access token on behalf of an end user, it does not have to ask the end user for any scopes, it will get all asked for scopes when calling the `/authorize` or `/token` end points (depending on the flow which is used). The Authorization Server will automatically grant all needed scopes to the access token - the application may do whatever it wants with the end user's data - it is "trusted" to not do any harm.
+
+In contrast to that, non-trusted applications (or, better, subscriptions) will always have to ask the end user to grant access for that specific application, and has to specify exactly for which scopes it wants access.
+
+### Trusted applications and the Resource Owner Password Grant
+
+_DRAFT_
+
+In the first iteration of the improved OAuth 2 support for wicked 1.0, the Resource Owner Password Grant - which is by nature browserless - is only allowed for trusted applications, and only using the Auth Methods `local` and `custom`.
+
+This is due to the fact that there is no mechanism for the end user to grant additional scopes to the application if it is not already a trusted application. This is only possible using the Authorization Code Grant or the Implicit Grant.
+
