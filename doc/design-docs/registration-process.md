@@ -20,7 +20,7 @@ Plus addition custom fields, e.g. "Company" or "Role", which can optionally be a
 
 ### Static configuration
 
-In the base path of the static configuration repository, there is a new directory called `registrationpools`, with JSON files. In the standard configuration, there is a single `wicked.json` for the registration of wicked users. This is also the registration pool which is used for the previously existing users when migrating the data.
+In the base path of the static configuration repository, there is a new directory called `registrationpools`, with JSON files. In the standard configuration, there is a single `wicked.json` for the registration of wicked users. This is also the registration pool which is used for the previously existing users when migrating the data. It is assumed to be present, deleting it is not a good idea. It will be automatically created when updating a static configuration directory with a wicked 1.0 kickstarter.
 
 File syntax:
 
@@ -69,16 +69,26 @@ Before wicked 1.0, the registration process for federated identity providers was
 
 This will make the registration process easier to understand, plus that you can (and should) also validate the email address you got from the Identity Provider. It will also enable users to use an identity provider like Google, but still use a different email address.
 
+## Open ID Connect Conformity
+
+The profile would usually be served via the `/profile` end point, which is defined for all(?) Auth Methods which the Authorization Server supports out of the box.
+
+If there is no registration process behind the API being secured with the Authorization Server's help, the `/profile` end point will only serve the most basic data, such as the authenticated user id, which is also used as a header for the backend API (and thus would usually not give any additional information).
+
+_TBD, are there additional things which can always be served here? Depending on the Auth Method, there might be, e.g. email addresses or full names, which are usually part of all directly available profiles._
+
 ## Migration from wicked <1.0
 
 When migrating data from an older version of wicked.haufe.io, the existing users in the user database will be moved to the `wicked` registration pool automatically.
 
-## Implementation Packages
+<!--## Implementation Packages
 
 ### Changes in `portal-api`
+
+### Changes in `portal-env`
 
 ### Changes in `portal-kickstarter`
 
 ### Changes in `portal` (UI)
 
-### Authorization Server
+### Authorization Server-->

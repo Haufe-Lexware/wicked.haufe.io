@@ -22,9 +22,19 @@ Special case of the above: As an API Management operator, I want to be able to u
 
 As a developer using the API Portal, I want to be able to use the Portal's API from outside the actual Portal's UI, using standard OAuth 2 flows (implicit or authorization code grant, or, if I choose to use local usernames and passwords, using the resource owner password grant). I want to accomplish this by logging in with the same identity providers as for the portal.
 
+### Keeping track of OAuth2 grants
+
+As a user of the APIm Gateway (using an application which in turn is using an API provided by the APIm), I want the APIm to keep track of the grants I have given to the application, in case it is not a trusted application. The grants must be persisted in the APIm, and if I am using the same application again, the grants are automatically given to the application.
+
+### Seeing granted scopes of applications
+
+_TBD - needed, but not Prio 1_
+
+As an end user of non-trusted application, I want to be able to see which scopes I have granted to which application, inside a special section of some web page (probably: the Authorization Server).
+
 ### Enabling custom username/password authentication
 
-(Prio 3)
+_TBD - Lower prio_
 
 As an operator of the API Management system, I want to be able to authenticate users via username and password via a REST call to third party system (which I implement myself), instead of using either the built in user database or any federated user store (such as Google or Github).
 
@@ -254,11 +264,13 @@ TODO (see [wicked.auth-passport](https://github.com/Haufe-Lexware/wicked.auth-pa
 
 Authenticate with a generic OpenID Connect Identity Provider.
 
-TODO.
+_to be specified further._
 
 #### Auth Method `custom`
 
 Delegate username and password checking to a third party component, which returns a profile for a matching username/password pair.
+
+_To be specified further._
 
 ### Calculated Scopes
 
@@ -286,6 +298,14 @@ After the usual scope negotiating (checking grants, trusted applications,...), t
 Any scopes which were present before (either because the application is trusted or because it requested and was granted scopes by the end user) will be merged with these scopes.
 
 **Important**: All scopes which are added to the token/grant also need to be registered with the API, otherwise the API Gateway will reject creating such an authenticated scope.
+
+### Injected Scope: `email_verified`
+
+All APIs which use any type of OAuth2 scope, and which makes use of [registration pools](registration-process.md), will get an additional scope `email_verified` injected into its list of scopes. If the scope list is empty until then, this will be the only scope which the API has.
+
+As the registration process supports verifying email addresses (if the `portal-mailer` is configured correctly), this can be used inside any API's business logic to give the end user additional rights (or whatever is desired) whenever the email address has been verified.
+
+This kind of feature is already in use within the portal API - usually it's not allowed for a user to register applications or create subscriptions if the user does not have a validated email address.
 
 ## Enabling custom authorization servers (like before)
 
@@ -327,3 +347,76 @@ In the first iteration of the improved OAuth 2 support for wicked 1.0, the Resou
 
 This is due to the fact that there is no mechanism for the end user to grant additional scopes to the application if it is not already a trusted application. This is only possible using the Authorization Code Grant or the Implicit Grant.
 
+## Specifying allowed Auth Methods for APIs
+
+Each API which is secured with OAuth2 is now required to specify which auth methods are allowed to access the API. This is done by replacing the `authServers` section of the API definition with an `authMethods` array, stating the names of the auth methods allowed to authenticate/authorize for this API.
+
+The syntax is as follows: `<auth-server>:<auth-method>`. If `auth-server` is left out, or is set `*`, all authorization servers registered with the configuration are allowed. If `auth-method` is set to `*`, any auth method is allowed.
+
+Examples (`apis.json`): This allows all auth methods which are defined in the standard wicked Authorization Server. This is the default for the `portal-api`.
+
+```
+{
+  "apis": [
+    {
+      "id": "petstore-oauth",
+      "name": "Petstore OAuth",
+      "desc": "This is a sample Petstore server secured via OAuth 2.0 Client Credentials flow.",
+      "auth": "oauth2",
+      "settings": {
+        "enable_client_credentials": true,
+        "enable_implicit_grant": true,
+        "token_expiration": "3600",
+        "scopes": ""
+      },
+      "authMethods": [
+        "portal-auth:*"
+      ],
+      "tags": [
+        "Sample"
+      ],
+      "requiredGroup": "dev",
+      "plans": [
+        "basic",
+        "stupid",
+        "unlimited",
+        "godlike"
+      ]
+    }
+  ]
+}
+```
+
+Some other valid auth method entries:
+
+* `"*"` - all auth methods of all Authorization Servers are allowed
+* `"portal-auth:google"` - Allow only Google Authentication
+* `"custom-auth:*"` - Allow all Auth Methods from custom Authorization Server `custom-auth`.
+
+## Authorization Grant Persistence
+
+When adopting OAuth2 flows, you will soon encounter the concept of grants to scopes, allowing an application to access an end user's (resource owner's) data on behalf of that user. Wicked will out of the box be able to store grants which an end user gave to an application, and retrieve those again at a later authorization session.
+
+### Extension of the Portal API
+
+The wicked API will get new end points for storing and retrieving grants, on a per application and per user basis. These end points will be used by the default authorization server to store and retrieve existing grants.
+
+### Example flow
+
+Note that this flow only applies under the following circumstances:
+
+* The application requesting scopes (requiring grants) is not a ["trusted" application](#trusted_apps)
+* Either the Authorization Code Grant, oder the Implicit Grant is used
+
+The flows then goes as follows:
+
+1. An application wants to access an API on behalf of an end user ("Resource Owner" in OAuth2 terminology). The application decides to make use of either the Authorization Code Grant, or the Implicit Grant, and thus redirects to the `/authorize` of the desired auth method (this is a property of the Auth Method, different identity providers have different end points for authentication). The input here is an Auth Method, and a set of desired `scopes` to the API.
+2. The Authorization Server delegates to the desired identity provider to find out who the end user is (establish identity); this is not important how this is accomplished, either by federating to some other identity provider, or by checking username and password. The main outcome of this step is the `authenticated_userid` (in Kong terms), which is a unique identifier, stable over time, for the identity of the end user, with respect to the given auth method.
+3. Using the application, the desired API, and the end user identity, the Authorization Server now queries the portal API for already existing grants, belonging to this tuple of data. If there is, and the grants match the desired `scopes`, the authorization step is done, and either an Authorization Code (for the Authorization Code Grant Flow) or an access token (in case of the Implicit Grant) can be created, and the flow can continue. If there are no stored grants, continue with...
+4. The Authorization Server displays a web page which displays (a) which application wants to access (b) which data (scopes) on behalf of the end user. The end user must "nod off", i.e. **grant** access to the API - for these scopes; if the user agrees to let the application access the API on his behalf, the Authorization Server will store these grants into the wicked API. If the user does not agree to share his/her data with the application, the authorization flow is cancelled, and the calling application will get a redirect back with an error code according to RFC 6749.
+
+### Administering granted access rights
+
+For all API grants, an authenticated user should be able to see which grants he/she has made for all non-trusted applications. This should be done as a separate page on the Authorization Server, callable after a user has been logged in.
+
+_TBD - Should this also be a(n optional) property of the Auth Method, i.e `/application-grants` or similar in the Auth Method interface? It might make things easier. The main reason to do this would be that the user has to be logged in using some kind of Auth Method anyway before he/she can review the already given application grants._

@@ -6,3 +6,14 @@ This document describes how the Portal behaves in terms of accessing the Portal 
 
 ## User Stories
 
+### Same Auth Methods for Portal and APIs
+
+As an administrator of the APIm (Portal and Gateway), I want to be able to use the same authorization server, and the same auth methods, both for the portal UI as for securing access to any of my APIs.
+
+### Selectable Auth Methods for the Portal authentication
+
+As an adminstrator of the APIm, I want to be able to specify only a subset of auth methods for authentication from the Authorization Server for authentication in the API Portal (e.g. only allow GitHub login to Portal, but SAML access to APIs, both supported by the default Authorization Servers via differently named Auth Methods).
+
+### Easier OAuth2 flows
+
+As a developer, I want to be able to test my OAuth2 flows using my identity from the API portal, if this is allowed by the APIm administrator.

@@ -48,3 +48,15 @@ The scopes are documented in the Swagger documentation of the portal API (see [L
 See [OAuth2 Support - trusted applications](oauth2-support.md#trusted_apps) - the Portal UI (`wicked.portal`) will automatically get a trusted subscription to the Portal API, and as such will automatically get access to all scopes it asks for from the Authorization Server.
 
 Read the [design document on OAuth 2 support](oauth2-support.md) for more information on this topic.
+
+### Auto-registration of the Portal UI
+
+The Portal UI must be automatically registered with the Portal API/as an application at startup of the Portal; this can be done using the wicked SDK and a machine user. This should be the only place where the machine user should be automatically used, all other places must explicitly use the token which was issued to the application (to the portal) by the Authorization Server.
+
+The redirect URI can be calculated from the static configuration, which is available at startup of the portal. Likewise can the URL of the Authorization Server be calculated (`<schema>://<gateway host>>/auth).
+
+### Authentication Methods
+
+The auth methods which are allowed for logging in to the Portal are the same which are configured as valid auth methods for the `portal-api`.
+
+Specifying which auth methods are valid for the `portal-api` corresponds to specifying which authentication methods are allowed for the Portal UI. The Kickstarter should transparently take care of this configuration when adding auth methods to the default authorization server, e.g. by displaying a check box "Allow for log in to Portal" at the configuration of the Authorization Server.
