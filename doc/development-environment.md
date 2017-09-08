@@ -103,6 +103,27 @@ If everything is successful, you will now be able to access the API Portal at [`
 
 **Reminder**: In a fresh configuration, you will usually have a predefined Admin user `admin@foo.com` having the password `wicked`.
 
+#### Using Redis as session store
+
+By default, the Portal UI will store session information in files on disk. This prevents the component from being deployed redundantly behind a load balancer for high availability. If HA is a requirement for the Portal UI, you can use [Redis](https://redis.io/) as a distributed session store. The session store is configured via three environment variables:
+
+* `SESSION_STORE_TYPE`: Sets the session store type. Set to `redis` to use Redis (default: `file`).
+* `SESSION_STORE_HOST`: Sets the session store host (default: `localhost`).
+* `SESSION_STORE_PORT`: Sets the session store port (default: `6379`).
+
+For an easy start, you can run Redis in a Docker container:
+
+```
+$ docker run -p 6379:6379 redis
+```
+
+Then select Redis as session store when starting the Portal UI:
+
+```
+$ SESSION_STORE_TYPE=redis node bin/www
+```
+
+
 ### Starting `kong-adapter`, `mailer` or `chatbot`
 
 Starting other components is done in exactly the same way as starting the Portal: 
