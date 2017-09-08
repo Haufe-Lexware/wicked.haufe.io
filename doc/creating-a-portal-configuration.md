@@ -34,9 +34,9 @@ In order to make it clearer how the configuration of the API Portal, consider th
 
 This image illustrates that the Portal API component is actually made up of three different containers: The `portal-api` container, and two additional configuration/state containers (data only containers), of which one is the static configuration container, and the other contains the dynamic data (users/passwords, application definitions, API subscriptions) which are used at runtime.
 
-The deployment process assumes the static configuration resides inside a git configuration repository, and the only thing it neds to build are the credentials and URLs of this git repository.
+The deployment process assumes the static configuration resides inside a git configuration repository, and the only thing it needs to build are the credentials and URLs of this git repository.
 
-Ther configuration repository itself is what is used with the kickstarter. The kickstarter can edit those static configuration files.
+The configuration repository itself is what is used with the kickstarter. The kickstarter can edit those static configuration files.
 
 # Creating a new configuration repository
 
@@ -88,9 +88,9 @@ Depending on your docker setup, you may now browse to [http://localhost:3333](ht
 
 Inside the `/path/to/repo` directory, kickstarter has now put quite a large amount of files which can be used for deploying an API Portal to your premises. 
 
-The mostpart of these files reside inside the `static` directory and can be directly committed to a git repository, but there is a special file which was created which needs special attention: `deploy.envkey`. This file contains a random string which is used to encrypt secrets inside the configuration files. This file **MUST NEVER BE CHECKED IN TO VERSION CONTROL**. This is the key which you need on your deployment system ([CI/CD system](continuous-deployment.md)) in order to "unlock" the encrypted secrets inside your configuration.
+The most part of these files reside inside the `static` directory and can be directly committed to a git repository, but there is a special file which was created which needs special attention: `deploy.envkey`. This file contains a random string which is used to encrypt secrets inside the configuration files. This file **MUST NEVER BE CHECKED IN TO VERSION CONTROL**. This is the key which you need on your deployment system ([CI/CD system](continuous-deployment.md)) in order to "unlock" the encrypted secrets inside your configuration.
 
-By default, a `.gitignore` file is created which explicitly takes out the `deploy.envkey` from source control. Nonetheless, when you edit a configuration using the kickstarter, you will need this file to be in place. If it is now, a new one will be created, but previously created secret environment variables can not be successfullly decrypted. For a more thorough discussion on secret environment variables, see [Using Deployment Environments](deployment-environments.md) and [Handling Credentials](handling-credentials.md).
+By default, a `.gitignore` file is created which explicitly takes out the `deploy.envkey` from source control. Nonetheless, when you edit a configuration using the kickstarter, you will need this file to be in place. If it is not, a new one will be created, but previously created secret environment variables can not be successfullly decrypted. For a more thorough discussion on secret environment variables, see [Using Deployment Environments](deployment-environments.md) and [Handling Credentials](handling-credentials.md).
 
 ### Step 5: Stopping the kickstarter
 
