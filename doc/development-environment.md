@@ -105,22 +105,12 @@ If everything is successful, you will now be able to access the API Portal at [`
 
 #### Using Redis as session store
 
-By default, the Portal UI will store session information in files on disk. This prevents the component from being deployed redundantly behind a load balancer for high availability. If HA is a requirement for the Portal UI, you can use [Redis](https://redis.io/) as a distributed session store. The session store is configured via three environment variables:
+By default, the Portal UI will store session information in files on disk. This prevents the component from being deployed redundantly behind a load balancer for high availability. If HA is a requirement for the Portal UI, you can use [Redis](https://redis.io/) as a distributed session store. The session store is configured via the kickstarter in the section "IP Config". Don't forget to restart `portal-api` as well after you changed the configuration.
 
-* `SESSION_STORE_TYPE`: Sets the session store type. Set to `redis` to use Redis (default: `file`).
-* `SESSION_STORE_HOST`: Sets the session store host (default: `localhost`).
-* `SESSION_STORE_PORT`: Sets the session store port (default: `6379`).
-
-For an easy start, you can run Redis in a Docker container:
+For an easy start, you can run Redis in a local Docker container:
 
 ```
 $ docker run -p 6379:6379 redis
-```
-
-Then select Redis as session store when starting the Portal UI:
-
-```
-$ SESSION_STORE_TYPE=redis node bin/www
 ```
 
 
