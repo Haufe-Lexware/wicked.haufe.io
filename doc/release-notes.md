@@ -10,6 +10,48 @@ Official Release of the API Portal.
 
 **Docker Tag**: tba
 
+[Design documents](https://github.com/Haufe-Lexware/wicked.haufe.io/tree/next/doc/design-docs).
+
+## 0.12.0 (beta)
+
+**Date**: September 17th, 2017 (2017-09-17)
+
+**Docker Tag**: `0.12.0`
+
+### Content
+
+It has been a while since the last wicked update, and this release gets you a couple of things which have been asked for since a while, most notably the following issues have been resolved, which are in part internal, in part with external impact:
+
+* [Support Kong 0.11.0](https://github.com/Haufe-Lexware/wicked.haufe.io/issues/74)
+* [Provide support for Redis as session store for portal-ui](https://github.com/Haufe-Lexware/wicked.haufe.io/issues/83)
+* [Move to Jenkins as a CI tool](https://github.com/Haufe-Lexware/wicked.haufe.io/issues/86)
+* [x-forwarded-proto set incorrect on outgoing API calls](https://github.com/Haufe-Lexware/wicked.haufe.io/issues/23)
+
+This time, upgrading is not 100% as easy as usual, therefore we are providing some upgrade notes below. Please read carefully for best upgrade experience.
+
+### Upgrade notes
+
+Under the hood we have now moved to using Kong 0.11.0, and that upgrade has to be done a little more carefully than you are perhaps used to with wicked before. Follow these recommendations for a glitch-free upgrade:
+
+* If you are still using `postgres:9.4` as a Postgres image, consider upgrading to `postgres:9.6`; please note that the database formats are **not compatible**, so that we advise you to discard the Postgres data completely when upgrading. The only downside of this is that currently active access tokens are also discarded, but other than that there are no downsides.
+* When starting the `wicked.kong` container the first time with the wicked 0.12.0, please
+    * Shut down all previous Kong instances, or even better, use a completely new environment
+    * Start just **one single Kong instance** at first, and wait until it has settled (created database schemas etc.); when everything is working again, you may now scale up to the desired amount of Kong instances again (when using Kubernetes, the readiness probe can be used to decide this)
+* If you are using the deployment via `docker-compose.yml` file as proposed by the Kickstarter, the `env` variable `EXCLUDE_PORTS` has to be extended with the port `8444`; otherwise HAproxy will pick up that this (new) port is available on the Kong container, and will start to route traffic to it (you will end up with error messages from `openResty` if this is the case).
+
+If you find anything else which does not work correctly, please do not hesitate to notify the project via GitHub Issues. Thanks.
+
+**Please upgrade your test/dev instances first to make sure your upgrade process works correctly.**
+
+### Contributors
+
+Code for this release was contributed by the following developers, THANKS FOR CONTRIBUTING!
+
+* @achwie
+* @santokhsingh
+* @maksimlikharev
+* @donmartin76
+
 ## 0.11.7 (beta)
 
 **Date**: July 18th, 2017 (2017-07-18)
