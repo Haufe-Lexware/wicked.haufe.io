@@ -1,3 +1,5 @@
+**Note**: This is work in progress.
+
 # Making the portal API OAuth2 compliant
 
 Before wicked 1.0, the portal API only support the client credentials flow for accessing the API, and that was only a hidden feature, as it did not work out nicely with the users the way one would/could/should expect.

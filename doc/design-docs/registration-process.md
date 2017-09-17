@@ -1,3 +1,5 @@
+**Note**: This is work in progress.
+
 # Registering for API/Portal usage
 
 A new concept in 1.0 will be "registration pools". Registration pools are intended as user pools for API usage, where you want to know more about your end user than just a username and password, or a third party identity provider identity.

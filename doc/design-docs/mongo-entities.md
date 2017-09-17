@@ -1,3 +1,5 @@
+**Note**: This is work in progress.
+
 # Mongo DB Migration
 
 wicked.haufe.io's database until 0.11 was a plain JSON file store, which had the following issues:
@@ -60,9 +62,13 @@ Applications
 
 ### Changes in `portal-api`
 
-TBD: Configuration of which DAO is to be used, and the connection to the data store.
+TBD: Configuration of which DAO is to be used, and the connection to the data store. 
 
 #### DAO for Mongo DB
+
+_Component design TBD._
+
+#### DAO for Cassandra
 
 _Component design TBD._
 
@@ -70,12 +76,14 @@ _Component design TBD._
 
 1. Check state of Mongo connection, are there entities (TBD: Which data should be used to determine whether a migration has to be done? Probably the already existing DB version; if `null` or not present --> Do a full migration of the previous data).
 
-In case a migration JSON -> Mongo is needed, continue as follows:
+In case a migration JSON -> DAO is needed, continue as follows:
 
 2. If necessary, perform previous database updates on the old data, so that the migration step has a canonical starting point, e.g. all data is in the latest format (0.11.x probably, as there were no updates to the dynamic data in the last couple of releases)
 3. Read the entities and use the DAO to store the data. The DAO must be pluggable, so that it is still possible to use other types of DAOs (if that is going to be implemented).
 
+#### Integration Testing
 
+Tests for all DAOs must be implemented in the `portal-test` repository.
 
 #### Optional: DAO for local storage
 

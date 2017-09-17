@@ -1,3 +1,5 @@
+**Note**: This is work in progress.
+
 # Design Document: Better OAuth 2 support out of the box
 
 ## Outline
