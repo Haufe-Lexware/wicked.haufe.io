@@ -4,6 +4,10 @@ This is a sample deployment script and configuration YML collection for wicked.h
 
 For a general description, please see [Deploying to Kubernetes](../../deploying-to-kubernetes.md).
 
+**IMPORTANT** THIS DOCUMENTATION IS NOT MAINTAINED ANYMORE, THE RECOMMENDED WAY OF RUNNING WICKED IN KUBERNETES IS USING THE [HELM TEMPLATES](../../../wicked/README.md).
+
+The documentation and Helm charts will be updated for the 0.12.1 version.
+
 ## Content
 
 The Kubernetes sample deployment script consists of the following parts:
