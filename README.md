@@ -73,7 +73,7 @@ The following repositories contain the actual source code (this repo contains mo
 
 ## More documentation
 
-* [Version History](VERSION.md)
+* [Version History](VERSION.md), [Release Notes](https://github.com/Haufe-Lexware/wicked.haufe.io/blob/master/doc/release-notes.md)
 * [Todo List](TODO.md) (deprecated, new things go into the [issues](https://github.com/Haufe-Lexware/wicked.haufe.io/issues))
 * [Blog post: Why we implemented our own API Portal](http://dev.haufe.com/introducing-wicked-haufe-io/)
 * [Blog post: State of our API strategy (by our CTO Holger)](http://dev.haufe.com/state-of-our-api-strategy/)
