@@ -15,6 +15,16 @@ spec:
         service: {{ template "fullname" . }}-portal
         wicked: "true"
     spec:
+{{- if .Values.useRbac }}
+      serviceAccountName: {{ template "fullname" . }}-role
+{{- end }}
+      initContainers:
+      - name: {{ template "fullname" . }}-portal-init
+        image: "{{ .Values.image.repository }}k8s-wait:{{ default "latest" .Values.image.tag }}"
+        imagePullPolicy: {{ default "Always" .Values.image.pullPolicy }}
+        args:
+        - "pod"
+        - "-lservice={{ template "fullname" . }}-api"
       containers:
       - name: {{ template "fullname" . }}-portal
         image: "{{ .Values.image.repository }}portal:{{ default "latest" .Values.image.tag }}{{ if .Values.image.alpine }}-alpine{{ end }}"
@@ -45,9 +55,7 @@ spec:
           periodSeconds: 15
           timeoutSeconds: 2
         resources:
-          requests:
-            memory: 256Mi
-            cpu: 100m
+{{ toYaml .Values.resources.portal | indent 10 }}
 {{- if .Values.imagePullSecrets }}
       imagePullSecrets:
 {{ toYaml .Values.imagePullSecrets | indent 8 }}

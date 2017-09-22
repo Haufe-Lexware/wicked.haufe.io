@@ -15,6 +15,22 @@ spec:
         service: {{ template "fullname" . }}-kong-adapter
         wicked: "true"
     spec:
+{{- if .Values.useRbac }}
+      serviceAccountName: {{ template "fullname" . }}-role
+{{- end }}
+      initContainers:
+      - name: {{ template "fullname" . }}-kong-adapter-init1
+        image: "{{ .Values.image.repository }}k8s-wait:{{ default "latest" .Values.image.tag }}"
+        imagePullPolicy: {{ default "Always" .Values.image.pullPolicy }}
+        args:
+        - "pod"
+        - "-lservice={{ template "fullname" . }}-api"
+      - name: {{ template "fullname" . }}-kong-adapter-init2
+        image: "{{ .Values.image.repository }}k8s-wait:{{ default "latest" .Values.image.tag }}"
+        imagePullPolicy: {{ default "Always" .Values.image.pullPolicy }}
+        args:
+        - "pod"
+        - "-lservice={{ template "fullname" . }}-kong"
       containers:
       - name: {{ template "fullname" . }}-kong-adapter
         image: "{{ .Values.image.repository }}portal-kong-adapter:{{ default "latest" .Values.image.tag }}{{ if .Values.image.alpine }}-alpine{{ end }}"
@@ -45,9 +61,7 @@ spec:
           periodSeconds: 15
           timeoutSeconds: 2
         resources:
-          requests:
-            memory: 256Mi
-            cpu: 200m
+{{ toYaml .Values.resources.kongAdapter | indent 10 }}
       restartPolicy: Always
 {{- if .Values.imagePullSecrets }}
       imagePullSecrets:

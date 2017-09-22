@@ -1,12 +1,22 @@
-This is still work in progress. You can use this chart to experimentally
-deploy wicked to a Kubernetes cluster. It has not yet been tested for
-production purposes, and is to be considered alpha or early beta. The work
-on this will continue though, and if you feel like helping out with this,
-any help is definitely welcome.
+This chart is considered beta, and has been tested with a few deployments
+in production, but that said there may still be corner cases which have not
+yet been tested and which may not lead to the intended behavior of the
+Chart.
 
-If you didn't change anything in the chart configuration, point the FQDNs
-"portal.local" and "api.portal.local" to the IP address of the ingress
-controller('s load balancer), depending on where you deploy to.
+If you find any bugs, please file an issue at
 
-In case you are running on minikube, point the above FQDNs to the output
-of `minikube ip`.
+    https://github.com/Haufe-Lexware/wicked.haufe.io
+
+For a guide of which values can and possibly should be overridden from the
+values.yaml file, please refer to the documentation of this Helm chart at
+
+    https://github.com/Haufe-Lexware/wicked.haufe.io/tree/master/wicked
+
+Point the FQDNs
+
+* {{ .Values.ingress.portalHost }}
+* {{ .Values.ingress.apiHost }}
+
+to the IP address of the ingress controller('s load balancer). In case you
+are using Let's Encrypt (`kube-lego`) annotations, you should have done this
+beforehand to make sure the retrieval of certificates can succeed.

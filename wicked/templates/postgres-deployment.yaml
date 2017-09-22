@@ -4,6 +4,8 @@ kind: Deployment
 metadata:
   name: {{ template "fullname" . }}-kong-database
   namespace: {{ default "default" .Values.namespace }}
+  labels:
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}"
 spec:
   replicas: 1
   strategy:
@@ -14,6 +16,9 @@ spec:
         service: {{ template "fullname" . }}-kong-database
         wicked: "true"
     spec:
+{{- if .Values.useRbac }}
+      serviceAccountName: {{ template "fullname" . }}-role
+{{- end }}
       containers:
       - env:
         - name: POSTGRES_USER

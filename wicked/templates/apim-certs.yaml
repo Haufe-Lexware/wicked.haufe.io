@@ -19,6 +19,7 @@ kind: Secret
 type: kubernetes.io/tls
 metadata:
   name: {{ template "fullname" . }}-gateway-ingress-tls
+  namespace: {{ default "default" .Values.namespace }}
   labels:
     chart: "{{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}"
 data:

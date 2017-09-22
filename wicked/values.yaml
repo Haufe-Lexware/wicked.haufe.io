@@ -1,27 +1,64 @@
 # Default values for wicked.
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
-kongReplicas: 2
 
 # namespace to deploy wicked to:
 namespace: default
+
+# Set to true if RBAC is enabled inside your cluster, failing to mismatch
+# this setting with your cluster will result in strange things, like pods
+# not starting, and/or hanging in the init container steps (waiting for
+# other containers/pods to start).
+useRbac: false
+
+# Deadline for all pods to come up successfully (in seconds)
+deployDeadline: 300
 
 # Specify true to deploy the chatbot
 deployChatbot: false
 # Specify true to deploy the mailer
 deployMailer: false
 
+# Deploy a Redis database for the sessions; the configuration of the
+# Redis connection to the portal must be done in your static config,
+# e.g. using the Kickstarter.
+redis:
+  # Whether this Helm chart should also deploy a redis server, or if you
+  # want to use an external one (or none at all)  
+  deployRedis: true
+  # The image for redis to use
+  image: "redis:3.2.10-alpine"
+  # Specify true to make the portal use redis as a session store. This requires
+  # a compatible configuration (i.e. created with wicked Kickstarter 0.12.1+)
+  useRedis: true
+  # If you don't deploy redis, but still use redis, you must specify the correct parameters here.
+  # If you specify to deploy redis inside your own cluster (deployRedis), these values will not be used.
+  host: "redis.provider.com"
+  port: "6379"
+  password: "some_password"
+
+  # Redis resources
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+    limits:
+      cpu: 200m
+      memory: 256Mi
+
 # If you are trying out wicked on minikube, please supply
 # the `minikube ip` address here:
 minikubeIP: ""
 
 image:
-  # Use the Alpine images (works as of 0.11.6, experimental)
+  # Use the Alpine images? Recommended, as they are just a fraction of the size (~60 MB
+  # instead of ~300MB compressed).
   alpine: true
   # Use "haufelexware/wicked." for the official ones, otherwise use the prefix you
   # need to pull your company's version of wicked.
   repository: "haufelexware/wicked."
-  tag: "0.11.7"
+  # The docker image tag to use; usually you don't change this.
+  tag: "0.12.1"
   pullPolicy: IfNotPresent
 
 # Add imagePullSecrets like this in an override.yaml to pass in with helm install
@@ -31,9 +68,11 @@ image:
 config:
   # The default password of the user admin@foo.com
   adminPassword: wicked
-  # It's not advisable to use the default environment; please create a dedicated
-  # environment for your deployment; this is for the sample repository.
-  envName: default
+  # It's not advisable to use the "default" environment; please create a dedicated
+  # environment for your deployment; this is for the sample repository. For new configurations,
+  # the Kickstarter (0.12.1+) creates a default k8s configuration called "k8s" which is intended
+  # for use with this Helm chart.
+  envName: k8s
   # This is the deployment key for the sample repository; it needs to be
   # overridden with your deployment key
   deployKey: 2c94d4ffce4b631a776289dca18bc9afec60f667
@@ -44,22 +83,72 @@ config:
   credentials: ""
   # Specify this (a git SHA1 revision, full length) if you want to pull a specific
   # configuration version. Use either this or branch, or none to pull HEAD of master
+  # It's recommended to really specify a git ref here, to avoid configuration drift
+  # if the portal-api container (which will use this information is restarted for some
+  # reason).
   revision: ""
   # Specify a branch to pull for the APIm configuration. Use either this or revision,
   # or none of both to pull HEAD of master.
   branch: ""
-  # Node debugging filter
-  debug: "*"
+  # Node debugging filter, specifying "*" here makes the wicked components very chatty.
+  debug: ""
+  # In case you bake in the configuration of wicked into a derivative of portal-api,
+  # specify the name of the image here. In case this is set to true, the git configuration
+  # will not be specified in the portal-api image.
+  useCustomApiImage: false
+  # Specify your custom portal-api image here in case the above is set to true.
+  customApiImage: "registry/repo/image:tag"
+
+# Standard resources for the node components of wicked.
+resources:
+  api:
+    limits:
+      cpu: 200m
+      memory: 256Mi
+    requests:
+      cpu: 100m
+      memory: 128Mi
+  portal:
+    limits:
+      cpu: 200m
+      memory: 256Mi
+    requests:
+      cpu: 100m
+      memory: 128Mi
+  kongAdapter:
+    limits:
+      cpu: 200m
+      memory: 256Mi
+    requests:
+      cpu: 100m
+      memory: 128Mi
+  chatbot:
+    limits:
+      cpu: 100m
+      memory: 256Mi
+    requests:
+      cpu: 50m
+      memory: 128Mi
+  mailer:
+    limits:
+      cpu: 100m
+      memory: 256Mi
+    requests:
+      cpu: 50m
+      memory: 128Mi
 
 # Ingress specification
 ingress:
   enabled: true
   # Value for ingress class, defaults to nginx
   class: nginx
-  # Used to create Ingress record (should used with service.type: ClusterIP).
+  # Used to create Ingress record; the FQDN of the portal and API hosts. These
+  # must be set using an A or CNAME record by yourself.
   apiHost: api.portal.local
   portalHost: portal.local
 
+  # Set this value to true to add kube-lego annotations to the ingress resources.
+  # If you do this, make sure the above FQDNs are already set before you deploy.
   useKubeLego: false
   # If useKubeLego is false, set this to true to use the secret names in the tls
   # property for the ingresses. Otherwise the standard secrets for "portal.local" and
@@ -70,6 +159,10 @@ ingress:
     apiHostSecret: gateway-ingress-tls
     portalHostSecret: portal-ingress-tls
 
+# Settings for the persistence of the dynamic data of the API Portal.
+# This has to be a file storage somewhere; if you do not choose to persist
+# data here, you will lose all user data if the wicked.portal-api container
+# goes down.
 persistence:
   # Use a PVC to persist data
   enabled: false
@@ -81,7 +174,8 @@ persistence:
   accessMode:	ReadWriteOnce
   # Size of data volume
   size: 1Gi	
-  # Subdirectory of the volume to mount at (useful for NFS mounts with hidden files in base)
+  # Subdirectory of the volume to mount at (useful for NFS mounts with hidden files in base),
+  # or if containers share NFS shares.
   subPath: ""
 
 # Specify the resource for Kong here
@@ -90,12 +184,18 @@ kong:
     requests:
       memory: 256Mi
       cpu: 200m
+    limits:
+      memory: 512Mi
+      cpu: 500m
 
 # Postgres configuration
 postgres:
   # Deploy a Kong Postgres storage with this application? If you specify false here,
   # you will need to take care of your Postgres instance yourself
   deployPostgres: true
+  # Which Postgres version do you want to deploy? Do NOT change this when upgrading, it
+  # will not end well.
+  version: "9.6"
 
   # In case you choose not to deploy Postgres along with Kong, you must specify the
   # following values. The Postgres port is fixed at 5432, can currently not be changed.
@@ -111,6 +211,9 @@ postgres:
     requests:
       memory: 256Mi
       cpu: 100m
+    limits:
+      memory: 512Mi
+      cpu: 250m
 
   # Persist Postgres storage? This is mandatory for production scenarios, in case you
   # do not decide to roll your own Postgres (i.e. deployPostgres=false)
@@ -127,11 +230,3 @@ postgres:
     size: 2Gi	
     # Subdirectory of the volume to mount at (useful for NFS mounts with hidden files in base)
     subPath: ""
-
-#resources:
-#  limits:
-#    cpu: 100m
-#    memory: 128Mi
-#  requests:
-#    cpu: 100m
-#    memory: 128Mi

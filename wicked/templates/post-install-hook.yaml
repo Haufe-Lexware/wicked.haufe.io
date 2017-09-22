@@ -1,0 +1,28 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ template "fullname" . }}-post-install
+  namespace: {{ default "default" .Values.namespace }}
+  labels:
+    release: {{ template "fullname" . }}
+    chart: "{{.Chart.Name}}-{{.Chart.Version}}"
+  annotations:
+    "helm.sh/hook": post-install
+    "helm.sh/hook-delete-policy": hook-succeeded
+spec:
+  activeDeadlineSeconds: {{ default 300 .Values.deployDeadline }}
+  template:
+    metadata:
+      name: {{ template "fullname" . }}-post-install
+      labels:
+        release: {{ template "fullname" . }}
+        wicked: "true"
+    spec:
+      restartPolicy: "Never"
+{{- if .Values.useRbac }}
+      serviceAccountName: {{ template "fullname" . }}-role
+{{- end }}
+      containers:
+      - name: {{ template "fullname" . }}-post-install
+        image: "{{ .Values.image.repository }}k8s-wait:{{ default "latest" .Values.image.tag }}"
+        args: ['pod', '-lservice={{ template "fullname" . }}-kong-adapter']

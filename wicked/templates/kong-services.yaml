@@ -20,6 +20,7 @@ metadata:
   labels:
     service: {{ template "fullname" . }}-kong
   name: {{ template "fullname" . }}-kong-gw
+  namespace: {{ default "default" .Values.namespace }}
 spec:
   ports:
   - name: "gateway"

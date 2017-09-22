@@ -16,6 +16,16 @@ spec:
         service: {{ template "fullname" . }}-chatbot
         wicked: "true"
     spec:
+{{- if .Values.useRbac }}
+      serviceAccountName: {{ template "fullname" . }}-role
+{{- end }}
+      initContainers:
+      - name: {{ template "fullname" . }}-chatbot-init
+        image: "{{ .Values.image.repository }}k8s-wait:{{ default "latest" .Values.image.tag }}"
+        imagePullPolicy: {{ default "Always" .Values.image.pullPolicy }}
+        args:
+        - "pod"
+        - "-lservice={{ template "fullname" . }}-api"
       containers:
       - name: {{ template "fullname" . }}-chatbot
         image: "{{ .Values.image.repository }}portal-chatbot:{{ default "latest" .Values.image.tag }}{{ if .Values.image.alpine }}-alpine{{ end }}"
@@ -46,9 +56,7 @@ spec:
           periodSeconds: 15
           timeoutSeconds: 2
         resources:
-          requests:
-            memory: 128Mi
-            cpu: 50m
+{{ toYaml .Values.resources.chatbot | indent 10 }}
       restartPolicy: Always
 {{- if .Values.imagePullSecrets }}
       imagePullSecrets:

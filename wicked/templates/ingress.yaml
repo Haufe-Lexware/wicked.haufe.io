@@ -23,7 +23,7 @@ spec:
   - host: {{ default "portal.local" .Values.ingress.portalHost }}
     http:
       paths:
-      - path:
+      - path: /
         backend:
           serviceName: {{ template "fullname" . }}-portal
           servicePort: 3000
@@ -52,7 +52,7 @@ spec:
   - host: {{ default "api.portal.local" .Values.ingress.apiHost }}
     http:
       paths:
-      - path:
+      - path: /
         backend:
           serviceName: {{ template "fullname" . }}-kong-gw
           servicePort: 8000
