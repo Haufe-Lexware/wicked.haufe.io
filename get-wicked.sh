@@ -2,7 +2,7 @@
 
 set -e
 
-latestVersion=$(curl https://api.github.com/repos/Haufe-Lexware/wicked.haufe.io/releases/latest | grep tag_name | cut -d '"' -f 4 | tr -d v)
+latestVersion=$(curl -Ls https://api.github.com/repos/Haufe-Lexware/wicked.haufe.io/releases/latest | grep tag_name | cut -d '"' -f 4 | tr -d v)
 
 echo "INFO: Latest release is v${latestVersion}."
 echo "INFO: Downloading Helm Chart..."
