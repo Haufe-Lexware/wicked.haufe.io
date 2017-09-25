@@ -7,7 +7,7 @@ metadata:
     release: {{ template "fullname" . }}
     chart: "{{.Chart.Name}}-{{.Chart.Version}}"
   annotations:
-    "helm.sh/hook": post-install
+    "helm.sh/hook": post-install,post-upgrade
     "helm.sh/hook-delete-policy": hook-succeeded
 spec:
   activeDeadlineSeconds: {{ default 300 .Values.deployDeadline }}
@@ -24,5 +24,13 @@ spec:
 {{- end }}
       containers:
       - name: {{ template "fullname" . }}-post-install
-        image: "{{ .Values.image.repository }}k8s-wait:{{ default "latest" .Values.image.tag }}"
-        args: ['pod', '-lservice={{ template "fullname" . }}-kong-adapter']
+        image: "{{ .Values.image.repository }}k8s-tool:{{ default "latest" .Values.image.tag }}"
+        volumeMounts:
+        - name: {{ template "fullname" . }}-post-install-config
+          mountPath: "/config"
+        command: ["/config/wait-for-all.sh"]
+      volumes:
+      - name: {{ template "fullname" . }}-post-install-config
+        configMap:
+          name: {{ template "fullname" . }}-post-install-config
+          defaultMode: 0744

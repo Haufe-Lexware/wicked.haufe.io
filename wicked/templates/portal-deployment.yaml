@@ -20,7 +20,7 @@ spec:
 {{- end }}
       initContainers:
       - name: {{ template "fullname" . }}-portal-init
-        image: "{{ .Values.image.repository }}k8s-wait:{{ default "latest" .Values.image.tag }}"
+        image: "{{ .Values.image.repository }}k8s-tool:{{ default "latest" .Values.image.tag }}"
         imagePullPolicy: {{ default "Always" .Values.image.pullPolicy }}
         args:
         - "pod"

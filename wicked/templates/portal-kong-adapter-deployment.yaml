@@ -20,13 +20,13 @@ spec:
 {{- end }}
       initContainers:
       - name: {{ template "fullname" . }}-kong-adapter-init1
-        image: "{{ .Values.image.repository }}k8s-wait:{{ default "latest" .Values.image.tag }}"
+        image: "{{ .Values.image.repository }}k8s-tool:{{ default "latest" .Values.image.tag }}"
         imagePullPolicy: {{ default "Always" .Values.image.pullPolicy }}
         args:
         - "pod"
         - "-lservice={{ template "fullname" . }}-api"
       - name: {{ template "fullname" . }}-kong-adapter-init2
-        image: "{{ .Values.image.repository }}k8s-wait:{{ default "latest" .Values.image.tag }}"
+        image: "{{ .Values.image.repository }}k8s-tool:{{ default "latest" .Values.image.tag }}"
         imagePullPolicy: {{ default "Always" .Values.image.pullPolicy }}
         args:
         - "pod"

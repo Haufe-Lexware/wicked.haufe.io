@@ -1,0 +1,37 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "fullname" . }}-post-install-config
+  namespace: {{ default "default" .Values.namespace }}
+  labels:
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}"
+data:
+  wait-for-all.sh: |
+    #!/usr/bin/env sh
+    set -ex
+
+    sleep 30
+
+    {{- if .Values.redis.deployRedis }}
+    k8s-tool.sh pod -lservice={{ template "fullname" . }}-redis
+    {{- end}}
+
+    {{- if .Values.postgres.deployPostgres }}
+    k8s-tool.sh pod -lservice={{ template "fullname" . }}-kong-database
+    {{- end}}
+
+    k8s-tool.sh pod -lservice={{ template "fullname" . }}-api
+    k8s-tool.sh pod -lservice={{ template "fullname" . }}-portal
+    
+    {{- if .Values.deployChatbot }}
+    k8s-tool.sh pod -lservice={{ template "fullname" . }}-chatbot
+    {{- end }}
+
+    {{- if .Values.deployMailer }}
+    k8s-tool.sh pod -lservice={{ template "fullname" . }}-mailer
+    {{- end }}
+
+    k8s-tool.sh pod -lservice={{ template "fullname" . }}-kong
+    k8s-tool.sh pod -lservice={{ template "fullname" . }}-kong-adapter
+
+    k8s-tool.sh scale {{ template "fullname" . }}-kong {{ default 2 .Values.kong.replicas }}

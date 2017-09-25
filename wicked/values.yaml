@@ -180,6 +180,8 @@ persistence:
 
 # Specify the resource for Kong here
 kong:
+  # Number of replicas of Kong to spin up; for HA, you will want to set this to at least 2
+  replicas: 1
   resources:
     requests:
       memory: 256Mi

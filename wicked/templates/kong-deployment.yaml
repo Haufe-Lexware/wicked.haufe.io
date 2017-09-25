@@ -6,6 +6,7 @@ metadata:
   labels:
     chart: "{{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}"
 spec:
+  # Kong is scaled up in the post-install hook.
   replicas: 1
   strategy:
     type: Recreate
@@ -21,7 +22,7 @@ spec:
 {{- if .Values.postgres.deployPostgres }}
       initContainers:
       - name: {{ template "fullname" . }}-kong-init
-        image: "{{ .Values.image.repository }}k8s-wait:{{ default "latest" .Values.image.tag }}"
+        image: "{{ .Values.image.repository }}k8s-tool:{{ default "latest" .Values.image.tag }}"
         imagePullPolicy: {{ default "Always" .Values.image.pullPolicy }}
         args:
         - "pod"
