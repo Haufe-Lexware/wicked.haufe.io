@@ -2,12 +2,14 @@
 
 ### Latest Release
 
-Latest release is `0.12.0` (September 18th 2017).
+Latest release is `0.12.1` (September 25th 2017).
 
 ### Next Release
 
-Next release will probably be `0.12.1` (no date defined yet).
+Next release will probably be `0.12.2` (no date defined yet).
 
 ### Current Priority Backlog
 
-* Kubernetes Helm Charts
+* OAuth2 rewrite Portal/API
+* Preparations default Auth Server
+* Mongo DB support for backend

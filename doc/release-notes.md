@@ -12,6 +12,24 @@ Official Release of the API Portal.
 
 [Design documents](https://github.com/Haufe-Lexware/wicked.haufe.io/tree/next/doc/design-docs).
 
+## 0.12.1 (beta)
+
+**Date**: September 25th, 2017 (2017-09-25)
+
+**Docker Tag**: `0.12.1`
+
+### Content
+
+This release is dedicated to the Kubernetes Helm Chart adaptions. The kickstarter now by default creates an environment `k8s` which is adapted for use with the new Helm Chart, which can be found in the [wicked.haufe.io/wicked](https://github.com/Haufe-Lexware/wicked.haufe.io/tree/next/wicked) repository. The Helm chart is now the default and recommended way to run wicked on Kubernetes; it has a lot of things already built in, like liveness and readiness probes, plus handling Kong updates correctly. Please give it a shot on a non-production environment and feedback, it would be much appreciated.
+
+* [Helm charts for wicked (for easier use in Kubernetes)](https://github.com/Haufe-Lexware/wicked.haufe.io/issues/64)
+
+Additionally, the micro site [wicked.haufe.io](http://wicked.haufe.io) was updated to reflect these changes/additions.
+
+### Contributors
+
+* @donmartin76
+
 ## 0.12.0 (beta)
 
 **Date**: September 17th, 2017 (2017-09-17)
