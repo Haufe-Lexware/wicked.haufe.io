@@ -17,7 +17,8 @@ block content
 
         p.
           The API Portal relies on proven technology to manage traffic: The actual portal
-          sits behind a HAproxy, and the actual API traffic is proxied by the excellent
+          either sits behind a HAproxy, or leverages standard Ingress Controllers (on Kubernetes) 
+          and the actual API traffic is proxied by the excellent
           <a href="https://getkong.org" target="_blank">API Gateway Kong by Mashape</a>.
         p.
           The portal itself is implemented as lightweight as possible, using node.js.
@@ -29,15 +30,16 @@ block content
     .container.pad20
       .row
         .col-md-6.pad20
-          a(href='https://www.docker.com/products/docker-swarm' target='_blank')
-            img(src='https://www.docker.com/sites/default/files/docker-swarm-hero2.png' style='height:300px;').center-block
+          a(href='https://www.docker.com' target='_blank')
+            img(src='images/moby_large.png' style='width:300px;').center-block
         .col-md-6.pad20
-          h3 Runs on any Docker Host/Swarm or on Kubernetes
+          h3 Runs on any Docker Host or on Kubernetes
 
           p.
             The API Portal can be deployed to any environment which runs a docker host.
             This can be a single VM, or a Swarm environment. You can either deploy using
-            a <code>docker-compose</code> file, or using an orchestrator like Kubernetes.
+            a <code>docker-compose</code> file, or using an orchestrator like Kubernetes, 
+            leveraging a <a href="https://github.com/Haufe-Lexware/wicked.haufe.io/tree/master/wicked">Kubernetes Helm Chart</a>.
           p.
             Depending on your requirements regarding high availability and your SLAs
             towards your clients, you are free to choose how to deploy the API Portal
@@ -55,6 +57,7 @@ block content
           background.
         p.
           Scaling your API Gateway is supported out of the box, and depending on your runtime
-          orchestration, setting up high availability is as well (for the Gateway).
+          orchestration, setting up high availability is as well (for the Gateway). Highly available
+          setups also for the API Portal is planned for 1.0.0.
       .col-md-6.pad20
         img(src='images/architecture-components.png').center-block.img-responsive

@@ -1,0 +1,204 @@
+extends layout
+
+block vars
+  - var thisPage = 'gettingstarted-k8s'
+
+block content
+
+  .jumbotron(style='background: url("images/header-3-500.jpg"); background-size:cover;')
+    .container(style='padding-top: 70px').feature-container
+      h1 Getting Started with Kubernetes
+
+      p Try out the API Portal on Kubernetes in the following simple steps.
+  .container
+
+    br
+
+    h2 Introduction
+
+    .row
+      .col-md-8
+        p.
+          This page contains the instructions to run a demo portal on a Kubernetes <code>minikube</code> cluster; to see this for
+          a local Docker host, please see the <a href="gettingstarted.html"><b>Getting Started With Docker</b></a> guide.
+        p.
+          This introduction to the API Portal we provide will guide you to deploy an API Portal
+          like the one we keep for demo purposes at 
+          <a href='https://wicked-demo.haufe.io' target='_blank'>wicked-demo.haufe.io</a>, on a Kubernetes cluster.
+        p.
+          The wicked API Portal is designed to run within <a href='http://docker.io' target='_blank'><code>docker</code></a>,
+          and is specifically now targeting Kubernetes as the preferred runtime environment. The following short tutorial
+          assumes you are familiar with Kubernetes, and that you have a local <code>minikube</code> environment up and
+          running on your local machine.
+        p.
+          Further, it's assumed that you are familiar in using a <code>bash</code> type shell, and that you
+          have a running <code>git</code> installation. On Linux/Mac OS X this should be present out of the box (if
+          you are a developer). On Windows, using either the Ubuntu bash Windows subsystem, or plain "Git bash" (cygwin)
+          should work fine.
+        p.
+          <b>Note:</b> The following guide is not suitable as a starting point for your own configuration, but is rather
+          meant as a demo configuration. The documentation contains more information on how to get you started with your
+          own APIs.
+        p &nbsp;
+
+      .col-md-4
+        a(href='https://kubernetes.io' target='_blank')
+          img(src='https://github.com/kubernetes/kubernetes/raw/master/logo/logo_with_border.png' width='200').center-block
+
+
+  .grey
+    .container.pad20
+      .row
+        .col-md-4
+          | &nbsp;
+        .col-md-8
+          h2 Step 1: Prerequisites - Minikube and Helm
+          
+      .row
+        .col-md-4
+          a(href='https://github.com/kubernetes/minikube' target='_blank')
+            img(src='https://github.com/kubernetes/minikube/raw/master/logo/logo.png' style='width:150px;').center-block
+
+        .col-md-8
+          p.
+            Please make sure you have runnning <code>minikube</code> installation before you proceed with the
+            next steps of this tutorial. Refer to the homepage of the <code>minikube</code> project on Github
+            for more information on how to install:
+
+          p.
+            <a href="https://github.com/kubernetes/minikube">Minikube on GitHub</a>
+
+          p.
+            Enable the "ingress addon" for minikube to be able to use the built-in ingress controller:
+
+          pre.
+            $ minikube addons enable ingress
+
+          p.
+            Please also install Kubernetes Helm, which is the package manager for Kubernetes.
+
+          p.
+            <a href="https://github.com/kubernetes/helm#install">Helm Installation (on GitHub)</a>
+
+          p.
+            Make sure Helm (the <code>tiller</code>) is installed on your cluster by running
+
+          pre.
+            $ helm init
+
+          br
+          br
+
+  .white.pad20
+    .container    
+      h2 Step 2: Fetch the Helm Chart
+
+      .row
+        .col-md-8
+          p.
+            Deploying the API Portal is equivalent to install a Helm Chart to your local <code>minikube</code>
+            Kubernetes cluster. You can always find the Chart release on Github, or you can use the following
+            script to download the latest version (for production use, please always use a specific version and
+            upgrade manually):
+
+          pre.
+            $ curl -L http://wicked.haufe.io/get-wicked.sh | bash
+
+          p.
+            This command downloads the latest version of the wicked Helm Chart to a local directory <code>wicked</code>
+            so that it can be used with the configured cluster and Helm:
+
+          pre.
+            $ helm install --set minikubeIP=$(minikube ip) --name test wicked
+
+          p.
+            The installation process takes a little while, as the images need to be downloaded and run on your cluster;
+            by opening a different terminal instance and calling <code>kubectl get pods</code>, you can check on the
+            status of the provisioning.
+          p.
+            After around 2-5 minutes, depending on your bandwidth, you will presented the installation notes from Helm.
+          
+          p &nbsp;
+        .col-md-4
+          a(href='https://github.com/Haufe-Lexware/wicked.deploy.sample' target='_blank')
+            img(src='https://assets-cdn.github.com/images/modules/logos_page/Octocat.png' style='width:250px;').center-block
+       
+  .grey.pad20
+    .container
+      .row
+        .col-md-4
+          p &nbsp;
+        .col-md-8
+          h2 Step 3: Create <code>/etc/hosts</code> entries
+
+      .row
+        .col-md-4
+          p &nbsp;
+        .col-md-8
+          p.
+            Issue the following command to retrieve the IP address of your <code>minikube</code> VM's IP:
+
+          pre.
+            $ minikube ip
+            192.168.64.2 # example value
+
+          p.
+            Open up your <code>/etc/hosts</code> (Linux/Mac OS X, on Windows: <code>C:\Windows\System32\drivers\etc\hosts</code>) 
+            file in an editor (this step will be different on Linux, Mac OS X and
+            Windows, please google if unclear) and add the following line:
+
+          pre.
+            (output of minikube ip)   portal.local,api.portal.local
+          
+          p.
+            <b>Note:</b> You may need to <code>sudo</code> to change that file; on Windows you will need
+            to edit the <code>hosts</code> file as Administrator.
+
+          p &nbsp;
+
+  .white.pad20
+    .container
+      .row
+        .col-md-8
+          h2 Step 4: Log in
+        .col-md-4
+          | &nbsp;
+
+      .row
+        .col-md-8
+          p.
+            Using Chrome or Firefox, navigate to your API Portal at <a href='https://portal.local' target='_blank'><code>https://portal.local</code></a>
+            and start playing around. The sample configuration has a preconfigured admin user with the following credentials:
+          ul
+            li <strong>User email:</strong> <code>admin@foo.com</code>
+            li <strong>Password:</strong> <code>wicked</code>
+
+          p.
+            <b>Note:</b> Due to restrictions with saving Cookies with self signed certificates, this process may not work with all browsers.
+            When installed with correct and valid certificates, wicked will work with all recent common browsers (Microsoft Edge, Firefox, Chrome and
+            Safari).
+
+          p &nbsp;
+
+          .panel.panel-default
+            .panel-heading
+              | Screenshot
+            .panel-body(style='text-align:center')
+              img(src='images/screenshot-640.png').img-responsive
+
+          p.
+            Read more in the <a href="https://github.com/Haufe-Lexware/wicked.haufe.io" target="_blank">documentation</a>, e.g.
+            on how to <a href="https://github.com/Haufe-Lexware/wicked.haufe.io/blob/master/doc/using-the-sample-portal.md">use
+            the sample portal</a>.
+          
+          p.
+            To stop and deallocate the local API Portal, issue the following command:
+          pre.
+            $ kubectl delete job test-wicked-post-install # in future, this will be auto-removed by Helm
+            $ helm delete test --purge
+
+          p.
+            Or, simply deprovision the <code>minikube</code> cluster (<code>minikube delete</code>).
+
+        .col-md-4
+          img(src='images/logo-s-500.png' style='height:350px').center-block

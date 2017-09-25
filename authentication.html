@@ -40,7 +40,13 @@
             <div id="navbar" class="navbar-collapse collapse">
               <ul class="nav navbar-nav">
                 <li><a href="index.html">Home</a></li>
-                <li><a href="gettingstarted.html">Getting Started</a></li>
+                <li class="dropdown">
+                  <!-- data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Dropdown <span class="caret"></span></a>--><a href="#" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" class="dropdown-toggle">Getting Started <span class='caret'/></a>
+                  <ul class="dropdown-menu">
+                    <li><a href="gettingstarted-k8s.html">With Kubernetes</a></li>
+                    <li><a href="gettingstarted.html">With Docker</a></li>
+                  </ul>
+                </li>
                 <li class="dropdown">
                   <!-- data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Dropdown <span class="caret"></span></a>--><a href="#" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" class="dropdown-toggle">Features <span class='caret'/></a>
                   <ul class="dropdown-menu">
@@ -112,6 +118,7 @@
             <li>ADFS 3.0 Federation using your own ADFS instance (SAML)</li>
             <li>Github Social Login (OAuth 2.0)</li>
             <li>Google Login (OAuth 2.0)</li>
+            <li>... more to come</li>
           </ul>
           <p>
             For e-mail and password log in, the portal supports reCAPTCHA to avoid robots

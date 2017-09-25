@@ -40,7 +40,13 @@
             <div id="navbar" class="navbar-collapse collapse">
               <ul class="nav navbar-nav">
                 <li><a href="index.html">Home</a></li>
-                <li><a href="gettingstarted.html">Getting Started</a></li>
+                <li class="dropdown">
+                  <!-- data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Dropdown <span class="caret"></span></a>--><a href="#" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" class="dropdown-toggle">Getting Started <span class='caret'/></a>
+                  <ul class="dropdown-menu">
+                    <li><a href="gettingstarted-k8s.html">With Kubernetes</a></li>
+                    <li><a href="gettingstarted.html">With Docker</a></li>
+                  </ul>
+                </li>
                 <li class="dropdown">
                   <!-- data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Dropdown <span class="caret"></span></a>--><a href="#" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" class="dropdown-toggle">Features <span class='caret'/></a>
                   <ul class="dropdown-menu">
@@ -99,7 +105,8 @@
           <h3>Deployment Architecture</h3>
           <p>
             The API Portal relies on proven technology to manage traffic: The actual portal
-            sits behind a HAproxy, and the actual API traffic is proxied by the excellent
+            either sits behind a HAproxy, or leverages standard Ingress Controllers (on Kubernetes) 
+            and the actual API traffic is proxied by the excellent
             <a href="https://getkong.org" target="_blank">API Gateway Kong by Mashape</a>.
           </p>
           <p>
@@ -113,13 +120,14 @@
     <div class="grey">
       <div class="container pad20">
         <div class="row">
-          <div class="col-md-6 pad20"><a href="https://www.docker.com/products/docker-swarm" target="_blank"><img src="https://www.docker.com/sites/default/files/docker-swarm-hero2.png" style="height:300px;" class="center-block"></a></div>
+          <div class="col-md-6 pad20"><a href="https://www.docker.com" target="_blank"><img src="images/moby_large.png" style="width:300px;" class="center-block"></a></div>
           <div class="col-md-6 pad20">
-            <h3>Runs on any Docker Host/Swarm or on Kubernetes</h3>
+            <h3>Runs on any Docker Host or on Kubernetes</h3>
             <p>
               The API Portal can be deployed to any environment which runs a docker host.
               This can be a single VM, or a Swarm environment. You can either deploy using
-              a <code>docker-compose</code> file, or using an orchestrator like Kubernetes.
+              a <code>docker-compose</code> file, or using an orchestrator like Kubernetes, 
+              leveraging a <a href="https://github.com/Haufe-Lexware/wicked.haufe.io/tree/master/wicked">Kubernetes Helm Chart</a>.
             </p>
             <p>
               Depending on your requirements regarding high availability and your SLAs
@@ -143,7 +151,8 @@
           </p>
           <p>
             Scaling your API Gateway is supported out of the box, and depending on your runtime
-            orchestration, setting up high availability is as well (for the Gateway).
+            orchestration, setting up high availability is as well (for the Gateway). Highly available
+            setups also for the API Portal is planned for 1.0.0.
           </p>
         </div>
         <div class="col-md-6 pad20"><img src="images/architecture-components.png" class="center-block img-responsive"></div>

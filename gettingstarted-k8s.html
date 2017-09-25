@@ -43,8 +43,8 @@
                 <li class="dropdown">
                   <!-- data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Dropdown <span class="caret"></span></a>--><a href="#" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" class="dropdown-toggle">Getting Started <span class='caret'/></a>
                   <ul class="dropdown-menu">
-                    <li><a href="gettingstarted-k8s.html">With Kubernetes</a></li>
-                    <li class="active"><a href="gettingstarted.html">With Docker</a></li>
+                    <li class="active"><a href="gettingstarted-k8s.html">With Kubernetes</a></li>
+                    <li><a href="gettingstarted.html">With Docker</a></li>
                   </ul>
                 </li>
                 <li class="dropdown">
@@ -95,8 +95,8 @@
     </div>
     <div style="background: url(&quot;images/header-3-500.jpg&quot;); background-size:cover;" class="jumbotron">
       <div style="padding-top: 70px" class="container feature-container">
-        <h1>Getting Started</h1>
-        <p>Try out the API Portal in the following simple steps.</p>
+        <h1>Getting Started with Kubernetes</h1>
+        <p>Try out the API Portal on Kubernetes in the following simple steps.</p>
       </div>
     </div>
     <div class="container"><br>
@@ -104,29 +104,22 @@
       <div class="row">
         <div class="col-md-8">
           <p>
-            This page contains the instructions to run a demo portal on a single docker host; to see this for
-            Kubernetes, please see the <a href="gettingstarted-k8s.html"><b>Getting Started With Kubernetes</b></a> guide.
+            This page contains the instructions to run a demo portal on a Kubernetes <code>minikube</code> cluster; to see this for
+            a local Docker host, please see the <a href="gettingstarted.html"><b>Getting Started With Docker</b></a> guide.
           </p>
           <p>
             This introduction to the API Portal we provide will guide you to deploy an API Portal
             like the one we keep for demo purposes at 
-            <a href='https://wicked-demo.haufe.io' target='_blank'>wicked-demo.haufe.io</a>.
+            <a href='https://wicked-demo.haufe.io' target='_blank'>wicked-demo.haufe.io</a>, on a Kubernetes cluster.
           </p>
           <p>
-            The wicked API Portal is designed to run within <a href='http://docker.io' target='_blank'><code>docker</code></a>.
-            While it would  be perfectly possible to run the API Portal without docker, we at Haufe firmly believe
-            that it is not worth the effort. We have designed a deployment you can just use off the shelf,
-            including guidelines on how to 
-            
+            The wicked API Portal is designed to run within <a href='http://docker.io' target='_blank'><code>docker</code></a>,
+            and is specifically now targeting Kubernetes as the preferred runtime environment. The following short tutorial
+            assumes you are familiar with Kubernetes, and that you have a local <code>minikube</code> environment up and
+            running on your local machine.
           </p>
-          <ul>
-            <li>Deploy</li>
-            <li>Update</li>
-            <li>and Operate</li>
-          </ul>
-          <p>your API Portal and the API Gateway (<a href='https://getkong.org' target='_blank'>Mashape Kong</a>) which is used to proxy the APIs.</p>
           <p>
-            The following steps assume that you are familiar in using a <code>bash</code> type shell, and that you
+            Further, it's assumed that you are familiar in using a <code>bash</code> type shell, and that you
             have a running <code>git</code> installation. On Linux/Mac OS X this should be present out of the box (if
             you are a developer). On Windows, using either the Ubuntu bash Windows subsystem, or plain "Git bash" (cygwin)
             should work fine.
@@ -138,7 +131,7 @@
           </p>
           <p>&nbsp;</p>
         </div>
-        <div class="col-md-4"><a href="https://docker.com" target="_blank"><img src="images/moby_large.png" width="250" class="center-block"></a></div>
+        <div class="col-md-4"><a href="https://kubernetes.io" target="_blank"><img src="https://github.com/kubernetes/kubernetes/raw/master/logo/logo_with_border.png" width="200" class="center-block"></a></div>
       </div>
     </div>
     <div class="grey">
@@ -146,59 +139,76 @@
         <div class="row">
           <div class="col-md-4">&nbsp;</div>
           <div class="col-md-8">
-            <h2>Step 1: Prerequisites - Docker</h2>
+            <h2>Step 1: Prerequisites - Minikube and Helm</h2>
           </div>
         </div>
         <div class="row">
-          <div class="col-md-4"><a href="https://www.docker.com/products/docker-compose" target="_blank"><img src="https://raw.githubusercontent.com/docker/compose/master/logo.png" style="width:200px;" class="center-block"></a></div>
+          <div class="col-md-4"><a href="https://github.com/kubernetes/minikube" target="_blank"><img src="https://github.com/kubernetes/minikube/raw/master/logo/logo.png" style="width:150px;" class="center-block"></a></div>
           <div class="col-md-8">
             <p>
-              The only prerequisites for this getting started guide is that you have access to a the docker command
-              line and a Docker host. If you haven't already installed Docker, go ahead and
-              <a href='https://docker.com' target='_blank'>do that first</a>.
-              It will work both on Windows and Mac OS X machines without problems, best using docker 1.12 or later.
+              Please make sure you have runnning <code>minikube</code> installation before you proceed with the
+              next steps of this tutorial. Refer to the homepage of the <code>minikube</code> project on Github
+              for more information on how to install:
               
             </p>
             <p>
-              The API Portal will - for evaluation purposes - happily run on your local machine, or on any docker
-              host which you have set up <code>docker-machine</code> to talk to. Make sure you are using version
-              greater than or equal to 1.12 (compose 1.8.0) when deploying the API Portal, as we are using features of Docker which
-              are not available before that. Also make sure you have a recent 
-              <a href='https://www.docker.com/products/docker-compose' target='_blank'><code>docker-compose</code></a>
-              installed; if you haven't, click the link above and get it before proceeding. If you are using the
-              Docker &geq;1.12 for Mac OS X or Windows, <code>docker-compose</code> will already be installed on your machine.
+              <a href="https://github.com/kubernetes/minikube">Minikube on GitHub</a>
               
-            </p><a href="https://docker.com" target="_blank" class="btn btn-primary btn-lg">Get Docker &raquo;</a><br><br>
+            </p>
+            <p>
+              Enable the "ingress addon" for minikube to be able to use the built-in ingress controller:
+              
+            </p>
+            <pre>$ minikube addons enable ingress
+</pre>
+            <p>
+              Please also install Kubernetes Helm, which is the package manager for Kubernetes.
+              
+            </p>
+            <p>
+              <a href="https://github.com/kubernetes/helm#install">Helm Installation (on GitHub)</a>
+              
+            </p>
+            <p>
+              Make sure Helm (the <code>tiller</code>) is installed on your cluster by running
+              
+            </p>
+            <pre>$ helm init
+</pre><br><br>
           </div>
         </div>
       </div>
     </div>
     <div class="white pad20">
       <div class="container">   
-        <h2>Step 2: Clone the Sample Deployment Repository</h2>
+        <h2>Step 2: Fetch the Helm Chart</h2>
         <div class="row">
           <div class="col-md-8">
             <p>
-              Deploying the API Portal is equivalent to running a <code>docker-compose.yml</code> file. Get a sample
-              configuration repository from the Haufe-Lexware Github Repository: 
+              Deploying the API Portal is equivalent to install a Helm Chart to your local <code>minikube</code>
+              Kubernetes cluster. You can always find the Chart release on Github, or you can use the following
+              script to download the latest version (for production use, please always use a specific version and
+              upgrade manually):
               
             </p>
-            <pre>$ git clone https://github.com/Haufe-Lexware/wicked.deploy.sample
-...
-$ cd wicked.deploy.sample
+            <pre>$ curl -L http://wicked.haufe.io/get-wicked.sh | bash
 </pre>
             <p>
-              Make sure you have a docker host at hand you can deploy to. If you have just installed docker on
-              your local machine, this will be the case, and you just have to call either the "Docker Quickstart Terminal"
-              or - with more recent installations - simply the Terminal. Check that everything works:
+              This command downloads the latest version of the wicked Helm Chart to a local directory <code>wicked</code>
+              so that it can be used with the configured cluster and Helm:
               
             </p>
-            <pre>$ docker --version
-Docker version 1.12.0, build 8eab29e
-$ docker-compose --version
-docker-compose version 1.8.0, build f3628c7
-$
+            <pre>$ helm install --set minikubeIP=$(minikube ip) --name test wicked
 </pre>
+            <p>
+              The installation process takes a little while, as the images need to be downloaded and run on your cluster;
+              by opening a different terminal instance and calling <code>kubectl get pods</code>, you can check on the
+              status of the provisioning.
+            </p>
+            <p>
+              After around 2-5 minutes, depending on your bandwidth, you will presented the installation notes from Helm.
+              
+            </p>
             <p>&nbsp;</p>
           </div>
           <div class="col-md-4"><a href="https://github.com/Haufe-Lexware/wicked.deploy.sample" target="_blank"><img src="https://assets-cdn.github.com/images/modules/logos_page/Octocat.png" style="width:250px;" class="center-block"></a></div>
@@ -221,29 +231,25 @@ $
           </div>
           <div class="col-md-8">
             <p>
-              Open up your <code>/etc/hosts</code> (Linux/Mac OS X, on Windows: <code>C:\Windows\System32\drivers\etc\hosts</code>) 
-              file in an editor (this step will be different on Linux, Mac OS X and
-              Windows, please google if unclear) and add the following two lines:
+              Issue the following command to retrieve the IP address of your <code>minikube</code> VM's IP:
               
             </p>
-            <pre>127.0.0.1   portal.local
-127.0.0.1   api.portal.local
+            <pre>$ minikube ip
+192.168.64.2 # example value
+</pre>
+            <p>
+              Open up your <code>/etc/hosts</code> (Linux/Mac OS X, on Windows: <code>C:\Windows\System32\drivers\etc\hosts</code>) 
+              file in an editor (this step will be different on Linux, Mac OS X and
+              Windows, please google if unclear) and add the following line:
+              
+            </p>
+            <pre>(output of minikube ip)   portal.local,api.portal.local
 </pre>
             <p>
               <b>Note:</b> You may need to <code>sudo</code> to change that file; on Windows you will need
-              to edit the <code>hosts</code> file as Administrator. Check that you can ping your machine using
-              both DNS names:
+              to edit the <code>hosts</code> file as Administrator.
               
             </p>
-            <pre>$ ping portal.local
-PING portal.local (127.0.0.1): 56 data bytes
-64 bytes from 127.0.0.1: icmp_seq=0 ttl=64 time=0.098 ms
-...
-$ ping api.portal.local
-PING api.portal.local (127.0.0.1): 56 data bytes
-64 bytes from 127.0.0.1: icmp_seq=0 ttl=64 time=0.098 ms
-...
-</pre>
             <p>&nbsp;</p>
           </div>
         </div>
@@ -253,45 +259,26 @@ PING api.portal.local (127.0.0.1): 56 data bytes
       <div class="container">
         <div class="row">
           <div class="col-md-8">
-            <h2>Step 4: Deploy</h2>
-            <p>
-              We are now almost set to deploy the API Portal. We just have to define some environment variables and
-              call <code>docker-compose</code>.
-            </p>
-            <pre>$ source ./env.sh
-$ docker-compose up -d
-...
-</pre>
-            <p>
-              This will take a little while, mostly because docker has to download the container images used for the portal.
-              Depending on your internet connection speed, you can expect this to take from two to ten minutes (the images
-              are around 1.5 GB in size in total).
-              
-            </p>
-            <p>&nbsp;</p>
+            <h2>Step 4: Log in</h2>
           </div>
-        </div>
-      </div>
-    </div>
-    <div class="grey pad20">
-      <div class="container">
-        <div class="row">
           <div class="col-md-4">&nbsp;</div>
-          <div class="col-md-8">
-            <h2>Step 5: Log in</h2>
-          </div>
         </div>
         <div class="row">
-          <div class="col-md-4"><img src="images/logo-s-500.png" style="height:350px" class="center-block"></div>
           <div class="col-md-8">
             <p>
-              Navigate to your API Portal at <a href='https://portal.local' target='_blank'><code>https://portal.local</code></a>
+              Using Chrome or Firefox, navigate to your API Portal at <a href='https://portal.local' target='_blank'><code>https://portal.local</code></a>
               and start playing around. The sample configuration has a preconfigured admin user with the following credentials:
             </p>
             <ul>
               <li><strong>User email:</strong> <code>admin@foo.com</code></li>
               <li><strong>Password:</strong> <code>wicked</code></li>
             </ul>
+            <p>
+              <b>Note:</b> Due to restrictions with saving Cookies with self signed certificates, this process may not work with all browsers.
+              When installed with correct and valid certificates, wicked will work with all recent common browsers (Microsoft Edge, Firefox, Chrome and
+              Safari).
+              
+            </p>
             <p>&nbsp;</p>
             <div class="panel panel-default">
               <div class="panel-heading">Screenshot</div>
@@ -304,8 +291,15 @@ $ docker-compose up -d
               
             </p>
             <p>To stop and deallocate the local API Portal, issue the following command:</p>
-            <pre>$ docker-compose down</pre>
+            <pre>$ kubectl delete job test-wicked-post-install # in future, this will be auto-removed by Helm
+$ helm delete test --purge
+</pre>
+            <p>
+              Or, simply deprovision the <code>minikube</code> cluster (<code>minikube delete</code>).
+              
+            </p>
           </div>
+          <div class="col-md-4"><img src="images/logo-s-500.png" style="height:350px" class="center-block"></div>
         </div>
       </div>
     </div>

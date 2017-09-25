@@ -40,7 +40,13 @@
             <div id="navbar" class="navbar-collapse collapse">
               <ul class="nav navbar-nav">
                 <li><a href="index.html">Home</a></li>
-                <li><a href="gettingstarted.html">Getting Started</a></li>
+                <li class="dropdown">
+                  <!-- data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Dropdown <span class="caret"></span></a>--><a href="#" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" class="dropdown-toggle">Getting Started <span class='caret'/></a>
+                  <ul class="dropdown-menu">
+                    <li><a href="gettingstarted-k8s.html">With Kubernetes</a></li>
+                    <li><a href="gettingstarted.html">With Docker</a></li>
+                  </ul>
+                </li>
                 <li class="dropdown">
                   <!-- data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Dropdown <span class="caret"></span></a>--><a href="#" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" class="dropdown-toggle">Features <span class='caret'/></a>
                   <ul class="dropdown-menu">
@@ -210,7 +216,7 @@
       <div class="row">
         <div class="col-md-4 feature-block grey">
           <h5 class="feature">Kubernetes Deployment</h5>
-          <p class="feature">wicked runs very well on the docker orchestration tool Kubernetes; the documentation contains recipes and best practices on running in Kubernetes.</p>
+          <p class="feature">wicked runs very well on the docker orchestration tool Kubernetes; the documentation contains recipes and best practices on running in Kubernetes, using Helm Charts</p>
         </div>
         <div class="col-md-4 feature-block white">
           <h5 class="feature">Pluggable Authorization Servers</h5>
