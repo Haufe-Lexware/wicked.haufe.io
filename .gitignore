@@ -3,3 +3,4 @@ node_modules
 /helm/
 temp.json
 git_*
+*.tgz

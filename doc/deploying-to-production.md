@@ -7,6 +7,8 @@
 * Setting up a scalable Postgres cluster should be possible, but usually not really necessary; in case you are storing refresh tokens, it is a good idea to persist the Postgres data as well (as it is suggested in the default configuration). In case of a crash of the Postgres with data loss, only temporary access tokens (and possibly refresh tokens) are lost; new access tokens can be had quite quickly, even if it forces and end user to log in again.
 * For situations where you only use OAuth 2 Client Credentials Flow and API Keys, the Postgres database does not need to be treated with special care (as in: no dedicated backup plan), as it can at any time be recreated by (re-)starting the Kong Adapter
 
+Wicked currently runs best in **Kubernetes**, using the [Kubernetes Chart for wicked.haufe.io](https://github.com/Haufe-Lexware/wicked.haufe.io/tree/master/wicked), **or** using a standalone Docker Host.
+
 ## Runtimes
 
 * [Deploying to a single Docker Host](deploying-to-docker-host.md)

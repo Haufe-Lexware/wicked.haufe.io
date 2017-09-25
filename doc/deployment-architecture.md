@@ -2,7 +2,7 @@
 
 ## Introduction
 
-The API Portal is intended to be deployed to using Docker. The default configuration is suitable for deployment to a single Docker Host (or Docker Swarm) using `docker-compose`. Alternatives are: [Docker Swarm](deploying-to-swarm.md), [Kubernetes](deploying-to-kubernetes.md), [Apache Mesos](deploying-to-mesos.md) and other orchestration layers supporting running Docker Containers.
+The API Portal is intended to be deployed to using Docker. The default configuration is suitable for deployment to a single Docker Host (or Docker Swarm) using `docker-compose`. For Kubernetes, the installation via the [wicked Helm Chart](deploying-to-kubernetes.md) is recommended. Alternatives are: [Docker Swarm](deploying-to-swarm.md), [Apache Mesos](deploying-to-mesos.md) and other orchestration layers supporting running Docker Containers.
 
 The deployment architecture is usually as follows:
 
