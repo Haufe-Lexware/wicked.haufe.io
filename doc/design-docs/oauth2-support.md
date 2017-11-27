@@ -262,6 +262,12 @@ Authenticate with Active Directory Federation Services (ADFS), using its OAuth 2
 
 TODO (see [wicked.auth-passport](https://github.com/Haufe-Lexware/wicked.auth-passport)).
 
+#### Auth Method `ldap`
+
+LDAP integration. Will probably be similar to the ADFS case (regarding groups etc.).
+
+_to be specified_
+
 #### Auth Method `oidc`
 
 Authenticate with a generic OpenID Connect Identity Provider.
