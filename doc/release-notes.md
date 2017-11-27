@@ -14,6 +14,24 @@ Official Release of the API Portal.
 
 ## 0.12.1 (beta)
 
+**Date**: November 27th, 2017 (2017-11.27)
+
+**Docker Tag**: `0.12.2`(`-alpine`)
+
+### Content
+
+Bugfixes.
+
+* [500 response when taking redis as session store](https://github.com/Haufe-Lexware/wicked.haufe.io/issues/89)
+* [Failing kong adapter due to "config.origin" error 400](https://github.com/Haufe-Lexware/wicked.haufe.io/issues/90)
+* [If user is logged in, the email validation does not have immediate effect](https://github.com/Haufe-Lexware/wicked.haufe.io/issues/88)
+
+### Contributors
+
+* @donmartin76
+
+## 0.12.1 (beta)
+
 **Date**: September 25th, 2017 (2017-09-25)
 
 **Docker Tag**: `0.12.1`
