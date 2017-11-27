@@ -12,7 +12,7 @@ Official Release of the API Portal.
 
 [Design documents](https://github.com/Haufe-Lexware/wicked.haufe.io/tree/next/doc/design-docs).
 
-## 0.12.1 (beta)
+## 0.12.2 (beta)
 
 **Date**: November 27th, 2017 (2017-11.27)
 
