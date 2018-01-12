@@ -12,9 +12,33 @@ Official Release of the API Portal.
 
 [Design documents](https://github.com/Haufe-Lexware/wicked.haufe.io/tree/next/doc/design-docs).
 
+## 0.12.3 (beta)
+
+**Date**: January 12th 2018 (2018-01-12)
+
+**Docker Tag**: `0.12.3`(`-alpine`)
+
+### Content
+
+Bugfixes, and a couple of features, contributed by @santokhsingh and @maksimlikharev. **Thanks**! (Sorry it took so long to merge your PRs).
+
+* Feature: [It should be possible to retrieve the Swagger information from a service endpoint](https://github.com/Haufe-Lexware/wicked.haufe.io/issues/98)
+* Feature: [Kong container should use Kong's logging features to stdout and stderr](https://github.com/Haufe-Lexware/wicked.haufe.io/issues/91)
+* Bugfix: [makeHealthEntry fails in portal-api if external apiHost points to other location](https://github.com/Haufe-Lexware/wicked.haufe.io/issues/95)
+* Feature: [Generic OAuth2 support for logging in to the Portal](https://github.com/apim-haufe-io/wicked.portal/pull/11)
+* Feature (Kickstarter): [AWS Lambda configuration support (Kong plugin)](https://github.com/apim-haufe-io/wicked.portal-kickstarter/pull/14)
+* Feature (Kong Adapter/Kickstarter): [Kong Adapter support for ignoring a list of plugins](https://github.com/apim-haufe-io/wicked.portal-kickstarter/pull/15)
+* Bugfix (Kickstarter): [Fixed issue with `strip_uri` for Authorization Servers](https://github.com/apim-haufe-io/wicked.portal-kickstarter/pull/20) 
+
+### Contributors
+
+* @santokhsingh
+* @maksimlikharev
+* @donmartin76
+
 ## 0.12.2 (beta)
 
-**Date**: November 27th, 2017 (2017-11.27)
+**Date**: November 27th, 2017 (2017-11-27)
 
 **Docker Tag**: `0.12.2`(`-alpine`)
 
