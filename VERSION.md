@@ -2,11 +2,11 @@
 
 ### Latest Release
 
-Latest release is `0.12.3` (January 12th 2018).
+Latest release is `0.12.4` (January 13th 2018).
 
 ### Next Release
 
-Next release will probably be `0.12.4` (no date defined yet).
+Next release will probably be `0.12.5` (no date defined yet).
 
 In parallel, we are preparing a 1.0.0 beta version, which will not be production ready yet.
 

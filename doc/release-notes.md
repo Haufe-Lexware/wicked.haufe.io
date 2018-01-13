@@ -12,6 +12,18 @@ Official Release of the API Portal.
 
 [Design documents](https://github.com/Haufe-Lexware/wicked.haufe.io/tree/next/doc/design-docs).
 
+## 0.12.4 (beta)
+
+**Date**: January 13th 2018 (2018-01-13)
+
+**Docker Tag**: `0.12.4`(`-alpine`)
+
+### Content
+
+Regression bugfix release. Sorry for the inconvenience.
+
+* [Regression: the host property of the swagger.json is not properly overwritten](https://github.com/Haufe-Lexware/wicked.haufe.io/issues/99)
+
 ## 0.12.3 (beta)
 
 **Date**: January 12th 2018 (2018-01-12)
