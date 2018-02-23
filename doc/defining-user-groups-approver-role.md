@@ -12,13 +12,14 @@ Approver role provides flexibility for use of the Wicked API portal across an en
 The Groups Configuration Screen in Kickstarter has a checkbox which allows the user to assign a new group type called 'approver' as part of Group Definition. For example, we create a new group called 'Electric Car API Approver' and assign it as approver 
  _Note: **This change does not impact existing admin group functionality**._ 
  
-![approver1](https://user-images.githubusercontent.com/9421117/36286403-74ae8e34-1264-11e8-9c65-1432bef850ee.png)
+![snip20180222_6](https://user-images.githubusercontent.com/9421117/36571212-711816e2-17ea-11e8-853d-318ccb19bb84.png)
 
 ### Associating APIs to approvers 
 
-The Alternative IDs field of the approver group must contain the Group IDs associated with the APIs, enabling the approver to see their approval requests when logging into the Wicked API Portal. For example, our gateway has an API, 'Charge Reader'.  To allow members of the 'Electric Car API Approver' group to see approval requests for this API in the portal, the Group IDs for API 'Charge Reader' is added to the approver group.  
- 
-![approver2](https://user-images.githubusercontent.com/9421117/36286407-7bc71e66-1264-11e8-95dc-967ef6d47381.png)
+Approver needs to be part of the group that is associated with the API that he/she has the responsibility to approve, enabling the approver to see their approval requests when logging into the Wicked API Portal.  
+For example, our gateway has an API, 'Charge Reader'.  To approver needs to be part of the  'Charge Reader' group to see approval requests for this API in the portal.
+
+![snip20180222_7](https://user-images.githubusercontent.com/9421117/36571218-776b7b9c-17ea-11e8-850c-79ebb0f865ac.png)
 
 ### API Portal UI 
 
