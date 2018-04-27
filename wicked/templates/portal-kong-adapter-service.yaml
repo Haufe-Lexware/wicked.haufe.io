@@ -1,0 +1,16 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    service: {{ template "fullname" . }}-kong-adapter
+  name: {{ template "fullname" . }}-kong-adapter
+  namespace: {{ default "default" .Values.namespace }}
+spec:
+  ports:
+  - name: "3002"
+    port: 3002
+    targetPort: 3002
+    protocol: TCP
+  selector:
+    service: {{ template "fullname" . }}-kong-adapter
