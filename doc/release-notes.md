@@ -12,6 +12,35 @@ Official Release of the API Portal.
 
 [Design documents](https://github.com/Haufe-Lexware/wicked.haufe.io/tree/next/doc/design-docs).
 
+## 0.12.5 (beta)
+
+**Date**: April 27th 2018 (2018-04-27)
+
+**Docker Tag**: `0.12.5`(`-alpine`)
+
+### Content
+
+* API Tags and Tag filtering (@santokhsingh and @maksimlikharev. **Thanks**!)
+* [Approver Group/Roles](defining-user-groups-approver-role.md) (@santokhsingh and @maksimlikharev. **Thanks**!)
+* Various UI fixes and improvements (@cjschweigart, **Thanks**!)
+* Kong 0.11.2 Upgrade
+* [Bug: portal-api-deployment.yaml (helm deployment)](https://github.com/Haufe-Lexware/wicked.haufe.io/issues/104)
+* [Missing service in Helm Chart](https://github.com/Haufe-Lexware/wicked.haufe.io/pull/105) (@ulrichhamann, **Thanks**!)
+* Various build fixes and release tooling improvements
+* Bumped to `node:8[-alpine]`
+
+Remarks: We have not yet done the transition to Kong 0.12 or 0.13, as there are several breaking changes in the Kong API. We are currently looking into it, and it's on the roadmap for one of the next releases.
+
+This release should be compatible with the 0.12.4 release, so upgrading to this release should be straightforward. As usual, it's advisable to re-initialize your Postgres database (wipe it) and let Kong and the Kong Adapter reinitialize it.
+
+### Contributors
+
+* @santokhsingh
+* @maksimlikharev
+* @donmartin76
+* @ulrichhamann
+* @saromba
+
 ## 0.12.4 (beta)
 
 **Date**: January 13th 2018 (2018-01-13)
