@@ -35,6 +35,11 @@ spec:
           valueFrom: { fieldRef: { fieldPath: status.podIP } }
         image: postgres:9.6
         name: {{ template "fullname" . }}-kong-database
+        args:
+          {{- range $key, $value := default dict .Values.postgres.runtimeConfig }}
+          - -c
+          - '{{ $key | snakecase }}={{ $value }}'
+          {{- end }}
         ports:
         - name: "psql"
           containerPort: 5432

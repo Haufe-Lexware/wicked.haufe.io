@@ -26,8 +26,8 @@ All node.js based images are based on the official [`node:6`](https://hub.docker
 The following images are not built by us, but are taken as-is:
 
 * `kong:(version)` (the version of Kong is announced in the [release notes](release-notes.md) whenever changed)
-* `postgres:9.4`: The official [Postgres 9.4](https://hub.docker.com/_/postgres/) image
-* `dockercloud/haproxy:1.5.3`: Docker's official [HAproxy](https://hub.docker.com/r/dockercloud/haproxy/) release.
+* `postgres:9.6`: The official [Postgres 9.6](https://hub.docker.com/_/postgres/) image
+* `dockercloud/haproxy:1.6.7`: Docker's official [HAproxy](https://hub.docker.com/r/dockercloud/haproxy/) release.
 
 ## Available Tags
 

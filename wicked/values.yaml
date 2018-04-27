@@ -27,7 +27,7 @@ redis:
   # want to use an external one (or none at all)  
   deployRedis: true
   # The image for redis to use
-  image: "redis:3.2.10-alpine"
+  image: "redis:3.2-alpine"
   # Specify true to make the portal use redis as a session store. This requires
   # a compatible configuration (i.e. created with wicked Kickstarter 0.12.1+)
   useRedis: true
@@ -195,6 +195,10 @@ postgres:
   # Deploy a Kong Postgres storage with this application? If you specify false here,
   # you will need to take care of your Postgres instance yourself
   deployPostgres: true
+  ## Specify runtime config parameters as a dict, using camelCase, e.g.
+  ## {"sharedBuffers": "500MB"}
+  ## ref: https://www.postgresql.org/docs/current/static/runtime-config.html
+  runtimeConfig: {"maxConnections": "300"}
   # Which Postgres version do you want to deploy? Do NOT change this when upgrading, it
   # will not end well.
   version: "9.6"
