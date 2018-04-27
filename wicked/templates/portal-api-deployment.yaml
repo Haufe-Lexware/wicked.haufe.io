@@ -39,7 +39,7 @@ spec:
           value: {{ .Values.minikubeIP }}
 {{ end }}
         - name: NODE_ENV
-          value: {{ default "default" .Values.envName }}
+          value: {{ default "default" .Values.config.envName }}
 {{- if not .Values.config.useCustomApiImage }}          
         - name: GIT_REPO
           valueFrom:
