@@ -58,7 +58,7 @@ image:
   # need to pull your company's version of wicked.
   repository: "haufelexware/wicked."
   # The docker image tag to use; usually you don't change this.
-  tag: "0.12.4"
+  tag: "0.12.5"
   pullPolicy: IfNotPresent
 
 # Add imagePullSecrets like this in an override.yaml to pass in with helm install
