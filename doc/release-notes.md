@@ -28,6 +28,7 @@ Official Release of the API Portal.
 * [Missing service in Helm Chart](https://github.com/Haufe-Lexware/wicked.haufe.io/pull/105) (@ulrichhamann, **Thanks**!)
 * Various build fixes and release tooling improvements
 * Bumped to `node:8[-alpine]`
+* The Docker images `haufelexware/wicked.k8s-init` and `haufelexware/wicked.k8s-tool` are now versioned and can be pulled just like all other images; the only difference being that these do not have a dedicated `-alpine` image, they are small as is
 
 Remarks: We have not yet done the transition to Kong 0.12 or 0.13, as there are several breaking changes in the Kong API. We are currently looking into it, and it's on the roadmap for one of the next releases.
 
