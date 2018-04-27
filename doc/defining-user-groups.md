@@ -47,6 +47,10 @@ All configurations should contain an `admin` user group. This is the default Adm
 
 As described in the [setup documentation](creating-a-portal-configuration.md), by default there is exactly one Administrator predefined, the Admin user with the user id `1` (email `admin@foo.com`, password `wicked`); leverage this user to grant admin rights to your own user (if you are the admin) and subsequently remove the password from the default admin user to prevent people logging in with that super user.
 
+**See also**:
+
+* [Approver role for User Groups](defining-user-groups-approver-role.md)
+
 ## User group use cases
 
 The followings sections describe typical use cases for user groups.
