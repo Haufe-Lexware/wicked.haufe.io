@@ -40,11 +40,8 @@ redis:
   # Redis resources
   resources:
     requests:
-      cpu: 100m
+      cpu: 50m
       memory: 128Mi
-    limits:
-      cpu: 200m
-      memory: 256Mi
 
 # If you are trying out wicked on minikube, please supply
 # the `minikube ip` address here:
@@ -102,39 +99,24 @@ config:
 # Standard resources for the node components of wicked.
 resources:
   api:
-    limits:
-      cpu: 200m
-      memory: 256Mi
     requests:
-      cpu: 100m
+      cpu: 50m
       memory: 128Mi
   portal:
-    limits:
-      cpu: 200m
-      memory: 256Mi
     requests:
-      cpu: 100m
+      cpu: 50m
       memory: 128Mi
   kongAdapter:
-    limits:
-      cpu: 200m
-      memory: 256Mi
     requests:
-      cpu: 100m
+      cpu: 50m
       memory: 128Mi
   chatbot:
-    limits:
-      cpu: 100m
-      memory: 256Mi
     requests:
-      cpu: 50m
+      cpu: 10m
       memory: 128Mi
   mailer:
-    limits:
-      cpu: 100m
-      memory: 256Mi
     requests:
-      cpu: 50m
+      cpu: 10m
       memory: 128Mi
 
 # Ingress specification
@@ -185,10 +167,7 @@ kong:
   resources:
     requests:
       memory: 256Mi
-      cpu: 200m
-    limits:
-      memory: 512Mi
-      cpu: 500m
+      cpu: 100m
 
 # Postgres configuration
 postgres:
@@ -216,10 +195,7 @@ postgres:
   resources:
     requests:
       memory: 256Mi
-      cpu: 100m
-    limits:
-      memory: 512Mi
-      cpu: 250m
+      cpu: 50m
 
   # Persist Postgres storage? This is mandatory for production scenarios, in case you
   # do not decide to roll your own Postgres (i.e. deployPostgres=false)
