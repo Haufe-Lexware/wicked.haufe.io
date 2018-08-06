@@ -15,6 +15,10 @@ spec:
       labels:
         service: {{ template "fullname" . }}-kong
         wicked: "true"
+      annotations:
+        prometheus.io/scrape: 'true'
+        prometheus.io/path: '/metrics'
+        prometheus.io/port:  '8001'
     spec:
 {{- if .Values.useRbac }}
       serviceAccountName: {{ template "fullname" . }}-role
@@ -54,6 +58,10 @@ spec:
             secretKeyRef:
               name: {{ template "fullname" . }}-postgres
               key: pgDatabase
+{{- if .Values.postgres.pgSsl }}
+        - name: KONG_PG_SSL
+          value: "on"
+{{- end }}
         readinessProbe:
           exec:
             command:

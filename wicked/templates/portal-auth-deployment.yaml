@@ -1,0 +1,63 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: {{ template "fullname" . }}-auth
+  namespace: {{ default "default" .Values.namespace }}
+  labels:
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}"
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        service: {{ template "fullname" . }}-auth
+        wicked: "true"
+    spec:
+{{- if .Values.useRbac }}
+      serviceAccountName: {{ template "fullname" . }}-role
+{{- end }}
+      initContainers:
+      - name: {{ template "fullname" . }}-auth-init
+        image: "{{ .Values.image.repository }}k8s-tool:{{ default "latest" .Values.image.tag }}"
+        imagePullPolicy: {{ default "Always" .Values.image.pullPolicy }}
+        args:
+        - "pod"
+        - "-lservice={{ template "fullname" . }}-api"
+      containers:
+      - name: {{ template "fullname" . }}-auth
+        image: "{{ .Values.image.repository }}portal-auth:{{ default "latest" .Values.image.tag }}{{ if .Values.image.alpine }}-alpine{{ end }}"
+        imagePullPolicy: {{ default "Always" .Values.image.pullPolicy }}
+        env:
+        - name: DEBUG
+          valueFrom:
+            configMapKeyRef:
+              name: {{ template "fullname" . }}-apim-config
+              key: DEBUG
+        - name: PORTAL_API_URL
+          value: "http://{{ template "fullname" . }}-api.{{ default "default" .Values.namespace }}.svc.cluster.local:3001/"
+        ports:
+        - containerPort: 3010
+          protocol: TCP
+        readinessProbe:
+          httpGet:
+            path: /ping
+            port: 3010
+          initialDelaySeconds: 5
+          periodSeconds: 15
+          timeoutSeconds: 2
+        livenessProbe:
+          httpGet:
+            path: /ping
+            port: 3010
+          initialDelaySeconds: 5
+          periodSeconds: 15
+          timeoutSeconds: 2
+        resources:
+{{ toYaml .Values.resources.auth | indent 10 }}
+      restartPolicy: Always
+{{- if .Values.imagePullSecrets }}
+      imagePullSecrets:
+{{ toYaml .Values.imagePullSecrets | indent 8 }}
+{{- end -}}

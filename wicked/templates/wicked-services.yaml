@@ -91,3 +91,21 @@ spec:
   selector:
     service: {{ template "fullname" . }}-chatbot
 {{- end -}}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    service: {{ template "fullname" . }}-auth
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}"
+    wicked: "true"
+  name: {{ template "fullname" . }}-auth
+  namespace: {{ default "default" .Values.namespace }}
+spec:
+  ports:
+  - name: "3010"
+    port: 3010
+    protocol: TCP
+    targetPort: 3010
+  selector:
+    service: {{ template "fullname" . }}-auth

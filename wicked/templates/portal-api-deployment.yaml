@@ -103,6 +103,10 @@ spec:
               name: {{ template "fullname" . }}-apim-secrets
               key: PORTAL_SESSIONSTORE_PASSWORD
 {{- end }}
+{{- if .Values.postgres.pgSsl }}
+        - name: PGSSLMODE
+          value: require
+{{- end }}
         ports:
         - containerPort: 3001
           protocol: TCP
