@@ -1,20 +1,25 @@
+**Prerequisites**: Read up on "Auth Methods" first to make it easier to understand how this works.
+
 # Configuring ADFS 3.0 Login
 
-The API Portal can be configured to allow federated login with an ADFS 3.0 service (Active Directory Federation Services).
+wicked can use an ADFS to authenticate users against, both for the portal UI and any API you would want to secure using ADFS identities. You can define as many ADFS integration as you need by using the default Authorization Server for wicked.
 
 The configuration has to be done both for the API Portal and on the ADFS Server in order to make the services "know each other".
 
 ## Wicked configuration
 
-It is assumed that you have a running Kickstarter instance; open the [Authentication Page](http://localhost:3333/auth), activate "ADFS" and fill in the following information:
+It is assumed that you have a running Kickstarter instance; open the [Authorization Server](http://localhost:3333/authservers/default), 
 
 ![Kickstarter ADFS config](images/adfs-portal-config-1.png)
+
+Tick the "Enable" end point, and depending on your needs, also tick the "Allow for portal/wicked login" to enable ADFS login also for the development portal.
+
+Fill in the needed fields.
 
 * **Authorization URL**: The Authorization end point of your ADFS instance (usually ending with `/adfs/oauth2/authorize`)
 * **Token URL**: The Token URL of your ADFS instance (usually ending with `/adfs/oauth2/token`)
 * **Client ID**: This is a value selected **by you**; use e.g. a GUID to make sure the client ID is unique. This ID is the ID which identifies the portal with the ADFS Server.
 * **Client Secret**: This is not used for this scenario, fill in anything
-* **Callback URL**: The URL under which the portal is to be called back; this depends on your DNS settings, but using `https://${PORTAL_NETWORK_PORTALHOST}/callback` will work most of the times (this will resolve to the URL of the API Portal, and its `/callback` end point).
 * **ADFS Resource (Claims)**: The identifier (as a URI) of the resource claims the ADFS server should return. This can be used for multiple ADFS OAuth2 clients; select an ID you can identify as belonging to your API Portal. This will be the "relying party trust identifier". E.g,. `https://portal.yourcompany.com/adfs/trust`
 * **Public Certificate to verify Callbacks with**: This is the certificate used to sign JWT tokens with; the portal uses this signature to verify that the callback actually comes from the ADFS instance it claims to come from. Has to be in PEM format. See below for information how to retrieve.
 
@@ -50,6 +55,10 @@ In the "Windows Azure Active Directory Module for Windows Powershell" (possibly 
 
 Please note that you can allow multiple Redirect URIs, which can be nice to do if you have multiple instances of your Portal (e.g. Dev, Test and Prod) running the same configuration. The ADFS Server would then accept different Redirect URIs with the same kind of registration. Another valid option is to have multiple registrations for the different instances; in that case you will have to re-do this step for every of your environments.
 
+**IMPORTANT NOTE**: To get the redirect URI, make use of the button "Display Callback URIs" which generates the callback URIs you need to use when connecting the ADFS with Wicked. Note that depending on your environments configuration, the callback URIs will be differing:
+
+![Display Callback URI](images/adfs-display-callback-uris.png)
+
 ### Configuration "Relying Trust Party"
 
 The second step is to define which data fields are returned as the authenticated profile when logging in. This is done by configuring the relying trust party.
@@ -82,6 +91,8 @@ As a last step, make sure all (if applicable) users are allowed to retrieve this
 
 ![Permit Access](images/adfs-trust-permit-access-to-claim-rule.png)
 
+**IMPORTANT**: If you have several instances of wicked, there is **no need** to create separate resource definitions for each instance - they can safely use the same rule.
+
 ## Verifying ADFS Callbacks
 
 It is recommended that you verify the profile returned by the identity server using its public certificate. This can also be defined in the ADFS settings using the kickstarter. The public certificate can be given to you from your ADFS administrator.
@@ -90,13 +101,13 @@ Without this setting, it would in principle be possible to spoof a login via ADF
 
 ## Testing
 
-In order to troubleshoot any issues, you may define the following diagnostic settings for the `portal` container: Make sure the container starts with the following environment variable set:
+In order to troubleshoot any issues, you may define the following diagnostic settings for the `portal-auth` container: Make sure the container starts with the following environment variable set:
 
 ```
-DEBUG=portal:auth:*
+LOG_LEVEL=debug
 ```
 
-The `portal` container will then output debug information, including full received profiles for the logged in users, as JSON structures. You can then either tweak the claim rules or the wicked configuration to make the field names match, if e.g. names or email addresses are not retrieved correctly.
+The `portal-auth` container will then output debug information, including full received profiles for the logged in users, as JSON structures. You can then either tweak the claim rules or the wicked configuration to make the field names match, if e.g. names or email addresses are not retrieved correctly.
 
 This also allows you to see whether groups (see below) are correctly passed in to the portal. 
 
@@ -106,9 +117,9 @@ A special feature of the ADFS Login federation is that you can identify [API Por
 
 Another valid option would be to have an ADFS Group "API Admins" which will without pre-registration always be members of the `admin` group.
 
-This can be specified at the [groups page in the kickstarter](http://localhost:3333/groups):
+This can be specified using the ADFS group to wicked group mapping tool:
 
-![adfs-group-definitions.md](images/adfs-group-definitions.png)
+![ADFS Group Mapping](images/adfs-group-mapping.png)
 
 **See also**:
 

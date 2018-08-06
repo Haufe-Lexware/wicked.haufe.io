@@ -1,3 +1,25 @@
+# Monitoring using Prometheus
+
+## Kong metrics
+
+As of wicked 1.0.0, Kong is by default configured to create Prometheus style metrics on the `:8001/metrics` end point. When using the Helm chart to deploy wicked, the corresponding `prometheus.io` annotations will automatically be applied to the Kong deployment.
+
+## Wicked metrics
+
+The wicked components will over time also receive metrics endpoints.
+
+## Dashboards
+
+Over time, we will try to create matching dashboards for use with Grafana.
+
+## Alerting
+
+Over time, we will try to create alerting rules which make sense for most wicked installations.
+
+---
+
+**BELOW OUTDATED DOCUMENTATION**: The below documentation actually still works, but it's not considered best practice.
+
 # Monitoring the API Portal
 
 An deployment such as an API Portal should always be monitored in some way, both regarding the underlying APIs, and the API Portal itself. Let us look at the two categories of monitoring which are of immediate importance.

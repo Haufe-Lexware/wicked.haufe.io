@@ -1,12 +1,14 @@
 # Configuring Github Login
 
+**NOTE**: It makes sense to have read up on Authorization Servers and Auth Methods.
+
 ## Introduction
 
-The API Portal can use Github for federating user logins to the API Portal. Users which are logged in using Github Social Login will automatically be registered for full use of the API Portal:
+Wicked can use Github for federating user logins to the Portal UI, and to authenticate users using your API. Users which are logged in using Github Social Login will automatically be registered for full use of the API Portal:
 
 * The primary email address which is used with Github is taken as a verified email address in the API Portal automatically (the user is auto-verified)
 * Name and email address are automatically retrieved from Github
-* The ID from Github is used as a unique id (prepended with `GitHub:`) in the API Portal
+* The ID from Github is used as a unique id (prepended with `<auth method id>:`) in the API Portal
 
 This is probably a good fit for most public facing developer API Portals, as most developers tend to already have a GitHub account.
 
@@ -28,7 +30,9 @@ Perform the following steps on [GitHub](https://github.com) to register your API
     * **Application Name**: State a speaking name for your API Portal, e.g. "MyCompany API Portal DEV"
     * **Homepage URL**: This should point to the main page of your API Portal, e.g. `https://domain.mycompany.com`
     * **Application Description**: Write more information on the API Portal here; this will be displayed when Github users log in to the API Portal
-    * **Authorization callback URL**: This is the most important bit, and has to point to the callback URL of your API Portal. If your main portal is at `https://domain.mycompany.com`, this will be `https://domain.mycompany.com/`**`callback/github`**
+    * **Authorization callback URL**: See below how to generate this.
+
+This is a little stupid as a todo list, but continue now with Step 2 in the mean time (open in parallel)
 
 ![Github Register application](images/github-step1-1.png)
 
@@ -46,19 +50,14 @@ Perform the following steps on [GitHub](https://github.com) to register your API
 
 ## Step 2: Configure the API Portal
 
-Next, you need to configure the API Portal to know the GitHub credentials. To do that, open up the kickstarter on the [Authorization Page](http://localhost:3333/auth), and tick the "Use GitHub Authentication" check box:
+Next, you need to configure the API Portal to know the GitHub credentials. To do that, open up the kickstarter on the [Default Authorization Server](http://localhost:3333/authservers/default), and open the predefined "GitHub" auth method:
 
 ![Kickstarter - Github](images/github-step2-1.png)
 
-Make sure you are using the "Use environment variable `....`" checkbox to enable:
+Fill in the needed fields. Note that it may make sense to make the Github credentials environment variables to (a) encrypt them at rest, and (b) enable different Github application registrations for different runtime environments.
 
-* Having multiple Client IDs and Secrets for multiple environments
-* Encrypting the Client ID (tick the "Encrypt" checkbox for this value) in the configuration repository
+Now all you have to do is to check in your changes to source control and redeploy your API configuration. GitHub social login should now be working.
 
-To learn more about deployment enviroments, see the [documentation on that](deployment-environments.md). 
+### Getting Callback URLs
 
-Now all you have to do is to check in your changes to source control and redeploy your API Portal(s). GitHub social login should now be working.
-
-## FAQ
-
-* Nothing so far.
+Use the "Display Callback URLs" button to display the callback URIs per environment which are needed to register the application with GitHub.

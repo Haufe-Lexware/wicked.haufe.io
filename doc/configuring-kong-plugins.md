@@ -59,10 +59,6 @@ The plugin configuration can be found for both Plans and API Kong Configurations
 
 Use this plugin to insert a correlation ID (`Correlation-Id`) header into the proxied request. If such a header is already present, simply pass it on. Otherwise create a new one, based on a UUID.
 
-### Logging
-
-To be discussed, I am not happy with this.
-
 ### Rate Limiting
 
 The rate limiting plugin documentation is partly self documenting in the kickstarter; for more information also see the [plugin documentation](https://getkong.org) on Mashape's Kong pages:

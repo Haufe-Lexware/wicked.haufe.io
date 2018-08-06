@@ -22,6 +22,8 @@ User Groups can be assigned via one of the following mechanisms:
 * Via [ADFS Group federation](auth-adfs.md)
 * Manually by an API Portal Admin (who is a member of an admin group)
 
+![Group UI Kickstarter](images/groups-ui.png)
+
 ## Prerequisites
 
 * You have [created a portal configuration](creating-a-portal-configuration.md) repository
@@ -31,7 +33,7 @@ You can now review the user groups using the [Groups Configuration](http://local
 
 ## Predefined User Groups
 
-For fresh configurations, there are two predefined user groups, of which the API Portal only assumes that the `admin` group will always be available. 
+For fresh configurations, there are two predefined user groups, of which the API Portal only assumes that the `admin` group will always be available (and which you cannot delete via the Kickstarter).
 
 ### User group `dev`
 

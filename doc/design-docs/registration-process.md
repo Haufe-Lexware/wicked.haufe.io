@@ -1,8 +1,6 @@
-**Note**: This is work in progress.
-
 # Registering for API/Portal usage
 
-A new concept in 1.0 will be "registration pools". Registration pools are intended as user pools for API usage, where you want to know more about your end user than just a username and password, or a third party identity provider identity.
+A new concept in 1.0 are "registration pools". Registration pools are intended as user pools for API usage, where you want to know more about your end user than just a username and password, or a third party identity provider identity.
 
 The prime use case for the registration pool concept is wicked itself. Wicked will have a registration pool of users which have registered for use of the API portal, and/or of APIs which are secured via wicked's [integrated authorization server](oauth2-support.md).
 
@@ -22,44 +20,52 @@ Plus addition custom fields, e.g. "Company" or "Role", which can optionally be a
 
 ### Static configuration
 
-In the base path of the static configuration repository, there is a new directory called `registrationpools`, with JSON files. In the standard configuration, there is a single `wicked.json` for the registration of wicked users. This is also the registration pool which is used for the previously existing users when migrating the data. It is assumed to be present, deleting it is not a good idea. It will be automatically created when updating a static configuration directory with a wicked 1.0 kickstarter.
+In the base path of the static configuration repository, there is a new directory called `pools`, with JSON files. In the standard configuration, there is a single `wicked.json` for the registration of wicked users. This is also the registration pool which is used for the previously existing users when migrating the data. It is assumed to be present, deleting it is not a good idea. It will be automatically created when updating a static configuration directory with a wicked 1.0 kickstarter.
 
 File syntax:
 
 ```json
 {
-    "name": "wicked",
-    "design": {
-        "logoUri": "/content/images/logo_140.png",
-        "css": "/content/auth_server.css"
+  "id": "wicked",
+  "name": "Portal Users",
+  "properties": [
+    {
+      "id": "name",
+      "description": "Your display name (e.g. given and last names)",
+      "type": "string",
+      "maxLength": 255,
+      "minLength": 1,
+      "required": true,
+      "oidcClaim": "name"
     },
-    "customFields": [
-        {
-            "name": "company",
-            "description": "Company name (if applicable)",
-            "type": "string",
-            "validationRegex": null
-        },
-        {
-            "name": "role",
-            "description": "Your role",
-            "type": "dropdown",
-            "choices": [
-                "Developer",
-                "Product Manager",
-                "Architect (Solution)",
-                "Architect (other)",
-                "Other"
-            ],
-            "default": "Other"
-        },
-        {
-            "name": "optin_email",
-            "description": "Send me infrequent updates on the service",
-            "type": "checkbox",
-            "default": false
-        }
-    ]
+    {
+      "id": "company",
+      "description": "Company",
+      "type": "string",
+      "maxLength": 255,
+      "minLength": 0,
+      "required": false,
+      "oidcClaim": "wicked.haufe.io:company"
+    },
+    {
+      "id": "job_role",
+      "description": "Job Role",
+      "type": "string",
+      "maxLength": 255,
+      "minLength": 0,
+      "required": false,
+      "oidcClaim": "wicked.haufe.io:job_role"
+    },
+    {
+      "id": "phone",
+      "description": "Telephone number",
+      "type": "string",
+      "maxLength": 63,
+      "minLength": 0,
+      "required": false,
+      "oidcClaim": "phone_number"
+    }
+  ]
 }
 ```
 
@@ -75,9 +81,7 @@ This will make the registration process easier to understand, plus that you can 
 
 The profile would usually be served via the `/profile` end point, which is defined for all(?) Auth Methods which the Authorization Server supports out of the box.
 
-If there is no registration process behind the API being secured with the Authorization Server's help, the `/profile` end point will only serve the most basic data, such as the authenticated user id, which is also used as a header for the backend API (and thus would usually not give any additional information).
-
-_TBD, are there additional things which can always be served here? Depending on the Auth Method, there might be, e.g. email addresses or full names, which are usually part of all directly available profiles._
+If there is no registration process behind the API being secured with the Authorization Server's help, the `/profile` end point will only serve the most basic data, such as the authenticated user id and the user's email address, which is also used as a header for the backend API (and thus would usually not give any additional information).
 
 ## Migration from wicked <1.0
 

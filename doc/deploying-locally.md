@@ -1,3 +1,8 @@
+**IMPORTANT**: This documentation is currently outdated and must be updated after the wicked 1.0.0 release.
+
+
+---
+
 # Deploying an API Portal locally
 
 In order to deploy an API portal locally on your development machine, you may follow these steps.

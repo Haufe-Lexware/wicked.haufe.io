@@ -10,11 +10,11 @@ The deployment architecture is usually as follows:
 
 The next sections briefly describes the functionality of each deployment artifact. For a list of which docker images are begind the different boxes, please refer to the [docker images](docker-images.md) documentation.
 
-### HAproxy
+### Load Balancer
 
-The HAPROXY component routes the incoming traffic via virtual hosts (vhosts) either to the Portal or directly to Kong. HAproxy is also able to load balance Kong if you decide to deploy multiple instances of Kong.
+A Load Balancer is needed to route traffic from the virtual hosts to either the portal UI or to Kong. The Load Balancer is in the docker case usually a HAproxy, but can be any type of load balancer (nginx, traefik, Kubernetes ingress controller) which suits your need.
 
-Depending on your deployment setup, the HAproxy can be replaced with a different type of load balancer, e.g. an Elastic Load Balancer on AWS, an Azure Load Balancer, or an ingress controller on Kubernetes. It just has to fulfill the same requirements as the HAproxy, i.e. to do SSL termination and route the two VHOSTs to the backends.
+Depending on your deployment setup, the load balancer is a HAproxy, or some other type of load balancer, e.g. an Elastic Load Balancer on AWS, an Azure Load Balancer, or an ingress controller on Kubernetes. It just has to fulfill the same requirements as the HAproxy, i.e. to do SSL termination and route the two VHOSTs to the backends.
 
 ### Portal
 
@@ -36,16 +36,22 @@ Alternatively (to the git repository), the STATIC CONFIG can be created at deplo
 
 The data inside STATIC CONFIG is static and will not change over time once the API Portal has been started after a deployment. STATIC CONFIG is a "data only" container which does not actually run, but only exposes a data volume which is mounted by the PORTAL API container at runtime. When redeploying, this container always has to be destroyed and rebuilt, if you choose the data-only volume approach. In case you choose the git clone approach, recreating the portal API container is enough to retrieve the new version of the configuration.
 
-### Dynamic Config
+### Postgres
 
-The DYNAMIC CONFIG contains all dynamic (non-static) data which is needed for the API Portal, such as
+All data from both wicked and Kong are stored inside a Postgres database. The recommended way (currently) is to use one Postgres instance for both wicked and for Kong, as Kong and wicked have data which needs to be in sync.
 
-* Users
+Wicked and Kong use two different internal Postgres databases (`kong` and `wicked`, respectively) so that the data can both be backed up and restored independently from each other, if need be.
+
+The postgres contains all dynamic (non-static) data which is needed for the API Portal, such as
+
+* Users and Registrations
 * Applications
 * API Subscriptions
 * Email and Password verifications
 
-These are stored as JSON files inside this "data only" container. At redeployment, this data container **must not** be destroyed and recreated. When exporting and importing data into an API Portal instance, this is the data which is transferred. This also applies to blue/green deployments.
+When deploying wicked, it is recommended to use a separate Postgres deployment, which is not part of wicked. Wicked usually providers a means of also deploying postgres (in a container), but this method is not recommended for production (there you should use a professionally run Postgres). This is also the reason why Postgres is depicted as laying outside the actual wicked components.
+
+**IMPORTANT**: As of wicked 1.0.0, the data is NO LONGER stored as plain JSON files in a data only container of the portal API container. Everything is persisted in Postgres, and thus the Postgres instance is now MUCH MORE important than it was in wicked <1.0.0.
 
 ### Kong Adapter
 
@@ -59,22 +65,14 @@ The MAILER component is also a webhook listener implementation, but this compone
 
 The CHATBOT component is very similar to the MAILER component, but does not send mails. Instead it may (configurably so) send out messages to webhook sinks in Slack or RocketChat (or other compatible chat tools). It has the default address `portal-chatbot` on port `3004`.
 
+### Auth Server
+
+The AUTH SERVER component is responsible for establishing user identity before allowing access (by creating access and possibly refresh tokens) to an API, also including the portal API. It is an actual implementation of a full featured OAuth 2.0 authorization server as specified in the [RFC 6749 for OAuth 2.0](https://tools.ietf.org/html/rfc6749).
+
 ### Kong
 
 If PORTAL API is the heart of the API Portal, Kong is the absolute heart of the API Gateway. The KONG component is based (very directly) on Mashape Kong, and routes all traffic according to the configuration in STATIC CONFIG and DYNAMIC CONFIG (via PORTAL API and KONG ADAPTER) to the backend APIs, or restricts access to the APIs. For storage of certain runtime data (such as rate limiting), it uses a database, here POSTGRES.
 
-### Postgres and Postgres Data Volume
-
-To store runtime data, KONG needs a database backend, which by default is a Postgres instance. Usually there is **no need** to backup the data volume used by POSTGRES, as the API Portal system is designed to be immutable, with the single exception of the DYNAMIC DATA container volume. Most data (except rate limiting data and OAuth tokens, if you use those) can be reconstructed from scratch after a new deployment, as soon as the DYNAMIC DATA has been restored or picked up (depending on your deployment strategy).
-
 ## Deployment Variants
 
 The above deployment architecture will most probably work for most scenarios, but there may be a need for other types of deployments in the future. This is not impossible at all, but rather expected. The API Portal is designed upfront to be able to deployed using other architectures.
-
-In the future, the following deployment variants may also be interesting:
-
-* Separate Kong/Postgres/Cassandra deployment
-    * Better support of zero-downtime upgrades for the API Gateway
-    * More robust HA deployments
-* Docker Swarm Deployment (docker 1.12+)
-* Deployments leveraging AWS ELB or Azure LB natively

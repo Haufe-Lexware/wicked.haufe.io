@@ -27,13 +27,17 @@ An example will make it simpler to understand how it works. Start up the [kickst
 ### Parametrizing a backend URL
 
 * Open the [APIs page](http://localhost:3333/apis) and select an API you want to parametrize the backend URL for.
-* Open the "Kong Configuration" of the API, locate the "Upstream URL" and tick the check box "Use environment variable":
+* Open the "Kong Configuration" of the API, locate the "Upstream URL" click the "Create ENV var" button:
 
 ![Upstream URL](images/backend-url-kickstarter.png)
 
 * Save the configuration and head over to the [Environments](http://localhost:3333/envs) page.
 * On the `/envs` page, you will see a single environment `default`; [click the default link](http://localhost:3333/envs/default).
 * Among other settings, you will find the new environment variable here.
+
+You can also inspect the content of the environment variable by using the "Show ENV var" button which is displayed if the content of the field starts with a dollar sign `$`:
+
+![Show ENV Var](images/backend-show-env-var.png)
 
 Now you have the choice to either just override this environment variable when deploying/running the portal (which will work just fine), or you can create environments which specify override variables. To do this, go back to the `/envs` page, and click the "Create new Environment" title bar.
 

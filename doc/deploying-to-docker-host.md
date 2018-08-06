@@ -1,3 +1,7 @@
+**IMPORTANT NOTE**: This documentation may be slightly outdated for wicked 1.0.0.
+
+----
+
 # Deploying to a single Docker Host
 
 If you plan to run your API Management instance on a single docker host, or by leveraging a Docker Swarm using `docker-compose`, this guide is for you.

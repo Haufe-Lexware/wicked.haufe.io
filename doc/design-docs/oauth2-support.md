@@ -4,7 +4,7 @@
 
 ## Outline
 
-Until version 0.11, wicked needed a separate authorization server (such as `wicked.auth-saml` or `wicked.auth-passport`) to support other OAuth 2 flows other than the client credentials flow (which is supported "out of the box" by the API Gateway, i.e. Kong).
+Until version 0.12, wicked needed a separate authorization server (such as `wicked.auth-saml` or `wicked.auth-passport`) to support other OAuth 2 flows other than the client credentials flow (which is supported "out of the box" by the API Gateway, i.e. Kong).
 
 This design document describes how the OAuth 2 support shall be increased for a 1.0 release of wicked, to support the full range of OAuth 2 standard flows out of the box, including user management and grants management for end users.
 
@@ -18,7 +18,7 @@ As an operator of wicked for my APIs, I want to be able to secure my API out of 
 
 ### Using the wicked user database for OAuth 2
 
-Special case of the above: As an API Management operator, I want to be able to use wicked's own user database for doing OAuth 2 flows. This enables me to test flows without having to gather external credentials; this is especially useful when evaluating wicked or when trying out new APIs.
+Special case of the above: As an API Management operator, I want to be able to use wicked's own user database for doing OAuth 2 flows. This enables me to test flows without having to gather external credentials; this is especially useful when evaluating wicked or when trying out new APIs. It is also very useful in case I have the requirement to implement my own Identity Provider with username and password on top of wicked (much like Auth0 can do, but on your own premises).
 
 ### External API usage
 
@@ -121,19 +121,18 @@ The syntax for the `local` auth method is like this:
 {
     "name": "wicked",
     "type": "local",
-    "verifyEmail": true,
-    "allowSignup": true,
-    "authorizeEndpoint": "/auth/{{name}}/api/{{api}}/authorize",
-    "tokenEndpoint": "/auth/{{name}}/api/{{api}}/token",
-    "profileEndpoint": "/auth/{{name}}/api/{{api}}/profile",
+    "friendlyShort": "....",
+    "friendlyLong": "...",
+    "config": {
+      "trustUsers": false,
+      "disableSignup": false      
+    }
 }
 ```
 
-Set `verifyEmail` to have wicked verify the email address via a verification email sent out to the registered email address; this will only have an effect if the API you select to authenticate for requires a registration (see [registration process](registration-process.md)).
+Set `trustUsers` to disable that wicked verifies the email address via a verification email sent out to the registered email address; this will only have an effect if the API you select to authenticate for requires a registration (see [registration process](registration-process.md)).
 
-Specifying `true` as `allowSignup` allows for users to sign up for using the resource. This will entrail an additional link to "Sign up" if specified, otherwise only "Forgot password?" will be displayed.
-
-The end points will be prepended with the API Gateway FQDN whe displaying in the Portal UI. Note that these kinds of URLs (the FQDNs) are not configured in the Authorization Server, as they are different for each deployment, and the API Gateway's FQDN is known inside the application and components anyway.
+Specifying `true` as `disableSignup` disallow users to sign up for using the resource. This will take out the link to "Sign up" if specified, and only "Forgot password?" will be displayed.
 
 #### Auth Method `google`
 
@@ -286,20 +285,9 @@ _DRAFT_
 
 In some cases, you do not want to let your applications choose the scopes, or you do not need the end user to authorize access to your API (e.g. because **you** are the resource owner, and not the user, and the scopes are rather licenses than anything else). Or, you want to do this in addition to the end user granting scopes to a third party application accessing data/the API on their behalf.
 
-All authenticatation methods accept an end point which takes a profile and/or authenticated user id which is inquired to retrieve scopes for an API for a specific user.
+All OAuth2 secured APIs accept an end point which takes a profile and/or authenticated user id which is inquired to retrieve scopes for an API for a specific user.
 
 This can be useful for paid services which want to retrieve license data for specific users when getting access tokens for an API.
-
-Example Auth Method JSON:
-
-```
-{
-    "name": "special",
-    "type": "local"
-    "scopesEndpoint": "http://scope-server:3006/scopes",
-    // ...
-}
-```
 
 After the usual scope negotiating (checking grants, trusted applications,...), the scopes endpoint (which has to be implemented by you) is called with the available profile (what would be returned by the `/profile` end point) and the authenticated user id, which lets you change or add scopes (e.g. licenses) to the authenticated scope programmatically.
 

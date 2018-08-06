@@ -11,7 +11,7 @@ When working with APIs, there are two main types of communication:
 
 When working with machine-to-machine communication, two machines trust each other without an end user or impersonation is needed. For this kind of communication over APIs, wicked offers API Key authentication and the OAuth 2.0 Client Credentials Flow, which do not require any kind of addition authorization: If you have the API Key (or the Client Credentials, i.e. ID and Secret), you are allowed to call the API, usually without any restriction. These flows/authentication mechanisms work "out of the box" with a standard wicked.haufe.io installation; you don't need to do any additional implementation.
 
-For other kinds of communication, where access actually depends on the identity of an end user, other flows should be used, like the OAuth 2.0 Authorization Code Grant, the Implicit Grant Flow or the Resource Owner Password Grant Flow. These flows are three-legged flows additionally involving an Authorization Server which can be used to decide whether a specific end user is allowed to access a resource via the API or not, and/or possibly with which restrictions (e.g. scopes). These flows are also supported by wicked, but require the implementation of an Authorization Server which is deployed alongside wicked's components (in the same network).
+For other kinds of communication, where access actually depends on the identity of an end user, other flows should be used, like the OAuth 2.0 Authorization Code Grant, the Implicit Grant Flow or the Resource Owner Password Grant Flow. These flows are three-legged flows additionally involving an Authorization Server which can be used to decide whether a specific end user is allowed to access a resource via the API or not, and/or possibly with which restrictions (e.g. scopes). These flows are fully supported by wicked but make additional use of the default Authorization Server implementation which is shipped with wicked 1.0+.
 
 ## Generic Architecture with an Authorization Server
 
@@ -27,9 +27,9 @@ The main workflow is usually:
 2. Coded into the application is its `client_id` and the URL of the Authorization Server (and of course also the URL of the API which it wants to access)
 3. The application accesses the authorization server via the end point which is exposed via Kong; this can either be an API call itself (using e.g. the Resource Owner Password Grant) or a user agent redirect (using the Implicit Grant)
 4. The Authorization Server makes sure it knows the client which is identified by the client ID
-5. In most cases, the Authorization Server will delegate the actual identification of the end user to a third party IdP, e.g. ADFS, a SAML IdP or some other identity provider the Authorization Server knows how to talk to. It would in principle be possible to establish identity using other means as well, such as certificates. This does not matter, as long as the Authorization Server has a means to establish identity ("Authenticate")
-6. As soon as the Auth Server knows the identity of the end user and has verified that this particular user is allowed to access the API ("Authorize"), the Authorization Server calls the Kong Adapter to tell it that it wants an access token to pass back to the client application
-7. The Kong Adatper does a couple of additional checks (e.g. "does the application have a valid subscription to the API?") and then issues the required type of access token
+5. In most cases, the Authorization Server will delegate the actual identification of the end user to a third party IdP, e.g. ADFS, a SAML IdP or some other identity provider the Authorization Server knows how to talk to. The simples case is that the Authorization Server checks the wicked user database for a username and password combination (any `local` auth method).
+6. As soon as the Auth Server knows the identity of the end user and has verified that this particular user is allowed to access the API ("Authorize"), the Authorization Server will use Kong to author an access token
+7. Kong does a couple of additional checks (e.g. "does the application have a valid subscription to the API?") and then issues the required type of access token
 
 This flow is the same for both the Implicit Grant Flow and the Resource Owner Password Grant Flow; the only thing which differs is the way the access tokens are passed on, and whether you get a refresh token or not.
 
@@ -76,20 +76,6 @@ The Authorization Server takes the user name and password and checks those again
 
 In addition to an access token, a refresh token is also passed on.
 
-For more information, see the [wicked SDK for node.js](https://www.npmjs.com/package/wicked-sdk).
+## Further reading
 
-## Example Implementations
-
-### Implicit Grant Flow
-
-For the implicit grant flow, there is a full fledged sample implementation here:
-
-* [https://github.com/Haufe-Lexware/wicked.auth-google](https://github.com/Haufe-Lexware/wicked.auth-google)
-
-### Resource Owner Password Flow
-
-(Will follow)
-
-### Authorization Code Grant
-
-(Will follow)
+To know more about the wicked implementation of an authorization server, read more at [Auth Methods](auth-methods.md).

@@ -16,11 +16,10 @@ The following things (and some more) are part of the configuration of the API Po
 * Plan definitions
 * User Group definitions
 * Initial Users definitions
-* Authentication Settings
-    * ADFS Configuration
-    * Google Login Configuration
-    * Github Configuration
+* [Authorization Server Settings](authorization-servers.md)
+    * [Auth Method Configuration](auth-methods.md)
     * Local signup configuration
+    * ...
 * Custom Content, such as Tutorials,...
 * ...
 

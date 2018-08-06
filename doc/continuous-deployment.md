@@ -20,6 +20,5 @@ The following list of use cases must be considered when setting up a CI/CD envir
   * Updating the wicked core components (API, Portal, Kong Adapter, Mailer, Chatbot)
   * Updating the Kong API Gateway
   * Updating the Postgres Database
-* [Disaster Recovery](disaster-recovery.md)
 
 The implementation of these use cases depend on the deployment technique you are applying (Docker Host, Swarm, Kubernetes, GCE,...) and thus are documented on the deployment specific pages. See [deploying to production](deploying-to-production.md).

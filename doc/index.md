@@ -38,10 +38,11 @@ If you feel something important is missing that should be documented, feel free 
 
 ### Authentication
 
+* [Authorization Servers](authorization-servers.md)
+* [Auth Methods of Authorization Servers](auth-methods.md)
 * [Configuring ADFS 3.0 OAuth login](auth-adfs.md)
 * [Configuring GitHub Social Login](auth-github.md)
 * [Configuring Google Social Login](auth-google.md)
-
 
 ### Release Notes
 

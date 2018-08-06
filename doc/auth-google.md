@@ -42,7 +42,9 @@ To register an application (your API Portal in this case) to be able to log in u
 ![Create Google credentials](images/google-step1-1.png)
 
 * Select "Web application" as the client type and specify a Client name, e.g. `MyCompany API Portal - Dev` or similar
-* Specify the callback URL as the FQDN of your API portal, plus `/callback/google`, e.g. `https://domain.mycompany.com/`**`callback/google`**:
+* Specify the callback URL as the FQDN of your API portal; to get the callback URL, see bottom of this page
+
+It's suboptimal that there is a slight circular dependency here, but Google as IDP and wicked as application need to know *of each other*, so you will need to start in parallel on Step 2 at this point.
 
 ![OAuth Client Spec](images/google-step1-2.png)
 
@@ -59,19 +61,16 @@ To register an application (your API Portal in this case) to be able to log in u
 
 ## Step 3: Configure the API Portal
 
-Next, you need to configure the API Portal to know the Google credentials. To do that, open up the kickstarter on the [Authorization Page](http://localhost:3333/auth), and tick the "Use Google Authentication" check box:
+Next, you need to configure the API Portal to know the Google credentials. To do that,open up the kickstarter on the [Default Authorization Server](http://localhost:3333/authservers/default), and open up the predefined "google" Auth Method box:
 
 ![Kickstarter - Google](images/google-step2-1.png)
 
-Make sure you are using the "Use environment variable `....`" checkbox to enable:
-
-* Having multiple Client IDs and Secrets for multiple environments
-* Encrypting the Client ID (tick the "Encrypt" checkbox for this value) in the configuration repository
+Fill in the required fields.
 
 To learn more about deployment enviroments, see the [documentation on that](deployment-environments.md). 
 
 Now all you have to do is to check in your changes to source control and redeploy your API Portal(s). Google social login should now be working.
 
-## FAQ
+### Getting the Callback URLs
 
-* Nothing so far.
+Use the "Display Callback URLs" button to display the Callback URLs which you need to register your API Gateway with Google (see image above).

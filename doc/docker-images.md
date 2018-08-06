@@ -17,11 +17,14 @@ The following images are taken as defaults for API Portal deployments, among whi
 * `haufelexware/wicked.kong:latest`: The Portal's Kong image (using the official Kong image as a base, slightly extended)
 * `haufelexware/wicked.portal:latest`: The Portal UI image
 * `haufelexware/wicked.portal-api:latest`: The Portal's API image
+* `haufelexware/wicked.portal-auth:latest`: The Authorization Server image
 * `haufelexware/wicked.portal-kong-adapter:latest`: The Kong Adapter
 * `haufelexware/wicked.portal-mailer:latest`: The API Portal's Mailer component
 * `haufelexware/wicked.portal-chatbot:latest`: The API Portal's "Chatbot" component
+* `haufelexware/wicked.k8s-init:latest`: [Kubernetes init container](https://github.com/apim-haufe-io/wicked.k8s-init)
+* `haufelexware/wicked.k8s-tool:latest`: [Kubernetes tooling container](https://github.com/apim-haufe-io/wicked.k8s-tool)
 
-All node.js based images are based on the official [`node:6`](https://hub.docker.com/_/node/) image (all images starting with `wicked.portal`).
+All node.js based images are based on the official [`node:10`](https://hub.docker.com/_/node/) or `node:10-alpine` images (all images starting with `wicked.portal`).
 
 The following images are not built by us, but are taken as-is:
 
@@ -74,16 +77,12 @@ There are some special environment variables which can be used to change/specify
 These four core components can only be impacted using two different environment variables:
 
 * `PORTAL_API_URL`: Pass in the URL of the `portal-api` API in case this is not the standard `http://portal-api:3001` URL. If this environment variable is empty, this is what is going to be tested. In case you are deploying using `docker-compose`, this is usually the correct address, and also when deploying using e.g. Kubernetes, there will be a service which is discoverable using this DNS address, so this will be correct in most cases. In case it's not, use this variable to bootstrap the configuration process.
-* `DEBUG`: Specify the debug message log level using this environment variable. Use either `*` to get **all** debug messages, or inspect the source code to narrow down the level of debug messages some.
+* `LOG_LEVLE`: Specify the debug message log level using this environment variable. Use either `debug` to get **all** debug messages.
 
 ### `kong`
 
 The `haufelexware/wicked.kong` container supports the following environment variables for tweaking its behavior:
 
-* `PROXY_SSL_CERT`: The SSL certificate (PEM format) to use when calling upstream services (use this for mutual SSL)
-* `PROXY_SSL_KEY`: The SSL private key (PEM format) to use when calling upstream services (use this for mutual SSL)
 * `KONG_DATABASE_SERVICE_HOST`: In case this variable is set, this will override the underlying `KONG_PG_HOST`. This can be used to circumvent the Kubernetes service discovery with Kong to resolve to an IP address for the Postgres database; in some situations, Kubernetes and Kong do not quite agree on name resolution...
-
-For more information on mutual SSL, see [setting up mutual SSL](mutual-ssl.md).
 
 In addition to these, all Kong environment variables can be used to tweak behavior. See the [official Kong documentation](https://getkong.org/docs/0.9.x/configuration/) for an overview. Usually, it is not necessary to change any of the standard settings.
