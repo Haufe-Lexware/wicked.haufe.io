@@ -62,7 +62,7 @@ The access token is short lived, and cannot be refreshed. When the access token 
 
 * Identity via ADFS: May be used for internal SPAs
 * Identity via Google: May be used for applications where the Google Identity is just enough for you to deem the user authorized to use your API
-* Any SAML identity provider: Used commonly in enterprise situations; this can also be used to federate the identity into the OAuth 2.0 Implicit Grant Flow, given that you register your Authorization Server as a SAML Service Provider with your SAML Identity Provider (see also [wicked saml-sdk](https://www.npmjs.com/package/wicked-saml)).
+* Any SAML identity provider: Used commonly in enterprise situations; this can also be used to federate the identity into the OAuth 2.0 Implicit Grant Flow, given that you register your Authorization Server as a SAML Service Provider with your SAML Identity Provider (see also [Auth method SAML](auth-saml.md)).
 
 ## The Resources Owner Password Grant Flow
 
@@ -78,4 +78,7 @@ In addition to an access token, a refresh token is also passed on.
 
 ## Further reading
 
-To know more about the wicked implementation of an authorization server, read more at [Auth Methods](auth-methods.md).
+To know more about the wicked implementation of an authorization server, read more
+
+* [Auth Methods](auth-methods.md)
+* [Registration Pools](registration-pools.md)

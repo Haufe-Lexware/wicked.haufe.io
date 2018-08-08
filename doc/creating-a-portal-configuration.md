@@ -148,6 +148,12 @@ With the `/path/to/repo` at your cloned repository, issue the following command:
 $ docker run -it --rm -v /path/to/repo:/var/portal-api -p 3333:3333 haufelexware/wicked.portal-kickstarter
 ```
 
+In case you want to use a specific version of the kickstarter, e.g. a beta, add the docker image tag after the image name, e.g. `1.0.0.beta1`, example:
+
+```bash
+$ docker run -it --rm -v /path/to/repo:/var/portal-api -p 3333:3333 haufelexware/wicked.portal-kickstarter:1.0.0.beta1
+```
+
 **For Linux**:
 
 ```bash

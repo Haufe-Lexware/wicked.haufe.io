@@ -42,28 +42,23 @@ Go to the [Deployment Page](http://localhost:3333/deploy) in the Kickstarter; if
 
 ![Deployment Config](images/deploy-config.png)
 
-Hit the "Save" button, and two files will be created:
+Hit the "Save" button, and one or two files will be created (default only `docker-compose.yml`):
 
 * `docker-compose.yml`
-* `static/Dockerfile`
+* `static/Dockerfile` (optional, when using the `git clone` method, this is not created)
 
-Inside the `docker-compose.yml` file, the `static/Dockerfile` is referenced; see also the [deployment architecture](deployment-architecture.md) for a picture of how the containers work together. The `static/Dockerfile` is used to build the "Static Configuration Container".
+See also the [deployment architecture](deployment-architecture.md) for a picture of how the containers work together. 
+
+In case you specified "Build data-only container", the `static/Dockerfile` is used to build the "Static Configuration Container".
 
 Depending on which method of injecting the static configuration into the `portal-api` container you choose, the `static/Dockerfile` might not be used; as of wicked 0.11.0 the recommended way of deploying is the `git clone` method.
 
-**Important**: Even if you already created a `docker-compose.yml` with a previous (pre 0.11.0) version of the Kickstarter, you may want to recreate it again to benefit from the improved compose template.
+**Important**: Even if you already created a `docker-compose.yml`, you may want to recreate it again to benefit from the improved compose template.
 
 ### Choosing static configuration deployment method
 
 * [The git clone method for injecting static configuration into the portal API](static-config-git-clone.md)
 * [The data-only container method for injecting static configuration into the portal API](static-config-dataonly-container.md)
-
-### Changes to `docker-compose.yml` when using the `git clone` method
-
-You decided to use the `git clone` method? GOOD! Now you have to change your `docker-compose.yml` slightly, as it's by default set up to use the data-only container method (as this is the only one which will work when working completely locally, without having the static configuration repository in git!).
-
-1. **Remove/comment out the `portal-api-data-static` service**: You will not need this, as the static repository is cloned each time at startup anyway; no need to have a specific container for that!
-2. **Remove the volume `portal-api-data-static` from the `portal-api` service**: See above -- we don't need the volume, as it will be overridden by the `git clone` anyway
 
 ## Inject SSL certificates
 
@@ -120,9 +115,9 @@ docker-compose up -d
 
 ## Updating the API Configuration
 
-**Works as of version 0.11.0**
-
 Updating the API configuration is just a matter of getting a new version of the static configuration into the portal API container.
+
+See also [updating the git configuration](updating-git-configuration.md) (TODO: the docs are subject to cleanup and merging).
 
 #### When using the `git clone` method
 

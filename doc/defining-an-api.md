@@ -80,3 +80,8 @@ This will open an editor for JSON; the editor is not really intended for actual 
 
 **Note**: It is advisable to set up continuous integration of Swagger files from your backend services into the configuration repository. In that case, you would not actually manually copy/paste the Swagger file into the configuration repository, but rather push it using CI/CD tooling. For further information on this topic, see [setting up continuous deployment](continuous-deployment.md).
 
+
+## Further reading
+
+* [Passthrough Users](passthrough-users.md)
+* [User Registration Pools](registration-pools.md)
