@@ -4,6 +4,14 @@
 
 General information can be seen at the wicked microsite over at [wicked.haufe.io](http://wicked.haufe.io). If you want to see how the API Portal looks like, check out [wicked-demo.haufe.io](https://wicked-demo.haufe.io). You may also want to try out our [Gitter Chatroom](https://gitter.im/wicked-haufe-io/Lobby).
 
+# TRY THE BETA
+
+Here are the instructions on how to try out the wicked 1.0.0 beta versions.
+
+Go here: [HOW TO BETA](https://github.com/Haufe-Lexware/wicked.haufe.io/blob/wicked_1_0/doc/BETA.md).
+
+The documentation has also been updated for the new versions, but it still lives in the `wicked_1_0` branch of this repository. The above link will take you there.
+
 # What's this?
 
 wicked.haufe.io is an open source API Management solution with a slightly different design focus in mind than most other API Management systems:
