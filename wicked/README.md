@@ -1,6 +1,6 @@
 # wicked.haufe.io Helm Chart
 
-This directory contains a [Kubernetes Helm](https://github.com/kubernetes/helm) chart for wicked.haufe.io. This will be the preferred way of deploying wicked in the future, so feel free to try it out on `minikube` or similar, and please give feedback.
+This directory contains a [Kubernetes Helm](https://github.com/kubernetes/helm) chart for wicked.haufe.io. This is the preferred way of deploying wicked to a Kubernetes cluster. If you run into issues, please tell us.
 
 Deploying wicked using a Helm chart is the easiest way to get wicked up and running on Kubernetes. The default configuration will deploy a sample portal assuming an ingress at `https://portal.local` (for the API Portal) and `https://api.portal.local` (for the API Gateway).
 
