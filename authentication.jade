@@ -24,8 +24,11 @@ block content
         ul
           li E-mail and password signup and login
           li ADFS 3.0 Federation using your own ADFS instance (SAML)
-          li Github Social Login (OAuth 2.0)
-          li Google Login (OAuth 2.0)
+          li Github Login
+          li Google Login
+          li Twitter Login
+          li Generic OAuth2 lgogin (JWT based)
+          li SAML based SSO
           li ... more to come
 
         p.
@@ -53,21 +56,54 @@ block content
           img(src='images/auth-kong.png').center-block
         .col-md-6
           p.
-            Besides the portal authentication, your developers can register applications with the
-            API Portal and subscribe to your APIs. You can choose to authenticate these applications
-            using one of the following methods:
-          
-          ul
-            li Static API Keys (using a header)
-            li OAuth 2.0, including Client Credentials Flow, Authorization Code Flow, Implicit Flow and Resource Owner Password Grant
+            Any type of authentication which you have configured for the Portal can also be used
+            for authenticating the use of any API registered in the API Portal. Wicked will federate
+            any type of login to a standard OAuth 2.0 flow, e.g. to an Authorization Code Grant, or
+            the Implicit Grant. This also applies to logins using SAML. Your applications only need
+            to implement generic OAuth 2.0, all other login types are federated by Wicked.
+
+          p. 
+            For simple machine to machine communication, you can also use plain API Keys.          
 
           p.
             Credentials, i.e. API Keys or Client ID and Client Secret are generated for each application
             and per API subscription automatically, depending on how you choose to secure your API.
 
           p.
-            Need other means of authentication? Kong supports additional ones, such as JWT. File an issue
-            on GitHub and tell us.
+            Need other means of authentication? File an 
+            <a href="https://github.com/Haufe-Lexware/wicked.haufe.io/issues" target="_blank">issue
+            on GitHub</a> and tell us.
+    .white
+      .container
+        .row
+          .col-md-6
+            h3 API Authorization
+          .col-md-6
+            | &nbsp;
+        .row
+          .col-md-6
+            p.
+              Wicked from version 1.0.0 on packs a feature rich Authorization Server with the installation.
+              The Authorization Server can serve as a full featured OAuth 2.0 Identity Provider, or it can
+              be used the federate identities from a wide range of Identity Providers, such as Google, Twitter,
+              GitHub, ADFS, generic OAuth 2.0 or even SAML.
+            p.
+              The Authorization Server can federate these identites to using a standard OAuth 2.0 flow, even
+              if the federated identity provider is e.g. a SAML identity provider.
+            p.
+              See also the documentation of the 
+              <a href="https://wicked-demo.haufe.io" target="_blank">wicked-demo.haufe.io Demo Portal</a>
+              regarding support for the different OAuth 2.0 flows:
+              
+            ul
+              li.
+                <a href="https://wicked-demo.haufe.io/help/oauth2_client_credentials" target="_blank">Client Credentials</a>
+              li.
+                <a href="https://wicked-demo.haufe.io/help/oauth2_authorization_code" target="_blank">Authorization Code Grant</a>
+              li.
+                <a href="https://wicked-demo.haufe.io/help/oauth2_implicit_grant" target="_blank">Implicit Grant</a>
+              li.
+                <a href="https://wicked-demo.haufe.io/help/oauth2_password_grant" target="_blank">Resource Owner Password Grant</a>
 
   .container
     .row

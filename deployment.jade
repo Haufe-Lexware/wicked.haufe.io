@@ -21,7 +21,12 @@ block content
           and the actual API traffic is proxied by the excellent
           <a href="https://getkong.org" target="_blank">API Gateway Kong by Mashape</a>.
         p.
-          The portal itself is implemented as lightweight as possible, using node.js.
+          The portal components are implemented as lightweight as possible, using node.js.
+
+        p.
+          When deploying on a single docker Host, the "Kickstarter" can create suitable 
+          <code>docker-compose.yml</code> files to include a HAproxy. For Kubernetes, the Helm
+          chart utilizes existing Ingress Controllers.
 
       .col-md-6.pad20
         img(src='images/architecture-highlevel.png').center-block.img-responsive
@@ -57,7 +62,11 @@ block content
           background.
         p.
           Scaling your API Gateway is supported out of the box, and depending on your runtime
-          orchestration, setting up high availability is as well (for the Gateway). Highly available
-          setups also for the API Portal is planned for 1.0.0.
+          orchestration, setting up high availability is as well, for the Gateway (Kong), the
+          Portal UI, API and Authorization Server.
+
+        p.
+          To achieve this, wicked stores all runtime configuration in a Postgres instance, and
+          session and other performance-critical information in a configurable Redis instance.
       .col-md-6.pad20
         img(src='images/architecture-components.png').center-block.img-responsive

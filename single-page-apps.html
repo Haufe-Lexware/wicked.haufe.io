@@ -112,7 +112,7 @@
           <p>
             In order to decouple the backend API and frontend application, an API Gateway can be put in place
             to implement the OAuth 2.0 Implicit Grant Flow, which is the recommended way of solving giving
-            a "public" client (as opposed to a <a href="enduser-to-api.html">&quot;confidential&quot; client</a>)
+            a "public" client (as opposed to a &quot;confidential&quot; client)
             access to an API.
             
           </p><img src="images/uc-single-page-app.png" class="center-block">
@@ -183,33 +183,35 @@
           <div class="col-md-8">
             <h4>How do I implement this with wicked?</h4>
             <p>
-              wicked.haufe.io supports the OAuth 2.0 Implicit Flow, even though not entirely out of the box: You will need
-              to provide an Authorization Server on your own.
-            </p>
-            <p>
-              To illustrate how such Authorization Servers can be implemented, there are two sample projects assosicated
-              with wicked which integrate with different Identity Providers:
+              wicked.haufe.io has everything in the box to implement this type of workflow, using any identity
+              provider you need, including wicked's own username/email and password store. Follow these steps:
               
             </p>
-            <ul>
-              <li>The project <a href="https://github.com/Haufe-Lexware/wicked.auth-passport">wicked.auth-passport</a> leverages the node.js PassportJS library to provide the following social logins:
-                <ul>
-                  <li>Google (Plus) login</li>
-                  <li>Github login</li>
-                  <li>Facebook login, and</li>
-                  <li>Twitter login</li>
-                </ul>
+            <ol>
+              <li>
+                Using the wicked Kickstarter, specify which type of authentication you need (Google, Twitter,
+                Github, SAML,...), by adding an authentication method to the default Authorization Server.
               </li>
-              <li>In <a href="https://github.com/Haufe-Lexware/wicked.auth-saml">wicked.auth-saml</a> you will find an Authorization Server which can be used to integrate with SAML type Identity Providers; this Authorization Server will let you federate a SAML SSO session to an OAuth 2.0 Implicit Flow, which can be really useful if you need to integrate in Enterprise Scenarios.</li>
-            </ul>
+              <li>
+                Create an API defintion using the Kickstarter, and specify "OAuth 2.0" as a means of authentication
+                and authorization. Link the authentication method you created previously to this API.
+              </li>
+              <li>
+                Specify that you want to use the "Implicit Grant" on the API definition; usually it's advisable to
+                also enable the "Authorization Code Grant" as well - from an API perspective the two grants are 
+                behving identical, it just opens up more possiblilies for the Application developer which one
+                he wants to use.
+              </li>
+              <li>
+                Deploy your updated API management configuration to your wicked instance.
+                
+              </li>
+            </ol>
             <p>
-              Both sample projects will allow some parameterizing out of the box, but both do not provide any kind of additional
-              authorization -- if the user was able to authenticate with the desired identity provider, this is considered enough
-              to also be <b>authorized</b>.
-            </p>
-            <p>
-              For wicked.auth-saml, you will find a stub in <code>authorize.js</code> which shows where to put custom authorization code,
-              in case you need or want that.
+              Now application developers can sign up for using your API; the portal will help the developer
+              to setup up the application and will also have help pages for the different flows
+              (see <a href="https://wicked-demo.haufe.io/help/oauth2_implicit_grant" target="_blank">Implicit Grant help page</a>,
+              and the <a href="https://wicked-demo.haufe.io/help/oauth2_authorization_code" target="_blank">Authorization Code Grant help page</a>).
             </p>
           </div>
         </div>
@@ -220,7 +222,7 @@
       <!-- FOOTER-->
       <footer></footer>
       <p class="pull-right"><a href="#">Back to top</a></p>
-      <p>© 2016-2017 Haufe-Lexware GmbH & Co. KG, <a href="http://www.haufe-lexware.com">www.haufe-lexware.com</a>, <a href="http://www.haufe.de">www.haufe.de</a>, <a href="http://www.lexware.de">www.lexware.de</a>, <a href="http://www.haufe-akademie.de">www.haufe-akademie.de</a></p>
+      <p>© 2016-2018 Haufe-Lexware GmbH & Co. KG, <a href="http://www.haufe-lexware.com">www.haufe-lexware.com</a>, <a href="http://www.haufe.de">www.haufe.de</a>, <a href="http://www.lexware.de">www.lexware.de</a>, <a href="http://www.haufe-akademie.de">www.haufe-akademie.de</a></p>
     </div>
     <!-- /.container-->
     <!--

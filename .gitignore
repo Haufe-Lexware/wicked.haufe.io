@@ -3,3 +3,4 @@ node_modules
 *.tgz
 git_*
 temp*
+_site

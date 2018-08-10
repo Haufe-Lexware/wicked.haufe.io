@@ -22,10 +22,9 @@ block content
           In order to prevent fraud or excessive usage of your API, it's also typical to apply rate limiting by number
           of calls per authorized user and application.
         p.
-          In this use case we assume that your user base is already contained in some external system (LDAP/SAML/other IdP), 
-          and you want to leverage this user base in a new mobile application, which is to make use of your mobile backend
-          API. The only constraint is that your Identity Provider needs to provide a headless means (e.g. an API) to verify
-          an end user's credentials, e.g. username and password.
+          You can now leverage the "local" authentication method of wicked to store your mobile users email addresses
+          and passwords. Wicked can act as a full featured identity provider for your mobile backend, i.e. be a full
+          mobile backend, including authentication and authorization.
 
         img(src="images/uc-mobile-api-gateway.png").center-block
 
@@ -40,7 +39,7 @@ block content
           p.
             For development time, the following workflow is typical:
           ol
-            li The developer signs up for the API Portal and registers the mobile application in the portal
+            li The developer signs up for the API Portal and registers the mobile application in the portal, using a <a href="https://wicked-demo.haufe.io/help/trusted" target="_blank">trusted subscription</a>
             li By creating a subscription to the Mobile API, the developer obtains client credentials for the mobile application, a client ID and a client secret; for this use case, only the client ID is significant
             li The developer incorporates the client ID into the mobile application and implements the needed bits for the OAuth2.0 Resource Owner Password Grant Flow.
           
@@ -49,6 +48,9 @@ block content
             secret into the mobile app; in case the API also supports the client credentials flow, this would enable attackers to
             reverse engineer the app and extract the credentials. The client ID on the other hand is only helpful in combination with
             an end user identity, which the end user will also try to protect.
+          p.
+            The wicked Authorization Server would also reject calls using the Resource Owner Password Grant from public applications
+            presenting their client secret, and vice versa.
     
   .container.pad20
     .row
@@ -87,35 +89,36 @@ block content
           h4 How do I implement this with wicked?
 
           p.
-            In order to implement this use case with wicked.haufe.io, you will need one additional componenet which is not 
-            available in a standard deployment of wicked: An Authorization Server. The task of the Authorization Server for the 
-            Mobile Backend API Gateway use case is:
+            Wicked packs brings all the necessary components to implement this out of the box:
 
-          ol
-            li.
-              Establish a user's identity by verifying the user's username and password, based on a call according to the
-              OAuth2.0 Resource Owner Password Grant (<b>authenticate</b> the user)
-            li.
-              Decide whether this user is entitled to use the backend API, and if he his, which scope he is entitled to use
-              (<b>authorize</b> the user). Depending on your use case, authentication may equal authorization (if you know the user,
-              that's enough to the user through to the API), or may include e.g. some license checking
-            li.
-              Decide on token renewal (via the Refresh Token) after the Access Token has expired and the mobile app needs a new
-              Access Token.
-          
-          p.
-            It's important to understand that wicked does neither impose any restrictions on how you verify user identity,
-            nor on how the user is authorized. This can be done in a completely custom way, if needed.
-
-          p.
-            An example implementation of an Authorization Server can be found at 
-            <a href="https://github.com/Haufe-Lexware/wicked.mobile-auth-template">wicked.mobile-auth-template</a>.
-            This is a template for implementing exactly such a mobile backend Authorization Server, with 
-            <code>TODO</code> sections to fill in.
-
-          p.
-            If you decide to implement an Authorization Server based on node.js, the following wicked SDK libraries
-            may help:
           ul
-            li <a href="https://github.com/Haufe-Lexware/wicked.node-sdk">wicked node.js SDK</a>
-            li <a href="https://github.com/Haufe-Lexware/wicked.node-saml-sdk">wicked node.js SAML SDK</a>
+            li.
+              Wicked stores usernames and passwords, and if needed, can also ask new users for additional
+              information (registration information).
+            li.
+              The wicked Authorization Server automatically creates suitable endpoints so that your API can
+              only be accessed using access tokens which are created using this endpoint.
+            li.
+              When your backend API is called from the Gateway Proxy, and a valid access token is presented,
+              Kong will automatically inject <b>who</b> is calling (as <code>X-Authenticated-UserId</code>),
+              which application is calling the API on behalf of the user.
+            li.
+              You can leverage this injected information to do further checking on the user as your business
+              logic requires, but wicked makes sure that only well-known users are being let through to your
+              API.
+
+          p.
+            In case you implement using node.js, you can also leverage the wicked SDK to have even more
+            influence on the user and registration management. Read up on the wicked SDK here:
+          
+          ul
+            li.
+              <a href="https://github.com/apim-haufe-io/wicked.node-sdk" target="_blank">GitHub Repository wicked.node-sdk</a>
+            li.
+              <a href="https://apim-haufe-io.github.io/wicked.node-sdk" target="_blank">Wicked SDK documentation</a>
+
+          p.
+            In a future version, wicked will also support the PKCE enhancement of the Authorization Code Grant
+            (see <a href="https://tools.ietf.org/html/rfc7636" target="_blank">RFC 7636) and OAuth2 for native apps
+            (see <a href="https://tools.ietf.org/html/rfc8252" target="_blank">RFC 8252</a>). This will enable even
+            more flexible authentication scenarios for mobile/native applications.

@@ -125,12 +125,12 @@
           <p class="feature">Let your users sign up with their email address and a password. Email addresses will be automatically validated by sending out verification emails.</p>
         </div>
         <div class="col-md-4 feature-block grey">
-          <h5 class="feature">Authenticate with ADFS</h5>
-          <p class="feature">Integrate the login process with your own ADFS 3.0 server. Register the API portal with ADFS and use your local users.</p>
+          <h5 class="feature">Authenticate with ADFS and generic OAuth 2.0</h5>
+          <p class="feature">Integrate the login process with your own ADFS 3.0 or generic OAuth2 identity provider.</p>
         </div>
         <div class="col-md-4 feature-block white">
-          <h5 class="feature">Authentication with GitHub or Google</h5>
-          <p class="feature">You may also configure signup and login using OAuth2 with GitHub and/or Google. These identities will be treated as 'verified' automatically.</p>
+          <h5 class="feature">Authentication with common Identity Proviers</h5>
+          <p class="feature">You may also configure authenticating both for the Portal and for your APIs via GitHub, Google or Twitter out of the box.</p>
         </div>
       </div>
       <div class="row">
@@ -178,12 +178,12 @@
           <p class="feature">wicked makes it easier to configure the API Gateway correctly. The Kickstarter helps configuring e.g. Rate Limiting or CORS.</p>
         </div>
         <div class="col-md-4 feature-block grey">
-          <h5 class="feature">API Key or OAuth 2</h5>
-          <p class="feature">Out of the box, wicked enables fast securing of your API using API Key authentication or OAuth 2 Client Credentials Flow. Other OAuth2.0 flows using custom components.</p>
+          <h5 class="feature">API Key API Authentication</h5>
+          <p class="feature">Out of the box, wicked enables fast securing of your API using API Key authentication</p>
         </div>
         <div class="col-md-4 feature-block white">
-          <h5 class="feature">Swagger UI integration</h5>
-          <p class="feature">In order to view the APIs in more detail, wicked has integrated Swagger UI, with configurable direct access to the backend services.</p>
+          <h5 class="feature">Full OAuth 2.0 Support</h5>
+          <p class="feature">Wicked comes with a default Authorization Server which supports federating any authentication method to OAuth 2.0</p>
         </div>
       </div>
       <div class="row">
@@ -191,40 +191,54 @@
           <!--img(src="images/wicked-#{featureObject.color}-100.png").center-block--><img src="images/logo-140.png" style="height:120px; padding-top:20px;" class="center-block"/>
         </div>
         <div class="col-md-4 feature-block white">
+          <h5 class="feature">Swagger UI integration</h5>
+          <p class="feature">In order to view the APIs in more detail, wicked has integrated Swagger UI, with configurable direct access to the backend services.</p>
+        </div>
+        <div class="col-md-4 feature-block grey">
           <h5 class="feature">Subscription Approval Workflow</h5>
           <p class="feature">API Plans can be configured to require approval of subscription; you will be sent an email to a predefined email address to the approval request.</p>
         </div>
-        <div class="col-md-4 feature-block grey">
+      </div>
+      <div class="row">
+        <div class="col-md-4 feature-block white">
           <h5 class="feature">Chatbot Integration</h5>
           <p class="feature">wicked can post interesting events (you decide which are interesting) to either a Rocket.Chat or a Slack Chat instance. Just register a Hook URL with Slack, and configure it for wicked.</p>
         </div>
-      </div>
-      <div class="row">
-        <div class="col-md-4 feature-block white">
+        <div class="col-md-4 feature-block grey">
           <h5 class="feature">Docker Deployment</h5>
           <p class="feature">The entire APIm solution is deployed using docker; everything runs in docker, enabling deployments to whatever infrastructure supports it.</p>
         </div>
-        <div class="col-md-4 feature-block grey">
-          <h5 class="feature">Simple scaling of deployment</h5>
-          <p class="feature">By using docker-compose, the deployment of your API Management solution can be easily scaled to use multiple instances of Kong, behind a powerful HAproxy. All pre-configured for you to use.</p>
-        </div>
         <div class="col-md-4 feature-block white">
-          <h5 class="feature">Battle-proven API Gateway</h5>
-          <p class="feature">Behind the scenes, wicked uses battle-proven, enterprise grade API Gateway <a href='http://getkong.org' target='_blank'>KONG by Mashape</a>. Open Source does not get much better than that.</p>
+          <h5 class="feature">Scaling of deployment</h5>
+          <p class="feature">By leveraging the functionality of your chosen container orchestrator, the user-facing components of wicked (Portal, API, Authorization Server can be deployed highly available</p>
         </div>
       </div>
       <div class="row">
         <div class="col-md-4 feature-block grey">
+          <h5 class="feature">Battle-proven API Gateway</h5>
+          <p class="feature">Behind the scenes, wicked uses battle-proven, enterprise grade API Gateway <a href='http://getkong.org' target='_blank'>KONG by Mashape</a>. Open Source does not get much better than that.</p>
+        </div>
+        <div class="col-md-4 feature-block white">
           <h5 class="feature">Kubernetes Deployment</h5>
           <p class="feature">wicked runs very well on the docker orchestration tool Kubernetes; the documentation contains recipes and best practices on running in Kubernetes, using Helm Charts</p>
         </div>
+        <div class="col-md-4 feature-block grey">
+          <h5 class="feature">Integrated User to Application Grant Management</h5>
+          <p class="feature">The wicked Authorization Server keeps track user scope grants to applications automatically. It also provides a way to review granted access.</p>
+        </div>
+      </div>
+      <div class="row">
         <div class="col-md-4 feature-block white">
-          <h5 class="feature">Pluggable Authorization Servers</h5>
-          <p class="feature">Plug in your own authorization server using a simplified OAuth 2.0 interface provided by the Kong Adapter (part of wicked). Enable authentication via any Identity Provider.</p>
+          <h5 class="feature">Customizable styles for Portal and Authorization Server</h5>
+          <p class="feature">The styling, colors and images can be customized to reflect your own corporate image.</p>
         </div>
         <div class="col-md-4 feature-block grey">
-          <h5 class="feature">Code Samples for Authorization Servers</h5>
-          <p class="feature">Sample implementations for Authorization Servers based on SAML or for Google, Github, Facebook and Twitter are provided.</p>
+          <h5 class="feature">Postgres storage backend</h5>
+          <p class="feature">Wicked and Kong store all runtime configuration (applications, users) in the best open source database available, Postgres.</p>
+        </div>
+        <div class="col-md-4 feature-block white">
+          <h5 class="feature">Pluggable databases for production environments</h5>
+          <p class="feature">For production environments, configure wicked to use an existing Postgres instance. You can also use an external redis instance (or the shipped one) for session handling and rate limiting.</p>
         </div>
       </div><br><br>
       <div class="row">
@@ -242,7 +256,7 @@
       <!-- FOOTER-->
       <footer></footer>
       <p class="pull-right"><a href="#">Back to top</a></p>
-      <p>© 2016-2017 Haufe-Lexware GmbH & Co. KG, <a href="http://www.haufe-lexware.com">www.haufe-lexware.com</a>, <a href="http://www.haufe.de">www.haufe.de</a>, <a href="http://www.lexware.de">www.lexware.de</a>, <a href="http://www.haufe-akademie.de">www.haufe-akademie.de</a></p>
+      <p>© 2016-2018 Haufe-Lexware GmbH & Co. KG, <a href="http://www.haufe-lexware.com">www.haufe-lexware.com</a>, <a href="http://www.haufe.de">www.haufe.de</a>, <a href="http://www.lexware.de">www.lexware.de</a>, <a href="http://www.haufe-akademie.de">www.haufe-akademie.de</a></p>
     </div>
     <!-- /.container-->
     <!--

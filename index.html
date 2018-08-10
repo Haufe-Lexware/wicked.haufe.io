@@ -103,13 +103,14 @@
         <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
         <li data-target="#myCarousel" data-slide-to="1"></li>
         <li data-target="#myCarousel" data-slide-to="2"></li>
+        <li data-target="#myCarousel" data-slide-to="3"></li>
       </ol>
       <div role="listbox" class="carousel-inner">
         <div class="item active"><img src="images/header-5-500.jpg" alt="First slide" class="first-slide">
           <div class="container">
             <div class="carousel-caption">
               <h1>Open Source API Management</h1>
-              <p>A full stack open source solution to API Management, based on Mashape's Kong, node.js, and docker.</p>
+              <p>A full stack open source API Management solution, based on Mashape's Kong, node.js, and docker.</p>
               <p><a href="gettingstarted.html" role="button" class="btn btn-lg btn-primary">Getting Started</a></p>
             </div>
           </div>
@@ -118,7 +119,7 @@
           <div class="container">
             <div class="carousel-caption">
               <h1>Fully dockerized and automatable</h1>
-              <p>Deploy your API Portal and API Gateway using docker, fully automated, from your own build pipelines, onto whatever infrastructure you want.</p>
+              <p>Deploy your API Portal and API Gateway using docker, fully automated, from your own build pipelines, onto whatever infrastructure (e.g. Kubernetes) you want.</p>
               <p><a href="deployment.html" role="button" class="btn btn-lg btn-primary">Deployment</a></p>
             </div>
           </div>
@@ -126,8 +127,17 @@
         <div class="item"><img src="images/header-3-500.jpg" alt="Third slide" class="third-slide">
           <div class="container">
             <div class="carousel-caption">
-              <h1>Integration with ADFS, Github and Google</h1>
-              <p>Let your users sign up with your own ADFS, using Github or Google, or using an email address and password.</p>
+              <h1>Federate Identity Providers</h1>
+              <p>Let your users sign up with your own Identity Provider (ADFS, SAML, OAuth 2.0), or using Github, Google, Twitter, or using an email address and password.</p>
+              <p><a href="authentication.html" role="button" class="btn btn-lg btn-primary">Authentication</a></p>
+            </div>
+          </div>
+        </div>
+        <div class="item"><img src="images/header-4-500.jpg" alt="Fourth slide" class="fourth-slide">
+          <div class="container">
+            <div class="carousel-caption">
+              <h1>OAuth 2.0 Identity Provider</h1>
+              <p>You can not only federate user identites; wicked.haufe.io can also act as a full featured OAuth 2.0 Identity Provider based on email and password.</p>
               <p><a href="authentication.html" role="button" class="btn btn-lg btn-primary">Authentication</a></p>
             </div>
           </div>
@@ -149,8 +159,8 @@
         </div>
         <div class="col-lg-4"><img src="images/logo-140.png" alt="Wicked">
           <h2>Who's behind it?</h2>
-          <p>wicked.haufe.io was developed at Haufe-Lexware GmbH &amp; Co. KG in beautiful Freiburg, Germany. Haufe is a great place to work at; you can find our developer blog at dev.haufe.com.</p>
-          <p><a href="http://dev.haufe.com" target="_blank" role="button" class="btn btn-default">Haufe Dev Blog &raquo;</a></p>
+          <p>wicked.haufe.io was developed at Haufe-Lexware GmbH &amp; Co. KG in beautiful Freiburg, Germany. Haufe is a great place to work at; you can find our developer blog at work.haufegroup.io.</p>
+          <p><a href="http://work.haufegroup.io" target="_blank" role="button" class="btn btn-default">Haufe Dev Blog &raquo;</a></p>
         </div>
         <div class="col-lg-4"><img src="images/logo-broom-140.png" alt="Generic placeholder image">
           <h2>The Code</h2>
@@ -170,8 +180,8 @@
       <hr class="featurette-divider">
       <div class="row featurette">
         <div class="col-md-7 col-md-push-5">
-          <h2 class="featurette-heading">Deploy it on any Docker host. <span class="text-muted">Small footprint, fast setup.</span></h2>
-          <p class="lead">The wicked kickstarter helps you in setting up the configuration for your API portal. You need to specify DNS names and provide an SSL certificate, but other than that, just provide your own content (APIs) and get going!</p>
+          <h2 class="featurette-heading">Deploy it on a container orchestration system. <span class="text-muted">Small footprint, fast setup.</span></h2>
+          <p class="lead">The wicked kickstarter helps you in setting up the configuration for your API portal. Provide your own content (APIs and Docs) and deploy it to e.g. Kubernetes or a Docker Host.</p>
         </div>
         <div class="col-md-5 col-md-pull-7"><img src="images/logo-s3-500.png" alt="Blue Gummybear" class="featurette-image img-responsive center-block"></div>
       </div>
@@ -190,7 +200,7 @@
       <!-- FOOTER-->
       <footer></footer>
       <p class="pull-right"><a href="#">Back to top</a></p>
-      <p>© 2016-2017 Haufe-Lexware GmbH & Co. KG, <a href="http://www.haufe-lexware.com">www.haufe-lexware.com</a>, <a href="http://www.haufe.de">www.haufe.de</a>, <a href="http://www.lexware.de">www.lexware.de</a>, <a href="http://www.haufe-akademie.de">www.haufe-akademie.de</a></p>
+      <p>© 2016-2018 Haufe-Lexware GmbH & Co. KG, <a href="http://www.haufe-lexware.com">www.haufe-lexware.com</a>, <a href="http://www.haufe.de">www.haufe.de</a>, <a href="http://www.lexware.de">www.lexware.de</a>, <a href="http://www.haufe-akademie.de">www.haufe-akademie.de</a></p>
     </div>
     <!-- /.container-->
     <!--

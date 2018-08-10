@@ -14,6 +14,7 @@ block content
       li.active(data-target='#myCarousel', data-slide-to='0')
       li(data-target='#myCarousel', data-slide-to='1')
       li(data-target='#myCarousel', data-slide-to='2')
+      li(data-target='#myCarousel', data-slide-to='3')
     .carousel-inner(role='listbox')
       .item.active
         img.first-slide(src='images/header-5-500.jpg', alt='First slide')
@@ -21,7 +22,7 @@ block content
           .carousel-caption
             h1 Open Source API Management
             p
-              | A full stack open source solution to API Management, based on Mashape's Kong, node.js, and docker.
+              | A full stack open source API Management solution, based on Mashape's Kong, node.js, and docker.
             p
               a.btn.btn-lg.btn-primary(href='gettingstarted.html', role='button') Getting Started
       .item
@@ -30,18 +31,28 @@ block content
           .carousel-caption
             h1 Fully dockerized and automatable
             p
-              | Deploy your API Portal and API Gateway using docker, fully automated, from your own build pipelines, onto whatever infrastructure you want.
+              | Deploy your API Portal and API Gateway using docker, fully automated, from your own build pipelines, onto whatever infrastructure (e.g. Kubernetes) you want.
             p
               a.btn.btn-lg.btn-primary(href='deployment.html', role='button') Deployment
       .item
         img.third-slide(src='images/header-3-500.jpg', alt='Third slide')
         .container
           .carousel-caption
-            h1 Integration with ADFS, Github and Google
+            h1 Federate Identity Providers
             p
-              | Let your users sign up with your own ADFS, using Github or Google, or using an email address and password.
+              | Let your users sign up with your own Identity Provider (ADFS, SAML, OAuth 2.0), or using Github, Google, Twitter, or using an email address and password.
             p
               a.btn.btn-lg.btn-primary(href='authentication.html', role='button') Authentication
+      .item
+        img.fourth-slide(src='images/header-4-500.jpg', alt='Fourth slide')
+        .container
+          .carousel-caption
+            h1 OAuth 2.0 Identity Provider
+            p
+              | You can not only federate user identites; wicked.haufe.io can also act as a full featured OAuth 2.0 Identity Provider based on email and password.
+            p
+              a.btn.btn-lg.btn-primary(href='authentication.html', role='button') Authentication
+
     a.left.carousel-control(href='#myCarousel', role='button', data-slide='prev')
       span.glyphicon.glyphicon-chevron-left(aria-hidden='true')
       span.sr-only Previous
@@ -66,9 +77,9 @@ block content
         img(src='images/logo-140.png' alt='Wicked')
         h2 Who's behind it?
         p
-          | wicked.haufe.io was developed at Haufe-Lexware GmbH &amp; Co. KG in beautiful Freiburg, Germany. Haufe is a great place to work at; you can find our developer blog at dev.haufe.com.
+          | wicked.haufe.io was developed at Haufe-Lexware GmbH &amp; Co. KG in beautiful Freiburg, Germany. Haufe is a great place to work at; you can find our developer blog at work.haufegroup.io.
         p
-          a.btn.btn-default(href='http://dev.haufe.com', target='_blank', role='button') Haufe Dev Blog &raquo;
+          a.btn.btn-default(href='http://work.haufegroup.io', target='_blank', role='button') Haufe Dev Blog &raquo;
       .col-lg-4
         img(src='images/logo-broom-140.png' alt='Generic placeholder image')
         h2 The Code
@@ -93,10 +104,10 @@ block content
     .row.featurette
       .col-md-7.col-md-push-5
         h2.featurette-heading
-          | Deploy it on any Docker host. 
+          | Deploy it on a container orchestration system. 
           span.text-muted Small footprint, fast setup.
         p.lead
-          | The wicked kickstarter helps you in setting up the configuration for your API portal. You need to specify DNS names and provide an SSL certificate, but other than that, just provide your own content (APIs) and get going!
+          | The wicked kickstarter helps you in setting up the configuration for your API portal. Provide your own content (APIs and Docs) and deploy it to e.g. Kubernetes or a Docker Host.
       .col-md-5.col-md-pull-7
         img.featurette-image.img-responsive.center-block(src='images/logo-s3-500.png', alt='Blue Gummybear')
     hr.featurette-divider
