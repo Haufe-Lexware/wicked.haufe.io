@@ -54,6 +54,6 @@ spec:
       paths:
       - path: /
         backend:
-          serviceName: {{ template "fullname" . }}-kong-gw
+          serviceName: {{ template "fullname" . }}-kong
           servicePort: 8000
 {{- end -}}
