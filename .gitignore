@@ -4,3 +4,4 @@ node_modules
 temp.json
 git_*
 *.tgz
+_site
