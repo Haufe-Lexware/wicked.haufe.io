@@ -14,6 +14,10 @@ spec:
       labels:
         service: {{ template "fullname" . }}-auth
         wicked: "true"
+      annotations:
+        prometheus.io/scrape: 'true'
+        prometheus.io/path: '/metrics'
+        prometheus.io/port:  '3010'
     spec:
 {{- if .Values.useRbac }}
       serviceAccountName: {{ template "fullname" . }}-role
