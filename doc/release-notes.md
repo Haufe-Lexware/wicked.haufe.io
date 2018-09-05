@@ -12,6 +12,22 @@ Official Release of the API Portal.
 
 [Design documents](https://github.com/Haufe-Lexware/wicked.haufe.io/tree/next/doc/design-docs).
 
+## 1.0.0 (beta versions)
+
+There will be various beta versions of the wicked 1.0.0 release, until we decide to release the final 1.0.0 version (and then resume to using 1.0.x updates).
+
+Only for very notable changes, there will be a note here, otherwise the changes are too numerous to be listed one by one (just yet). That is also going to be resumed when 1.0.0 has been released.
+
+### 1.0.0.beta3 - Notable changes
+
+* Changes to format of `X-Authenticated-UserId`; now includes `sub=<user id>` instead of just `<user id>`; for APIs needing namespaces, `;namespace=<namespace>` is also added.
+* Updated Swagger UI to 3.18.2, including better error messages from the Authorization Server
+* Fixed Echo Server for Kubernetes deployments (missing port 3009 in portal API service definition)
+
+### 1.0.0.beta2 - Notable changes
+
+* Fixed Kubernetes Helm Chart (faulty service definitions)
+
 ## 0.12.5 (beta)
 
 **Date**: April 27th 2018 (2018-04-27)
