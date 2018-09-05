@@ -31,6 +31,10 @@ spec:
     port: 3001
     protocol: TCP
     targetPort: 3001
+  - name: "echo"
+    port: 3009
+    protocol: TCP
+    targetPort: 3009
   selector:
     service: {{ template "fullname" . }}-api
 ---
