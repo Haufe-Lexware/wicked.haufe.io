@@ -73,3 +73,13 @@ The response must be a JSON structure containing a boolean property `valid` and 
 This end point will also be called should the API client decide to attempt to refresh the token. In those cases, only the `sub` property of the POST message is supplied, as the other values are not present in any database to that point in time.
 
 In case `valid` is set to `false`, the Authorization Server will reject the authorization request to the calling client with an appropriate error message. This will also happen in case the service which looks up the scopes is not reachable.
+
+## Addendum: Configure "Passthrough Users"
+
+In many cases where this mechanism is used (passthrough scopes/scope lookup), it's usually not necessary for wicked to store any user information, as the users are not able to store any application grants anyway. For such situations, the check box "Passthrough Users" of an API can be used:
+
+![Passthrough Users](images/scope-lookup-passthrough-users.png)
+
+As stated in the Kickstarter, this means that users are never persisted in the wicked database, but their unique IDs (whatever is mapped to `sub`, depending on the Auth Method) are merely passed on in the `X-Authenticated-UserId` header as `sub=<unique id>`. This can be useful not only for passthrough scopes, but also if you just want to make sure that a user can be authenticated via some identity provider, but it doesn't matter which scope is used (or no scopes are used).
+
+**Note**: This option cannot be used in conjunction with user registrations - user registrations require persisting the users in the wicked user database.
