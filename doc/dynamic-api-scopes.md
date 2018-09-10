@@ -64,11 +64,11 @@ Content-Type: application/json
 
 {
   "allow": <true|false>,
-  "scope": ["scope1", "scope2", "..."]
+  "authenticated_scope": ["scope1", "scope2", "..."]
 }
 ```
 
-The response must be a JSON structure containing a boolean property `allow` and a property `scope` which contains an array of allowed scopes.
+The response must be a JSON structure containing a boolean property `allow` and a property `authenticated_scope` which contains an array of allowed scopes.
 
 This end point will also be called should the API client decide to attempt to refresh the token. In those cases, only the `sub` property of the POST message is supplied, as the other values are not present in any database to that point in time.
 
