@@ -57,14 +57,23 @@ POST http://scope-lookup-service.default.svc.cluster.local:4000/user_scopes
 }
 ```
 
+The `sub` contains a string which is formatted in the following way:
+
+```
+sub=<auth method id>:<unique id of idp>
+```
+
+In case e.g. of a Google authentication, such a string may look like this: `sub=google:<some google id>`.
+
 Wicked's Authorization Server then expects a response in the following way:
 
 ```
 Content-Type: application/json
 
 {
-  "allow": <true|false>,
-  "authenticated_scope": ["scope1", "scope2", "..."]
+  "allow": <true|false>, // Mandatory
+  "authenticated_scope": ["scope1", "scope2", "..."], // Mandatory
+  "authenticated_userid": "<optional override>" // Optional
 }
 ```
 
@@ -73,6 +82,8 @@ The response must be a JSON structure containing a boolean property `allow` and 
 This end point will also be called should the API client decide to attempt to refresh the token. In those cases, only the `sub` property of the POST message is supplied, as the other values are not present in any database to that point in time.
 
 In case `allow` is set to `false`, the Authorization Server will reject the authorization request to the calling client with an appropriate error message. This will also happen in case the service which looks up the scopes is not reachable.
+
+The property `authenticated_userid` is an optional response parameter which can be used to override the user id in the passed in `sub` property.
 
 ## Addendum: Configure "Passthrough Users"
 
