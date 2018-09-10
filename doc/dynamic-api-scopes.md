@@ -76,10 +76,6 @@ In case `valid` is set to `false`, the Authorization Server will reject the auth
 
 ## Addendum: Configure "Passthrough Users"
 
-In many cases where this mechanism is used (passthrough scopes/scope lookup), it's usually not necessary for wicked to store any user information, as the users are not able to store any application grants anyway. For such situations, the check box "Passthrough Users" of an API can be used:
+When using the "Passthrough Scope URL", it's usually advisable to also make use of "Passthrough Users", as wicked does not need to actually store any type of information on the user anyway.
 
-![Passthrough Users](images/scope-lookup-passthrough-users.png)
-
-As stated in the Kickstarter, this means that users are never persisted in the wicked database, but their unique IDs (whatever is mapped to `sub`, depending on the Auth Method) are merely passed on in the `X-Authenticated-UserId` header as `sub=<unique id>`. This can be useful not only for passthrough scopes, but also if you just want to make sure that a user can be authenticated via some identity provider, but it doesn't matter which scope is used (or no scopes are used).
-
-**Note**: This option cannot be used in conjunction with user registrations - user registrations require persisting the users in the wicked user database.
+See [Passthrough Users](passthrough-users.md) for more information.
