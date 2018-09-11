@@ -29,6 +29,7 @@ Mainly stability and regression fixes.
 * Implementation of missing bits and pieces for "Passthrough Users" and "Passthrough Scopes" for delegation of scopes to a different resource owner (documentation in the `wicked_1_0` branch of this repository).
 * Fixed integration test suite (adapt to changes of beta3).
 * Fixed authorization server test suite (adapt to changes of beta3).
+* Update to latest Kong 0.14.1
 
 ### 1.0.0.beta3 - Notable changes
 
