@@ -18,6 +18,18 @@ There will be various beta versions of the wicked 1.0.0 release, until we decide
 
 Only for very notable changes, there will be a note here, otherwise the changes are too numerous to be listed one by one (just yet). That is also going to be resumed when 1.0.0 has been released.
 
+### 1.0.0.beta4 - Notable changes
+
+Mainly stability and regression fixes.
+
+* Fix of the refresh token grant (regression from beta3 regarding the `sub=<user id>` change)
+* Fix [portal-api crashes if connection to Postgres times out](https://github.com/Haufe-Lexware/wicked.haufe.io/issues/119)
+* Various stability issues fixed, especially on flaky connections; wicked SDK now retries on 5xx responses or hard connection errors automatically
+* [Postgres database for wicked data is now configurable](https://github.com/Haufe-Lexware/wicked.haufe.io/issues/118)
+* Implementation of missing bits and pieces for "Passthrough Users" and "Passthrough Scopes" for delegation of scopes to a different resource owner (documentation in the `wicked_1_0` branch of this repository).
+* Fixed integration test suite (adapt to changes of beta3).
+* Fixed authorization server test suite (adapt to changes of beta3).
+
 ### 1.0.0.beta3 - Notable changes
 
 * Changes to format of `X-Authenticated-UserId`; now includes `sub=<user id>` instead of just `<user id>`; for APIs needing namespaces, `;namespace=<namespace>` is also added.
