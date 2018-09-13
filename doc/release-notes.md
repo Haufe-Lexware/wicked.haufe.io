@@ -18,6 +18,17 @@ There will be various beta versions of the wicked 1.0.0 release, until we decide
 
 Only for very notable changes, there will be a note here, otherwise the changes are too numerous to be listed one by one (just yet). That is also going to be resumed when 1.0.0 has been released.
 
+### 1.0.0.beta5 - Notable changes
+
+Bugfixes.
+
+* Fix of the OpenAPI compliant swagger files in Swagger UI (weren't working)
+* Support for multiple URIs with OpenAPI3 compliant API docs
+* Fix of the "View Swagger UI" button for APIs not requiring authentication (was broken)
+* Fix of "Log in as existing user" from the "Sign up" screen, was using the wrong link
+
+Known issues: With flaky Postgres connections, portal-api still sometimes crashes (very rarely now though). Will be addressed in the next Beta hopefully.
+
 ### 1.0.0.beta4 - Notable changes
 
 Mainly stability and regression fixes.
