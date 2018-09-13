@@ -76,8 +76,8 @@ The following repositories contain the actual source code (this repo contains mo
 * [wicked.portal-tools](https://github.com/Haufe-Lexware/wicked.portal-tools): Tooling and sample integration code
 * [wicked.portal-test](https://github.com/Haufe-Lexware/wicked.portal-test): The Integration Test Suite
 * [wicked.kong](https://github.com/Haufe-Lexware/wicked.kong): The Kong Docker image used by the API Portal, based directly on the official Kong docker image, `kong`
-* [wicked.auth-passport](https://github.com/Haufe-Lexware/wicked.auth-passport): A sample Authorization Server implementation, using different social logins to authorize API usage
-* [wicked.auth-saml](https://github.com/Haufe-Lexware/wicked.auth-saml): A sample Authorization Server implementation, using a SAML to OAuth2 federation to authorize API usage
+* [wicked.portal-auth](https://github.com/apim-haufe-io/wicked.portal-auth): The wicked Authorization Server implementation, using different social logins or SAML to authorize API usage and Portal login
+* [wicked.k8s-init](https://github.com/apim-haufe-io/wicked.k8s-init): A dedicated wicked init container for Kubernetes to automatically provision client credentials to applications
 
 ## More documentation
 
