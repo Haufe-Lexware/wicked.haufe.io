@@ -18,6 +18,16 @@ There will be various beta versions of the wicked 1.0.0 release, until we decide
 
 Only for very notable changes, there will be a note here, otherwise the changes are too numerous to be listed one by one (just yet). That is also going to be resumed when 1.0.0 has been released.
 
+### 1.0.0.beta6 - Notable changes
+
+Minor features, and some bug fixes.
+
+* Support for four (4) different password validation strategies; use in Kickstarter, Portal API, Auth Server and Portal
+* Support for enforcing a password change when using Authorization Code and Implicit flows
+* Some more edge cases regarding postgres connection fixed
+* Read Swagger UI CSS via `/content` API, support for Mustache templates in CSS files (to get `portalUrl` and `apiUrl` in)
+* Increased security of Auth Server using more elaborate CSRF checks
+
 ### 1.0.0.beta5 - Notable changes
 
 Bugfixes.
