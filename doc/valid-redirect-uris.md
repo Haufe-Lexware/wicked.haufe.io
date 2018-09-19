@@ -20,3 +20,6 @@ This document describes the different Redirect URIs for application which wicked
 
 * `http://www.hello.com/oauth2/callback` (callback via `http`, not allowed)
 * `myappscheme:/oauth2redirect` (no host in URL)
+
+---
+Applies to version 1.0.0+ (post beta7).
