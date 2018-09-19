@@ -18,6 +18,14 @@ There will be various beta versions of the wicked 1.0.0 release, until we decide
 
 Only for very notable changes, there will be a note here, otherwise the changes are too numerous to be listed one by one (just yet). That is also going to be resumed when 1.0.0 has been released.
 
+### 1.0.0.beta7 - Notable changes
+
+Some really exciting changes this time:
+
+* Support for the OAuth 2.0 Authorization Code Grant for Public clients, using PKCE ([RFC 7636](https://tools.ietf.org/html/rfc7636))
+* Accompanying PKCE, wicked now accepts Redirect URIs containing custom schemes, such as `mycoolapp://dummy/some_path`; this enables implementing [RFC 8252](https://tools.ietf.org/html/rfc8252)
+* Various bug fixes in the Kickstarter (ADFS Resource was missing)
+
 ### 1.0.0.beta6 - Notable changes
 
 Minor features, and some bug fixes.
