@@ -18,6 +18,23 @@ There will be various beta versions of the wicked 1.0.0 release, until we decide
 
 Only for very notable changes, there will be a note here, otherwise the changes are too numerous to be listed one by one (just yet). That is also going to be resumed when 1.0.0 has been released.
 
+### 1.0.0.beta9 - Notable changes
+
+Bugfixes, minor features and changes:
+
+* Refresh Token TTLs can now be configured on OAuth2 enabled APIs
+* The wicked API is now served as `/wicked/v1` (instead of the too generic sounding `/api/v1`)
+* The echo API is now served as `/wicked-echo/v1`
+* The legacy health API was removed (this is possibly a BREAKING change in case you have subscriptions to this API).
+* Improved email validity checking (according to RFC 5322), both backend and frontend (`portal-api` and `portal-auth`), #122
+* Add configuration option to have different URL bases for Kong Admin and Proxy APIs, #122
+* Fixed regression bug #121, migration scripts were crashing
+* Improved stability of Kong Adapter with slow Postgres servers
+
+### 1.0.0.beta8 - Notable changes
+
+Minor bugfixes.
+
 ### 1.0.0.beta7 - Notable changes
 
 Some really exciting changes this time:
