@@ -55,7 +55,7 @@ spec:
     targetPort: 3002
   selector:
     service: {{ template "fullname" . }}-kong-adapter
-{{- if .Values.deployMailer -}}
+{{- if .Values.deployMailer }}
 ---
 apiVersion: v1
 kind: Service
@@ -74,8 +74,8 @@ spec:
     targetPort: 3003
   selector:
     service: {{ template "fullname" . }}-mailer
-{{- end -}}
-{{- if .Values.deployChatbot -}}
+{{- end }}
+{{- if .Values.deployChatbot }}
 ---
 apiVersion: v1
 kind: Service
@@ -94,7 +94,7 @@ spec:
     targetPort: 3004
   selector:
     service: {{ template "fullname" . }}-chatbot
-{{- end -}}
+{{- end }}
 ---
 apiVersion: v1
 kind: Service
