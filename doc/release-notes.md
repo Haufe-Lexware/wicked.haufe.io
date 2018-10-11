@@ -25,6 +25,7 @@ Bugfixes.
 * Migration script (0.12.x --> 1.0.0) inadvertently always dropped the `wicked` database, and not the configured one
 * [SAML Logout not working](https://github.com/Haufe-Lexware/wicked.haufe.io/issues/124) fixed
 * [Renaming auth methods in the Kickstarter makes it behave strangely](https://github.com/Haufe-Lexware/wicked.haufe.io/issues/125) fixed
+* Corner cases in the Helm Chart fixed (e.g. when not deploying Mailer and/or Chatbot)
 
 ### 1.0.0.beta9 - Notable changes
 
