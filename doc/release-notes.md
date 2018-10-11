@@ -18,6 +18,14 @@ There will be various beta versions of the wicked 1.0.0 release, until we decide
 
 Only for very notable changes, there will be a note here, otherwise the changes are too numerous to be listed one by one (just yet). That is also going to be resumed when 1.0.0 has been released.
 
+### 1.0.0.beta10 - Notable changes
+
+Bugfixes.
+
+* Migration script (0.12.x --> 1.0.0) inadvertently always dropped the `wicked` database, and not the configured one
+* [SAML Logout not working](https://github.com/Haufe-Lexware/wicked.haufe.io/issues/124) fixed
+* [Renaming auth methods in the Kickstarter makes it behave strangely](https://github.com/Haufe-Lexware/wicked.haufe.io/issues/125) fixed
+
 ### 1.0.0.beta9 - Notable changes
 
 Bugfixes, minor features and changes:
