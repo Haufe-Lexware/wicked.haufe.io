@@ -30,6 +30,7 @@ Currently, wicked supports the following Auth Method types, which can be used bo
 * `oauth2`: Generic JWT based OAuth2 (authorization code) login (TODO: docs)
 * [`adfs`: Microsoft ADFS login](auth-adfs.md)
 * [`saml`: SAML based login](auth-saml.md)
+* [`external`: External checking of username/password](auth-external.md)
 
 In the future, there will be additional auth methods, such as 
 
