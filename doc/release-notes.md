@@ -18,6 +18,14 @@ There will be various beta versions of the wicked 1.0.0 release, until we decide
 
 Only for very notable changes, there will be a note here, otherwise the changes are too numerous to be listed one by one (just yet). That is also going to be resumed when 1.0.0 has been released.
 
+### 1.0.0.beta11 - Notable changes
+
+Bugfixes and an additional auth method, `external`, for integration with existing username/password databases. This enables wicked.haufe.io to support the full OAuth2 experience with a legacy username/password database via a very lightweight type of integration.
+
+* [When using passthrough users and passthrough scopes, refresh token grant fails if API does not allow password grant](https://github.com/Haufe-Lexware/wicked.haufe.io/issues/127)
+* [Support for validating 3rd party username/password](https://github.com/Haufe-Lexware/wicked.haufe.io/issues/128)
+* [Renaming auth methods in the Kickstarter makes it behave strangely](https://github.com/Haufe-Lexware/wicked.haufe.io/issues/125)
+
 ### 1.0.0.beta10 - Notable changes
 
 Bugfixes.
