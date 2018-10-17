@@ -33,6 +33,10 @@ Content-Type: application/json
 
 Every five minutes, wicked will perform this lookup again; it will take up to another five minutes until the settings have actually propagated to Kong, so allow wicked this time before you actually start serving new scopes.
 
+See also:
+
+* [ScopeLookupResponse](https://apim-haufe-io.github.io/wicked.node-sdk/interfaces/_interfaces_.scopelookupresponse.html)
+
 ## Step 2: Dynamically looking up scopes for a user
 
 The second step is the more interesting case: After a user has been successfully authenticated by the Authorization Server (and the [configured auth method](auth-methods.md)), wicked can delegate the finding of the correct scope to a third party service. This can be the same service (with a different end point) as above, or a completely different one.
@@ -49,21 +53,24 @@ After authenticating a user, the Authorization Server will now perform a `POST` 
 POST http://scope-lookup-service.default.svc.cluster.local:4000/user_scopes
 
 {
-  "sub": "<idp unique id>",
-  "email": "<user email>",
-  "email_verified": <true|false>,
-  "name: "Display Name"
-  // ... other properties
+    "profile": {
+        "sub": "<idp unique id>",
+        "email": "<user email>",
+        "email_verified": <true|false>,
+        "name: "Display Name"
+        // ... other properties
+    },
+    scope: ['scope1', 'scope2']
 }
 ```
 
 The `sub` contains a string which is formatted in the following way:
 
 ```
-sub=<auth method id>:<unique id of idp>
+<auth method id>:<unique id of idp>
 ```
 
-In case e.g. of a Google authentication, such a string may look like this: `sub=google:<some google id>`.
+In case e.g. of a Google authentication, such a string may look like this: `google:<some google id>`.
 
 Wicked's Authorization Server then expects a response in the following way:
 
@@ -74,6 +81,7 @@ Content-Type: application/json
   "allow": <true|false>, // Mandatory
   "authenticated_scope": ["scope1", "scope2", "..."], // Mandatory
   "authenticated_userid": "<optional override>" // Optional
+  "error_message": "<specify if something goes wrong>"
 }
 ```
 
@@ -84,6 +92,11 @@ This end point will also be called should the API client decide to attempt to re
 In case `allow` is set to `false`, the Authorization Server will reject the authorization request to the calling client with an appropriate error message. This will also happen in case the service which looks up the scopes is not reachable.
 
 The property `authenticated_userid` is an optional response parameter which can be used to override the user id in the passed in `sub` property.
+
+See also: 
+
+* [PassthroughScopeRequest](https://apim-haufe-io.github.io/wicked.node-sdk/interfaces/_interfaces_.passthroughscoperequest.html)
+* [PassthroughScopeResponse](https://apim-haufe-io.github.io/wicked.node-sdk/interfaces/_interfaces_.passthroughscoperesponse.html)
 
 ## Addendum: Configure "Passthrough Users"
 
