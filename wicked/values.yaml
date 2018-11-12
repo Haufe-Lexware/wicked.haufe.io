@@ -87,8 +87,12 @@ config:
   # Specify a branch to pull for the APIm configuration. Use either this or revision,
   # or none of both to pull HEAD of master.
   branch: ""
-  # Node debugging filter, specifying "*" here makes the wicked components very chatty.
+  # Node debugging filter, specifying "*" here makes the wicked components very chatty; 
+  # use "wicked-sdk" for debugging the wicked SDK
   debug: ""
+  # Specify the log level for the wicked components. Supports "debug", "info", "warn"
+  # or "error".
+  logLevel: "info"
   # In case you bake in the configuration of wicked into a derivative of portal-api,
   # specify the name of the image here. In case this is set to true, the git configuration
   # will not be specified in the portal-api image.

@@ -70,6 +70,11 @@ spec:
             configMapKeyRef:
               name: {{ template "fullname" . }}-apim-config
               key: DEBUG
+        - name: LOG_LEVEL
+          valueFrom:
+            configMapKeyRef:
+              name: {{ template "fullname" . }}-apim-config
+              key: LOG_LEVEL
         - name: PORTAL_NETWORK_PORTALHOST
           valueFrom:
             configMapKeyRef:

@@ -41,6 +41,11 @@ spec:
             configMapKeyRef:
               name: {{ template "fullname" . }}-apim-config
               key: DEBUG
+        - name: LOG_LEVEL
+          valueFrom:
+            configMapKeyRef:
+              name: {{ template "fullname" . }}-apim-config
+              key: LOG_LEVEL
         - name: PORTAL_API_URL
           value: "http://{{ template "fullname" . }}-api.{{ default "default" .Values.namespace }}.svc.cluster.local:3001/"
         ports:

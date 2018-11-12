@@ -9,6 +9,7 @@ data:
   HELM_NAME: {{ template "fullname" . }}
   GIT_REPO: {{ .Values.config.repository | quote }}
   DEBUG: {{ default "" .Values.config.debug | quote }}
+  LOG_LEVEL: {{ default "info" .Values.config.logLevel | quote }}
   PORTAL_NETWORK_APIHOST: {{ default "api.portal.local" .Values.ingress.apiHost | quote }}
   PORTAL_NETWORK_PORTALHOST: {{ default "portal.local" .Values.ingress.portalHost | quote }}
 {{- if and .Values.redis.deployRedis .Values.redis.useRedis }}
