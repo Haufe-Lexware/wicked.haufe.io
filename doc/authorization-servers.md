@@ -58,7 +58,7 @@ The web application can now use the access token to safely access the backend AP
 
 The access token is short lived, and cannot be refreshed. When the access token is invalid, the SPA has to re-authenticate and re-authorize again using the Authorization Server.
 
-**Note**: How the identity of the end user is established is NOT part of wicked. This can be done by any means you need, be it SAML SSO, ADFS Login, Google Login, Twitter,... The Authorization Server has to establish SOME identity, but how that's done is totally unimportant to the architecture, and is purely a decision you need to take based on your use cases. Examples:
+**Note**: How the identity of the end user is established is NOT part of wicked, except in the case where the auth method is using the internal user database of wicked for authentication. This can be done by any means you need, be it SAML SSO, ADFS Login, Google Login, Twitter,... The Authorization Server has to establish SOME identity, but how that's done is totally unimportant to the architecture, and is purely a decision you need to take based on your use cases. Examples:
 
 * Identity via ADFS: May be used for internal SPAs
 * Identity via Google: May be used for applications where the Google Identity is just enough for you to deem the user authorized to use your API

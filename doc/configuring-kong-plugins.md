@@ -6,13 +6,14 @@ In case you have to change something when proxying a request via the API Gateway
 
 ## Kong's modus operandi
 
-Mashape Kong knows, very coarsely speaking, three different entities which it works with for configuration:
+Mashape Kong knows, very coarsely speaking, four different entities which it works with for configuration:
 
-* APIs
+* Services
+* Routes
 * Consumers
 * Plugins
 
-**APIs** are the entities Kong uses to know which end points to proxy to which backends. This is what you configure when you [define APIs for use with the API Portal](defining-an-api.md).
+**Services** and **Routers** are the entities Kong uses to know which end points to proxy to which backends. This is what you configure when you [define APIs for use with the API Portal](defining-an-api.md).
 
 For Kong, **Consumers** are entities which can be used when applying plugins to API routes. Kong is agnostic to what kind of Consumer may be behind (e.g. "User", "Application",...), this is up to the API Gateway operator to decide. For the wicked API Portal, consumers map to API **Subscriptions**, i.e. a combination of an API, an Application and an API Plan.
 
@@ -48,6 +49,7 @@ The API Portal kickstarter has support for selected Kong Plugins, for which ther
 * Logging (only API level)
 * Rate Limiting
 * CORS (only API level)
+* Prometheus
 
 To some extent, also the `request-transformer` plugin is supported, which makes it possible to add or delete specific parts of requests, e.g. adding headers.
 
@@ -70,6 +72,10 @@ The rate limiting plugin documentation is partly self documenting in the kicksta
 ![CORS Plugin](images/plugin-cors.png)
 
 TODO: Currently, there is no way to use registered application's hosts as `Origin` in this setting. This is due to a limitation of the Kong Plugin, which is not able to use more than a single origin host currently. This is about to change (see e.g. [PR #1774 in Mashape/Kong](https://github.com/Mashape/kong/pull/1774), and then a varying origin header may be supported here.
+
+### Prometheus
+
+The wicked Kong adapter will automatically configure Kong in a way that it exposes its standard metrics regarding services and routes. If your are using the standard [Helm chart](../wicked), the (hopefully) correct annoatations are already specified for the Kong containers. If you need to set up this manually, Kong will expose its metrics as `http://<kong ip>:8001/metrics`; this means that the administration port 8001 must be available to your Prometheus instance for scraping.
 
 ### Other Plugins
 
