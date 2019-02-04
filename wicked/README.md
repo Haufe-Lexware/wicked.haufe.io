@@ -2,7 +2,7 @@
 
 This directory contains a [Kubernetes Helm](https://github.com/kubernetes/helm) chart for wicked.haufe.io. This is the preferred way of deploying wicked to a Kubernetes cluster. If you run into issues, please tell us.
 
-Deploying wicked using a Helm chart is the easiest way to get wicked up and running on Kubernetes. The default configuration will deploy a sample portal assuming an ingress at `https://portal.local` (for the API Portal) and `https://api.portal.local` (for the API Gateway).
+Deploying wicked using a Helm chart is the easiest way to get wicked up and running on Kubernetes. The default configuration will deploy a sample portal assuming an ingress at `https://portal.com` (for the API Portal) and `https://api.portal.com` (for the API Gateway).
 
 Most things are configurable via the Chart, like which parts of wicked you want to deploy (mailer and chatbot are e.g. not deployed by default), whether you want persistence or not, and whether you want to deploy a separate Postgres instance for Kong, or perhaps use your own.
 
@@ -33,7 +33,7 @@ It is also assumed that you have some knowledge of Helm, and that you have run `
 If that is set and done, you may now install wicked using the Helm chart. Move into a suitable directory, and then download the chart using `helm fetch`:
 
 ```
-$ export WICKED_VERISON=0.12.1 # Possibly adapt to the latest version
+$ export WICKED_VERSION=1.0.0-rc1 # Possibly adapt to the latest version
 $ helm fetch --untar https://github.com/Haufe-Lexware/wicked.haufe.io/releases/download/v${WICKED_VERSION}/wicked-${WICKED_VERSION}.tgz
 ```
 
@@ -45,7 +45,7 @@ $ helm install --set minikubeIP=$(minikube ip) wicked
 
 This will take a while, as the Helm Chart by default waits until all deployed pods are up and running. By opening a different terminal, you can check on the status of the pods coming up one after another.
 
-**IMPORTANT**: Then run `minikube ip` once more, and edit your own `/etc/hosts` (or corresponding file on Windows) to add the names `portal.local` and `api.portal.local` to point to this IP address.
+**IMPORTANT**: Then run `minikube ip` once more, and edit your own `/etc/hosts` (or corresponding file on Windows) to add the names `portal.com` and `api.portal.com` to point to this IP address.
 
 *Hint:* If you want to assign a non-random name to your release of wicked to your cluster, supply a name using the `--name some-name` argument when doing the `helm install`.
 
@@ -79,7 +79,7 @@ Now we're ready to...
 
 ### Open the wicked portal
 
-You should now be able to open the API portal at [https://portal.local](https://portal.local). You may log in using the default dummy admin user `admin@foo.com` with the password `wicked`.
+You should now be able to open the API portal at [https://portal.com](https://portal.com). You may log in using the default dummy admin user `admin@foo.com` with the password `wicked`.
 
 <a name="overridables">&nbsp;</a>
 
@@ -110,10 +110,10 @@ Setting | Must Override | Default | Description
 `config.customApiImage` | - | `nil` | The (fully qualified) image name of your derived `portal-api` image. Take care that you have added `imagePullSecrets` (see `values.yaml`) if appropriate.
 `ingress.enabled` | - | `true` | Specify `false` to **not** deploy an ingress resource for routing the API Portal and Gateway to the corresponding services.
 `ingress.class` | - | `nginx` | The ingress class (`kubernetes.io/ingress.class`) to apply to the ingress resources.
-`ingress.apiHost` | **X** | `api.portal.local` | The (desired) FQDN of the API Gateway; this must point to the (load balancer of the) ingress controller selected via the ingress class, preferably before the deployment.
-`ingress.portalHost` | **X** | `portal.local` | The (desired) FQDN of the API Portal; this must point to the (load balancer of the) ingress controller selected via the ingress class, preferably before the deployment.
+`ingress.apiHost` | **X** | `api.portal.com` | The (desired) FQDN of the API Gateway; this must point to the (load balancer of the) ingress controller selected via the ingress class, preferably before the deployment.
+`ingress.portalHost` | **X** | `portal.com` | The (desired) FQDN of the API Portal; this must point to the (load balancer of the) ingress controller selected via the ingress class, preferably before the deployment.
 `ingress.useKubeLego` | - | `false` | Set to `true` to add the necessary annotations for `kube-lego`; Note that this will **not** deploy `kube-lego` on your cluster, but merely use it if present (and usable in the desired namespace)
-`ingress.existingTls` | - | `false` | If useKubeLego is false, set this to true to use the secret names in the tls property for the ingresses. Otherwise the standard secrets for `portal.local` and `api.portal.local` are used. **It's a must for production deployments to either use `existingTls` or `useKubeLego` to get correct TLS certificates.**
+`ingress.existingTls` | - | `false` | If useKubeLego is false, set this to true to use the secret names in the tls property for the ingresses. Otherwise the standard secrets for `portal.com` and `api.portal.com` are used. **It's a must for production deployments to either use `existingTls` or `useKubeLego` to get correct TLS certificates.**
 `ingress.tls.apiHostSecret` | - | `gateway-ingress-tls` | If `existingTls` is set to `true`, specify the TLS secret name for the API Gateway Host's FQDN here.
 `ingress.tls.portalHostSecret` | - | `portal-ingress-tls` | If `existingTls` is set to `true`, specify the TLS secret name for the API Portal Host's FQDN here.
 `persistence.enabled` | - | `false` | Set to `true` to persist the dynamic data to a Persistent Volume Claim. If set to `true`, specify the volume claim below. **This is a must for production deployments.**

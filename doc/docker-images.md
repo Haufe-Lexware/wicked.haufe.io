@@ -14,22 +14,22 @@ The images needed for the API Portal are built automatically by our CI/CD server
 
 The following images are taken as defaults for API Portal deployments, among which the following are built by us:
 
-* `haufelexware/wicked.kong:latest`: The Portal's Kong image (using the official Kong image as a base, slightly extended)
-* `haufelexware/wicked.portal:latest`: The Portal UI image
-* `haufelexware/wicked.portal-api:latest`: The Portal's API image
-* `haufelexware/wicked.portal-auth:latest`: The Authorization Server image
-* `haufelexware/wicked.portal-kong-adapter:latest`: The Kong Adapter
-* `haufelexware/wicked.portal-mailer:latest`: The API Portal's Mailer component
-* `haufelexware/wicked.portal-chatbot:latest`: The API Portal's "Chatbot" component
-* `haufelexware/wicked.k8s-init:latest`: [Kubernetes init container](https://github.com/apim-haufe-io/wicked.k8s-init)
-* `haufelexware/wicked.k8s-tool:latest`: [Kubernetes tooling container](https://github.com/apim-haufe-io/wicked.k8s-tool)
+* `haufelexware/wicked.kong:<version>`: The Portal's Kong image (using the official Kong image as a base, slightly extended)
+* `haufelexware/wicked.ui:<version>`: The Portal UI image
+* `haufelexware/wicked.api:<version>`: The Portal's API image
+* `haufelexware/wicked.auth:<version>`: The Authorization Server image
+* `haufelexware/wicked.kong-adapter:<version>`: The Kong Adapter
+* `haufelexware/wicked.mailer:<version>`: The API Portal's Mailer component
+* `haufelexware/wicked.chatbot:<version>`: The API Portal's "Chatbot" component
+* `haufelexware/wicked.k8s-init:<version>`: [Kubernetes init container](https://github.com/apim-haufe-io/wicked.k8s-init)
+* `haufelexware/wicked.k8s-tool:<version>`: [Kubernetes tooling container](https://github.com/apim-haufe-io/wicked.k8s-tool)
 
 All node.js based images are based on the official [`node:10`](https://hub.docker.com/_/node/) or `node:10-alpine` images (all images starting with `wicked.portal`).
 
 The following images are not built by us, but are taken as-is:
 
-* `kong:(version)` (the version of Kong is announced in the [release notes](release-notes.md) whenever changed)
 * `postgres:9.6`: The official [Postgres 9.6](https://hub.docker.com/_/postgres/) image
+* `redis:5-alpine`: The official [Redis](https://hub.docker.com/_/redis) redis; this is used for session storage and rate limiting caching
 * `dockercloud/haproxy:1.6.7`: Docker's official [HAproxy](https://hub.docker.com/r/dockercloud/haproxy/) release.
 
 ## Available Tags
@@ -59,7 +59,7 @@ Equally true is that working with the kickstarter of a later version than the po
 
 There are some special environment variables which can be used to change/specify the behavior of the different docker images. These are described in detail in this section. This mostly applies to the portal API container (`haufelexware/wicked.portal-api`), as most configuration is done via this container and its `globals.json` file.
 
-### `portal-api`
+### `api`
 
 * `NODE_ENV`: The most important environment variable; the content of this variable decides which [environment](deployment-environments.md) is to be used, i.e. which set of internal environment variables should be used.
 * `PORTAL_CONFIG_KEY`: This has to contain the configuration key created when creating your static configuration repository. This is a secret which should be injected using appropriate measures, such as an environment variable when deploying via `docker-compose`, or a "secret" when deploying using Kubernetes. Without this secret key, the encrypted environment variables inside the environment settings cannot be decrypted, and importing and exporting will fail.
@@ -72,11 +72,11 @@ There are some special environment variables which can be used to change/specify
 
 **Note**: Passing in any other environment variable from the "outside" which is part of the environment variables of the environment definitions (i.e. which is inside the `default.json` file) will cause this variable to be overridden. Doing this for other environment variables than the ones above (which are not part of `default.json`) will inevitably make things very difficult to understand though.
 
-### `portal`, `portal-mailer`, `portal-kong-adapter`, `portal-chatbot`
+### `ui`, `mailer`, `kong-adapter`, `chatbot`
 
 These four core components can only be impacted using two different environment variables:
 
-* `PORTAL_API_URL`: Pass in the URL of the `portal-api` API in case this is not the standard `http://portal-api:3001` URL. If this environment variable is empty, this is what is going to be tested. In case you are deploying using `docker-compose`, this is usually the correct address, and also when deploying using e.g. Kubernetes, there will be a service which is discoverable using this DNS address, so this will be correct in most cases. In case it's not, use this variable to bootstrap the configuration process.
+* `PORTAL_API_URL`: Pass in the URL of the `api` API in case this is not the standard `http://portal-api:3001` URL. If this environment variable is empty, this is what is going to be tested. In case you are deploying using `docker-compose`, this is usually the correct address, and also when deploying using e.g. Kubernetes, there will be a service which is discoverable using this DNS address, so this will be correct in most cases. In case it's not, use this variable to bootstrap the configuration process. When using the [Kubernetes Helm chart](../wicked/README.md), the services are named slightly different, also depending on the helm deployment name, but if you use the predefined `k8s` environment in the static configuration, things should "just work".
 * `LOG_LEVLE`: Specify the debug message log level using this environment variable. Use either `debug` to get **all** debug messages.
 
 ### `kong`

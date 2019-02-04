@@ -31,7 +31,7 @@ spec:
         - "-lservice={{ template "fullname" . }}-api"
       containers:
       - name: {{ template "fullname" . }}-auth
-        image: "{{ .Values.image.repository }}portal-auth:{{ default "latest" .Values.image.tag }}{{ if .Values.image.alpine }}-alpine{{ end }}"
+        image: "{{ .Values.image.repository }}auth:{{ default "latest" .Values.image.tag }}{{ if .Values.image.alpine }}-alpine{{ end }}"
         imagePullPolicy: {{ default "Always" .Values.image.pullPolicy }}
         env:
         - name: DEBUG

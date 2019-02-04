@@ -27,7 +27,7 @@ redis:
   # want to use an external one (or none at all)  
   deployRedis: true
   # The image for redis to use
-  image: "redis:3.2-alpine"
+  image: "redis:5-alpine"
   # Specify true to make the portal use redis as a session store. This requires
   # a compatible configuration (i.e. created with wicked Kickstarter 0.12.1+)
   useRedis: true
@@ -55,7 +55,7 @@ image:
   # need to pull your company's version of wicked.
   repository: "haufelexware/wicked."
   # The docker image tag to use; usually you don't change this.
-  tag: "1.0.0.beta11"
+  tag: "1.0.0.beta12"
   pullPolicy: IfNotPresent
 
 # Add imagePullSecrets like this in an override.yaml to pass in with helm install
@@ -130,15 +130,15 @@ ingress:
   class: nginx
   # Used to create Ingress record; the FQDN of the portal and API hosts. These
   # must be set using an A or CNAME record by yourself.
-  apiHost: api.portal.local
-  portalHost: portal.local
+  apiHost: api.portal.com
+  portalHost: portal.com
 
   # Set this value to true to add kube-lego annotations to the ingress resources.
   # If you do this, make sure the above FQDNs are already set before you deploy.
   useKubeLego: false
   # If useKubeLego is false, set this to true to use the secret names in the tls
-  # property for the ingresses. Otherwise the standard secrets for "portal.local" and
-  # "api.portal.local" are used.
+  # property for the ingresses. Otherwise the standard secrets for "portal.com" and
+  # "api.portal.com" are used.
   existingTls: false
   # If existingTls is true, specify the secret names for the certificates here
   tls:

@@ -28,7 +28,7 @@ spec:
         - "-lservice={{ template "fullname" . }}-api"
       containers:
       - name: {{ template "fullname" . }}-mailer
-        image: "{{ .Values.image.repository }}portal-mailer:{{ default "latest" .Values.image.tag }}{{ if .Values.image.alpine }}-alpine{{ end }}"
+        image: "{{ .Values.image.repository }}mailer:{{ default "latest" .Values.image.tag }}{{ if .Values.image.alpine }}-alpine{{ end }}"
         imagePullPolicy: {{ default "Always" .Values.image.pullPolicy }}
         env:
         - name: DEBUG

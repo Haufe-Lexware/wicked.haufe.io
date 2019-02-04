@@ -13,7 +13,7 @@ Please follow these easy(?) steps.
 
 ## Prerequisites
 
-You will need the following to try out wicked's 1.0.0 beta version:
+You will need the following to run wicked 1.0.0 (as of the Beta/RC version):
 
 * Either a docker host (a Windows or macOS local docker host will work) to deploy on
 * Or a Kubernetes cluster (see below for more detailed requirements in that case)
@@ -24,7 +24,7 @@ Start with picking the desired beta version from the actual docker tags: [Docker
 Export that version as an environment variable, we will use it in the following scripts:
 
 ```
-$ export WICKED_VERSION=1.0.0.beta1
+$ export WICKED_VERSION=1.0.0.beta12
 ```
 
 ### Creating a static configuration
@@ -66,7 +66,7 @@ Go to the [SSL Tools page](http://localhost:3333/ssl) and click "Create Certific
 
 Use `ifconfig` or a similar tool to retrieve your local machine IP. Note that using `127.0.0.1` or `localhost` will **not** work.
 
-As a super user, open `/etc/hosts` and add entries for `portal.local` and `api.portal.local`:
+As a super user, open `/etc/hosts` and add entries for `portal.com` and `api.portal.com`:
 
 ```
 ##
@@ -79,9 +79,11 @@ As a super user, open `/etc/hosts` and add entries for `portal.local` and `api.p
 255.255.255.255	broadcasthost
 ::1             localhost 
 
-192.168.1.34    portal.local
-192.168.1.34    api.portal.local
+192.168.1.34    portal.com
+192.168.1.34    api.portal.com
 ```
+
+**Note**: In previous versions of this documentation, these addresses used to be `portal.local` and `api.portal.local`; the drawback with that address was that it is not possible to register OAuth2 callbacks e.g. for Google using the `.local` top level domain. This is why this changed to `portal.com`.
 
 #### Step 1.4: Source settings and start the APIm
 
@@ -105,9 +107,9 @@ Verify that the containers run (this may take a while, depending on how fast the
 $ docker ps
 ```
 
-As soon as all containers are up and running, you will now be able to access wicked at [https://portal.local](https://portal.local). You browser
-will scream at you because of the self signed certificates, but that's normal; accept the changes and try it out. Note that both `portal.local` and
-`api.portal.local` is used in the browser, so that you will need to accept both these certificates.
+As soon as all containers are up and running, you will now be able to access wicked at [https://portal.com](https://portal.com). Your browser
+will scream at you because of the self signed certificates, but that's normal; accept the changes and try it out. Note that both `portal.com` and
+`api.portal.com` is used in the browser, so that you will need to accept both these certificates.
 
 ### Variant 2: Deploying to a Docker host with real certificates and real DNS entries
 

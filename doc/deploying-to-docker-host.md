@@ -169,7 +169,7 @@ In this scenario, the Kong Gateway is treated same as the wicked Core Components
 
 ## Updating the Postgres Database
 
-Currently, there are no plans on moving away from the `postgres:9.4` image. This image may be updated once in a while, so doing a `docker-compose pull` from time to time may be advisable, but otherwise there is currently no need to upgrade the Postgres image; it's stable and very mature.
+Currently, there are no plans on moving away from the `postgres:9.6` image. This image may be updated once in a while, so doing a `docker-compose pull` from time to time may be advisable, but otherwise there is currently no need to upgrade the Postgres image; it's stable and very mature.
 
 If in the future Kong will need a later version of Postgres, this will be described in the release notes when it's time.
 

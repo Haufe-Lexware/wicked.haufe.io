@@ -45,16 +45,16 @@ Open up that environment and override the two hosts environment variables we def
 
 Use the mentioned values:
 
-* `portal.local` for the Portal host
-* `api.portal.local` for the API host
+* `portal.com` for the Portal host
+* `api.portal.com` for the API host
 
 ## Create `/etc/hosts` entries
 
 In case you haven't yet followed the ["Getting Started" instructions](http://wicked.haufe.io/gettingstarted.html), you will need to create local hosts entries for these new host names:
 
 ```
-127.0.0.1   portal.local
-127.0.0.1   api.portal.local
+127.0.0.1   portal.com
+127.0.0.1   api.portal.com
 ```
 
 This has to added (most probably using `sudo`) to `/etc/hosts` on Mac OS X and Linux, or to `C:\Windows\System32\drivers\etc\hosts` on Windows. Make sure pinging these names work. 
@@ -90,7 +90,7 @@ $ pushd certs && source ./localdev.sh && popd # Set some environment vars
 $ docker-compose up -d
 ```
 
-After `docker-compose` has finished, you should be able to open your API Portal from [`https://portal.local`](https://portal.local).
+After `docker-compose` has finished, you should be able to open your API Portal from [`https://portal.com`](https://portal.com).
 
 To take down the API Portal again, issue the following command:
 
@@ -99,6 +99,8 @@ $ docker-compose down
 ```
 
 Please note that this will also **delete all local data**, such as test applications you have registered, users names you have create and so on.
+
+Should API portal not start correctly, you may also try `docker-compose up` without the `-d` option; this will show you the logs in the console, which may help finding the problem. In case you encounter anything out of the ordinary, please feel free to file an [issue on GitHub](https://github.com/Haufe-Lexware/wicked.haufe.io/issues).
 
 ## Deployment Architecture locally
 

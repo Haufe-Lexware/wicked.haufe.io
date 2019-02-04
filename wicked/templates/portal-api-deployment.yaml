@@ -25,7 +25,7 @@ spec:
       containers:
       - name: {{ template "fullname" . }}-api
 {{- if not .Values.config.useCustomApiImage }}          
-        image: {{ .Values.image.repository }}portal-api:{{ default "latest" .Values.image.tag }}{{ if .Values.image.alpine }}-alpine{{ end }}
+        image: {{ .Values.image.repository }}api:{{ default "latest" .Values.image.tag }}{{ if .Values.image.alpine }}-alpine{{ end }}
 {{- else }}
         image: {{ .Values.config.customApiImage }}
 {{- end }}

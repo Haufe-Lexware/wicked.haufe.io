@@ -17,10 +17,10 @@ metadata:
 spec:
   tls:
   - hosts:
-    - {{ default "portal.local" .Values.ingress.portalHost }}
+    - {{ default "portal.com" .Values.ingress.portalHost }}
     secretName: {{ if .Values.ingress.useKubeLego }}{{ template "fullname" . }}-portal-ingress-tls{{ else if .Values.ingress.existingTls }}{{ .Values.ingress.tls.portalHostSecret }}{{ else }}{{ template "fullname" . }}-portal-ingress-tls{{ end }}
   rules:
-  - host: {{ default "portal.local" .Values.ingress.portalHost }}
+  - host: {{ default "portal.com" .Values.ingress.portalHost }}
     http:
       paths:
       - path: /
@@ -46,10 +46,10 @@ metadata:
 spec:
   tls:
   - hosts:
-    - {{ default "api.portal.local" .Values.ingress.apiHost }}
+    - {{ default "api.portal.com" .Values.ingress.apiHost }}
     secretName: {{ if .Values.ingress.useKubeLego }}{{ template "fullname" . }}-gateway-ingress-tls{{ else if .Values.ingress.existingTls }}{{ .Values.ingress.tls.apiHostSecret }}{{ else }}{{ template "fullname" . }}-gateway-ingress-tls{{ end }}
   rules:
-  - host: {{ default "api.portal.local" .Values.ingress.apiHost }}
+  - host: {{ default "api.portal.com" .Values.ingress.apiHost }}
     http:
       paths:
       - path: /

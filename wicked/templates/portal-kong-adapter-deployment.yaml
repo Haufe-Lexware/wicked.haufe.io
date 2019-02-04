@@ -33,7 +33,7 @@ spec:
         - "-lservice={{ template "fullname" . }}-kong"
       containers:
       - name: {{ template "fullname" . }}-kong-adapter
-        image: "{{ .Values.image.repository }}portal-kong-adapter:{{ default "latest" .Values.image.tag }}{{ if .Values.image.alpine }}-alpine{{ end }}"
+        image: "{{ .Values.image.repository }}kong-adapter:{{ default "latest" .Values.image.tag }}{{ if .Values.image.alpine }}-alpine{{ end }}"
         imagePullPolicy: {{ default "Always" .Values.image.pullPolicy }}
         env:
         - name: DEBUG
