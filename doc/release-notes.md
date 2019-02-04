@@ -18,6 +18,26 @@ There will be various beta versions of the wicked 1.0.0 release, until we decide
 
 Only for very notable changes, there will be a note here, otherwise the changes are too numerous to be listed one by one (just yet). That is also going to be resumed when 1.0.0 has been released.
 
+### 1.0.0.beta12 - Notable changes
+
+Mostly bug fixes from the usage of wicked 1.0.0 beta in production situations; only minor features were implemented, as currently the feature set for wicked 1.0.0 has mostly been finalized (there will also be an auditing type of feature in one of the upcoming releases). Nonetheless, here is a change log:
+
+* SAML Identity Provider now also heeds `prompt=login` request (forces `force_authn`)
+* [apim-certs.yaml prevents successful `helm upgrade`](https://github.com/Haufe-Lexware/wicked.haufe.io/issues/152)
+* [Wicked 1.0.0 portal-auth docker container can't resolve Portal and API hosts](https://github.com/Haufe-Lexware/wicked.haufe.io/issues/150)
+* [Application description is susceptible to XSS attack](https://github.com/Haufe-Lexware/wicked.haufe.io/issues/145)
+* [Access tokens can be refreshed even if Resource Owner has revoked grants to client application](https://github.com/Haufe-Lexware/wicked.haufe.io/issues/130)
+* [Migrating from wicked 0.12.x to 1.0.0 results in leftover "api" objects in Kong database](https://github.com/Haufe-Lexware/wicked.haufe.io/issues/140)
+* [Authorization Server returns 500 if an invalid Authorization Code is used when requesting the Token](https://github.com/Haufe-Lexware/wicked.haufe.io/issues/131)
+* [redirect_uri must be treated as optional](https://github.com/Haufe-Lexware/wicked.haufe.io/issues/143)
+* [Feature: Restrict scopes per subscription](https://github.com/Haufe-Lexware/wicked.haufe.io/issues/138)
+* [Trusted applications always get full scope of API even if requesting subset](https://github.com/Haufe-Lexware/wicked.haufe.io/issues/132)
+* [ADFS/OAuth2 JWT Groups aren't refreshed when logging in](https://github.com/Haufe-Lexware/wicked.haufe.io/issues/142)
+* [Creating new local users interactively crashes portal-auth under certain circumstances](https://github.com/Haufe-Lexware/wicked.haufe.io/issues/135)
+* [Auth Server answers /authorize request with JSON if client_id is invalid](https://github.com/Haufe-Lexware/wicked.haufe.io/issues/137)
+* [DEBUG value in chart](https://github.com/Haufe-Lexware/wicked.haufe.io/issues/133)
+* [Link "Sign up" on main page of standard configuration leads to a 404](https://github.com/Haufe-Lexware/wicked.haufe.io/issues/136)
+
 ### 1.0.0.beta11 - Notable changes
 
 Bugfixes and an additional auth method, `external`, for integration with existing username/password databases. This enables wicked.haufe.io to support the full OAuth2 experience with a legacy username/password database via a very lightweight type of integration.
