@@ -12,6 +12,118 @@ Official Release of the API Portal.
 
 [Design documents](https://github.com/Haufe-Lexware/wicked.haufe.io/tree/next/doc/design-docs).
 
+## 1.0.0 (beta versions)
+
+There will be various beta versions of the wicked 1.0.0 release, until we decide to release the final 1.0.0 version (and then resume to using 1.0.x updates).
+
+Only for very notable changes, there will be a note here, otherwise the changes are too numerous to be listed one by one (just yet). That is also going to be resumed when 1.0.0 has been released.
+
+### 1.0.0.beta12 - Notable changes
+
+Mostly bug fixes from the usage of wicked 1.0.0 beta in production situations; only minor features were implemented, as currently the feature set for wicked 1.0.0 has mostly been finalized (there will also be an auditing type of feature in one of the upcoming releases). Nonetheless, here is a change log:
+
+* SAML Identity Provider now also heeds `prompt=login` request (forces `force_authn`)
+* [apim-certs.yaml prevents successful `helm upgrade`](https://github.com/Haufe-Lexware/wicked.haufe.io/issues/152)
+* [Wicked 1.0.0 portal-auth docker container can't resolve Portal and API hosts](https://github.com/Haufe-Lexware/wicked.haufe.io/issues/150)
+* [Application description is susceptible to XSS attack](https://github.com/Haufe-Lexware/wicked.haufe.io/issues/145)
+* [Access tokens can be refreshed even if Resource Owner has revoked grants to client application](https://github.com/Haufe-Lexware/wicked.haufe.io/issues/130)
+* [Migrating from wicked 0.12.x to 1.0.0 results in leftover "api" objects in Kong database](https://github.com/Haufe-Lexware/wicked.haufe.io/issues/140)
+* [Authorization Server returns 500 if an invalid Authorization Code is used when requesting the Token](https://github.com/Haufe-Lexware/wicked.haufe.io/issues/131)
+* [redirect_uri must be treated as optional](https://github.com/Haufe-Lexware/wicked.haufe.io/issues/143)
+* [Feature: Restrict scopes per subscription](https://github.com/Haufe-Lexware/wicked.haufe.io/issues/138)
+* [Trusted applications always get full scope of API even if requesting subset](https://github.com/Haufe-Lexware/wicked.haufe.io/issues/132)
+* [ADFS/OAuth2 JWT Groups aren't refreshed when logging in](https://github.com/Haufe-Lexware/wicked.haufe.io/issues/142)
+* [Creating new local users interactively crashes portal-auth under certain circumstances](https://github.com/Haufe-Lexware/wicked.haufe.io/issues/135)
+* [Auth Server answers /authorize request with JSON if client_id is invalid](https://github.com/Haufe-Lexware/wicked.haufe.io/issues/137)
+* [DEBUG value in chart](https://github.com/Haufe-Lexware/wicked.haufe.io/issues/133)
+* [Link "Sign up" on main page of standard configuration leads to a 404](https://github.com/Haufe-Lexware/wicked.haufe.io/issues/136)
+
+### 1.0.0.beta11 - Notable changes
+
+Bugfixes and an additional auth method, `external`, for integration with existing username/password databases. This enables wicked.haufe.io to support the full OAuth2 experience with a legacy username/password database via a very lightweight type of integration.
+
+* [When using passthrough users and passthrough scopes, refresh token grant fails if API does not allow password grant](https://github.com/Haufe-Lexware/wicked.haufe.io/issues/127)
+* [Support for validating 3rd party username/password](https://github.com/Haufe-Lexware/wicked.haufe.io/issues/128)
+* [Renaming auth methods in the Kickstarter makes it behave strangely](https://github.com/Haufe-Lexware/wicked.haufe.io/issues/125)
+
+### 1.0.0.beta10 - Notable changes
+
+Bugfixes.
+
+* Migration script (0.12.x --> 1.0.0) inadvertently always dropped the `wicked` database, and not the configured one
+* [SAML Logout not working](https://github.com/Haufe-Lexware/wicked.haufe.io/issues/124) fixed
+* [Renaming auth methods in the Kickstarter makes it behave strangely](https://github.com/Haufe-Lexware/wicked.haufe.io/issues/125) fixed
+* Corner cases in the Helm Chart fixed (e.g. when not deploying Mailer and/or Chatbot)
+
+### 1.0.0.beta9 - Notable changes
+
+Bugfixes, minor features and changes:
+
+* Refresh Token TTLs can now be configured on OAuth2 enabled APIs
+* The wicked API is now served as `/wicked/v1` (instead of the too generic sounding `/api/v1`)
+* The echo API is now served as `/wicked-echo/v1`
+* The legacy health API was removed (this is possibly a BREAKING change in case you have subscriptions to this API).
+* Improved email validity checking (according to RFC 5322), both backend and frontend (`portal-api` and `portal-auth`), #122
+* Add configuration option to have different URL bases for Kong Admin and Proxy APIs, #122
+* Fixed regression bug #121, migration scripts were crashing
+* Improved stability of Kong Adapter with slow Postgres servers
+
+### 1.0.0.beta8 - Notable changes
+
+Minor bugfixes.
+
+### 1.0.0.beta7 - Notable changes
+
+Some really exciting changes this time:
+
+* Support for the OAuth 2.0 Authorization Code Grant for Public clients, using PKCE ([RFC 7636](https://tools.ietf.org/html/rfc7636))
+* Accompanying PKCE, wicked now accepts Redirect URIs containing custom schemes, such as `mycoolapp://dummy/some_path`; this enables implementing [RFC 8252](https://tools.ietf.org/html/rfc8252)
+* Various bug fixes in the Kickstarter (ADFS Resource was missing)
+
+### 1.0.0.beta6 - Notable changes
+
+Minor features, and some bug fixes.
+
+* Support for four (4) different password validation strategies; use in Kickstarter, Portal API, Auth Server and Portal
+* Support for enforcing a password change when using Authorization Code and Implicit flows
+* Some more edge cases regarding postgres connection fixed
+* Read Swagger UI CSS via `/content` API, support for Mustache templates in CSS files (to get `portalUrl` and `apiUrl` in)
+* Increased security of Auth Server using more elaborate CSRF checks
+
+### 1.0.0.beta5 - Notable changes
+
+Bugfixes.
+
+* Fix of the OpenAPI compliant swagger files in Swagger UI (weren't working)
+* Support for multiple URIs with OpenAPI3 compliant API docs
+* Fix of the "View Swagger UI" button for APIs not requiring authentication (was broken)
+* Fix of "Log in as existing user" from the "Sign up" screen, was using the wrong link
+
+Known issues: With flaky Postgres connections, portal-api still sometimes crashes (very rarely now though). Will be addressed in the next Beta hopefully.
+
+### 1.0.0.beta4 - Notable changes
+
+Mainly stability and regression fixes.
+
+* Fix of the refresh token grant (regression from beta3 regarding the `sub=<user id>` change)
+* Fix [portal-api crashes if connection to Postgres times out](https://github.com/Haufe-Lexware/wicked.haufe.io/issues/119)
+* Various stability issues fixed, especially on flaky connections; wicked SDK now retries on 5xx responses or hard connection errors automatically
+* [Postgres database for wicked data is now configurable](https://github.com/Haufe-Lexware/wicked.haufe.io/issues/118)
+* Implementation of missing bits and pieces for "Passthrough Users" and "Passthrough Scopes" for delegation of scopes to a different resource owner (documentation in the `wicked_1_0` branch of this repository).
+* Fixed integration test suite (adapt to changes of beta3).
+* Fixed authorization server test suite (adapt to changes of beta3).
+* Update to latest Kong 0.14.1
+
+### 1.0.0.beta3 - Notable changes
+
+* Changes to format of `X-Authenticated-UserId`; now includes `sub=<user id>` instead of just `<user id>`; for APIs needing namespaces, `;namespace=<namespace>` is also added.
+* Updated Swagger UI to 3.18.2, including better error messages from the Authorization Server
+* Fixed Echo Server for Kubernetes deployments (missing port 3009 in portal API service definition)
+
+### 1.0.0.beta2 - Notable changes
+
+* Fixed Kubernetes Helm Chart (faulty service definitions)
+
 ## 0.12.5 (beta)
 
 **Date**: April 27th 2018 (2018-04-27)
