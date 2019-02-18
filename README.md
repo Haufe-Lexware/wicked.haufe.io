@@ -50,7 +50,7 @@ If you are looking for a super flexible and extensible API Management suite whic
 
 # Getting Started
 
-* Read the [wicked box guide](docs/wicked-in-a-box.md) to try out how easy it is to deploy an API Portal and Gateway to your local machien
+* Read the [wicked box guide](doc/wicked-in-a-box.md) to try out how easy it is to deploy an API Portal and Gateway to your local machien
 * To start incorporating your own APIs, head over to the [documentation](doc/index.md), and read the how-to on [creating a portal configuration](doc/creating-a-portal-configuration.md)
 
 # Related repositories
