@@ -4,14 +4,6 @@
 
 General information can be seen at the wicked microsite over at [wicked.haufe.io](http://wicked.haufe.io). If you want to see how the API Portal looks like, check out [wicked-demo.haufe.io](https://wicked-demo.haufe.io). You may also want to try out our [Gitter Chatroom](https://gitter.im/wicked-haufe-io/Lobby).
 
-# TRY THE BETA
-
-Here are the instructions on how to try out the wicked 1.0.0 beta versions.
-
-Go here: [HOW TO BETA](https://github.com/Haufe-Lexware/wicked.haufe.io/blob/next/doc/BETA.md).
-
-The documentation has also been updated for the new versions, but it still lives in the `next` branch of this repository. The above link will take you there.
-
 # What's this?
 
 wicked.haufe.io is an open source API Management solution with a slightly different design focus in mind than most other API Management systems:
@@ -48,9 +40,7 @@ The following things which you might expect from an API Management System are ex
 * API Analytics
 * Log Aggregation
 
-This does not mean it's not possible to do this with wicked, it's just that we decided not to include a prebuilt solution for these things. As the API Gateway is based on a plain vanilla docker image of Mashape Kong, anything you can hook up to Kong will also work with wicked.haufe.io, including e.g. the API Analytics tools provided by [Mashape Galileo](https://getgalileo.io), [DataDog](https://getkong.org/plugins/datadog/), [Runscope](https://getkong.org/plugins/runscope/) or [Loggly](https://getkong.org/plugins/loggly/).
-
-It's also perfectly possible to just hook up your own ELK stack (ElasticSearch, Logstash and Kibana) to your APIs, e.g. using the [`http-log` Kong Plugin](https://getkong.org/plugins/http-log/). And if you have a good recipe for that, tell us!
+This does not mean it's not possible to do this with wicked, it's just that we decided not to include a prebuilt solution for these things. As the API Gateway is based on a plain vanilla docker image of Mashape Kong, anything you can hook up to Kong, or plain Docker log forwarding will also work with wicked.haufe.io, including e.g. [DataDog](https://getkong.org/plugins/datadog/), [Runscope](https://getkong.org/plugins/runscope/) or [Loggly](https://getkong.org/plugins/loggly/).
 
 # Is this for me?
 
@@ -60,24 +50,29 @@ If you are looking for a super flexible and extensible API Management suite whic
 
 # Getting Started
 
-* Read the [Getting Started Guide](http://wicked.haufe.io/gettingstarted.html) to try out how easy it is to deploy an API Portal and Gateway
+* Read the [wicked box guide](docs/wicked-in-a-box.md) to try out how easy it is to deploy an API Portal and Gateway to your local machien
 * To start incorporating your own APIs, head over to the [documentation](doc/index.md), and read the how-to on [creating a portal configuration](doc/creating-a-portal-configuration.md)
 
 # Related repositories
 
 The following repositories contain the actual source code (this repo contains mostly documentation):
 
-* [wicked.portal](https://github.com/Haufe-Lexware/wicked.portal): The API Portal UI
-* [wicked.portal-api](https://github.com/Haufe-Lexware/wicked.portal-api): The API Portal backend API
-* [wicked.portal-kong-adapter](https://github.com/Haufe-Lexware/wicked.portal-kong-adapter): The API Portal's Kong Adapter service
-* [wicked.portal-mailer](https://github.com/Haufe-Lexware/wicked.portal-mailer): The API Portal's Mailer service
-* [wicked.portal-chatbot](https://github.com/Haufe-Lexware/wicked.portal-chatbot): The API Portal' Chatbot service
-* [wicked.portal-kickstarter](https://github.com/Haufe-Lexware/wicked.portal-kickstarter): The API Portal's Configuration Editor and Kickstarter
-* [wicked.portal-tools](https://github.com/Haufe-Lexware/wicked.portal-tools): Tooling and sample integration code
-* [wicked.portal-test](https://github.com/Haufe-Lexware/wicked.portal-test): The Integration Test Suite
-* [wicked.kong](https://github.com/Haufe-Lexware/wicked.kong): The Kong Docker image used by the API Portal, based directly on the official Kong docker image, `kong`
-* [wicked.portal-auth](https://github.com/apim-haufe-io/wicked.portal-auth): The wicked Authorization Server implementation, using different social logins or SAML to authorize API usage and Portal login
+* [wicked.ui](https://github.com/apim-haufe-io/wicked.ui): The API Portal UI
+* [wicked.api](https://github.com/apim-haufe-io/wicked.api): The API Portal backend API
+* [wicked.auth](https://github.com/apim-haufe-io/wicked.auth): The wicked Authorization Server implementation, using different social logins or SAML to authorize API usage and Portal login
+* [wicked.kong-adapter](https://github.com/apim-haufe-io/wicked.kong-adapter): The API Portal's Kong Adapter service
+* [wicked.mailer](https://github.com/apim-haufe-io/wicked.mailer): The API Portal's Mailer service
+* [wicked.chatbot](https://github.com/apim-haufe-io/wicked.chatbot): The API Portal' Chatbot service
+* [wicked.kickstarter](https://github.com/apim-haufe-io/wicked.kickstarter): The API Portal's Configuration Editor and Kickstarter
+* [wicked.tools](https://github.com/apim-haufe-io/wicked.tools): Developer Tooling and sample integration code
+* [wicked.test](https://github.com/apim-haufe-io/wicked.test): The Integration Test Suite
+* [wicked.kong](https://github.com/apim-haufe-io/wicked.kong): The Kong Docker image used by the API Portal, based on the official Kong docker images, `kong`
 * [wicked.k8s-init](https://github.com/apim-haufe-io/wicked.k8s-init): A dedicated wicked init container for Kubernetes to automatically provision client credentials to applications
+* [wicked.k8s-tool](https://github.com/apim-haufe-io/wicked.k8s-tool): A tool container for special purposes when deploying the Kubernetes
+
+Most wicked components (at least the ones written in node.js) also rely on the wicked SDK for node.js:
+
+* [wicked.node-sdk](https://github.com/apim-haufe-io/wicked.node-sdk)
 
 ## More documentation
 

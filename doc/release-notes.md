@@ -12,6 +12,32 @@ Official Release of the API Portal.
 
 [Design documents](https://github.com/Haufe-Lexware/wicked.haufe.io/tree/next/doc/design-docs).
 
+## 1.0.0 (release candidates)
+
+### 1.0.0-rc.1 - Notable changes
+
+Motto: **"We're getting nearer!"**
+
+Since the last beta release, every code change for the `wicked_1_0` branch has been merged to `next`, and now for the first release candidate (of which we admit we know it won't be the last) also subsequently merged to the `master` branch.
+
+This first RC release deals to a large extent with changes to make the process of setting up a working wicked.haufe.io configuration locally as easy as possible, by introducing **wicked-in-a-box**. Wicked in a box is a single container image which contains everything wicked needs to run, but in a single container. The only thing which is not present in the container is the Postgres database, which has to run alongside in a separate container. This mostly to enable easier persistence of the data, e.g. for local development environments containing wicked as an infrastructure component. You can read more on ["wicked-in-a-box" here](wicked-in-a-box.md).
+
+Another very important and security relevant change is the introduction of more detailed client types. Previously, wicked only distinguished between "public" and "confidential" clients. To be able to implement the OAuth2.0 security guidelines published by the IETF, a more granular distinction is necessary: The "public" type is now split into "Public SPA (Single Page Applications", aka "browser based applications", and "Public Native" applications, such as iOS and Android applications. There are some crucial differences in how the Authorization Code Grant has to be handled for these types of clients, notably that for Public SPAs the Authorization Code Grant is allowed, but it does **not return a refresh token**. For Public Native Applications, a **refresh token is returned**. Both public clients (as before) require the [implementation of PKCE](https://tools.ietf.org/html/rfc7636) (Proof Key of Code Exchange) for the Authorization Server to allow the Authorization Code Grant with such clients.
+
+A last notable change is the implementation of a ["Configuration Reload" button](https://github.com/Haufe-Lexware/wicked.haufe.io/issues/162). Reloading the configuration of a wicked installation usually meant either killing wicked's `api` container (on Kubernetes) or doing a full redeployment (e.g. on a docker host). In those cases where you just need an update of the configuration (in git), there is now a button to remote-restart the API container, which subsequently restarts all other components, so that the new configuration is pulled in. Only Admin users of the API portal can see this button on the "System Health" page.
+
+Here's a more detailed list of resolved issues:
+
+* [Kong Adapter "latest commit" not displayed on "System Health" page](https://github.com/Haufe-Lexware/wicked.haufe.io/issues/147)
+* [Auth Server is not present on "System Health" page](https://github.com/Haufe-Lexware/wicked.haufe.io/issues/146)
+* [Help pages on OAuth2 are not quite up to date, plus have minor bugs](https://github.com/Haufe-Lexware/wicked.haufe.io/issues/157)
+* [Distinction between SPAs, Native Apps and Confidential Clients needed](https://github.com/Haufe-Lexware/wicked.haufe.io/issues/159)
+* [Reload Configuration button](https://github.com/Haufe-Lexware/wicked.haufe.io/issues/162)
+* [Make local deployments easier with "wicked-in-a-box"](https://github.com/Haufe-Lexware/wicked.haufe.io/issues/161)
+* [Local test deployment unable to get token](https://github.com/Haufe-Lexware/wicked.haufe.io/issues/149) (fixed as a side effect of wicked-in-a-box).
+
+The documentation has beeen and will be further updated over the course of the next days and weeks.
+
 ## 1.0.0 (beta versions)
 
 There will be various beta versions of the wicked 1.0.0 release, until we decide to release the final 1.0.0 version (and then resume to using 1.0.x updates).

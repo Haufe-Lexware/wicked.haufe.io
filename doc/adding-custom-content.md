@@ -28,6 +28,7 @@ Binary Content, always served as a public asset:
 * PNG images
 * GIF images
 * CSS files
+* JS files
 
 **Note**: Currently, there is no explicit support for other file types, not even PDF. If there's demand for this, we can think something up, or use some library to do the media type selection.
 

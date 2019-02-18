@@ -33,7 +33,68 @@ The main workflow is usually:
 
 This flow is the same for both the Implicit Grant Flow and the Resource Owner Password Grant Flow; the only thing which differs is the way the access tokens are passed on, and whether you get a refresh token or not.
 
+## The Authorziation Code Grant
+
+The Authorization Code Grant is the "classical" OAuth2.0 flow. It is the recommended flow for all types of clients: Confidential clients such as classical web applications, Single Page applications (also known as browser based applications) and also for Native or Mobile applications. Depending on the client type, the Authorization Code Grant behaves slightly different in some details, which are described later on in this section.
+
+**Example**: Configuration:
+
+1. A web application `some-web-app` has registered in the API Portal and given its redirect URI as `https://some.web.app/path`.
+2. For this web application, a subscription to the API `backend-api` (which supports the OAuth 2.0 Implicit Flow) is created
+ 
+Runtime:
+
+1. The web application is called by an end user
+2. There is no access or refresh token token currently stored in the storage (session, HTML5,... depending on the client type)
+3. The app sends the end user to the authorization server
+4. The authorization server does what it needs to authenticate the user (depending on the configured identity providers)
+5. The auth server authorizes the end user (depending on the identity provider and in parts on your business logic)
+6. The auth server tells the Kong Adapter to create an access token
+7. The auth server redirects the end user back to the application, using the registered redirect URI of the application: `https://some.web.app/path?code=<authorization code>`
+8. The application uses its client ID (and mostly client secret), combined with the authorization code, and asks the Token endpoint for an access token
+9. If successful, the authorization server's token endpoint will return an access token, and mostly also a refresh token
+
+The web application can now use the access token to safely access the backend API using an `Authorization: Bearer <access token>` header in its AAPI calls. The identity of the end user (authenticated user id) and the scopes (authenticated scopes) are not changeable by the application, but are injected by Kong when proxying the call to the backend API, which is just what we want.
+
+The access token is short lived. When the access token is invalid, the application can either make use of the refres token (if available) to get continued access to the API, or, it can use the "silent refresh" method to get a new authorization code which can in turn be exchanged for a new access token.
+
+The Authorization Code Grant can be used with any configured [Auth Method](auth-methods.md).
+
+### Specialties by Client Type
+
+To get the most secure architecture and OAuth2 flows possible, wicked has to know the nature of each API client. Wicked distinguishes the following three types:
+
+* Confidential Clients
+* Public Clients - Single Page Applications (Browser Based Applications)
+* Public Clients - Native/Mobile Applications
+
+The following sections describe the specialties which apply on each of these client types when using the Authorization Code Grant.
+
+#### Confidential Clients
+
+A confidential client is a client which can keep secrets in its backend; examples for such applications are classical typical session based web applications with a dedicated backend.
+
+There are no special requirements for such applications to use the Authorization Code Grant. It's still **recommended** that the [PKCE extension](oauth-pkce.md) is used.
+
+#### Public Clients (Single Page Applications/Browser Based Applications)
+
+Single Page Applications/Browser Based Applications are considered public clients as the cannot store any secrets in its code. The code is typically fully transferred to the user's user agent (browser), and thus cannot contain other secret information. Such applications can still use the Authorization Code Grant, but with the following restrictions:
+
+* [The use of the PKCE extension is mandatory](oauth-pkce.md)
+* The application will not receive a refresh token; to refresh the access token, the [silent refresh method](oauth-silent-refresh.md) must be applied
+
+#### Public Clients (Native/Mobile Clients)
+
+Another type of public clients are native or mobile applications, such as Windows/macOS applications, or mobile iOS or Android Apps. These are inherently more secure than Single Page Applications, but must still be considered public, as it's technically feasible to reverse engineer the applications and extract secrets from them.
+
+Still, such applications are usually reasonably able to keep runtime data secure. When using the Auhthorization Code Grant, the following applies:
+
+* [The use of the PKCE extension is mandatory](oauth-pkce.md)
+* The application will receive a refresh token which can be use to perform a token refresh completely using the backend channel; the application does not need a renewed authentication/authorization step as long as it has access to a refresh token
+
 ## The Implicit Grant Flow
+
+**Important**: The Implicit grant is considered deprecated by the IETF. The replacement flow for browser based applications is now the Authorization Code Grant, including the [PKCE extension (Proof Key for Code Exchange)](oauth-pkce.md).
 
 The Implicit Grant Flow is particularly useful for Single Page Applications (SPAs) which need secure access to a backend API. Remember: SPAs are usually pure client side JavaScript and as such are not able to keep any kind of secret, and are vulnerable for manipulations (aka public applications). Using API Keys and/or the Client Credentials Flow is out of the question, as these need a "secret" (either the API key or the Client Secret).
 
@@ -58,11 +119,7 @@ The web application can now use the access token to safely access the backend AP
 
 The access token is short lived, and cannot be refreshed. When the access token is invalid, the SPA has to re-authenticate and re-authorize again using the Authorization Server.
 
-**Note**: How the identity of the end user is established is NOT part of wicked, except in the case where the auth method is using the internal user database of wicked for authentication. This can be done by any means you need, be it SAML SSO, ADFS Login, Google Login, Twitter,... The Authorization Server has to establish SOME identity, but how that's done is totally unimportant to the architecture, and is purely a decision you need to take based on your use cases. Examples:
-
-* Identity via ADFS: May be used for internal SPAs
-* Identity via Google: May be used for applications where the Google Identity is just enough for you to deem the user authorized to use your API
-* Any SAML identity provider: Used commonly in enterprise situations; this can also be used to federate the identity into the OAuth 2.0 Implicit Grant Flow, given that you register your Authorization Server as a SAML Service Provider with your SAML Identity Provider (see also [Auth method SAML](auth-saml.md)).
+The Implicit Grant can be used with any configured [Auth Method](auth-methods.md).
 
 ## The Resources Owner Password Grant Flow
 
@@ -75,6 +132,15 @@ The main difference to the Implicit Flow is that everything can be done using AP
 The Authorization Server takes the user name and password and checks those against an IdP (can be anything), and if and only if these credentials check out, the client ID is taken with the user's authenticated identity to create an access token for this user and a specific scope (if applicable).
 
 In addition to an access token, a refresh token is also passed on.
+
+The Resource Owner Password Grant can only be used with [local auth methods](auth-local.md) and in some cases, also with [the external auth method](auth-external.md).
+
+**Important:** The Resource Owner Password Grant is not a recommended flow for any typical use case of OAuth 2.0 anymore. It used to be recommended for mobile applications, but it has been superceded by the Authorization Code Grant with the PKCE extension (see above). It can still be of use for certain integration scenarios where an end user identity is needed, but there is no way to provide an interactive login.
+
+### Specialties per Client Type
+
+* **Confidential Clients** must present both their `client_id` and `client_secret` when requesting a token, or when refreshing a token
+* **Public Clients** must only present the `client_id` when requesting or refreshing a token
 
 ## Further reading
 

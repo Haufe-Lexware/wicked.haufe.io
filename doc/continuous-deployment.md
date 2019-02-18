@@ -1,6 +1,6 @@
 # Continuous Integration/Continuous Deployment
 
-The API Portal is designed to be built up of immutable servers in the following sense: Everything which is not "user supplied" data, such as user accounts, applications and subscriptions, is considered static configuration, and **cannot** be changed after the deployment. If you need to change a configuration setting, such as API definitions or User groups, you will need to redeploy the API Portal with the updated configuration. 
+The API Portal is designed to be built up of immutable servers in the following sense: Everything which is not "user supplied" data, such as user accounts, applications and subscriptions, is considered static configuration, and **cannot** be changed after the deployment. If you need to change a configuration setting, such as API definitions or User groups, you will need to restart the API Portal with the updated configuration.
 
 This is intended behavior, but it does mean that you will have to set up a real CI/CD system for your API Portal. If you have little or no experience with this, the API Portal may be a useful testing object, and if you already have such a system in place, the API Portal should fit in quite nicely.
 

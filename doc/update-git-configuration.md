@@ -7,8 +7,6 @@
 
 One of the most common use cases is to update the static configuration (stored in a git repository) of a running wicked installation. How this can be achieved is currently depending on the deployment method which was used to deploy wicked.
 
-#### WORK IN PROGRESS
-
 This document is work in progress and is subject to change over the next versions; the target is the following:
 
 * Enable automatic detection of git repository changes
@@ -26,7 +24,15 @@ The portal API, which is the component which keeps the static configuration in i
 
 This means that there is a short period of time where the containers are not responding (as they are currently restarting). All in all, this will be less than a minute, but nonetheless, there is a downtime.
 
-**THIS IS DUE TO CHANGE IN A LATER VERSION**.
+## Manual Reload of the Configuration
+
+In order to reload the configuration interactively:
+
+1. Log in as an admin user to your API portal,
+1. Go to the "System Health" page
+1. Open the panel "Reload Configuration" and press the button "Restart Components/Reload Configuration"
+
+Allow the portal up to 30-60 seconds to recover from the component restarts.
 
 ## Kubernetes Deployment
 

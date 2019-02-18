@@ -41,13 +41,9 @@ The configuration repository itself is what is used with the kickstarter. The ki
 
 The following steps assume you have **not** set up a development environment for API Portal development (the API Portal components themselves), but rather are using the pre-packaged docker images Haufe-Lexware have created from the sources.
 
-### Step 1: Pulling the kickstarter `docker` image
+### Step 1: Installing the `wicked-cli`
 
-Pull the latest `docker` image for the kickstarter by issuing the following command:
-
-```bash
-$ docker pull haufelexware/wicked.portal-kickstarter
-```
+Follow the instructions on [wicked-in-a-box](wicked-in-a-box.md) to install the wicked command line tool. The CLI is the easiest way to get started with creating a wicked configuration.
 
 ### Step 2: Create an empty repository directory
 
@@ -55,31 +51,23 @@ On your local machine, create an empty directory `<repo>` at the location you wa
 
 **Note**: We will mount this directory into the `docker` image for kickstarter, so this has to be technically possible. Depending on the `docker` type you are using, you will want to stick to a subdirectory of your user folder (`C:\Documents\<your user>` on Windows, `/Users/<your user>` on Mac OS X). This path will be referred to as `/path/to/repo` in the following sections.
 
-**Note for Windows**: As of docker 1.12, you will need to grant access to Docker to the drive you want to use for your configuration repository. When docker is running, right click the task bar icon, select "Settings...", then "Shared Drives" and tick the corresponding check box (see also [issue #8](https://github.com/Haufe-Lexware/wicked.haufe.io/issues/8)).
+**Note for Windows**: As of docker 1.12, you will need to grant access to Docker to the drive you want to use for your configuration repository. When docker is running, right click the task bar icon, select "Settings...", then "Shared Drives" and tick the corresponding check box (see also [issue #8](https://github.com/Haufe-Lexware/wicked.haufe.io/issues/8)). For Windows users with a work or school account, the following workaround may be necessary: 
 
 ### Step 3: Running the kickstarter
 
 We are now ready to start the kickstarter:
 
-**For Windows and Mac OS X**:
-
-```bash
-$ docker run -it --rm -v /path/to/repo:/var/portal-api -p 3333:3333 haufelexware/wicked.portal-kickstarter --new 
+```
+$ wicked kickstart /path/to/repo --new
 ```
 
-**For Linux**:
+The above command does the following things:
 
-```bash
-$ docker run -it --rm -v /path/to/repo:/var/portal-api -e LOCAL_UID=$(id -u) -e LOCAL_GID=$(id -g) -p 3333:3333 haufelexware/wicked.portal-kickstarter --new 
-```
-
-The above docker command does the following things:
-
-* Starts the kickstarter image interactively (`-it`) and will remove it after it has finished (`--rm`)
-* Mounts `/path/to/repo` (your new repository configuration directory) to `/var/portal-api`, which is the directory where the kickstarter expects the configuration to be by default
-* Opens the port `3333` from the container to the docker hosts port `3333`
+* Starts the kickstarter image (and will remove it after it has finished)
+* Mounts `/path/to/repo` (your new repository configuration directory) into the Kickstarter container
+* Opens the port `3333`
 * Tells kickstarter to create a new configuration (`--new`)
-* **Linux**: Pass in your local user's UID and GID (user and group IDs) so that the created files will carry your own user's ID and Group ID
+* **Linux**: The wicked CLI will attempt to detect your local user's UID and GID and run the Kickstarter process inside the container with these IDs, so that the created files will belong to your local user on the local machine's disk
 
 Depending on your docker setup, you may now browse to [http://localhost:3333](http://localhost:3333) and view the kickstarters configuration pages.
 
@@ -93,7 +81,7 @@ By default, a `.gitignore` file is created which explicitly takes out the `deplo
 
 ### Step 5: Stopping the kickstarter
 
-Usually you may stop a container by pressing `Ctrl-C`, but this doesn't work when using the above combination of command line options. Instead, you should use the "shutdown" button in the menu bar of the kickstarter web page. This will shut down the running container, and, as we used the `--rm` command line options, clean up the container.
+Either press `Ctrl-C` in the terminal, or use the "Shut down" icon in the Kickstarter UI (on localhost:3333).
 
 ### Step 6: Checking in configuration to a git repository
 
@@ -127,14 +115,15 @@ In case you have stored the encryption key somewhere else, you will need to crea
 
 Then clone the repository, the path to the configuration repository will be referred to as `/path/to/repo`. The `deploy.envkey` file has to reside inside the `static` directory (besides the `globals.json` file).
 
-### Step 1: Pull the kickstarter docker image
+### Step 1: Specify the kickstarter docker tag
 
+Use the following command to set the Kickstarter tag to use:
 
-In case you haven't done that already, pull the latest `docker` image for the kickstarter by issuing the following command:
-
-```bash
-$ docker pull haufelexware/wicked.portal-kickstarter
 ```
+$ wicked tags set <tag>
+```
+
+More information can be found at [wicked-in-a-box](wicked-in-a-box.md).
 
 **Note**: It's important that you are using the same version of the kickstarter as the API Portal you will be deploying. The different components are released together and rely on each other using the same data formats. In case you are using a named release (tagged) of the API Portal for deployment, you **MUST** use the same version for the kickstarter. Otherwise, the static configuration will potentially have a higher version number than the API Portal can actually handle. This may result in unpredictable behavior of the Portal, and/or the portal will not be able to start correctly.
 
@@ -142,25 +131,13 @@ $ docker pull haufelexware/wicked.portal-kickstarter
 
 With the `/path/to/repo` at your cloned repository, issue the following command:
 
-**For Windows and Mac OS X/macOS:**
-
-```bash
-$ docker run -it --rm -v /path/to/repo:/var/portal-api -p 3333:3333 haufelexware/wicked.portal-kickstarter
 ```
-
-In case you want to use a specific version of the kickstarter, e.g. a beta, add the docker image tag after the image name, e.g. `1.0.0.beta1`, example:
-
-```bash
-$ docker run -it --rm -v /path/to/repo:/var/portal-api -p 3333:3333 haufelexware/wicked.portal-kickstarter:1.0.0.beta1
-```
-
-**For Linux**:
-
-```bash
-$ docker run -it --rm -v /path/to/repo:/var/portal-api -e LOCAL_UID=$(id -u) -e LOCAL_GID=$(id -g) -p 3333:3333 haufelexware/wicked.portal-kickstarter
+$ wicked kickstart /path/to/repo
 ```
 
 It is essentially the same command line as when creating a new configuration, just omitting `--new`. The kickstarter in docker will assume that the static configuration resides in `/var/portal-api/static`, which will be the case if you mount your `/path/to/repo` to that path inside the container with the above `-v` command line switch.
+
+**Linux users:** The Kickstarter will attempt to read and write using the `uid` and `gid` of your local Linux user.
 
 ### Step 3: Edit the configuration
 
@@ -177,7 +154,7 @@ Some things you may want to do which are explained in more detail here:
 
 ### Step 4: Stop the kickstarter
 
-As soon as you are done editing the configuration, shut down the kickstarter using the "shutdown" icon top right of each configuration page.
+As soon as you are done editing the configuration, shut down the kickstarter using the "shutdown" icon top right of each configuration page. Alternatively, you can press `Ctrl-C` to shut down the Kickstarter process. The wicked CLI will detect the keypress and shut down the container.
 
 Due to mounting in your local directory into the container, the configuration will now have changed on your local disk.
 
@@ -188,6 +165,13 @@ When you are done with editing the configuration and have stopped the kickstarte
 * Are there any new credentials/secrets which are visible in plain text? (see [handling credentials](handling-credentials.md)
 * Are there settings which have to change between different deployment environments, and thus need to be parametrized using [environment variables](deployment-environments.md)?
 
-### Step 6: Redeploy
+### Step 6: Reload the Configuration
 
-Now you are ready to redeploy the configuration. Depending on your setup, this will be done automatically (in case you set up [continuous deployment](continuous-deployment.md)), or you have to deploy manually.
+In order to get the configuration changes propagated to the running wicked instance, the API container(s) of wicked need(s) to be restarted. At each restart, the configuration is cloned from git automatically, and thus the latest changes are pulled. The only case where this does not apply is when using specific git revisions passed on via e.g. the [Helm template (for deployments in Kubernetes)](../wicked).
+
+In other cases, you can trigger a restart of the `wicked.api` container using one of the following methods:
+
+* Use the "System Health" page's "Reload Configuration" button (recommended)
+* Trigger a restart/kill the `wicked.api` container, e.g. by issuing a `kubectl delete pod` command on the right pod
+* Redeploy the entire stack using a script (may lead to unnecessary downtime)
+

@@ -1,8 +1,8 @@
 # Deploying wicked to Kubernetes
 
-The previous scripts in this repository to deploy and update wicked on Kubernetes have been superseded by the Helm Chart for wicked, which can be found here:
+We recommend using Helm to deploy wicked.haufe.io to Kubernetes. The corresponding Helm Chart and instructions can be found here:
 
-[wicked.haufe.io Helm Chart](https://github.com/Haufe-Lexware/wicked.haufe.io/tree/next/wicked)
+[wicked.haufe.io Helm Chart](https://github.com/Haufe-Lexware/wicked.haufe.io/tree/master/wicked)
 
 ## Why Helm?
 
