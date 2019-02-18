@@ -117,9 +117,13 @@ docker-compose up -d
 
 Updating the API configuration is just a matter of getting a new version of the static configuration into the portal API container.
 
-See also [updating the git configuration](updating-git-configuration.md) (TODO: the docs are subject to cleanup and merging).
+See also [updating the git configuration](updating-git-configuration.md).
 
 #### When using the `git clone` method
+
+If you just need a manual refresh of the configuration, you can log in as an administrator, view the "System Health" page and use the "Reload Configuration" button from there.
+
+In case you want to automate the reloading of the configuration, proceed as follows:
 
 Depending on whether you want to use a specific `GIT_REVISION` or not, set that environment variable. Otherwise `HEAD` of the selected branch (using `GIT_BRANCH`, or `master` if left out) is used:
 

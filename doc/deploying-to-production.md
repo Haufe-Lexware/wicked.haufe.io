@@ -3,17 +3,17 @@
 * Use the [git clone method](static-config-git-clone.md) to get the static configuration into the portal API container
 * The following wicked components can and should be scaled to at least two containers: `portal-api`, `portal`, `portal-auth`. The other components (`portal-mailer`, `portal-kong-adapter`, `portal-chatbot`) are singletons and MUST NOT be scaled to more than one instance.
 * The Kong container is able to scale out of the box, as long as each instance has its own private range IP address (10.x, 172.16.x)backup plan), as it can at any time be recreated by (re-)starting the Kong Adapter
-* Use a production proven custom Postgres installation
+* Use a production proven custom Postgres installation. **It is not recommended to run wicked/Kong on the Postgres installation which comes with the wicked Helm Chart**. We recommend running Postgres as a service, e.g. Azure Postgres, or Amazon RDS for Postgres.
 * Make sure you keep the Postgres data safe, and make sure you have a backup and disaster recovery plan
 
 Wicked currently runs best in **Kubernetes**, using the [Kubernetes Chart for wicked.haufe.io](https://github.com/Haufe-Lexware/wicked.haufe.io/tree/master/wicked), **or** using a standalone Docker Host.
 
+See also: [Wicked and Kong and Postgres](postgres-notes.md).
+
 ## Runtimes
 
 * [Deploying to a single Docker Host](deploying-to-docker-host.md)
-* [Deploying to Docker Swarm](deploying-to-swarm.md)
 * [Deploying to Kubernetes](deploying-to-kubernetes.md)
-* [Deploying to Apache Mesos](deploying-to-mesos.md)
 
 ## Static configuration deployments
 

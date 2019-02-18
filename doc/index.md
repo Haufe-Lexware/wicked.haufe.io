@@ -12,6 +12,7 @@ This is the repository for the Open Source API Management system **wicked.haufe.
 
 ## What do you want to do?
 
+* [I want to get started quickly with a local wicked-in-a-box](wicked-in-a-box.md)
 * [I want to see how the portal looks and how it is used](using-the-sample-portal.md) (see also [wicked.haufe.io](http://wicked.haufe.io)).
 * [I want to create my own portal configuration](creating-a-portal-configuration.md)
 * [I want to deploy a portal to my development machine](deploying-locally.md)
@@ -25,6 +26,7 @@ If you feel something important is missing that should be documented, feel free 
 ## Further topics
 
 * [Deployment architecture](deployment-architecture.md)
+* [Configuring Postgres connections](postgres-notes.md)
 * [Using Authorization Servers with OAuth 2.0](authorization-servers.md)
 * [Defining APIs in the API Portal](defining-an-api.md)
 * [Using Deployment Environments](deployment-environments.md)
