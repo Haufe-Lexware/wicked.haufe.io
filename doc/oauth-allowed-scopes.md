@@ -20,7 +20,7 @@ _This is the default for APIs where either the Authorization Code Grant or the I
 
 Applications of which the subscription is set to "None" will never be granted any scope. All access tokens will only ever be for the empty scope. Please note that this does not mean that you will not get any access tokens - it's just that the scope will always be empty (in case you request a valid scope).
 
-_<i>This is the default for APIs which **only** have the [Client Credentials](oauth-client-credentials.md) Flow enabled_.
+_This is the default for APIs which **only** have the [Client Credentials](oauth-client-credentials.md) Flow enabled_.
 
 ### "Select"
 
