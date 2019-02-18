@@ -35,6 +35,7 @@ Here's a more detailed list of resolved issues:
 * [Reload Configuration button](https://github.com/Haufe-Lexware/wicked.haufe.io/issues/162)
 * [Make local deployments easier with "wicked-in-a-box"](https://github.com/Haufe-Lexware/wicked.haufe.io/issues/161)
 * [Local test deployment unable to get token](https://github.com/Haufe-Lexware/wicked.haufe.io/issues/149) (fixed as a side effect of wicked-in-a-box).
+* [Kubernetes Helm Chart: It should be possible to change Postgres connection of wicked's API](https://github.com/Haufe-Lexware/wicked.haufe.io/issues/167)
 
 The documentation has beeen and will be further updated over the course of the next days and weeks.
 
