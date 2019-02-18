@@ -100,6 +100,19 @@ config:
   # Specify your custom portal-api image here in case the above is set to true.
   customApiImage: "registry/repo/image:tag"
 
+# All these values, except for pgSsl, have defaults set in the default environment
+# configurations which match the sample deployments (points to the PG service inside
+# the Kubernetes cluster). If they are not explicitly overridden with other values,
+# they will not be introduced as environment variables to the wicked API container
+# at all.
+storage:
+  pgHost: ""
+  pgPort: ""
+  pgDatabase: ""
+  pgUser: ""
+  pgPassword: ""
+  pgSsl: false
+
 # Standard resources for the node components of wicked.
 resources:
   api:
@@ -187,8 +200,9 @@ postgres:
   version: "9.6"
 
   # In case you choose not to deploy Postgres along with Kong, you must specify the
-  # following values. The Postgres port is fixed at 5432, can currently not be changed.
+  # following values.
   pgHost: postgres.host.com
+  pgPort: "5432"
   
   # These values are used both to prime your local database (deployPostgres=true) or
   # if you choose to run a custom postgres instance.

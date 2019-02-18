@@ -112,7 +112,33 @@ spec:
               name: {{ template "fullname" . }}-apim-secrets
               key: PORTAL_SESSIONSTORE_PASSWORD
 {{- end }}
-{{- if .Values.postgres.pgSsl }}
+{{- if .Values.storage.pgHost }}
+        - name: PORTAL_STORAGE_PGHOST
+          value: "{{ .Values.postgres.pgHost }}"
+{{- end }}
+{{- if .Values.storage.pgPort }}
+        - name: PORTAL_STORAGE_PGPORT
+          value: "{{ .Values.postgres.pgPort }}"
+{{- end }}
+{{- if .Values.storage.pgDatabase }}
+        - name: PORTAL_STORAGE_PGDATABASE
+          value: "{{ .Values.postgres.pgDatabase }}"
+{{- end }}
+{{- if .Values.storage.pgUser }}
+        - name: PORTAL_STORAGE_PGUSER
+          valueFrom:
+            secretKeyRef:
+              name: {{ template "fullname" . }}-apim-secrets
+              key: PORTAL_STORAGE_PGUSER
+{{- end }}
+{{- if .Values.storage.pgPassword }}
+        - name: PORTAL_STORAGE_PGPASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: {{ template "fullname" . }}-apim-secrets
+              key: PORTAL_STORAGE_PGPASSWORD
+{{- end }}
+{{- if .Values.storage.pgSsl }}
         - name: PGSSLMODE
           value: require
 {{- end }}

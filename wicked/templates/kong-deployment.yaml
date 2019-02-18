@@ -43,6 +43,8 @@ spec:
 {{- else }}
           value: {{ .Values.postgres.pgHost }}
 {{- end }}
+        - name: KONG_PG_PORT
+          value: "{{ .Values.postgres.pgPort }}"
         - name: KONG_PG_USER
           valueFrom:
             secretKeyRef:
