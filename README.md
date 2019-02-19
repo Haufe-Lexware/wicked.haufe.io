@@ -4,6 +4,44 @@
 
 General information can be seen at the wicked microsite over at [wicked.haufe.io](http://wicked.haufe.io). If you want to see how the API Portal looks like, check out [wicked-demo.haufe.io](https://wicked-demo.haufe.io). You may also want to try out our [Gitter Chatroom](https://gitter.im/wicked-haufe-io/Lobby).
 
+---
+
+# tl;dr: [Getting Started (kicking the tires)](http://wicked.haufe.io/gettingstarted.html)
+
+
+Install the wicked CLI:
+
+```
+$ npm install -g wicked-cli
+```
+
+Create a directory for the wicked configuration repository:
+
+```
+$ mkdir wicked-test
+$ cd wicked-test
+```
+
+Specify you want to use the latest stable release and start the kickstarter:
+
+```
+$ wicked tags set latest
+$ wicked kickstart --new .
+```
+
+Now press `Ctrl-C` to stop the configuration. Then run a Postgres instance and the Wicked-in-a-box:
+
+```
+$ wicked postgres start
+$ wicked box start .
+```
+
+Wait around 10 seconds, then open the API portal at [http://localhost:3000](http://localhost:3000). You can play around with the user `admin@foo.com` and password `wicked`.
+
+Still interested? Good. Now you can continue reading on this page.
+
+---
+
 # What's this?
 
 wicked.haufe.io is an open source API Management solution with a slightly different design focus in mind than most other API Management systems:
