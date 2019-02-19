@@ -29,7 +29,7 @@ $ wicked tags set latest
 $ wicked kickstart --new .
 ```
 
-Now press `Ctrl-C` to stop the configuration. Then run a Postgres instance and the Wicked-in-a-box:
+Now press `Ctrl-C` to stop the configuration. Then run a Postgres instance and [Wicked-in-a-box](doc/wicked-in-a-box.md):
 
 ```
 $ wicked postgres start
