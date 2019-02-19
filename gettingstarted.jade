@@ -18,48 +18,22 @@ block content
 
     .row
       .col-md-8
-        .panel.panel-success
-          .panel-heading
-            h4.panel-title Wicked Beta Release
-          .panel-body
-            p.
-              <span style="color:#a00"><b>IMPORTANT:</b> Currently, this page will install the latest released version of wicked (0.12.5).
-              If you want to try the latest Beta release (<b>recommended</b>, wicked 1.0.0 is in a quite stable state already),
-              please go to this page: 
-              <a href="https://github.com/Haufe-Lexware/wicked.haufe.io/blob/wicked_1_0/doc/BETA.md" target="_blank">How
-              to install a beta version of wicked.haufe.io</a>.</span>
-
         br
         br
 
         p.
-          This page contains the instructions to run a demo portal on a single docker host; to see this for
-          Kubernetes, please see the <a href="gettingstarted-k8s.html"><b>Getting Started With Kubernetes</b></a> guide.
+          This page contains the instructions to run a demo portal on a your local docker host.
         p.
-          This introduction to the API Portal we provide will guide you to deploy an API Portal
+          This introduction to the API Portal we provide will guide you to run an API Portal
           like the one we keep for demo purposes at 
           <a href='https://wicked-demo.haufe.io' target='_blank'>wicked-demo.haufe.io</a>.
         p.
           The wicked API Portal is designed to run within <a href='http://docker.io' target='_blank'><code>docker</code></a>.
-          While it would  be perfectly possible to run the API Portal without docker, we at Haufe firmly believe
-          that it is not worth the effort. We have designed a deployment you can just use off the shelf,
-          including guidelines on how to 
 
-        ul
-          li Deploy
-          li Update
-          li and Operate
         p.
-          your API Portal and the API Gateway (<a href='https://getkong.org' target='_blank'>Mashape Kong</a>) which is used to proxy the APIs.
-        p.
-          The following steps assume that you are familiar in using a <code>bash</code> type shell, and that you
-          have a running <code>git</code> installation. On Linux/Mac OS X this should be present out of the box (if
-          you are a developer). On Windows, using either the Ubuntu bash Windows subsystem, or plain "Git bash" (cygwin)
-          should work fine.
-        p.
-          <b>Note:</b> The following guide is not suitable as a starting point for your own configuration, but is rather
-          meant as a demo configuration. The documentation contains more information on how to get you started with your
-          own APIs.
+          The following steps assume that you are familiar in using the command line, and that you
+          have a working <a href="https://nodejs.org"><code>node.js</code> installation</a>, and a working
+          <a href="https://docker.io">Docker installation</a>. The guide works on macOS, Windows and on Linux.
         p &nbsp;
 
       .col-md-4
@@ -85,16 +59,7 @@ block content
             The only prerequisites for this getting started guide is that you have access to a the docker command
             line and a Docker host. If you haven't already installed Docker, go ahead and
             <a href='https://docker.com' target='_blank'>do that first</a>.
-            It will work both on Windows and Mac OS X machines without problems, best using docker 1.12 or later.
-
-          p.
-            The API Portal will - for evaluation purposes - happily run on your local machine, or on any docker
-            host which you have set up <code>docker-machine</code> to talk to. Make sure you are using version
-            greater than or equal to 1.12 (compose 1.8.0) when deploying the API Portal, as we are using features of Docker which
-            are not available before that. Also make sure you have a recent 
-            <a href='https://www.docker.com/products/docker-compose' target='_blank'><code>docker-compose</code></a>
-            installed; if you haven't, click the link above and get it before proceeding. If you are using the
-            Docker &geq;1.12 for Mac OS X or Windows, <code>docker-compose</code> will already be installed on your machine.
+            It will work on Windows, macOS and Linux machines, best using Docker CE 18.09 or later.
 
           a(href='https://docker.com' target='_blank').btn.btn-primary.btn-lg Get Docker &raquo;
 
@@ -103,35 +68,37 @@ block content
 
   .white.pad20
     .container    
-      h2 Step 2: Clone the Sample Deployment Repository
+      h2 Step 2: Install the wicked command line
 
       .row
         .col-md-8
           p.
-            Deploying the API Portal is equivalent to running a <code>docker-compose.yml</code> file. Get a sample
-            configuration repository from the Haufe-Lexware Github Repository: 
+            The easiest way to get started with wicked.haufe.io is using the command line, which was introduced
+            for version 1.0.0-rc.1.
 
           pre.
-            $ git clone https://github.com/Haufe-Lexware/wicked.deploy.sample
-            ...
-            $ cd wicked.deploy.sample
+            $ npm install -g wicked-cli
 
           p.
-            Make sure you have a docker host at hand you can deploy to. If you have just installed docker on
-            your local machine, this will be the case, and you just have to call either the "Docker Quickstart Terminal"
-            or - with more recent installations - simply the Terminal. Check that everything works:
+            Make sure that Docker is allowed to mount local directories into running containers. This is done in the
+            Docker for Mac/Windows "Shares" configuration. On macOS, this should be straightforward, on Windows
+            you may encounter some issues 
+            (<a href="https://blogs.msdn.microsoft.com/stevelasker/2016/06/14/configuring-docker-for-windows-volumes/" target="_blank">see this link for a possible help</a>).
 
+          p.
+            Now retrieve the list of versions of wicked:
           pre.
-            $ docker --version
-            Docker version 1.12.0, build 8eab29e
-            $ docker-compose --version
-            docker-compose version 1.8.0, build f3628c7
-            $
+            $ wicked tags list
           
+          p.
+            Select the latest version and set it for use with the command line:
+          pre.
+            $ wicked tags set &lt;tag&gt;
+
           p &nbsp;
         .col-md-4
-          a(href='https://github.com/Haufe-Lexware/wicked.deploy.sample' target='_blank')
-            img(src='https://assets-cdn.github.com/images/modules/logos_page/Octocat.png' style='width:250px;').center-block
+          a(href='https://github.com/Haufe-Lexware/wicked.haufe.io/blob/master/doc/wicked-in-a-box.md' target='_blank')
+            img(src='https://github.githubassets.com/images/modules/logos_page/Octocat.png' style='width:250px;').center-block
        
   .grey.pad20
     .container
@@ -139,35 +106,33 @@ block content
         .col-md-4
           p &nbsp;
         .col-md-8
-          h2 Step 3: Create <code>/etc/hosts</code> entries
+          h2 Step 3: Create a default configuration
 
       .row
         .col-md-4
           p &nbsp;
         .col-md-8
           p.
-            Open up your <code>/etc/hosts</code> (Linux/Mac OS X, on Windows: <code>C:\Windows\System32\drivers\etc\hosts</code>) 
-            file in an editor (this step will be different on Linux, Mac OS X and
-            Windows, please google if unclear) and add the following two lines:
+            Now it's time to create a default configuration repository for wicked. Using the terminal/command line,
+            create an empty directory. This directory has to be mountable into docker.
 
-          pre.
-            127.0.0.1   portal.local
-            127.0.0.1   api.portal.local
-          
           p.
-            <b>Note:</b> You may need to <code>sudo</code> to change that file; on Windows you will need
-            to edit the <code>hosts</code> file as Administrator. Check that you can ping your machine using
-            both DNS names:
-
+            <b>Windows:</b>
           pre.
-            $ ping portal.local
-            PING portal.local (127.0.0.1): 56 data bytes
-            64 bytes from 127.0.0.1: icmp_seq=0 ttl=64 time=0.098 ms
-            ...
-            $ ping api.portal.local
-            PING api.portal.local (127.0.0.1): 56 data bytes
-            64 bytes from 127.0.0.1: icmp_seq=0 ttl=64 time=0.098 ms
-            ...
+            C:\TEMP> mkdir wicked
+            C:\TEMP> cd wicked
+            C:\TEMP> wicked kickstart --new .
+
+          p.
+            <b>macOS/Linux:</b>
+          pre.
+            $ mkdir wicked
+            $ cd wicked
+            $ wicked kickstart --new .
+
+          p.
+            You can immediately close the "wicked Kickstarter" again by pressing <code>Ctrl-C</code>. It will have
+            created a configuration repository in the current <code>.</code> directory.
 
           p &nbsp;
 
@@ -175,19 +140,23 @@ block content
     .container
       .row
         .col-md-8
-          h2 Step 4: Deploy
+          h2 Step 4: Start up Postgres and Wicked
           p.
-            We are now almost set to deploy the API Portal. We just have to define some environment variables and
-            call <code>docker-compose</code>.
+            We are now set to deploy wicked locally using the command line. To work correctly, wicked (and Kong) need
+            a Postgres instance to persist its data to. The wicked command line can help running one on your local machine:
           pre.
-            $ source ./env.sh
-            $ docker-compose up -d
-            ...
+            $ wicked postgres start
+          
+          p.
+            Once Postgres is up and running, we can also start the API Portal:
+
+          pre.
+            $ wicked box start .
 
           p.
-            This will take a little while, mostly because docker has to download the container images used for the portal.
-            Depending on your internet connection speed, you can expect this to take from two to ten minutes (the images
-            are around 1.5 GB in size in total).
+            The command will now pull the wicked image and start the API Portal with the configuration in the current directory
+            (this is what the <code>.</code> argument means). Allow around 5-15 seconds, depending on your machine, for the
+            API Portal to start at <a href="http://localhost:3000" target="_blank">http://localhost:3000</a>.
 
           p &nbsp;
 
@@ -204,8 +173,8 @@ block content
           img(src='images/logo-s-500.png' style='height:350px').center-block
         .col-md-8
           p.
-            Navigate to your API Portal at <a href='https://portal.local' target='_blank'><code>https://portal.local</code></a>
-            and start playing around. The sample configuration has a preconfigured admin user with the following credentials:
+            Navigate to your API Portal at <a href='http://localhost:3000' target='_blank'><code>http://localhost:3000</code></a>
+            and start playing around. The default configuration has a preconfigured admin user with the following credentials:
           ul
             li <strong>User email:</strong> <code>admin@foo.com</code>
             li <strong>Password:</strong> <code>wicked</code>
@@ -224,6 +193,7 @@ block content
             the sample portal</a>.
           
           p.
-            To stop and deallocate the local API Portal, issue the following command:
+            To stop the local API Portal, issue the following commands:
           pre.
-            $ docker-compose down
+            $ wicked box stop
+            $ wicked postgres stop

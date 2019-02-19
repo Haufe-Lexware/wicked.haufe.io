@@ -19,6 +19,7 @@ module.exports = function (grunt) {
                     'index.html': 'index.jade',
                     'features.html': 'features.jade',
                     'gettingstarted.html': 'gettingstarted.jade',
+                    'gettingstarted-docker.html': 'gettingstarted-docker.jade',
                     'gettingstarted-k8s.html': 'gettingstarted-k8s.jade',
                     'deployment.html': 'deployment.jade',
                     'authentication.html': 'authentication.jade',

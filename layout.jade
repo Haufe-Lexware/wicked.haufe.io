@@ -50,22 +50,28 @@ html(lang='en')
                 else
                   li
                     a(href='index.html') Home
-                li.dropdown
-                  // data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Dropdown <span class="caret"></span></a>
-                  a(href='#' data-toggle='dropdown' role='button' aria-haspopup='true' aria-expanded='false').dropdown-toggle Getting Started <span class='caret'/>
-                  ul.dropdown-menu
-                    if (thisPage == 'gettingstarted-k8s')
-                      li.active
-                        a(href='gettingstarted-k8s.html') With Kubernetes
-                    else
-                      li
-                        a(href='gettingstarted-k8s.html') With Kubernetes
-                    if (thisPage == 'gettingstarted')
-                      li.active
-                        a(href='gettingstarted.html') With Docker
-                    else
-                      li
-                        a(href='gettingstarted.html') With Docker
+                if (thisPage == 'gettingstarted')
+                  li.active
+                    a(href='gettingstarted.html') Getting Started
+                else
+                  li
+                    a(href='gettingstarted.html') Getting Started
+                //- li.dropdown
+                //-   // data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Dropdown <span class="caret"></span></a>
+                //-   a(href='#' data-toggle='dropdown' role='button' aria-haspopup='true' aria-expanded='false').dropdown-toggle Getting Started <span class='caret'/>
+                //-   ul.dropdown-menu
+                //-     if (thisPage == 'gettingstarted-k8s')
+                //-       li.active
+                //-         a(href='gettingstarted-k8s.html') With Kubernetes
+                //-     else
+                //-       li
+                //-         a(href='gettingstarted-k8s.html') With Kubernetes
+                //-     if (thisPage == 'gettingstarted')
+                //-       li.active
+                //-         a(href='gettingstarted.html') With Docker
+                //-     else
+                //-       li
+                //-         a(href='gettingstarted.html') With Docker
                 li.dropdown
                   // data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Dropdown <span class="caret"></span></a>
                   a(href='#' data-toggle='dropdown' role='button' aria-haspopup='true' aria-expanded='false').dropdown-toggle Features <span class='caret'/>

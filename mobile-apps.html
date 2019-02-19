@@ -40,13 +40,7 @@
             <div id="navbar" class="navbar-collapse collapse">
               <ul class="nav navbar-nav">
                 <li><a href="index.html">Home</a></li>
-                <li class="dropdown">
-                  <!-- data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Dropdown <span class="caret"></span></a>--><a href="#" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" class="dropdown-toggle">Getting Started <span class='caret'/></a>
-                  <ul class="dropdown-menu">
-                    <li><a href="gettingstarted-k8s.html">With Kubernetes</a></li>
-                    <li><a href="gettingstarted.html">With Docker</a></li>
-                  </ul>
-                </li>
+                <li><a href="gettingstarted.html">Getting Started</a></li>
                 <li class="dropdown">
                   <!-- data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Dropdown <span class="caret"></span></a>--><a href="#" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" class="dropdown-toggle">Features <span class='caret'/></a>
                   <ul class="dropdown-menu">
@@ -96,7 +90,7 @@
     <div style="background: url(&quot;images/header-2-500.jpg&quot;); background-size:cover;" class="jumbotron">
       <div style="padding-top: 70px" class="container feature-container">
         <h1>Mobile API Gateway</h1>
-        <p>Securing Mobile APIs using the OAuth2 Resource Owner Password Flow</p>
+        <p>Securing Mobile APIs using the OAuth2 Authorization Code Grant with PKCE</p>
       </div>
     </div>
     <div class="container pad20">
@@ -132,18 +126,14 @@
             <p>For development time, the following workflow is typical:</p>
             <ol>
               <li>The developer signs up for the API Portal and registers the mobile application in the portal, using a <a href="https://wicked-demo.haufe.io/help/trusted" target="_blank">trusted subscription</a></li>
+              <li>The registered application should register a redirect URL which will, on the end user's device, open the installed application with a specific path (custom schemas, such as <code>myapp://</code> are also allowed)</li>
               <li>By creating a subscription to the Mobile API, the developer obtains client credentials for the mobile application, a client ID and a client secret; for this use case, only the client ID is significant</li>
-              <li>The developer incorporates the client ID into the mobile application and implements the needed bits for the OAuth2.0 Resource Owner Password Grant Flow.</li>
+              <li>The developer incorporates the client ID into the mobile application and implements the needed bits for the OAuth2.0 Authorization Code Grant with the PKCE extension.</li>
             </ol>
             <p>
-              For the OAuth2.0 Resource Owner Password Grant, it is not necessary and advised against to also incorporate the client
-              secret into the mobile app; in case the API also supports the client credentials flow, this would enable attackers to
-              reverse engineer the app and extract the credentials. The client ID on the other hand is only helpful in combination with
-              an end user identity, which the end user will also try to protect.
-            </p>
-            <p>
-              The wicked Authorization Server would also reject calls using the Resource Owner Password Grant from public applications
-              presenting their client secret, and vice versa.
+              For the Authorization Code Grant to work with public clients (a client which is not running on a server backend), wicked.haufe.io
+              requires the PKCE extension to be implemented. Any deployed portal itself contains more information on the details on how to implement
+              this, see e.g. the <a href="https://wicked-demo.haufe.io/help/oauth2_authorization_code" target="_blank">help pages of the wicked Demo portal</a>.
               
             </p>
           </div>
@@ -159,29 +149,24 @@
             When the end user opens the application for the first time, this happens:
           </p>
           <ol>
-            <li>The mobile app presents a login screen which asks for username and password of the end user</li>
+            <li>The mobile app shows a web view and redirects to the Authorization end point of the wicked Authorization Server (depending on which identity provider was configured)</li>
             <li>
-              Using the client ID, the username and password, the mobile app uses the OAuth 2.0 Resource Owner Password Grant Flow to 
-              ask an Authorization Server for an access token to the backend API
+              By checking the client ID of the authorization call, the Authorization Server knows which application is requesting access
+              to the API, and can in turn verify the identity of the calling user (with whichever identity provider is configured)
             </li>
             <li>
-              The Authorization Server verifies the username and password, and if successful, issues both an Access Token and a Refresh Token
-              for the mobile App to use
+              If the user identity was successfully established, the Authorization Sevrer now answers with a redirect back to the application,
+              possibly using a custom schema, such as <code>myapp://hello/world?code=abcdefabcdefabcdef</code>.
             </li>
             <li>
-              Whenever the mobile app now uses the access token, all requests to the backend API will be enriched with the identity
-              (and possibly scope) of the request
+              The application now uses the token and a PKCE code verifier to retrieve an access token and a refresh token, according to
+              the standard OAuth 2.0 Authorization Code Grant.
               
             </li>
           </ol>
           <p>
-            The mobile app can (and should) now discard the end user username and password, and instead make use of the access token;
-            in case the access token expires, the mobile app cann use the refresh token to obtain a new access token (and refresh token).
-          </p>
-          <p>
-            This means that the mobile app does not need to keep the user's actual secrets; it has exchanged them for a purpose-tied
-            pair of access and refresh tokens; even if the mobile app is hacked, the user's username and password are no longer
-            present in the memory/storage of the mobile app, which obviously increases security.
+            All requests which the application now issues towards the API will be enriched with (a) the client identity, and (b) the end
+            user's identity, passed on as headers.
             
           </p>
         </div>
@@ -196,13 +181,15 @@
           <div class="col-md-8">
             <h4>How do I implement this with wicked?</h4>
             <p>
-              Wicked packs brings all the necessary components to implement this out of the box:
+              Wicked packs brings all the necessary components to implement this out of the box, including the PKCE
+              extension:
               
             </p>
             <ul>
               <li>
                 Wicked stores usernames and passwords, and if needed, can also ask new users for additional
-                information (registration information).
+                information (registration information). It can also federate any other supported Identity Provider,
+                such as any SAML ot OAuth2 IdP, Google, GitHub,...
               </li>
               <li>
                 The wicked Authorization Server automatically creates suitable endpoints so that your API can
@@ -233,10 +220,9 @@
               </li>
             </ul>
             <p>
-              In a future version, wicked will also support the PKCE enhancement of the Authorization Code Grant
+              As mentioned, wicked supports the PKCE extension of the Authorization Code Grant
               (see <a href="https://tools.ietf.org/html/rfc7636" target="_blank">RFC 7636</a>) and OAuth2 for native apps
-              (see <a href="https://tools.ietf.org/html/rfc8252" target="_blank">RFC 8252</a>). This will enable even
-              more flexible authentication scenarios for mobile/native applications.
+              (see <a href="https://tools.ietf.org/html/rfc8252" target="_blank">RFC 8252</a>).
             </p>
           </div>
         </div>

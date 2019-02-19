@@ -21,8 +21,8 @@ block content
           side sessions) are not desired.
         p.
           In order to decouple the backend API and frontend application, an API Gateway can be put in place
-          to implement the OAuth 2.0 Implicit Grant Flow, which is the recommended way of solving giving
-          a "public" client (as opposed to a &quot;confidential&quot; client)
+          to implement the OAuth 2.0 Implicit Grant Flow or Authorization Code Grant with the PKCE extension,
+           which is the recommended way of solving giving a "public" client (as opposed to a &quot;confidential&quot; client)
           access to an API.
 
         img(src="images/uc-single-page-app.png").center-block
@@ -42,14 +42,18 @@ block content
             li By creating a subscription to the Backend API, the developer obtains client credentials for the single page application, a client ID and a client secret; for this use case, only the client ID is significant
             li The developer incorporates the client ID into the single page application:
               ul
-                li If the SPA does not have a valid access token (e.g. in the HTML5 local storage), redirect to the Authorization Server (the URL of which is stated on the API page in the API Portal), specifying which application is calling by passing on the <code>client_id=...</code> and <code>grant_type=implicit</code> in the redirect parameters
-                li Expect to get called back being passed an access token in the fragment of the URL of your own application (e.g. `https://my.spa.com/#access_token=abc928987dffabe9273`)
+                li If the SPA does not have a valid access token (e.g. in the HTML5 local storage), redirect to the Authorization Server (the URL of which is stated on the API page in the API Portal), specifying which application is calling by passing on the <code>client_id=...</code> and <code>response_type=code</code> in the redirect parameters
+                li Expect to get called back being passed an authorization code in the query parameter of the URL of your own application (e.g. `https://my.spa.com/?code=abc928987dffabe9273`)
+                li Use an AJAX call to retrieve a token from the token endpoint
           
           p.
-            For the OAuth2.0 Implicit Flow Grant, it is not necessary and actually "forbidden" to also incorporate the client
-            secret into the single page app; in case the API also supports the client credentials flow, this would enable attackers to
+            For the OAuth2.0 Implicit Flow Grant and the Authorization Code Grant, it is strongly adviced against  to also incorporate the client
+            secret into the single page app; this would enable attackers to
             reverse engineer the app and extract the credentials. The client ID helps the authorization server to know exactly to
             which URL it will deliver the access token.
+
+          p.
+            wicked supports both Flows, but the Authorization Code Grant is the flow which is recommended, being more secure.
     
   .container.pad20
     .row
@@ -64,14 +68,13 @@ block content
 
         p.
           Usually, the SPA will try to store an access token inside its local storage; in case there is none to use, or
-          if it has expired, the SPA should redirect to the Authorization Server to get a new token. How the Authorization
-          Server decides whether or not to issue a (new) token to the single page application is an implemnetation detail
-          and inherently part of the business logic of your single page application.
+          if it has expired, the SPA should redirect to the Authorization Server to get a new token or authorization code.
+          Wicked supports "silent refreshes", which is the technique which is usually applied to refresh tokens in situations
+          where refresh tokens do not exist.
 
         p.
-          The Authorization normally delegates finding the identity of the end user (authenticate the user) to an external
-          Identity Provider, which can be most anything, e.g. a SAML SSO IdP, Google, Github or any other Provider which allows
-          for integrations.
+          When registering the application/client, you must specify that it's a Single Page Application (aka browser based
+          application). This has certain effects on the Authorization Server, such as a refresh token is not being returned.
 
   .grey
     .container.pad20
@@ -93,10 +96,10 @@ block content
               Create an API defintion using the Kickstarter, and specify "OAuth 2.0" as a means of authentication
               and authorization. Link the authentication method you created previously to this API.
             li.
-              Specify that you want to use the "Implicit Grant" on the API definition; usually it's advisable to
-              also enable the "Authorization Code Grant" as well - from an API perspective the two grants are 
-              behving identical, it just opens up more possiblilies for the Application developer which one
-              he wants to use.
+              Specify that you want to use the "Implicit Grant"/"Authorization Code Grant" on the API definition;
+              - from an API perspective the two grants are 
+              behaving identical, it just opens up more possiblilies for the Application developer which one
+              he wants to use, even thought the latter is the recommended flow.
             li.
               Deploy your updated API management configuration to your wicked instance.
 
