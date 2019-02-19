@@ -22,7 +22,7 @@ $ mkdir wicked-test
 $ cd wicked-test
 ```
 
-Specify you want to use the latest stable release and start the kickstarter:
+Specify you want to use the latest stable release and start the kickstarter (you will need [Docker](https://docker.io) installed):
 
 ```
 $ wicked tags set latest
