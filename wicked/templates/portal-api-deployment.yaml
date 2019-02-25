@@ -114,15 +114,15 @@ spec:
 {{- end }}
 {{- if .Values.storage.pgHost }}
         - name: PORTAL_STORAGE_PGHOST
-          value: "{{ .Values.postgres.pgHost }}"
+          value: "{{ .Values.storage.pgHost }}"
 {{- end }}
 {{- if .Values.storage.pgPort }}
         - name: PORTAL_STORAGE_PGPORT
-          value: "{{ .Values.postgres.pgPort }}"
+          value: "{{ .Values.storage.pgPort }}"
 {{- end }}
 {{- if .Values.storage.pgDatabase }}
         - name: PORTAL_STORAGE_PGDATABASE
-          value: "{{ .Values.postgres.pgDatabase }}"
+          value: "{{ .Values.storage.pgDatabase }}"
 {{- end }}
 {{- if .Values.storage.pgUser }}
         - name: PORTAL_STORAGE_PGUSER
