@@ -122,7 +122,7 @@
         <div class="row">
           <div class="col-md-4">&nbsp;</div>
           <div class="col-md-8">
-            <h2>Step 1: Prerequisites - Docker</h2>
+            <h2>Step 1: Prerequisites (Docker, node.js)</h2>
           </div>
         </div>
         <div class="row">
@@ -130,11 +130,16 @@
           <div class="col-md-8">
             <p>
               The only prerequisites for this getting started guide is that you have access to a the docker command
-              line and a Docker host. If you haven't already installed Docker, go ahead and
+              line, a Docker host and a node.js installation. If you haven't already installed Docker, go ahead and
               <a href='https://docker.com' target='_blank'>do that first</a>.
               It will work on Windows, macOS and Linux machines, best using Docker CE 18.09 or later.
               
-            </p><a href="https://docker.com" target="_blank" class="btn btn-primary btn-lg">Get Docker &raquo;</a><br><br>
+            </p>
+            <p>
+              Installation node.js guidelines can be found at <a href="https://nodejs.org" target="_blank">nodejs.org</a>.
+              The node.js installation is only used for the wicked command line in this guide, and (almost) any version will work.
+              
+            </p><a href="https://docker.com" target="_blank" class="btn btn-primary btn-lg">Get Docker &raquo;</a>&nbsp;&nbsp;<a href="https://nodejs.org" target="_blank" class="btn btn-primary btn-lg">Get node.js &raquo;</a><br><br>
           </div>
         </div>
       </div>
@@ -154,7 +159,7 @@
             <p>
               Make sure that Docker is allowed to mount local directories into running containers. This is done in the
               Docker for Mac/Windows "Shares" configuration. On macOS, this should be straightforward, on Windows
-              you may encounter some issues 
+              you may encounter some issues with Work/School accounts
               (<a href="https://blogs.msdn.microsoft.com/stevelasker/2016/06/14/configuring-docker-for-windows-volumes/" target="_blank">see this link for a possible help</a>).
               
             </p>
@@ -191,7 +196,7 @@
               
             </p>
             <p><b>Windows:</b></p>
-            <pre>C:\TEMP> mkdir wicked
+            <pre>C:\TEMP> md wicked
 C:\TEMP> cd wicked
 C:\TEMP> wicked kickstart --new .
 </pre>
