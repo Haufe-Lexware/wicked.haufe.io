@@ -14,6 +14,26 @@ Official Release of the API Portal.
 
 ## 1.0.0 (release candidates)
 
+### 1.0.0-rc.2 - Notable changes
+
+Motto: **Small enhancements and detail fixes**
+
+The biggest change for the new RC2 is definitely the ability of wicked to now support more than a single redirect URI for registered applications. This makes implementing silent refreshs in the case of browser based applications (so-called SPAs) a lot easier, as it enbales you to have one callback for the "first login", and a second callback which you can use for "refresh callbacks". The latter can be a lot less complicated (actually usually just a `postMessage` to the parent window).
+
+The other changes are mostly bug fixes of various kinds, mostly related to either the new wicked CLI, or OAuth 2.0 flows. Further, some code cleanup activities have taken place; these come from the use of SonarQube on the code base, and some edge cases were found and addressed.
+
+Here's the detailed list:
+
+* [[Kickstarter] Allow association of APIs to Auth Methods on Auth Server config page](https://github.com/Haufe-Lexware/wicked.haufe.io/issues/171) (enhancement)
+* [Some Auth Methods should not be visible to all users](https://github.com/Haufe-Lexware/wicked.haufe.io/issues/172) (enhancement)
+* [Auth Server does not issue error for prompt=none when not logged in as redirect](https://github.com/Haufe-Lexware/wicked.haufe.io/issues/181)
+* [wicked should support multiple redirect_uris for OAuth2 applications](https://github.com/Haufe-Lexware/wicked.haufe.io/issues/178) (enhancement)
+* ["wicked box start" does not work with Postgres running on custom port](https://github.com/Haufe-Lexware/wicked.haufe.io/issues/182)
+* [Swagger UI application should be pre-defined as a confidential client](https://github.com/Haufe-Lexware/wicked.haufe.io/issues/174)
+* [Support "forgot password" URL for external auth method](https://github.com/Haufe-Lexware/wicked.haufe.io/issues/185)
+
+We are still working on the "All Subscriptions" list where API portal managers can review and download all subscriptions to the APIs in the portal. This will land in one of the next release candidates.
+
 ### 1.0.0-rc.1 - Notable changes
 
 Motto: **"We're getting nearer!"**
