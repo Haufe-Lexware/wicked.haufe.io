@@ -34,3 +34,15 @@ The following flows work:
 Whether it is allowed to use this flows is subject to how you configure your APIs.
 
 ![External username/password database](images/external-auth-method.png)
+
+## Extensions
+
+### `prefill_username`
+
+The `/authorize` endpoint of the external auth method supports prefilling the username for the login screen. This can be useful for cases where the email adress/username is checked in a different place, and the user is then redirected to this authorization endpoint.
+
+Example:
+
+```
+https://api.portal.com/auth/external/api/some-api/authorize?client_id=abcdefg&response_type=code&redirect_uri=http://localhost:3000/callback&prefill_username=some@user.com
+```

@@ -21,3 +21,16 @@ The configuration options are:
 * Descriptions
 * **Trust user email addresses**: For local or internal installations it may be useful to use this option to avoid users having to verify their email addresses; for public portals, you will want to tick this option (and also deploy a portal mailer to send out these mails).
 * **Disable interactive signup**: In case you tick this check box, it will not be possible for users to interactively sign up with a new user
+
+
+## Extensions
+
+### `prefill_username`
+
+The `/authorize` endpoint of the local auth method supports prefilling the username for the login screen. This can be useful for cases where the email adress/username is checked in a different place, and the user is then redirected to this authorization endpoint.
+
+Example:
+
+```
+https://api.portal.com/auth/local/api/some-api/authorize?client_id=abcdefg&response_type=code&redirect_uri=http://localhost:3000/callback&prefill_username=some@user.com
+```
