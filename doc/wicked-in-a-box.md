@@ -33,7 +33,7 @@ Follow these steps to get a wicked environment up and running, using a fresh wic
 * `cd` into the new directory
 * Run `wicked tags list`
 
-From the offered tags, pick the newest version, e.g. `1.0.0-rc.2` (or use `latest` for the latest released build), and run
+From the offered tags, pick the newest version, e.g. `1.0.0-rc.3` (or use `latest` for the latest released build), and run
 
 * `wicked tags set <tag>`: This stores the selected version into `~/.wicked/wicked.json`
 * Run `wicked kickstart . --new`

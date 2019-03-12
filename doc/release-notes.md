@@ -14,6 +14,12 @@ Official Release of the API Portal.
 
 ## 1.0.0 (release candidates)
 
+### 1.0.0-rc.3 - Notable changes
+
+Regression bug fix:
+
+* [Some applications' redirect URIs aren't correctly retrieved after update to rc2](https://github.com/Haufe-Lexware/wicked.haufe.io/issues/186)
+
 ### 1.0.0-rc.2 - Notable changes
 
 Motto: **Small enhancements and detail fixes**
