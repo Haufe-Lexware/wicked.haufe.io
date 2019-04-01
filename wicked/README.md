@@ -33,7 +33,7 @@ It is also assumed that you have some knowledge of Helm, and that you have run `
 If that is set and done, you may now install wicked using the Helm chart. Move into a suitable directory, and then download the chart using `helm fetch`:
 
 ```
-$ export WICKED_VERSION=1.0.0-rc.3 # Possibly adapt to the latest version
+$ export WICKED_VERSION=1.0.0-rc.4 # Possibly adapt to the latest version
 $ helm fetch --untar https://github.com/Haufe-Lexware/wicked.haufe.io/releases/download/v${WICKED_VERSION}/wicked-${WICKED_VERSION}.tgz
 ```
 

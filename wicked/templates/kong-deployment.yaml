@@ -9,7 +9,10 @@ spec:
   # Kong is scaled up in the post-install hook.
   replicas: 1
   strategy:
-    type: Recreate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+    type: RollingUpdate
   template:
     metadata:
       labels:
