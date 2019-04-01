@@ -14,6 +14,22 @@ Official Release of the API Portal.
 
 ## 1.0.0 (release candidates)
 
+### 1.0.0-rc.4 - Notable changes
+
+Motto: **Two of the last pending features, and detail changes**
+
+In the RC4 we have two very notable features coming up, implemented by [santokhsingh](https://github.com/santokhsingh) and [maksimlikharev](https://github.com/maksimlikharev) (**thank you!!**): There is now, for Administrators and API Approvers, a new admin page to review all current subscriptions in the system, including the possibility to download those as a CSV file. As an additional new feature, a possibility to have "No auth" (or "Public") APIs was added; you can now create APIs which do not require authentication, but which still can include features like CORS or rate limiting (powered by Kong).
+
+* [Audit Report or All subscriptions page for administrators and approvers](https://github.com/Haufe-Lexware/wicked.haufe.io/issues/176)
+* [Allow no-key access/Public APIs/auth-type "none"](https://github.com/Haufe-Lexware/wicked.haufe.io/issues/96)
+
+Additionally, the following changes were made and bugs fixed:
+
+* [JSON circular reference in debug statement: wicked.auth](https://github.com/Haufe-Lexware/wicked.haufe.io/issues/188)
+* [websocket cosmetic issue in dev portal](https://github.com/Haufe-Lexware/wicked.haufe.io/issues/177)
+* [Restart time unnecessary long (config reload)](https://github.com/Haufe-Lexware/wicked.haufe.io/issues/191)
+* [Two instances of wicked using same database are killing each other](https://github.com/Haufe-Lexware/wicked.haufe.io/issues/190)
+
 ### 1.0.0-rc.3 - Notable changes
 
 Regression bug fix:
