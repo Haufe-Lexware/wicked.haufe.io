@@ -14,6 +14,15 @@ Official Release of the API Portal.
 
 ## 1.0.0 (release candidates)
 
+### 1.0.0-rc.5 - Notable changes
+
+Motto: **Even nicer OAuth2.0 support**
+
+In the RC5, we fixed two issues which are more "enhancements" than bug fixes. The OAuth2 password grant can now also delegate to an upstream identity provider, and it uses the correct (or: the spec'ed) content type for the token request. The second thing we implemented is that we now support the `prompt=none` parameter also when there is no session with the wicked Authorization Server anymore. This means that with upstream identity providers which support it, SPAs can now also get a refreshed authorization code (with the authorization code grant) or a refreshed token (with the implicit grant) even if the authorization server session has expired. Typical use cases would be enable a more seamless login/refresh experience for identity providers which support a "remember me" type of feature. Supported identity provider types are "OAuth2", "Google" and (yes!) SAML2.
+
+* [Better support for prompt=none with external IdPs](https://github.com/Haufe-Lexware/wicked.haufe.io/issues/194)
+* [OAuth2 password grant payload must be posted using Content type "x-www-form-urlencoded"](https://github.com/Haufe-Lexware/wicked.haufe.io/issues/195)
+
 ### 1.0.0-rc.4 - Notable changes
 
 Motto: **Two of the last pending features, and detail changes**
