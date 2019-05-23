@@ -7,6 +7,7 @@ This document describes the different Redirect URIs for application which wicked
 * All `https:` URIs are valid
 * `http:` URIs are only valid if the point to `localhost`, `127.0.0.1`, `portal.local` or if the `NODE_ENV` contains the string `local` (for local development scenarios)
 * All custom schemes are accepted, as long as they contain a host
+* Any valid URL, in case `ALLOW_ANY_REDIRECT_URI` is defined in the `wicked.api` container (corresponds to the `wicked box start --allow-any-redirect-uri` command line parameter for [wicked-in-a-box](wicked-in-a-box.md)).
 
 ## Examples of valid URIs
 

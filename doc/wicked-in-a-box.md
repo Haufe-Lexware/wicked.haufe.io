@@ -140,15 +140,19 @@ $ wicked box start --help
 Usage: wicked-box-start [options] <configdir>
 
 Options:
-  -t, --tag <tag>                    wicked Docker tag to use (default: "next")
+  -t, --tag <tag>                    wicked Docker tag to use (default: "1.0.0-rc.5")
   -u, --ui-port <ui-port>            port to expose the portal UI on (default: 3000)
   -g, --gateway-port <gateway-port>  port to expose Kong on (API Gateway) (default: 8000)
   -a, --admin-port <admin-port>      port to expose Kong's Admin port on (defaults to off)
   -w, --api-port <api-port>          port to expose wicked's API port on (defaults to off)
   -e, --node-env <node-env>          the NODE_ENV (wicked environment) to use (default: "box")
   -l, --log-level <log-level>        log level to use in the wicked components (debug, info, warn, error) (default: "info")
-  --docker-host <docker-host>        DNS name or IP address of the docker host (use on Linux) (default: "host.docker.internal")
+  --docker-host <docker-host>        DNS name or IP address of the docker host (default: "host.docker.internal")
   --no-pull                          do not attempt to pull the image
+  --no-wait                          do not wait (up 60 seconds) until environment has started
+  --no-open                          do not open the browser with the portal after it has finished; implied by --no-wait
+  --allow-any-redirect-uri           allow any (syntactically valid) redirect URI (sets ALLOW_ANY_REDIRECT_URI)
+  -h, --help                         output usage information
 ```
 
 ## Advanced Topics
