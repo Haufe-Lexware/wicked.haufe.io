@@ -14,6 +14,16 @@ Official Release of the API Portal.
 
 ## 1.0.0 (release candidates)
 
+### 1.0.0-rc.6 - Notable changes
+
+Motto: **Some bug fixing**
+
+Over the last couple of weeks of testing, some minor things have emerged which are being addressed in this release. In the meantime, we are also working hard on extended/extensive support for the routes and services concept in Kong 1.0.0+, but that is not yet quite ready for prime time, as we also want to bundle that with an update to the latest Kong version, but Kong still has an incompatibility with its old API which has to be addressed first.
+
+* [Rejected logins via external scope validations do not redirect back to client](https://github.com/Haufe-Lexware/wicked.haufe.io/issues/197)
+* [Protected auth methods are exposed in the /apis/.../swagger endpoint](https://github.com/Haufe-Lexware/wicked.haufe.io/issues/198)
+* [Unable to create Redirect URIs using local domains](https://github.com/Haufe-Lexware/wicked.haufe.io/issues/196)
+
 ### 1.0.0-rc.5 - Notable changes
 
 Motto: **Even nicer OAuth2.0 support**
