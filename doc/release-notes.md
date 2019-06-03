@@ -23,6 +23,8 @@ Over the last couple of weeks of testing, some minor things have emerged which a
 * [Rejected logins via external scope validations do not redirect back to client](https://github.com/Haufe-Lexware/wicked.haufe.io/issues/197)
 * [Protected auth methods are exposed in the /apis/.../swagger endpoint](https://github.com/Haufe-Lexware/wicked.haufe.io/issues/198)
 * [Unable to create Redirect URIs using local domains](https://github.com/Haufe-Lexware/wicked.haufe.io/issues/196)
+* [wicked.box startup race condition ("Timeout")](https://github.com/Haufe-Lexware/wicked.haufe.io/issues/202)
+* [Custom Content does not allow loading of Javascript](https://github.com/Haufe-Lexware/wicked.haufe.io/issues/201)
 
 ### 1.0.0-rc.5 - Notable changes
 

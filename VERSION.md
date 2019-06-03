@@ -2,7 +2,7 @@
 
 ### Latest Release
 
-Latest release is `1.0.0-rc.6` (May 29th 2019)
+Latest release is `1.0.0-rc.6` (June 3rd 2019)
 
 ### Next Release
 
