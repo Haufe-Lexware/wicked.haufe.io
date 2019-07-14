@@ -35,3 +35,18 @@ Currently, wicked supports the following Auth Method types, which can be used bo
 In the future, there will be additional auth methods, such as 
 
 * OpenID Connect (may be added to `oauth2` as a special case of getting profile data)
+
+## Protected Auth Methods
+
+You can specify an auth method to be "protected". This has the following effects:
+
+* The auth methods is not displayed in the documentation of an API which is configured to be used with this auth method
+* Administrators of the API portal will still be able to see the auth method
+* Such an auth method is not displayed as a "login" button on the wicked portal, in case it is also configured to be used to log in to the wicked portal
+* To enable logging in with a protected auth method to the wicked portal, use the following type of URL: `http://your.portal.com/login?auth_method=<id>`
+* Such an auth method will be stored as a cookie, and will also be displayed automatically the next time the usual `/login` page is displayed
+* Currently, only one additional auth method can be displayed using this method; if you call the `/login` page using a different auth method (or an auth method which does not exist), the previous one will no longer be displayed.
+
+This can be used for example with corporate SSO providers where it's not wanted to display the corporate SSO option unless you have the "special link".
+
+Please note that this is not actually a security measure, but rather a "cosmetic" measure to not display too many custom identity providers to your APIs. This is especially useful for situations where your product has many enterprise SSO login options.
