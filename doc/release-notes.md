@@ -14,6 +14,15 @@ Official Release of the API Portal.
 
 ## 1.0.0 (release candidates)
 
+### 1.0.0-rc.7 - Notable changes
+
+Motto: **OAuth2 leftovers**
+
+Thanks to a contribution, wicked now also supports retrieving profile information from `user_info` type endpoints (OIDC style); this was unfortunately already surfaced in the Kickstarter, but it wasn't actually implemented. A big thank you to [Philipp Walser](https://github.com/Iblis) for this contribution. Additionally, a bug concerning protected auth methods were fixed, so that these, even if they are allowed to be used for logging in to the API portal, are not by default displayed in the Login mask. [The documentation has been updated](auth-methods.md#protected-auth-methods).
+
+* [ProfileEndpoint for wicked.auth not implemented yet?](https://github.com/Haufe-Lexware/wicked.haufe.io/issues/208)
+* [Protected auth methods are displayed in the public login page of wicked itself](https://github.com/Haufe-Lexware/wicked.haufe.io/issues/210)
+
 ### 1.0.0-rc.6 - Notable changes
 
 Motto: **Some bug fixing**
