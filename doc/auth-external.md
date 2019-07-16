@@ -14,7 +14,7 @@ The auth method type `external` has two main configuration properties (in additi
 More information on this can be found in the wicked Kickstarter, and in the documentation of the request and response types in the wicked node SDK documentation:
 
 * [ExternalUserPassRequest](https://apim-haufe-io.github.io/wicked.node-sdk/interfaces/_interfaces_.externaluserpassrequest.html)
-* [ExternalUserPassResponse](https://apim-haufe-io.github.io/wicked.node-sdk/interfaces/_interfaces_.externalrefreshresponse.html)
+* [ExternalUserPassResponse](https://apim-haufe-io.github.io/wicked.node-sdk/interfaces/_interfaces_.externaluserpassresponse.html)
 * [ExternalRefreshRequest](https://apim-haufe-io.github.io/wicked.node-sdk/interfaces/_interfaces_.externalrefreshrequest.html)
 * [ExternalRefreshResponse](https://apim-haufe-io.github.io/wicked.node-sdk/interfaces/_interfaces_.externalrefreshresponse.html)
 
