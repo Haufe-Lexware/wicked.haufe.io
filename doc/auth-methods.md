@@ -27,10 +27,11 @@ Currently, wicked supports the following Auth Method types, which can be used bo
 * [`google`: Google+ login](auth-google.md)
 * [`github`: Github login](auth-github.md)
 * [`twitter`: Twitter login](auth-twitter.md)
-* `oauth2`: Generic JWT based OAuth2 (authorization code) login (TODO: docs)
+* [`oauth2`: Generic OAuth2 login](auth-oauth2.md)
 * [`adfs`: Microsoft ADFS login](auth-adfs.md)
 * [`saml`: SAML based login](auth-saml.md)
 * [`external`: External checking of username/password](auth-external.md)
+* [`ldap`: Authenticate with an LDAP Server](auth-ldap.md)
 
 In the future, there will be additional auth methods, such as 
 

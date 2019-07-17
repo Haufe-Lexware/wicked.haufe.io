@@ -14,6 +14,15 @@ Official Release of the API Portal.
 
 ## 1.0.0 (release candidates)
 
+### 1.0.0-rc.8 - Notable changes
+
+Motto: **Finally, LDAP Support**
+
+LDAP support has been something that we have wanted for a long time in wicked, both for authentication and authorization for logging in to the portal, and also to enable LDAP interactive login to secure API support (which is, in the end, the same thing; wicked's API uses its own API Gateway to secure the traffic to the wicked API). Finally it has been implemented, and we hope that most use cases are covered by the existing functionality. See also the documentation on the [LDAP Auth Method](auth-ldap.md).
+
+* [LDAP Support](https://github.com/Haufe-Lexware/wicked.haufe.io/issues/126)
+* [How to configure LDAP for wicked portal](https://github.com/Haufe-Lexware/wicked.haufe.io/issues/211)
+
 ### 1.0.0-rc.7 - Notable changes
 
 Motto: **OAuth2 leftovers**

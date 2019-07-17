@@ -101,13 +101,13 @@ Without this setting, it would in principle be possible to spoof a login via ADF
 
 ## Testing
 
-In order to troubleshoot any issues, you may define the following diagnostic settings for the `portal-auth` container: Make sure the container starts with the following environment variable set:
+In order to troubleshoot any issues, you may define the following diagnostic settings for the `wicked.auth` container: Make sure the container starts with the following environment variable set:
 
 ```
 LOG_LEVEL=debug
 ```
 
-The `portal-auth` container will then output debug information, including full received profiles for the logged in users, as JSON structures. You can then either tweak the claim rules or the wicked configuration to make the field names match, if e.g. names or email addresses are not retrieved correctly.
+The `wicked.auth` container will then output debug information, including full received profiles for the logged in users, as JSON structures. You can then either tweak the claim rules or the wicked configuration to make the field names match, if e.g. names or email addresses are not retrieved correctly.
 
 This also allows you to see whether groups (see below) are correctly passed in to the portal. 
 
