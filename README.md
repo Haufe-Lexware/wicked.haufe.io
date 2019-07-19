@@ -59,11 +59,18 @@ When you use wicked.haufe.io, you get the following things out of the box:
 * A great API Gateway (this is [Mashape Kong](http://getkong.org) underneath! Good stuff!)
 * A developer portal which enables your developers to sign up for an API by themselves
     * Supports ADFS, Google and Github logins
-    * And local accounts (if you need that)
+    * Support for SAML2 login
+    * Support for generic OAuth2 logins (also with `user_info` profile loading)
+    * Local accounts (managed by wicked)
+    * API for arbitrary username/password checking, e.g. against legacy databases
+    * LDAP
 * Integrated Swagger (OpenAPI) support
 * A lightweight CMS based on your static configuration, coming straight from source control
-* Support for API Keys and the OAuth 2.0 Client Credentials Flow out of the box
-* APIs to make it easy to implement the OAuth 2.0 Implicit Grant and Resource Owner Password Grant
+* Support for API Keys and most of OAuth 2.0, out of the box.
+    * Client Credentials Flow
+    * Authorization Code Grant Flow, including PKCE extension, with **any** supported identity provider (same as for portal login)
+    * Implicit Grant Flow
+    * Resource Owner Password Grant, for those Identity Providers supporting it (local login, OAuth2, external sources)
 * Most visual things can be fully customized by configuration, including logos and stylesheets
 * A stringent deployment strategy, enforcing immutable servers and infrastructure as code (leveraging docker)
 
