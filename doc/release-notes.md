@@ -14,6 +14,17 @@ Official Release of the API Portal.
 
 ## 1.0.0 (release candidates)
 
+### 1.0.0-rc.9 - Notable changes
+
+**Bugfixes**
+
+The following bugs were fixed:
+
+* [Chrome/FireFox: wicked UI does not accept any redirect URIs with custom schemes](https://github.com/Haufe-Lexware/wicked.haufe.io/issues/215)
+* [PKCE extension expects non-base64-urlencoded code_verifier/code_challenge](https://github.com/Haufe-Lexware/wicked.haufe.io/issues/219)
+* [Migration code fails with "loadApis() not allowed"](https://github.com/Haufe-Lexware/wicked.haufe.io/issues/216)
+
+
 ### 1.0.0-rc.8 - Notable changes
 
 Motto: **Finally, LDAP Support**
