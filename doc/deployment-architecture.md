@@ -8,7 +8,7 @@ The deployment architecture is usually as follows:
 
 ![Deployment Architecture](images/deployment-architecture.png)
 
-The next sections briefly describes the functionality of each deployment artifact. For a list of which docker images are begind the different boxes, please refer to the [docker images](docker-images.md) documentation.
+The next sections briefly describes the functionality of each deployment artifact. For a list of which docker images are in the different boxes, please refer to the [docker images](docker-images.md) documentation.
 
 ### Load Balancer
 

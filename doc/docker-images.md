@@ -67,6 +67,7 @@ There are some special environment variables which can be used to change/specify
 * `GIT_CREDENTIALS`: The credentials (`username:password`) to pass in to the `git clone` command at startup of the container; if this is not set, the portal API container assumes that it can access the git repository without credentials (i.e. that it's a public repository)
 * `GIT_BRANCH`: The branch to check out/clone at startup of the portal API container. If this is not set/is empty, `master` is assumed.
 * `DEBUG`: The specification of debug message sources to be output. Use `portal-api:*` to output debug messages from the portal API itself. Use `*` to output **all** debug messages of all packages used in the portal API. Note that this can become **very** verbose (up to such an extent that it may have impact on performance). To see specific debug messages, inspect the source code of the `portal-api` to see which debug scopes are available (`require('debug')('portal-api:asdfg')`). Please also note that secrets and credentials (including passwords of users) MAY be exposed in the logs when specifying a very verbose debug logging. **So take care with the logs**.
+* `LOG_LEVEL`: Specify the debug message log level using this environment variable. Use either `debug` to get **all** debug messages, or one of `info`, `warn` and `error`. Defaults to `info`.
 
 **Note**: Currently, regardless of the branch selected with `GIT_BRANCH`, the `HEAD` is checked out. In the next versions, `GIT_REVISION` may be introduced to support cloning a specific version of the git repository.
 
@@ -77,7 +78,7 @@ There are some special environment variables which can be used to change/specify
 These four core components can only be impacted using two different environment variables:
 
 * `PORTAL_API_URL`: Pass in the URL of the `api` API in case this is not the standard `http://portal-api:3001` URL. If this environment variable is empty, this is what is going to be tested. In case you are deploying using `docker-compose`, this is usually the correct address, and also when deploying using e.g. Kubernetes, there will be a service which is discoverable using this DNS address, so this will be correct in most cases. In case it's not, use this variable to bootstrap the configuration process. When using the [Kubernetes Helm chart](../wicked/README.md), the services are named slightly different, also depending on the helm deployment name, but if you use the predefined `k8s` environment in the static configuration, things should "just work".
-* `LOG_LEVLE`: Specify the debug message log level using this environment variable. Use either `debug` to get **all** debug messages.
+* `LOG_LEVEL`: Specify the debug message log level using this environment variable. Use either `debug` to get **all** debug messages, or one of `info`, `warn` and `error`. Defaults to `info`.
 
 ### `kong`
 
