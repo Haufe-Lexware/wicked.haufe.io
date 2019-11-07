@@ -14,6 +14,32 @@ Official Release of the API Portal.
 
 ## 1.0.0 (release candidates)
 
+### 1.0.0-rc.10 - Notable changes
+
+Motto: **Some new features and enhancements**
+
+The latest releases have been very stable, and thus there has not been many emergency fixes to do in the last three months. On the other hand, quite some things have been going on under the hood which are now ready to be released. Further, we have seen some issues with managed Postgres services which are a little picky how you establish and tear down Postgres connections; there is now a way to influence that a little bit better, plus the Prometheus metrics with regard to this have been improved.
+
+Contributions by:
+
+* [Iblis](https://github.com/Iblis)
+* [MibenCoop](https://github.com/MibenCoop)
+* [santokhsingh](https://github.com/santokhsingh)
+* [Jabb0](https://github.com/Jabb0)
+* [DonMartin76](https://github.com/DonMartin76)
+
+Thank you so much!
+
+Here are the changes in detail:
+
+* [Approver rights currently superseding Admin rights](https://github.com/Haufe-Lexware/wicked.haufe.io/issues/225)
+* [kickstarter throws error when swagger longer than limit](https://github.com/Haufe-Lexware/wicked.haufe.io/issues/217)
+* [Support for Microsoft Teams in the Chatbot](https://github.com/Haufe-Lexware/wicked.haufe.io/issues/213)
+* [Approver Permission to view application details](https://github.com/Haufe-Lexware/wicked.haufe.io/issues/226)
+* [SamlAuth: Can't build profile if User attribute names are uris](https://github.com/Haufe-Lexware/wicked.haufe.io/issues/221)
+* [Add possibility to influence Postgres Pool parameters](https://github.com/Haufe-Lexware/wicked.haufe.io/issues/231)
+* [AuthServer Configuration: Hyphen in auth method name causes login issues](https://github.com/Haufe-Lexware/wicked.haufe.io/issues/222)
+
 ### 1.0.0-rc.9 - Notable changes
 
 **Bugfixes**

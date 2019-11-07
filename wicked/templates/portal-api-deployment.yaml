@@ -98,6 +98,16 @@ spec:
             configMapKeyRef:
               name: {{ template "fullname" . }}-apim-config
               key: PORTAL_SESSIONSTORE_TYPE
+        - name: POSTGRES_CONNECT_RETRIES
+          value: "{{ .Values.storage.pgConnectRetries }}"
+        - name: POSTGRES_CONNECT_DELAY
+          value: "{{ .Values.storage.pgConnectDelay }}"
+        - name: POSTGRES_MAX_CLIENTS
+          value: "{{ .Values.storage.pgMaxClients }}"
+        - name: POSTGRES_CONNECT_TIMEOUT
+          value: "{{ .Values.storage.pgConnectTimeout }}"
+        - name: POSTGRES_IDLE_TIMEOUT
+          value: "{{ .Values.storage.pgIdleTimeout }}"
 {{- if and (not .Values.redis.deployRedis) .Values.redis.useRedis }}
         - name: PORTAL_SESSIONSTORE_HOST
           valueFrom:

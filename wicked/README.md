@@ -33,7 +33,7 @@ It is also assumed that you have some knowledge of Helm, and that you have run `
 If that is set and done, you may now install wicked using the Helm chart. Move into a suitable directory, and then download the chart using `helm fetch`:
 
 ```
-$ export WICKED_VERSION=1.0.0-rc.9 # Possibly adapt to the latest version
+$ export WICKED_VERSION=1.0.0-rc.10 # Possibly adapt to the latest version
 $ helm fetch --untar https://github.com/Haufe-Lexware/wicked.haufe.io/releases/download/v${WICKED_VERSION}/wicked-${WICKED_VERSION}.tgz
 ```
 
@@ -139,6 +139,11 @@ Setting | Must Override | Default | Description
 `storage.pgUser` | - | - | **Postgres Setting for Wicked**: Specify the Postgres user for Wicked; if you are using the default Postgres installation (`deployPostgres: true`), this is the user name which will be created for Kong/Wicked, otherwise it has to exist in your existing Postgres instance (and have access rights to the above database).
 `storage.pgPassword` | - | `kong` | **Postgres Setting for Wicked**: Specify the Postgres password for Wicked; if you are using the default Postgres installation (`deployPostgres: true`), this is the password which will be used when creating the user for Wicked/Kong, otherwise it has to exist in your existing Postgres instance (and have access rights to the above database).
 `storage.pgSsl` | - | `false` | **Postgres Setting for Wicked**: Set to `true` to set the Postgres SSL mode to "require". This is especially needed when using a managed Postgres service such as Azure Database for Postgres, which requires this option and does not let the client negotiate.
+`storage.pgConnectRetries` | - | `30` | **Postgres Setting for Wicked**: The number of times the wicked API container tries to connect to Postgres before failing and quitting the process.
+`storage.pgConnectDelay` | - | `2000` | **Postgres Setting for Wicked**: The delay between connect attempts (in milliseconds).
+`storage.pgMaxClients` | - | `10` | **Postgres Setting for Wicked**: The maximum number of Postgres clients in the Postgres connection pool.
+`storage.pgConnectTimeout` | - | `10000` | **Postgres Setting for Wicked**: The Postgres connection timeout (in milliseconds).
+`storage.pgIdleTimeout` | - | `120000` | **Postgres Setting for Wicked**: The idle timeout of a Postgres connection pool connection. Specify this to be larger than 60 seconds (`60000`) for best performance and compatibility with managed Postgres services, such as AWS RDS or Azure Postgres.
 `persistence.enabled` | - | `false` | **ONLY APPLIES TO JSON STORAGE TYPE**: Set to `true` to persist the dynamic data to a Persistent Volume Claim. If set to `true`, specify the volume claim below. Not important if wicked stores data in Postgres (recommended)
 `persistence.existingClaim` | - | `""` | **ONLY APPLIES TO JSON STORAGE TYPE**: If you want to use pre-existing volume claim for the persistence, specify it here. Mutually exclusive with the option `persistence.storageClass` which is used for dynamic provisioning of volume claims.
 `persistence.storageClass` | - | `""` | **ONLY APPLIES TO JSON STORAGE TYPE**: If your cluster supports dynamic provisioning of volumes (provision volumes for volume claims automatically), specify the storage class for the volume here. Mutually exclusive with `persistence.existingClaim` (use either).

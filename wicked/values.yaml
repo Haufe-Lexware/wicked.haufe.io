@@ -55,7 +55,7 @@ image:
   # need to pull your company's version of wicked.
   repository: "haufelexware/wicked."
   # The docker image tag to use; usually you don't change this.
-  tag: "1.0.0-rc.9"
+  tag: "1.0.0-rc.10"
   pullPolicy: IfNotPresent
 
 # Add imagePullSecrets like this in an override.yaml to pass in with helm install
@@ -112,6 +112,17 @@ storage:
   pgUser: ""
   pgPassword: ""
   pgSsl: false
+  # Tweaking the behaviour of the Postgres node.js driver.
+  # Number of times wicked API tries to connect to Postgres
+  pgConnectRetries: 30
+  # Delay between (failed) connection attempts
+  pgConnectDelay: 2000
+  # Maximum number of connections in the connection pool
+  pgMaxClients: 10
+  # Postgres connection timeout
+  pgConnectTimeout: 10000
+  # Postgres idle connection in connection pool timeout
+  pgIdleTimeout: 120000
 
 # Standard resources for the node components of wicked.
 resources:
