@@ -10,7 +10,9 @@ pipeline {
         pollSCM "H/10 * * * *"
     }
 
-    env.DOCKER_TAG = env.BRANCH_NAME.replaceAll('/', '-')
+    environment {
+        DOCKER_TAG = env.BRANCH_NAME.replaceAll('/', '-')
+    }
 
     stages {
         // stage('SonarQube analysis') {
@@ -34,9 +36,7 @@ pipeline {
 
         stage('Build') {
             steps {
-                script {
-                    sh './src/build.sh'
-                }
+                sh './src/build.sh'
             }
         }
 
