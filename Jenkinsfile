@@ -1,6 +1,7 @@
 pipeline {
     agent {
         docker {
+            label 'docker'
             image 'haufelexware/wicked.build-agent:latest'
             // Add docker group
             args '--group-add 999'
