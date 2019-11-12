@@ -5,3 +5,4 @@ Dockerfile*
 build.sh
 git_*
 *.tmp
+.git

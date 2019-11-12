@@ -5,3 +5,4 @@ Dockerfile*
 sessions
 git_*
 *.tgz
+.git
