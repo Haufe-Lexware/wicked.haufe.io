@@ -1,0 +1,26 @@
+extends layout
+
+block scripts
+    -var isVuePage = true
+
+block content
+    .jumbotron
+        .container
+            h1 Postgres and Redis
+            
+            p Specify Postgres and Redis configuration settings
+    
+    .container
+
+        div(id="vueBase")
+            wicked-database(v-model="glob")
+            br
+            nav-buttons(this-page="database")
+
+block afterScripts
+    script(type="text/javascript").
+        const injectedData = {
+            glob: !{JSON.stringify(glob)}
+        };
+
+    script(src='/js/database.js')

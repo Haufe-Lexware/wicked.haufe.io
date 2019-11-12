@@ -1,0 +1,222 @@
+extends layout
+
+// This is just to unclutter the layout.jade a little.
+
+mixin kilroy
+    p Kilroy was here.
+
+mixin pluginPanel(source, dummy, label)
+  - var inputId = source
+  - var inputValue = eval(source)
+  //- var collapseId = 'collapse_' + source.replace(/\./g, '_')
+  - var collapseId = Math.random().toString(36).substring(7)
+  div(id='accordion').panel-group
+    .panel.panel-info
+      .panel-heading
+          .checkbox
+            label(data-toggle="collapse" data-target='##{collapseId}')
+              if inputValue
+                input(name='#{inputId}' id='#{inputId}' checked='checked' type='checkbox')
+                | #{label}
+              else
+                input(name='#{inputId}' id='#{inputId}' type='checkbox')
+                | #{label}
+      if inputValue
+        div(id='#{collapseId}').panel-collapse.collapse.in
+          .panel-body
+            block
+      else
+        div(id='#{collapseId}').panel-collapse.collapse
+          .panel-body
+            block
+
+mixin loggingPanel(prefix, data)
+    +pluginPanel(prefix + 'plugins.file_log.useFileLog', data, "Logging")
+        h4 Logging configuration
+        p.
+            Check this option if you want to use standard logging to <code>stdout</code> in
+            the Kong container. If you want other/custom logging, you can to uncheck
+            this option and configure a custom plugin below (not the <code>file-log</code> plugin
+            though).
+        +inputField2(prefix + 'plugins.file_log.config.path', data, 'File log path:', 'string', null, 'readonly')
+
+mixin awsLambdaPanel(prefix, data)
+    +pluginPanel(prefix + 'plugins.aws_lambda.useAwsLambda', data, "AWS Lambda")
+        h4 AWS Lambda configuration
+        p.
+            All of these fields must be filled (we won't check, but it will fail when deploying).       
+        +inputField2(prefix + 'plugins.aws_lambda.config.aws_key', data, "AWS Key:")
+        +inputField2(prefix + 'plugins.aws_lambda.config.aws_secret', data, "AWS Secret:")
+        +inputField2(prefix + 'plugins.aws_lambda.config.aws_region', data, "AWS Region:")
+        +inputField2(prefix + 'plugins.aws_lambda.config.function_name', data, "Function name:")
+  
+mixin rateLimitingPanel(prefix, data)
+    +pluginPanel(prefix + 'plugins.rate_limiting.useRateLimiting', data, "Rate Limiting")
+        h4 Rate limiting configuration
+        p.
+            One of these fields must be filled (we won't check, but it will fail when deploying).
+            Prefer shorter periods over longer periods in case you might need to redeploy/re-init
+            the Kong database. That would result in reset rate limiting periods.
+            <strong>Recommendation:</strong> Stick to hours or smaller.
+        +inputField2(prefix + 'plugins.rate_limiting.config.second', data, "Requests per second:")
+        +inputField2(prefix + 'plugins.rate_limiting.config.minute', data, "Requests per minute:")
+        +inputField2(prefix + 'plugins.rate_limiting.config.hour', data, "Requests per hour:")
+        +inputField2(prefix + 'plugins.rate_limiting.config.day', data, "Requests per day:")
+        +inputField2(prefix + 'plugins.rate_limiting.config.month', data, "Requests per month:")
+        +inputField2(prefix + 'plugins.rate_limiting.config.year', data, "Requests per year:")
+        hr
+        h4 Additional Settings
+        +checkBox(prefix + 'plugins.rate_limiting.config.fault_tolerant', data, '<strong>Fault tolerant:</strong> Proxy requests even if Kong cannot reach its DB.')
+
+mixin corsPanel(prefix, data)
+    +pluginPanel(prefix + 'plugins.cors.useCors', data, "CORS")
+        p.
+            Use the CORS plugin to enable Cross Origin Request Sharing on your API. If you don't use
+            CORS, you will not be able to call your API from a browser. Which may be exactly what you do
+            not want. For machine to machine communication, enabling this is <strong>not required</strong>
+            and definitely <strong>not recommended</strong>.
+        +inputField2(prefix + 'plugins.cors.config.origins', plugins, 'Access-Control-Allow-Origin:', 'string', 'Allowed origins; to allow all origins, specify <code>*</code>')
+        +inputField2(prefix + 'plugins.cors.config.methods', plugins, 'Access-Control-Allow-Methods', 'string', 'Value for the <code>Access-Control-Allow-Methods</code> header, expects a comma delimited string (e.g. GET,POST). Defaults to GET,HEAD,PUT,PATCH,POST,DELETE.')
+        +inputField2(prefix + 'plugins.cors.config.headers', plugins, 'Access-Control-Allow-Headers', 'string', 'Value for the <code>Access-Control-Allow-Headers</code> header, expects a comma delimited string (e.g. <code>Origin,Authorization</code>). Defaults to the value of the <code>Access-Control-Request-Headers</code> header.')
+        +inputField2(prefix + 'plugins.cors.config.exposed_headers', plugins, 'Access-Control-Expose-Headers', 'string', 'Value for the <code>Access-Control-Expose-Headers</code> header, expects a comma delimited string (e.g. <code>Origin,Authorization</code>). If not specified, no custom headers are exposed.')
+        +checkBox(prefix + 'plugins.cors.config.credentials', plugins, '<strong>Access-Control-Allow-Credentials</strong>: Flag to determine whether the Access-Control-Allow-Credentials header should be sent with true as the value. Defaults to false.')
+        +inputField2(prefix + 'plugins.cors.config.max_age', plugins, 'Preflight Max Age (seconds):', 'string', 'Indicates how long the results of the preflight request can be cached, in seconds.')
+        +checkBox(prefix + 'plugins.cors.config.preflight_continue', plugins, '<strong>Proxy OPTIONS to backend</strong>: A boolean value that instructs the plugin to proxy the <code>OPTIONS</code> preflight request to the upstream API. Defaults to <code>false</code>.')
+
+mixin correlationIdPanel(prefix, data, selectedGenerator)
+    +pluginPanel(prefix + 'plugins.correlation_id.useCorrelationId', data, 'Correlation ID')
+        p.
+            Use the Correlation ID plugin to introduce a correlation ID by the API Gateway; this can be
+            useful when tracking and debugging requests to your backend, to see which request passes through
+            which systems at which time. This is a highly recommended plugin.
+        +inputField2(prefix + 'plugins.correlation_id.config.header_name', plugins, 'Header Name:', 'string', 'The name of the header to pass the ID in.')
+        .form-group
+            label Correlation ID Generator
+            select(name=prefix+'plugins.correlation_id.config.generator').form-control
+                if selectedGenerator == 'uuid#counter'
+                    option uuid
+                    option(selected) uuid#counter
+                else
+                    option(selected) uuid
+                    option uuid#counter
+        +checkBox(prefix + 'plugins.correlation_id.config.echo_downstream', plugins, '<strong>Echo ID downstream</strong>: Check to echo the correlation ID back to the calling client.')
+
+mixin otherPluginsPanel(prefix, data, apiId)
+    - var friendlyId = apiId.toUpperCase().replace(/[\-\.]/g, '_').replace(/[\[\]]/g, '')
+    +pluginPanel(prefix + 'plugins.others.useOthers', data, 'Other Plugins')
+        p.
+            This wicked Kickstarter application only has direct support for a few of Kong's plugins.
+            You can, by editing the following JSON snippet, configure all other plugins according to
+            the <a href='https://getkong.org/plugins/' target='_blank'>plugin documentation at Mashape</a>. 
+            Kickstarter will unfortunately not really help you with it. The input area will expect a
+            JSON array of plugin configuration, as described at Kong's documentation pages.
+            
+        p.
+            <strong>Important Note</strong>: You must not try to use any of the following plugins, as they
+            are used under the hood by wicked to achieve the subscription mechanisms:
+        ul
+            li <strong>Access Control Lists</strong> (ACL)
+            li <strong>Key Authentication</strong> (<code>key-auth</code>)
+            li <strong>OAuth2</strong> (<code>oauth2</code>)
+
+        .panel.panel-success
+            .panel-heading
+                h4.panel-title
+                    a(data-toggle='collapse' data-target='#toolbox') Toolbox &raquo;
+            #toolbox.collapse.panel-collapse
+                .panel-body
+                    h5 Add <code>Forwarded</code> header
+
+                    a(href='javascript:addForwarded("#{friendlyId}")').btn.btn-success.btn-sm Add Forwarded Header
+
+                    hr
+
+                    h5 Add Basic Authentication Header
+                    p
+                        table(width='100%')
+                            tr()
+                                td
+                                    label Username:
+                                    input(id=friendlyId+'_USERNAME' type='string').form-control
+                                td(style='padding-left: 5px;')
+                                    label Password:
+                                    input(id=friendlyId+'_PASSWORD' type='string').form-control
+                    p
+                        a(href='javascript:addBasicAuth("#{friendlyId}")').btn.btn-sm.btn-success Add Authentication Header
+        br
+            
+        textarea(style='height:600px' id=friendlyId+'_json' name='#{prefix}plugins.others.config').form-control= eval(prefix + 'plugins.others.config')
+
+block moreScripts
+    script(type='text/javascript').
+
+        function addHeader(anId, header) {
+            var jsonText = $('#' + anId + '_json').val();
+            var pluginJson = null;
+            try {
+                pluginJson = JSON.parse(jsonText);
+            } catch (ex) {
+                alert('The JSON in the text area cannot be parsed. Please correct and retry.');
+                return;
+            }
+
+            try {
+                var reqTransformer = null;
+                for (var i=0; i<pluginJson.length; ++i) {
+                    var pl = pluginJson[i];
+                    if (pl.name == 'request-transformer') {
+                        reqTransformer = pl;
+                        break;
+                    }
+                }
+                if (!reqTransformer) {
+                    reqTransformer = {
+                        name: 'request-transformer'
+                    };
+                    pluginJson.push(reqTransformer);
+                }
+                if (!reqTransformer.config)
+                    reqTransformer.config = {};
+                var config = reqTransformer.config;
+                if (!config.add)
+                    config.add = {};
+                var add = config.add;
+                if (!add.headers)
+                    add.headers = [];
+                var headers = add.headers;
+                headers.push(header);
+
+                $('#' + anId + '_json').val(JSON.stringify(pluginJson, null, 2));
+            } catch (ex) {
+                alert('An error occurred. Exception: ' + ex.message);
+            }
+
+        }
+
+        function addBasicAuth(anId) {
+            try {
+                var username = $('#' + anId + '_USERNAME').val();
+                var password = $('#' + anId + '_PASSWORD').val();
+                var base64Creds = btoa(username + ':' + password);
+                // alert(base64Creds);
+                var headerText = 'Authorization:Basic ' + base64Creds;
+                var envVarName = anId + '_BASICAUTH';
+                $.ajax({
+                    method: 'POST',
+                    url: '/api/envs/default',
+                    data: {
+                        name: envVarName,
+                        value: headerText,
+                        encrypted: true
+                    }
+                }).done(function() {
+                    addHeader(anId, '$' + envVarName);
+                })
+            } catch (ex) {
+                alert('An error occurred. Possibly your browser does not support "btoa". The exception: ' + ex.message);
+            }
+        }
+
+        function addForwarded(anId) {
+            addHeader(anId, '%%Forwarded');
+        }

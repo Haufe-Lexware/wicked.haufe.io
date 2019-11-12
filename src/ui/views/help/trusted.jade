@@ -1,0 +1,44 @@
+extends help_layout
+
+block help_content
+  +helpItem('application_trust', 'Application/Subscription Trust')
+
+  p.
+    The concept of "Application/Subscription Trust" only applies to APIs which are secured using OAuth2.
+
+  p.
+    In terms of API subscriptions, an application can have a "trusted", or a "normal" subscription to an
+    API. The difference between the two is that a trusted subscription will implicitly always be trusted
+    by the API Management system to access all scopes of the API, even without asking for permission to the user.
+
+  p.
+    Usually, when an application wants to access an API on behalf of an end user, the API Management system
+    will ask the user to "grant access" to the API for the application on behalf of himself. If the application's
+    subscription is a "trusted" subscription, the API Management will automatically assume that the user grants
+    all scopes to the application, without asking.
+
+  p.
+    Normally, only the "main" application which uses an API, i.e. the application which is tied most to the API,
+    has a trusted subscription (as this is what the end user also would expect). All other subscriptions to the
+    API are usually "normal" subscriptions which would require the end user to explicitly grant access to the
+    application for his own personal data.
+
+  +helpItem('implications_of_trust', 'What does this mean?')
+
+  p.
+    The concept of trusted subscriptions has the following implications which are also important to the application developer:
+
+  ul
+    li.
+      Only trusted subscriptions can make use of the <a href="/help/oauth2_password_grant">Resource Owner Password Grant</a>
+      flow; this flow does not have a user interface which could enable the user grant access to the API. Normal subscriptions
+      must use either the <a href="/help/oauth2_authorization_code">Authorization Code</a> or
+      <a href="/help/oauth2_implicit_grant">Implicit Grant</a> flows (depending on their nature), which allow the user to,
+      by UI, grant access on its behalf.
+    li.
+      Only Admins can create trusted subscriptions without approval.
+    li.
+      Even if a subscription is created for a plan which does not need approval, creating a trusted subscription would 
+      <b>still</b> require approval.
+    li.
+      The scope which can be requested by a trusted subscriptions cannot be limited using a set of <a href="allowed_scopes">allowed scopes</a>; this only works with non-trusted subscriptions.

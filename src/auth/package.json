@@ -1,0 +1,77 @@
+{
+  "name": "wicked.portal-auth",
+  "version": "1.0.0-rc.10",
+  "description": "wicked.haufe.io Authorization Server",
+  "main": "dist/authz.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "./build-typescript.sh",
+    "build-and-start": "./build-typescript.sh && node ./dist/authz.js",
+    "start": "node ./dist/authz.js",
+    "postinstall": "npm link wicked-sdk && npm link portal-env"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Haufe-Lexware/wicked.portal-auth.git"
+  },
+  "keywords": [
+    "authentication",
+    "authorization",
+    "google",
+    "wicked",
+    "apim",
+    "api",
+    "management",
+    "google",
+    "github",
+    "facebook",
+    "twitter",
+    "adfs",
+    "ldap"
+  ],
+  "author": "Martin Danielsson <martin.danielsson@haufe-lexware.com>",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/Haufe-Lexware/wicked.haufe.io/issues"
+  },
+  "homepage": "https://github.com/Haufe-Lexware/wicked.portal-auth",
+  "dependencies": {
+    "@types/node": "^10.3.2",
+    "async": "2.6.2",
+    "body-parser": "1.18.3",
+    "bootstrap": "3.4.1",
+    "connect-redis": "3.3.2",
+    "cookie-parser": "1.4.3",
+    "cors": "2.7.1",
+    "express": "4.16.3",
+    "express-session": "1.15.6",
+    "jade": "1.11.0",
+    "jquery": "3.4.1",
+    "json-stringify-safe": "5.0.1",
+    "jsonwebtoken": "5.7.0",
+    "ldapts": "1.9.0",
+    "morgan": "1.9.1",
+    "mustache": "2.2.1",
+    "nocache": "^2.0.0",
+    "openid-client": "2.5.0",
+    "passport": "0.3.2",
+    "passport-facebook": "2.1.1",
+    "passport-github2": "0.1.10",
+    "passport-google-oauth20": "1.0.0",
+    "passport-oauth": "1.0.0",
+    "passport-twitter": "1.0.4",
+    "redis": "2.8.0",
+    "request": "2.88.0",
+    "session-file-store": "1.0.0",
+    "twitter": "1.7.1",
+    "wicked-saml2-js": "3.0.0"
+  },
+  "jshintConfig": {
+    "node": true,
+    "esversion": 6
+  },
+  "devDependencies": {
+    "@types/async": "2.0.49",
+    "typescript": "3.4.1"
+  }
+}

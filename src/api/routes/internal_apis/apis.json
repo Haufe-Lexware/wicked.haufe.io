@@ -1,0 +1,145 @@
+{
+    "apis": [
+        {
+            "id": "portal-api",
+            "name": "Portal API",
+            "desc": "This is the API for wicked, which is used to store the entire state of the portal. Can e.g. be used for automation.",
+            "auth": "oauth2",
+            "authMethods": [
+                "will be overridden from globals.json settings"
+            ],
+            "registrationPool": "wicked",
+            "settings": {
+                "enable_client_credentials": true,
+                "enable_implicit_grant": true,
+                "enable_authorization_code": true,
+                "enable_password_grant": true,
+                "token_expiration": "1800",
+                "scopes": {
+                    "read_plans": {
+                        "description": "Read plans"
+                    },
+                    "read_groups": {
+                        "description": "Read user group definitions"
+                    },
+                    "read_content": {
+                        "description": "Read custom/markdown/HTML content"
+                    },
+                    "health": {
+                        "description": "Read out health information"
+                    },
+                    "read_templates": {
+                        "description": "Read templates"
+                    },
+                    "read_auth_servers": {
+                        "description": "Read authorization servers"
+                    },
+                    "read_apis": {
+                        "description": "Read API definitions"
+                    },
+                    "read_users": {
+                        "description": "Read user information"
+                    },
+                    "write_users": {
+                        "description": "Write user information"
+                    },
+                    "login": {
+                        "description": "Verify username and password"
+                    },
+                    "read_applications": {
+                        "description": "Read application data"
+                    },
+                    "write_applications": {
+                        "description": "Write application data"
+                    },
+                    "read_subscriptions": {
+                        "description": "Read subscriptions"
+                    },
+                    "write_subscriptions": {
+                        "description": "Write/edit/delete subscriptions"
+                    },
+                    "read_approvals": {
+                        "description": "Read pending approvals"
+                    },
+                    "read_verifications": {
+                        "description": "Read email and password verifications"
+                    },
+                    "write_verifications": {
+                        "description": "Create or delete verifications"
+                    },
+                    "webhooks": {
+                        "description": "Access and change webhooks"
+                    },
+                    "read_registrations": {
+                        "description": "Read user registrations"
+                    },
+                    "write_registrations": {
+                        "description": "Write user registrations"
+                    },
+                    "read_namespaces": {
+                        "description": "Read registration pool namespaces"
+                    },
+                    "write_namespaces": {
+                        "description": "Write registration pool namespaces"
+                    },
+                    "read_grants": {
+                        "description": "Read user API/Application grants"
+                    },
+                    "write_grants": {
+                        "description": "Write user API/Application grants"
+                    },
+                    "restart_api": {
+                        "description": "Restart the API components"
+                    }
+                }
+            },
+            "tags": [],
+            "requiredGroup": null,
+            "plans": [
+                "__internal_api_basic",
+                "__internal_api_unlimited"
+            ],
+            "internal": true
+        },
+        {
+            "id": "echo",
+            "name": "Echo API",
+            "desc": "A simple echo API which can be used to test authentication and authorization integrations, or for demonstration purposes. Supports all OAuth2 flows.",
+            "auth": "oauth2",
+            "authMethods": [
+                "will be overridden from globals.json settings"
+            ],
+            "settings": {
+                "enable_client_credentials": true,
+                "enable_implicit_grant": true,
+                "enable_authorization_code": true,
+                "enable_password_grant": true,
+                "token_expiration": "1800",
+                "scopes": {
+                    "get": {
+                        "description": "Allow GET operations"
+                    },
+                    "put": {
+                        "description": "Allow POST operations"
+                    },
+                    "post": {
+                        "description": "Allow POST operations"
+                    },
+                    "patch": {
+                        "description": "Allow PATCH operations"
+                    },
+                    "delete": {
+                        "description": "Allow DELETE operations"
+                    }
+                }
+            },
+            "tags": [],
+            "requiredGroup": null,
+            "plans": [
+                "__internal_api_basic",
+                "__internal_api_unlimited"
+            ],
+            "internal": true
+        }
+    ]
+}

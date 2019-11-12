@@ -1,0 +1,49 @@
+extends auth_layout
+
+block scripts
+    script(type='text/javascript').
+        function confirmRevoke(appName, apiName) {
+            return confirm('Really revoke the rights of application "' + appName + '" to access the API "' + apiName + '" on your behalf?');
+        }
+
+block content
+    h2 Access Grants
+
+    if flashMessage
+        +flashMessage(flashMessage.type, flashMessage.message)
+
+    if grants.length <= 0
+        p You haven't granted access to any applications.
+
+        h5.
+            In case you have granted access to an API on your behalf, you may use this page
+            to review and revoke the application's rights to access specific APIs.
+    else
+        p You have given the following applications access to APIs on your behalf:
+
+        table.table
+            thead
+                tr
+                    th Application
+                    th API
+                    th Action
+            each grant, i in grants
+                tr
+                    td(style='vertical-align:middle') <a href="#{grant.appInfo.mainUrl}">#{grant.appInfo.name}</a>
+                    td(style='vertical-align:middle') <a href='#{portalUrl}apis/#{grant.apiInfo.id}'>#{grant.apiInfo.name}</a>
+                    td(style='vertical-align:middle')
+                        form(role='form' action='#{baseUrl}/#{manageGrantsUrl}' method='post' onsubmit="return confirmRevoke('#{grant.appInfo.name}', '#{grant.apiInfo.name}');")
+                            input(type='hidden' name='_csrf' value='#{csrfToken}')
+                            input(type='hidden' name='revoke_app' value='#{grant.appInfo.id}')
+                            input(type='hidden' name='revoke_api' value='#{grant.apiInfo.id}')
+                            button(class='btn btn-danger btn-block' type='submit') Revoke
+
+        h5.
+            Click the "Revoke" button to revoke an application's right to access an API
+            on your behalf. The next time, the application will need to ask for your 
+            permission again.
+
+        br
+
+        h5
+            a(href='#{baseUrl}/#{manageGrantsUrl}') Refresh page.

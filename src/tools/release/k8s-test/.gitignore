@@ -1,0 +1,4 @@
+*id_rsa*
+wicked
+env.sh
+kubeconfig-*

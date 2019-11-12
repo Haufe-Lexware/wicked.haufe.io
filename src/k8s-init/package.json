@@ -1,0 +1,24 @@
+{
+  "name": "wicked.k8s-init",
+  "version": "1.0.0-rc.10",
+  "description": "Init container for running getting client credentials for k8s with wicked",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Haufe-Lexware/wicked.k8s-init.git"
+  },
+  "author": "Martin Danielsson <martin.danielsson@haufe-lexware.com>",
+  "license": "Apache-2.0",
+  "homepage": "https://github.com/Haufe-Lexware/wicked.k8s-init",
+  "dependencies": {
+    "axios": "0.18.0",
+    "wicked-sdk": "file:wicked-sdk.tgz"
+  },
+  "jshintConfig": {
+    "node": true,
+    "esversion": 6
+  }
+}

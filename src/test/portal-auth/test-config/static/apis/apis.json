@@ -1,0 +1,177 @@
+{
+  "apis": [
+    {
+      "id": "echo-woo",
+      "name": "Echo with woo",
+      "desc": "Echo with woo Registration",
+      "auth": "oauth2",
+      "tags": [],
+      "plans": [
+        "basic",
+        "unlimited"
+      ],
+      "settings": {
+        "token_expiration": "600",
+        "scopes": {
+          "get": {
+            "description": "GET"
+          },
+          "put": {
+            "description": "PUT"
+          },
+          "patch": {
+            "description": "PATCH"
+          },
+          "post": {
+            "description": "POST"
+          },
+          "delete": {
+            "description": "DELETE"
+          }
+        },
+        "mandatory_scope": false,
+        "enable_client_credentials": false,
+        "enable_implicit_grant": true,
+        "enable_password_grant": true,
+        "enable_authorization_code": true
+      },
+      "requiredGroup": "",
+      "registrationPool": "woo",
+      "hide_credentials": true,
+      "authMethods": [
+        "default:local"
+      ]
+    },
+    {
+      "id": "echo-woo-ns",
+      "name": "Echo with woo-ns",
+      "desc": "Echo API with woo-ns registration (with namespaces)",
+      "auth": "oauth2",
+      "tags": [],
+      "plans": [
+        "basic",
+        "unlimited"
+      ],
+      "authMethods": [
+        "default:local"
+      ],
+      "settings": {
+        "token_expiration": "600",
+        "scopes": {
+          "get": {
+            "description": "GET"
+          },
+          "put": {
+            "description": "PUT"
+          },
+          "patch": {
+            "description": "PATCH"
+          },
+          "post": {
+            "description": "POST"
+          },
+          "delete": {
+            "description": "DELETE"
+          }
+        },
+        "mandatory_scope": false,
+        "enable_implicit_grant": true,
+        "enable_password_grant": true,
+        "enable_authorization_code": true
+      },
+      "requiredGroup": "",
+      "registrationPool": "woo-ns"
+    },
+    {
+      "id": "echo-passthrough",
+      "name": "Echo with passthrough",
+      "desc": "Echo API with passthrough Scope checking",
+      "auth": "oauth2",
+      "tags": [],
+      "plans": [
+        "unlimited",
+        "basic"
+      ],
+      "authMethods": [
+        "default:local"
+      ],
+      "settings": {
+        "token_expiration": "600",
+        "scopes": {
+          "get": {
+            "description": "GET"
+          },
+          "put": {
+            "description": "PUT"
+          },
+          "post": {
+            "description": "POST"
+          },
+          "delete": {
+            "description": "DELETE"
+          },
+          "patch": {
+            "description": "PATCH"
+          }
+        },
+        "mandatory_scope": false,
+        "enable_client_credentials": false,
+        "enable_implicit_grant": true,
+        "enable_password_grant": true,
+        "enable_authorization_code": true
+      },
+      "requiredGroup": "",
+      "registrationPool": "",
+      "passthroughScopeUrl": "${PORTAL_APIS_ECHOPASSTHROUGH_SCOPE_URL}"
+    },
+    {
+      "id": "echo-client-credentials",
+      "name": "Echo with Client Credentials",
+      "desc": "Echo with Client Credentials",
+      "auth": "oauth2",
+      "tags": [],
+      "plans": [
+        "unlimited",
+        "basic"
+      ],
+      "authMethods": [
+        "default:local"
+      ],
+      "settings": {
+        "token_expiration": "600",
+        "scopes": {
+          "get": {
+            "description": "GET"
+          },
+          "put": {
+            "description": "PUT"
+          },
+          "post": {
+            "description": "POST"
+          },
+          "delete": {
+            "description": "DELETE"
+          },
+          "patch": {
+            "description": "PATCH"
+          }
+        },
+        "mandatory_scope": false,
+        "enable_client_credentials": true,
+        "enable_implicit_grant": false,
+        "enable_password_grant": false,
+        "enable_authorization_code": false
+      },
+      "requiredGroup": "",
+      "registrationPool": ""
+    }
+  ],
+  "_links": {
+    "self": {
+      "href": "/apis"
+    },
+    "plans": {
+      "href": "/plans"
+    }
+  }
+}

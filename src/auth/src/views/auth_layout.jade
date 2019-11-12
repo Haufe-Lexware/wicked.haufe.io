@@ -1,0 +1,48 @@
+mixin flashMessage(type, message)
+    if type == 'error'
+        div(role='alert').alert.alert-danger
+            span(aria-hidden="true").glyphicon.glyphicon-exclamation-sign
+            span.sr-only Error:
+            | &nbsp; #{message}
+    else if type == 'warning'
+        div(role='alert').alert.alert-warning
+            span(aria-hidden="true").glyphicon.glyphicon-warning-sign
+            span.sr-only Warning:
+            | &nbsp; #{message}
+    else
+        div(role='alert').alert.alert-success
+            span(aria-hidden="true").glyphicon.glyphicon-check
+            span.sr-only Success:
+            | &nbsp; #{message}
+    
+doctype html
+html
+  head
+    title #{title}
+    title Authorization Server
+    link(rel='stylesheet', href='#{baseUrl}/bootstrap/css/bootstrap.min.css')
+    link(rel='stylesheet', href='#{baseUrl}/content/wicked.css')
+    
+    block scripts
+
+  body.wicked-auth
+    .container
+        span.center-block
+
+    .container
+        .row
+            .col-md-12
+                div(style='margin-left:auto;margin-right:auto;text-align:center')
+                    a(href='#{portalUrl}')
+                        img(src='#{baseUrl}/content/images/wicked-auth-page-120.png')
+                        //img(src='/images/wicked-text-64.png')
+            .col-md-8.col-md-offset-2
+                .panel.panel-default
+                    .panel-body
+                        .jumbotron.wicked-login-title
+                            
+                            block content
+
+    script(src='#{baseUrl}/jquery/jquery.min.js')
+    script(src='#{baseUrl}/bootstrap/js/bootstrap.min.js')
+ 

@@ -1,0 +1,11 @@
+FROM node:10
+
+RUN apt-get update && apt-get install -y jq
+RUN mkdir -p /usr/src/app
+COPY . /usr/src/app
+WORKDIR /usr/src/app
+RUN npm install -g typescript@$(jq .devDependencies.typescript package.json | tr -d '"')
+RUN npm install --production
+RUN tsc && npm pack && cp -f wicked-sdk-*.tgz wicked-sdk.tgz
+
+CMD ["/bin/true"]

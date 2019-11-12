@@ -1,0 +1,165 @@
+{
+  "title": "$PORTAL_TITLE",
+  "footer": "Recursive ${PORTAL_REC1}",
+  "storage": {
+    "type": "${WICKED_STORAGE}",
+    "pgHost": "${PORTAL_STORAGE_PGHOST}",
+    "pgPort": "${PORTAL_STORAGE_PGPORT}",
+    "pgUser": "kong",
+    "pgPassword": "kong"
+  },
+  "network": {
+    "schema": "http",
+    "portalHost": "$PORTAL_NETWORK_PORTALHOST",
+    "apiHost": "$PORTAL_NETWORK_APIHOST",
+    "apiUrl": "$PORTAL_API_URL",
+    "portalUrl": "$PORTAL_PORTAL_URL",
+    "kongAdapterUrl": "$PORTAL_KONG_ADAPTER_URL",
+    "kongAdminUrl": "$PORTAL_KONG_ADMIN_URL",
+    "mailerUrl": "$PORTAL_MAILER_URL",
+    "chatbotUrl": "$PORTAL_CHATBOT_URL",
+    "forceRedirectToHttps": false
+  },
+  "validatedUserGroup": "dev",
+  "api": {
+    "headerName": "X-ApiKey",
+    "portal": {
+      "enableApi": true,
+      "requiredGroup": "dev"
+    }
+  },
+  "auth": {
+    "local": {
+      "useLocal": true,
+      "trustLocal": false
+    },
+    "adfs": {
+      "useAdfs": false
+    },
+    "github": {
+      "useGithub": false
+    },
+    "google": {
+      "useGoogle": false
+    },
+    "oauth2": {
+      "useOauth2": false,
+      "authorizationURL": "https://identity.yourcompany.com/oauth2/authorize",
+      "tokenURL": "https://identity.yourcompany.com/oauth2/token",
+      "clientID": "this-is-your-client-id",
+      "clientSecret": "this-is-your-client-secret",
+      "callbackURL": "https://portal.yourcompany.com/oauth2/callback",
+      "customIdField": "upn",
+      "firstNameField": "given_name",
+      "lastNameField": "family_name",
+      "emailField": "email"
+    }
+  },
+  "initialUsers": [
+    {
+      "id": "1",
+      "firstName": "Admin",
+      "lastName": "User",
+      "email": "foo@bar.com",
+      "validated": true,
+      "groups": [
+        "admin"
+      ]
+    },
+    {
+      "id": "1234567890",
+      "firstName": "Initial",
+      "lastName": "User",
+      "email": "initial@user.com",
+      "password": "password",
+      "validated": true,
+      "groups": [
+        "admin"
+      ]
+    },
+    {
+      "id": "9876543210",
+      "firstName": "Unvalidated",
+      "lastName": "User",
+      "email": "unvalidated@user.com",
+      "password": "password",
+      "validated": false,
+      "groups": []
+    },
+    {
+      "id": "11",
+      "firstName": "Fred",
+      "lastName": "Flintstone",
+      "email": "fred@flintstone.com",
+      "password": "pebbles",
+      "validated": true,
+      "groups": [
+        "dev"
+      ]
+    }
+  ],
+  "version": 13,
+  "company": "$PORTAL_TITLE",
+  "configKeyCheck": "3e514f150e2e47fae2c6c35a5b329834fcf7a3a662b7f040026f5029eb6b10828e48fabb50df02a0c6716717d347e36f63cc889fb5122694fc3dea4ed75e031f36587d013b7f5caf272985bebb8dbf0561e99097e553",
+  "layouts": {
+    "defautRootUrl": "http://wicked.haufe.io",
+    "defautRootUrlTarget": "_blank",
+    "defautRootUrlText": null,
+    "menu": {
+      "homeLinkText": "Home",
+      "apisLinkVisibleToGuest": true,
+      "applicationsLinkVisibleToGuest": true,
+      "contactLinkVisibleToGuest": true,
+      "contentLinkVisibleToGuest": true,
+      "classForLoginSignupPosition": "left",
+      "showSignupLink": true,
+      "loginLinkText": "Log in"
+    },
+    "footer": {
+      "showBuiltBy": true,
+      "showBuilds": true
+    },
+    "swaggerUi": {
+      "menu": {
+        "homeLinkText": "Home",
+        "showContactLink": true,
+        "showContentLink": false
+      }
+    }
+  },
+  "views": {
+    "apis": {
+      "showApiIcon": true,
+      "titleTagline": "This is the index of APIs which are available for this API Portal."
+    },
+    "applications": {
+      "titleTagline": "This page displays all your registered applications. It also allows you to register a new application."
+    },
+    "application": {
+      "titleTagline": "This page lets you administer the owners of this application. You can add and remove co-owners of the application. New co-owners must be already be registered in the portal in order to make them co-owners of the application."
+    }
+  },
+  "sessionStore": {
+    "type": "redis",
+    "host": "${PORTAL_SESSIONSTORE_HOST}",
+    "port": "${PORTAL_SESSIONSTORE_PORT}",
+    "password": ""
+  },
+  "kongAdapter": {
+    "useKongAdapter": true,
+    "ignoreList": [
+      "plugin-name"
+    ]
+  },
+  "portal": {
+    "authMethods": [
+      "default:local",
+      "default:google",
+      "default:github",
+      "default:twitter",
+      "default:oauth2",
+      "default:facebook",
+      "default:adfs"
+    ]
+  }
+}

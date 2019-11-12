@@ -1,0 +1,111 @@
+{
+    "version": 1,
+    "title": "wicked.haufe.io API Portal",
+    "footer": "&copy; 2018 Your Company Ltd.",
+    "api": {
+        "headerName": "X-ApiKey",
+        "apiUserGroup": "",
+        "echoUserGroup": ""
+    },
+    "passwordStrategy": "PW_6_24",
+    "network": {
+        "schema": "$PORTAL_NETWORK_SCHEMA",
+        "apiHost": "$PORTAL_NETWORK_APIHOST",
+        "portalHost": "$PORTAL_NETWORK_PORTALHOST",
+        "apiUrl": "$PORTAL_API_URL",
+        "portalUrl": "$PORTAL_PORTAL_URL",
+        "kongAdapterUrl": "$PORTAL_KONG_ADAPTER_URL",
+        "kongAdminUrl": "$PORTAL_KONG_ADMIN_URL",
+        "kongProxyUrl": "$PORTAL_KONG_PROXY_URL",
+        "mailerUrl": "$PORTAL_MAILER_URL",
+        "chatbotUrl": "$PORTAL_CHATBOT_URL"
+    },
+    "sessionStore": {
+        "type": "$PORTAL_SESSIONSTORE_TYPE",
+        "host": "$PORTAL_SESSIONSTORE_HOST",
+        "port": "$PORTAL_SESSIONSTORE_PORT",
+        "password": ""
+    },
+    "db": {
+        "staticConfig": "$PORTAL_API_STATIC_CONFIG",
+        "dynamicConfig": "$PORTAL_API_DYNAMIC_CONFIG"
+    },
+    "storage": {
+        "type": "postgres",
+        "pgHost": "$PORTAL_STORAGE_PGHOST",
+        "pgPort": "$PORTAL_STORAGE_PGPORT",
+        "pgUser": "$PORTAL_STORAGE_PGUSER",
+        "pgPassword": "$PORTAL_STORAGE_PGPASSWORD",
+        "pgDatabase": "$PORTAL_STORAGE_PGDATABASE"
+    },
+    "initialUsers": [
+        {
+            "id": "1",
+            "firstName": "Admin",
+            "lastName": "User",
+            "email": "admin@foo.com",
+            "password": "$PORTAL_INITIALUSERS0_PASSWORD",
+            "validated": true,
+            "groups": [
+                "admin"
+            ]
+        }
+    ],
+    "recaptcha": {
+        "useRecaptcha": false,
+        "secretKey": "reCaptchaSecretKey",
+        "websiteKey": "reCaptchaWebsiteKey"
+    },
+    "kongAdapter": {
+        "useKongAdapter": true,
+        "ignoreList": [
+            "plugin-name"
+        ]
+    },
+    "mailer": {
+        "useMailer": false,
+        "senderEmail": "apiportal@yourcompany.com",
+        "senderName": "The wicked API Portal",
+        "smtpHost": "smtp.yourcompany.com",
+        "anonymous": false,
+        "forceSecure": false,
+        "smtpPort": 465,
+        "username": "smtpuser",
+        "password": "smtppassword",
+        "adminEmail": "adminemail@yourcompany.com",
+        "adminName": "Admin Name"
+    },
+    "chatbot": {
+        "useChatbot": false,
+        "username": "wicked.haufe.io",
+        "targets": [
+            {
+              "type": "slack",
+              "hookUrl": "https://yourinstance.slack.com/thisisahookurlyouneedtogetfromyourslackadmin",
+              "events": {
+                "userSignedUp": true,
+                "userValidatedEmail": true,
+                "applicationAdded": true,
+                "applicationDeleted": true,
+                "subscriptionAdded": true,
+                "subscriptionDeleted": true,
+                "approvalRequired": true,
+                "lostPasswordRequest": true,
+                "verifyEmailRequest": true
+              }
+            }
+          ],
+        "icon_url": "https://raw.githubusercontent.com/Haufe-Lexware/wicked.haufe.io/master/public/wicked-40.png"
+    },
+    "portal": {
+        "authMethods": [
+            "default:local",
+            "default:google",
+            "default:github",
+            "default:twitter",
+            "default:oauth2",
+            "default:facebook",
+            "default:adfs"
+        ]
+    }
+}

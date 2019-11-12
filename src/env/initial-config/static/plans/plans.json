@@ -1,0 +1,59 @@
+{
+    "plans": [
+        {
+            "id": "basic",
+            "name": "Basic Plan",
+            "desc": "Basic access to the API, limits access to 100 calls per hour.",
+            "needsApproval": false,
+            "config": {
+                "plugins": [
+                    {
+                        "name": "rate-limiting",
+                        "config": {
+                            "hour": 100,
+                            "async": true
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "id": "stupid",
+            "name": "Stupid Plan",
+            "desc": "Stupid access to the API, limits access to 1 call per minute.",
+            "needsApproval": false,
+            "config": {
+                "plugins": [
+                    {
+                        "name": "rate-limiting",
+                        "config": {
+                            "minute": 4,
+                            "async": true
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "id": "unlimited",
+            "name": "Unlimited Plan",
+            "desc": "Unlimited access to the API, no limits in terms of calls.",
+            "needsApproval": true,
+            "config": {
+                "plugins": []
+            }
+        },
+        {
+            "id": "godlike",
+            "name": "Godlike Plan",
+            "desc": "Not only gives you unlimited access to the API, but you may also destroy it at your wish.",
+            "needsApproval": true,
+            "config": {
+                "plugins": []
+            }
+        }
+    ],
+    "_links": {
+        "self": { "href": "/plans" }
+    }
+}

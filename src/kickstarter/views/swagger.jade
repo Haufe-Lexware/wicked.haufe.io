@@ -1,0 +1,32 @@
+extends layout
+
+block scripts
+    //link(rel="stylesheet", href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.3.0/styles/default.min.css")
+    //script(src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.3.0/highlight.min.js")
+
+block content
+    .jumbotron
+        .container
+            h1 Swagger File - #{apiId}
+            
+            p.
+                You <i>could</i> edit the Swagger file here, but to be honest, you won't. Copy and paste
+                it from someplace else. We'll check that it's valid JSON (but not more).
+    
+    .container
+    
+        p.
+            If you have trouble in writing valid JSON, try <a href='http://www.jsonlint.org' target='_blank'>JSONlint</a>
+            or something similar. A good friend is always <a href='http://editor.swagger.io' target='_blank'>editor.swagger.io</a>.
+            It will do more for you, like visualizing things and making sure it's valid Swagger. You can copy this file
+            from here and paste it there (it takes both JSON or YAML). Here you'll have to make sure it's JSON.
+            If you have YAML, you can paste it here, and the wicked Kickstarter will convert it to JSON.
+        p.
+            In case your backend service has its own end point serving the Swagger JSON, you can point wicked to this location
+            by inserting the following JSON into this file: <code>{"href":"http://your.backend/api-docs"}</code>. The <code>href</code>
+            may contain environment variables; add here, save, and then edit in the <a href="/envs">Environments section</a>.
+        
+        form(role='form' action='/swagger/#{apiId}' method='post')
+            +renderButtons('/swagger/' + apiId, '/apis', null, '&laquo; Save &amp; Return')
+            br
+            textarea(name='swagger' style='height:500px;').form-control= swagger

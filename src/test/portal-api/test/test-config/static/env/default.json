@@ -1,0 +1,26 @@
+{
+    "PORTAL_TITLE": {
+        "value": "Portal Title"
+    },
+    "PORTAL_COMPANY": {
+        "value": "Company"
+    },
+    "PORTAL_REC1": {
+        "value": "${PORTAL_REC2} ${PORTAL_REC2}"
+    },
+    "PORTAL_REC2": {
+        "value": "Recursive"
+    },
+    "WICKED_STORAGE": {
+        "value": "json"
+    },
+    "PORTAL_STORAGE_PGHOST": {
+        "value": "localhost"
+    },
+    "PORTAL_STORAGE_PGPORT": {
+        "value": "6543"
+    },
+    "SWAGGER_RESOURCE_URL": {
+        "value": "http://api-test-data:8080"
+    }
+}

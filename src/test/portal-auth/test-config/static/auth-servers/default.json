@@ -1,0 +1,111 @@
+{
+    "id": "default-auth",
+    "desc": "Default Authorization Server",
+    "authMethods": [
+        {
+            "enabled": true,
+            "name": "local",
+            "type": "local",
+            "friendlyShort": "Username and Password",
+            "friendlyLong": "Log in using a local username and password.",
+            "config": {
+                "trustUsers": true
+            }
+        },
+        {
+            "enabled": false,
+            "name": "github",
+            "type": "github",
+            "friendlyShort": "GitHub",
+            "friendlyLong": "Log in using your GitHub identity.",
+            "config": {
+                "clientId": "<github client id>",
+                "clientSecret": "<github client secret>"
+            }
+        },
+        {
+            "enabled": false,
+            "name": "google",
+            "type": "google",
+            "friendlyShort": "Google",
+            "friendlyLong": "Log in using your Google identity.",
+            "config": {
+                "clientId": "google-client-id",
+                "clientSecret": "google-client-secret"
+            }
+        },
+        {
+            "enabled": false,
+            "name": "twitter",
+            "type": "twitter",
+            "friendlyShort": "Twitter",
+            "friendlyLong": "Log in using your Twitter identity.",
+            "config": {
+                "consumerKey": "twitter-consumer-key",
+                "consumerSecret": "twitter-consumer-secret"
+            }
+        },
+        {
+            "enabled": false,
+            "name": "your-oauth2-change-this",
+            "type": "oauth2",
+            "friendlyShort": "Standard OAuth2",
+            "friendlyLong": "Log in using a standard OAuth2 Identity Provider.",
+            "config": {
+                "endpoints": {
+                    "authorizeEndpoint": "https://your.idp.com/authorize",
+                    "tokenEndpoint": "https://your.idp.com/token"
+                },
+                "clientId": "oauth2-client-id",
+                "clientSecret": "oauth2-client-secret",
+                "customIdField": "upn",
+                "firstNameField": "given_name",
+                "lastNameField": "family_name",
+                "emailField": "email"
+            }
+        },
+        {
+            "enabled": false,
+            "name": "adfs",
+            "type": "adfs",
+            "friendlyShort": "ADFS",
+            "friendlyLong": "Log in using ADFS.",
+            "config": {
+                "endpoints": {
+                    "authorizeEndpoint": "https://your.idp.com/authorize",
+                    "tokenEndpoint": "https://your.idp.com/token"
+                },
+                "clientId": "google-client-id",
+                "clientSecret": "google-client-secret",
+                "resource": "https://api.yourcompany.com",
+                "customIdField": "upn",
+                "firstNameField": "given_name",
+                "lastNameField": "family_name",
+                "emailField": "email",
+                "verifyCert": true,
+                "publicCert": "----BEGIN CERTIFICATE-----\r\nfdkjhfkljdshglkdfhgklsdfhgkldsfhgkjsdfkgjhf\r\n------END----"
+            }
+        }
+    ],
+    "config": {
+        "api": {
+            "name": "default-auth",
+            "upstream_url": "$PORTAL_AUTHSERVER_URL",
+            "preserve_host": false,
+            "uris": [
+                "/auth"
+            ],
+            "strip_uri": false
+        },
+        "plugins": [
+            {
+                "name": "correlation-id",
+                "config": {
+                    "header_name": "Correlation-Id",
+                    "generator": "uuid",
+                    "echo_downstream": false
+                }
+            }
+        ]
+    }
+}

@@ -1,0 +1,13 @@
+{
+    "enter_email": "Please enter a value for the username.",
+    "enter_password": "Please enter your password.",
+    "validation_error": "Validation errored! Check your input values.",
+    "log_in": "Login",
+    "welcome_to": "Welcome to",
+    "redirect_message": "You will be redirected to the desired page right after successfully logging in.",
+    "username": "Email",
+    "password": "Password",
+    "forgot_password": "Forgot password?",
+    "create_new_user": "Create a new user.",
+    "login": "Login"
+}

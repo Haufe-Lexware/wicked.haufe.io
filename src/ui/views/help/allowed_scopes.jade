@@ -1,0 +1,43 @@
+extends help_layout
+
+block help_content
+  +helpItem('allowed_scopes', 'Allowed Scopes')
+
+  -var apiUrl = `${glob.network.schema}://${glob.network.apiHost}`
+  -var authUrl = `${apiUrl}/auth/`
+
+  p.
+    In certain situations you may want to restrict which scope can be requested by certain applications. With wicked, this can be done using a setting on the subscription of an application to an API.
+
+  p.
+    <b>Example</b>: An API has three different scopes: <code>read</code>, <code>write</code> and <code>create</code>, and offers only the <a href="oauth2_client_credentials">Client Credentials</a> Flow. Some applications/subscriptions shall only be able to <code>read</code> from the API, others are allowed to request any scope.
+
+  p.
+    This can be achieved by specifying the allowed scopes. Changing allowed scopes can <b>only</b> be done by API Portal administrators, but any user of the API Portal can review the settings on their own subscriptions, by going to the <a href="/applications">applications</a> they have a subscription for.
+
+  +helpItem('possible_settings', 'Possible Settings')
+
+  p.
+    The possible settings for the allowed scopes are the following:
+  
+  ul
+    li <b>All</b>:
+      p.
+        The application can request any scope from the API; depending on the OAuth2 flow which is used, the request is either immediately granted (<a href="oauth2_client_credentials">Client Credentials</a> Flow), or the user has to grant access to the application (<a href="oauth2_authorization_code">Authorization Code Grant</a> and <a href="oauth2_implicit_grant">Implicit Grant</a>). The <a href="oauth2_password_grant">Resource Owner Password Grant</a> requires trusted applications, for which there is a special case (see below). 
+      p.
+        <i>This is the default for APIs where either the Authorization Code Grant or the Implicit Grant is enabled</i>.
+    li <b>None</b>:
+      p.
+        Applications of which the subscription is set to "None" will never be granted any scope. All access tokens will only ever be for the empty scope. Please note that this does not mean that you will not get any access tokens - it's just that the scope will always be empty (in case you request a valid scope).
+      p.
+        <i>This is the default for APIs which <b>only</b> have the <a href="oauth2_client_credentials">Client Credentials</a> Flow enabled.</i>
+    li <b>Select</b>:
+      p.
+        With this setting, a set of scope aspects can be defined on a per-subscription basis. This is the setting which can be used to implement the example from above.
+      p.
+        <i>This setting has to be manually set on a subscription, by an Admin.</i>
+
+  +helpItem('trusted', 'Trusted Applications/Subscriptions')
+
+  p.
+    For <a href="trusted">trusted</a> applications/subscriptions, the allowed scopes mode (see previous section) is <b>implicitly</b> set to <b>All</b>. It is not possible to restrain the scope which is granted to a trusted application.

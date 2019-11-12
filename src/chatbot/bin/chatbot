@@ -1,0 +1,127 @@
+#!/usr/bin/env node
+
+/**
+ * Module dependencies.
+ */
+
+const app = require('../app');
+const { debug, info, warn, error } = require('portal-env').Logger('portal-chatbot:main');
+const http = require('http');
+const async = require('async');
+const wicked = require('wicked-sdk');
+
+const chatbot = require('../chatbot');
+const utils = require('../utils');
+
+/**
+ * Get port from environment and store in Express.
+ */
+
+const port = normalizePort(process.env.PORT || '3004');
+app.set('port', port);
+
+// Create HTTP server.
+const server = http.createServer(app);
+
+// Listen on provided port, on all network interfaces.
+server.listen(port);
+server.on('error', onError);
+server.on('listening', onListening);
+
+const wickedOptions = {
+    userAgentName: 'wicked.portal-chatbot',
+    userAgentVersion: utils.getVersion()
+};
+
+// Init wicked SDK and register a machine user.
+async.series([
+    callback => wicked.initialize(wickedOptions, callback),
+    callback => wicked.initMachineUser('chatbot', callback),
+], function (err) {
+    if (err) {
+        error('Failed waiting for API.');
+        throw err;
+    }
+
+    // Remember some URLs
+    app.set('api_url', wicked.getInternalApiUrl());
+    app.set('my_url', wicked.getInternalChatbotUrl());
+
+    chatbot.init(app, function (err) {
+        if (err) {
+            error("Could not intialize the Portal Chatbot.");
+            throw err;
+        }
+
+        // Graceful shutdown
+        process.on('SIGINT', function () {
+            debug("Attempting unregistering from portal API.");
+            chatbot.deinit(app, function (err) {
+                process.exit();
+            });
+        });
+
+        info('====== INITIALIZATION FINISHED ======');
+        
+        app.initialized = true;
+    });
+});
+
+/**
+ * Normalize a port into a number, string, or false.
+ */
+function normalizePort(val) {
+    const port = parseInt(val, 10);
+
+    if (isNaN(port)) {
+        // named pipe
+        return val;
+    }
+
+    if (port >= 0) {
+        // port number
+        return port;
+    }
+
+    return false;
+}
+
+/**
+ * Event listener for HTTP server "error" event.
+ */
+
+function onError(err) {
+    if (err.syscall !== 'listen') {
+        throw err;
+    }
+
+    const bind = typeof port === 'string' ?
+        'Pipe ' + port :
+        'Port ' + port;
+
+    // handle specific listen errors with friendly messages
+    switch (err.code) {
+        case 'EACCES':
+            error(bind + ' requires elevated privileges');
+            process.exit(1);
+            break;
+        case 'EADDRINUSE':
+            error(bind + ' is already in use');
+            process.exit(1);
+            break;
+        default:
+            throw err;
+    }
+}
+
+/**
+ * Event listener for HTTP server "listening" event.
+ */
+
+function onListening() {
+    const addr = server.address();
+    const bind = typeof addr === 'string' ?
+        'pipe ' + addr :
+        'port ' + addr.port;
+    info('Listening on ' + bind);
+}

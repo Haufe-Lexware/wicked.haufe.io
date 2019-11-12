@@ -1,0 +1,226 @@
+extends help_layout
+
+block help_content
+  +helpItem('introduction', 'Introduction')
+
+  -var apiUrl = `${glob.network.schema}://${glob.network.apiHost}`
+  -var authUrl = `${apiUrl}/auth/`
+
+  p.
+    The Authorization Code Grant is the most common authorization flow in OAuth2. It is a three-legged
+    process which is considered to be the OAuth2 flow to use for best security, both with confidential 
+    and public clients (then using the PKCE Extension).
+
+  p.
+    The flow works like this in short words:
+
+  ol
+    li.
+      The application which needs access to an API redirects the user agent (usually the browser) to
+      the authorization page of the Authorization Server.
+    li.
+      The Authorization Server verifies the identity of the end user (depending on the selected auth method),
+      checks the client ID of the calling application, and if everything is fine, issues a so-called
+      "Authorization Code".
+    li.
+      The Authorization Server redirects (302) back to the calling application, giving the authorization
+      code back as a query parameter (<code>?code=(authorization code)</code>).
+    li.
+      The application now uses the authorization code together with its client credentials (id and secret, or id and code verifier)
+      to retrieve an actual access token, and optionally a refresh token.
+    li.
+      The application can now use the API with the returned access token.
+
+  +helpItem('get_auth_code', 'Getting an Authorization Code (confidential clients)')
+
+  p.
+    The calling application must redirect to the correct Authorization Server <code>/authorize</code> end point.
+    The URL of this endpoint depends on the authentication method, and on the API. The URL is displayed
+    for each supported Authentication Method at the top of each API page.
+
+  pre.
+    #{authUrl}<b style="color:#0a0">(auth method id)</b>/api/<b style="color:#0a0">(api id)</b>/authorize?client_id=<b style="color:#0a0">(your client id)</b>&amp;redirect_uri=<b style="color:#0a0">(redirect URI of your application)</b>&amp;response_type=code&amp;scope=<b style="color:#0a0">(space separated list of scopes)</b>
+
+  p.
+    All parameteters except the scope and redirect URI (depending on the API) are mandatory. The correct URL for valid combinations
+    of API and Authentication Method can be seen on the API page.
+
+  p.
+    Note the use of <code>response_type=code</code>, as opposed to <code>response_type=token</code> for the <a href="oauth2_implicit_grant">Implicit Grant</a>.
+
+  p.
+    The Authorization Server will now verify the user's identity, and also check whether the application is either
+    implicitly (because it is a <a href="/help/trusted">trusted application/subscription</a>), or explicitly
+    allowed to access the API on behalf of the user. In case the user has not yet consented to the application accessing
+    the API on behalf of the user, wicked will ask the user to grant access to the application, so that it can access
+    the API on behalf of the user.
+
+  p.
+    If the end user's identity could be verified, the Authorization Server will craft an authorization code which
+    is passed back to your application with a <code>302</code> redirect, giving the authorization code as a 
+    query parameter:
+
+  pre.
+    http://your.application.com/oauth2/callback?code=<b style="color:#0a0">(authorization code)</b>
+
+  +helpItem('get_access_token', 'Getting an Access Token (confidential clients)')
+
+  p.
+    This authorization code can now be used by your application, which has to call the Token endpoint, passing
+    the authorization code, and the application's client credentials, to create an access token (and a refresh token).
+    An example request using <code>curl</code> would look as follows:
+
+  pre.
+    curl -X POST -d 'grant_type=authorization_code&amp;client_id=<b style="color:#0a0">(your client id)</b>&client_secret=<b style="color:#0a0">(your client secret)</b>&code=<b style="color:#0a0">(authorization code)</b>' #{authUrl}<b style="color:#0a0">(auth method id)</b>/api/<b style="color:#0a0">(api id)</b>/token
+
+  p.
+    In case of a success, the token endpoint returns a JSON structure which contains an access token and a refresh token:
+
+  pre.
+    {
+      "access_token": "<b style="color:#0a0">(access token)</b>",
+      "refresh_token": "<b style="color:#0a0">(refresh token)</b>",
+      "token_type": "bearer",
+      "expires_in": 3600
+    }
+
+  p.
+    The token expiration depends on the API configuration and can vary between APIs.
+
+  +helpItem('refresh', 'Refreshing the Access Token (confidential clients)')
+
+  p.
+    Your application can refresh the access token using a specific call to the same <code>/token</code> end point
+    as before. Using curl syntax, the call will look like this:
+
+  pre.
+    curl -X POST -d 'grant_type=refresh_token&amp;client_id=<b style="color:#0a0">(your client id)</b>&amp;client_secret=<b style="color:#0a0">(your client secret)</b>&amp;refresh_token=<b style="color:#0a0">(refresh token)</b>' #{authUrl}<b style="color:#0a0">(auth method id)</b>/api/<b style="color:#0a0">(api id)</b>/token
+
+  p.
+    If successful, the Authorization Server will return a new access token and a new refresh token.
+
+  p.
+    <b>Important:</b> After refreshing the access token using the refresh token, the refresh token which was
+    used for this, is <b>no longer valid</b>. You must then use the new refresh token.
+
+  +helpItem('accessing', 'Accessing the API')
+
+  p.
+    With the returned access token, you may now access the API using the token as a bearer token:
+
+  pre.
+    curl -H 'Authorization: Bearer <b style="color:#0a0">(access token)</b>' #{apiUrl}/<b style="color:#0a0">(api endpoint)</b>
+
+  p.
+    The actual API endpoint is also displayed on the API's page.
+
+  +helpItem('pkce', 'What is PKCE? - Proof Key for Code Exchange')
+
+  p.
+    The Authorization Code Grant can also be used for <a href="client_types">public clients</a>, i.e. clients which are not able to keep a secret. Examples for
+    such applications are Single Page Applications, or very typically, Mobile Apps (native or web based).
+
+  p.
+    The most dangerous threat for such applications is that the Authorization Code is hijacked during the redirect call; if then the
+    client secret can be reverse engineered, it's possible to fully impersonate an application, stealing the logged in user's identity.
+    This is what the PKCE OAuth2 extension mitigates, by a fairly simple exchange of hashed proof keys.
+
+  p.
+    More information on this specification can be found here: <a href="https://tools.ietf.org/html/rfc7636" target="_blank">https://tools.ietf.org/html/rfc7636</a>.
+
+  +hint()
+    p.
+      <b>IMPORTANT</b>: The PKCE extension is highly recommended also for <a href="client_types">Confidential Clients</a>. It is not only
+      applicable for public clients.
+
+  +helpItem('pkce_get_auth_code', 'Getting an Authorization Code (public clients/using PKCE)')
+
+  p.
+    When using a public client, i.e. a client which does not have the "confidential" flag checked in its settings, wicked will not accept
+    the Authorization Code Grant for this client unless it supplies an additional <code>code_challenge</code> parameter with the call
+    to the authorization end point.
+
+  p.
+    To obtain this extra parameter, do as follows: 
+  ol
+    li Create a long (43-128 characters) random string, this is your <code>code_verifier</code>. The string must only contain digits, characters, <code>.</code>, <code>-</code>, <code>_</code> and <code>~</code> (per RFC)
+    li Create the code challenge as follows: <code>code_challenge = BASE64URL-ENCODE(SHA256(ASCII(code_verifier)))</code>
+
+  p.
+    Now pass in this as an additional parameter for the authorization call:
+
+  pre.
+    #{authUrl}<b style="color:#0a0">(auth method id)</b>/api/<b style="color:#0a0">(api id)</b>/authorize?client_id=<b style="color:#0a0">(your client id)</b>&amp;redirect_uri=<b style="color:#0a0">(redirect URI of your application)</b>&amp;response_type=code&amp;scope=<b style="color:#0a0">(space separated list of scopes)</b>&amp;<b>code_challenge=</b><b style="color:#0a0">(code challenge)</b><b>&amp;code_challenge_method=S256</b>
+
+  p.
+    The bold parts of the above URL are the difference to how the call without PKCE looks (for confidential clients). In case the
+    application associated with the <code>client_id</code> is not a confidential client, the authorize call will fail unless the code challenge
+    and code challenge method parameters are passed as well.
+
+  p.
+    <b>Note:</b> Using PKCE is explicitly allowed also for confidential clients.
+
+  +helpItem('pkce_get_access_token', 'Getting an Access Token (public clients/using PKCE)')
+
+  p.
+    The call to the token endpoint is also slightly different when using the PKCE extension. For public clients, the
+    clients secret <b>must not</b> be passed in, but instead the <code>code_verifier</code> must be part of the payload
+    for the token endpoint:
+
+  pre.
+    curl -X POST -d 'grant_type=authorization_code&amp;client_id=<b style="color:#0a0">(your client id)</b>&code_verifier=<b style="color:#0a0">(unhashed code verifier)</b>&code=<b style="color:#0a0">(authorization code)</b>' #{authUrl}<b style="color:#0a0">(auth method id)</b>/api/<b style="color:#0a0">(api id)</b>/token
+
+  p.
+    This applies to public clients; if you are using PKCE with a confidential client (which is explicitly allowed), wicked still 
+    expects the <code>client_secret</code> to be passed in in addition to the <code>code_verifier</code>.
+
+  p.
+    In case of a success, the token endpoint returns a JSON structure which contains an access token, but <b>not a refresh token</b> (for public clients):
+
+  pre.
+    {
+      "access_token": "<b style="color:#0a0">(access token)</b>",
+      "token_type": "bearer",
+      "expires_in": 3600
+    }
+
+  p.
+    Only when using <a href="client_types">confidential or native clients</a>, a refresh token is also returned, even if the PKCE extension is used.
+
+  +helpItem('pkce_refresh_token', 'Refreshing the Access Token (public browser based clients)')
+
+  p.
+    <b>Note:</b> Public Clients in the sense of <a href="client-types">Native/Mobile Applications</a> will be handed a refresh token, just as confidential clients. The below parts only apply for Single Page/Browser Based Applications.
+
+  p.
+    To refresh a token using the Authorization Code Grant using a public client, the same method as with the
+    implicit grant has to be applied: <a href="oauth2_implicit_grant#refreshing_tokens">A silent refresh</a>. In this case, the client needs to call the authorization
+    end point with a fresh PKCE <code>code_challenge</code> (as described above), adding also the <code>&amp;prompt=none</code>
+    parameter to make sure that the call definitely returns, either with a new authorization code, or with
+    an error.
+
+  pre.
+    #{authUrl}<b style="color:#0a0">(auth method id)</b>/api/<b style="color:#0a0">(api id)</b>/authorize?client_id=<b style="color:#0a0">(your client id)</b>&amp;redirect_uri=<b style="color:#0a0">(redirect URI of your application)</b>&amp;response_type=code&amp;scope=<b style="color:#0a0">(space separated list of scopes)</b><b>&amp;code_challenge=</b><b style="color:#0a0">(code challenge)</b><b>&amp;code_challenge_method=S256</b><b style="color:#a00">&amp;prompt=none</b>
+
+  p.
+    By letting this run in a hidden <code>iframe</code>, the renewal of the access token can be done without the end
+    user actually noticing.
+
+  
+  +helpItem('pkce_refresh_token_native', 'Refreshing the Access Token (native/mobile)')
+
+  p.
+    Public Clients in the sense of <a href="client-types">Native/Mobile Applications</a> will be handed a refresh token, just as confidential clients.
+
+  p.
+    These clients can use the <code>/token</code> endpoint directly, just as confidential clients can. The only difference is that native/mobile clients must <b>not present their <code>client_secret</code></b> in the call to the <code>/token</code> endpoint.
+
+  pre.
+    curl -X POST -d 'grant_type=refresh_token&amp;client_id=<b style="color:#0a0">(your client id)</b>&amp;refresh_token=<b style="color:#0a0">(refresh token)</b>' #{authUrl}<b style="color:#0a0">(auth method id)</b>/api/<b style="color:#0a0">(api id)</b>/token
+
+  p.
+    If successful, the Authorization Server will return a new access token and a new refresh token.
+
+  p.
+    <b>Important:</b> After refreshing the access token using the refresh token, the refresh token which was
+    used for this, is <b>no longer valid</b>. You must then use the new refresh token.

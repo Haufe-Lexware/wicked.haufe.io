@@ -1,0 +1,4 @@
+ARG ENV_TAG
+FROM wicked.env:${ENV_TAG}
+
+EXPOSE 3003

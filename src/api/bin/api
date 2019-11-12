@@ -1,0 +1,225 @@
+#!/usr/bin/env node
+
+'use strict';
+
+/**
+ * Module dependencies.
+ */
+
+const app = require('../app');
+const { debug, info, warn, error } = require('portal-env').Logger('portal-api:server');
+const http = require('http');
+const path = require('path');
+const fs = require('fs');
+const os = require('os');
+const envReader = require('portal-env'); // local npm module
+
+if (os.platform() === 'darwin') {
+    if (!process.env.NODE_ENV) {
+        process.env.NODE_ENV = 'portal_local';
+        app.set('env', 'portal_local');
+        warn('**** Defaulting in dev environment to NODE_ENV "portal_local"');
+    }
+    if (!process.env.PORTAL_CONFIG_BASE) {
+        process.env.PORTAL_CONFIG_BASE = '../wicked-sample-config/';
+        warn('**** Defaulting in dev environment to PORTAL_CONFIG_BASE "../wicked-sample-config/"');
+    }
+}
+
+const initializer = require('../routes/initializer.js');
+const utils = require('../routes/utils.js');
+const dao = require('../dao/dao');
+const echoApp = require('../routes/echo');
+
+/**
+ * Get port from environment and store in Express.
+ */
+
+const port = normalizePort(process.env.PORT || '3001');
+app.set('port', port);
+
+info("Portal API environment: " + app.get('env'));
+const osUsername = getOsUsername();
+info("Running as user '" + osUsername + "'");
+
+const environment = app.get('env');
+const staticConfigPath = envReader.resolveStaticConfig();
+
+let configKey = process.env.PORTAL_CONFIG_KEY;
+if (!configKey) {
+    // Check if we have an *envkey file.
+    let configKeyFileName = findEnvKeyFileName(staticConfigPath);
+    if (configKeyFileName) {
+        info('INFO: Found config key file ' + configKeyFileName);
+        configKey = fs.readFileSync(configKeyFileName, 'utf8').trim();
+    } else {
+        info('INFO: PORTAL_CONFIG_KEY is not set, will not be able to decrypt encrypted environment variables.');
+    }
+} else {
+    info('INFO: PORTAL_CONFIG_KEY is set, using environment variable.');
+}
+app.set('config_key', configKey);
+
+// Populate all the environment variables.
+envReader.checkEnvironment(staticConfigPath, configKey, environment);
+
+const staticRepo = process.env.PORTAL_API_STATIC_CONFIG;
+if (!staticRepo) {
+    throw Error('Environment variable PORTAL_API_STATIC_CONFIG not set.');
+}
+app.set('static_config', staticRepo);
+debug('Static DB: ' + staticRepo);
+const dynamicRepo = process.env.PORTAL_API_DYNAMIC_CONFIG;
+if (!dynamicRepo) {
+    throw Error('Environment variable PORTAL_API_DYNAMIC_CONFIG not set.');
+}
+app.set('dynamic_config', dynamicRepo);
+debug('Dynamic DB: ' + dynamicRepo);
+
+const aesKey = process.env.PORTAL_API_AESKEY;
+if (!aesKey) {
+    throw Error('Environment variable PORTAL_API_AESKEY not set. Needed for encrypting files.');
+}
+app.set('aes_key', aesKey);
+debug('AES encryption key for file encryption set.');
+
+// Check if we need to update the static DB?
+try {
+    envReader.updateConfig(staticRepo, path.join(utils.getInitialConfigDir(), 'static'), configKey);
+} catch (dbErr) {
+    error(dbErr);
+    error(dbErr.stack);
+    throw Error("The Configuration update steps failed. Check log files for details.");
+}
+
+// Populate all the environment variables again; some may have been added
+// via the update steps.
+envReader.checkEnvironment(staticConfigPath, configKey, environment);
+
+// Sanity check environment variables
+if (!envReader.sanityCheckDir(staticRepo)) {
+    throw Error('Environment variables are missing. Check log files for details.');
+}
+
+let server = null;
+// How does our dynamic config look?
+dao.init(app);
+initializer.checkDynamicConfig(function (err, results) {
+    if (err) {
+        error('initializer.checkDynamicConfig() failed!');
+        error(err);
+        error(err.stack);
+        process.exit(1);
+    }
+    if (results) {
+        error('initializer.checkDynamicConfig() returned messages!');
+        error(JSON.stringify(results, null, 2));
+        process.exit(1);
+    }
+
+    // Create table of contents for contents
+    app.content.setup(app);
+
+    // Turn on the regular hooks
+    app.setupHooks();
+
+    // Write swagger.json files for internal APIs
+    initializer.writeSwaggerJsonFiles();
+
+    // Create HTTP server.
+    server = http.createServer(app);
+
+    // Listen on provided port, on all network interfaces.
+    server.listen(port);
+    server.on('error', onError);
+    server.on('listening', onListening);
+
+    // Graceful shutdown
+    const shutdown = function (signal) {
+        app.shuttingDown = true;
+        info("Received " + signal + ". Gracefully shutting down.");
+        setTimeout(process.exit, 1000);
+    };
+    process.on('SIGINT', () => shutdown("SIGINT"));
+    process.on('SIGTERM', () => shutdown("SIGTERM"));
+
+    // Also start the simple echo server
+    echoApp.start();
+});
+
+
+/**
+ * Normalize a port into a number, string, or false.
+ */
+
+function normalizePort(val) {
+    const port = parseInt(val, 10);
+
+    if (isNaN(port)) {
+        // named pipe
+        return val;
+    }
+
+    if (port >= 0) {
+        // port number
+        return port;
+    }
+
+    return false;
+}
+
+/**
+ * Event listener for HTTP server "error" event.
+ */
+
+function onError(err) {
+    if (err.syscall !== 'listen') {
+        throw err;
+    }
+
+    const bind = typeof port === 'string' ?
+        'Pipe ' + port :
+        'Port ' + port;
+
+    // handle specific listen errors with friendly messages
+    switch (err.code) {
+        case 'EACCES':
+            error(bind + ' requires elevated privileges');
+            process.exit(1);
+            break;
+        case 'EADDRINUSE':
+            error(bind + ' is already in use');
+            process.exit(1);
+            break;
+        default:
+            throw err;
+    }
+}
+
+/**
+ * Event listener for HTTP server "listening" event.
+ */
+
+function onListening() {
+    const addr = server.address();
+    const bind = typeof addr === 'string' ?
+        'pipe ' + addr :
+        'port ' + addr.port;
+    info('Listening on ' + bind);
+}
+
+function findEnvKeyFileName(baseDir) {
+    const fileNames = fs.readdirSync(baseDir);
+    for (let i = 0; i < fileNames.length; ++i) {
+        const fileName = fileNames[i];
+        if (/[a-zA-Z0-9\._]*envkey/.test(fileName)) {
+            return path.join(baseDir, fileName);
+        }
+    }
+    return null;
+}
+
+function getOsUsername() {
+    const username = require('child_process').execSync("whoami", { encoding: 'utf8', timeout: 1000 });
+    return String(username).trim();
+}

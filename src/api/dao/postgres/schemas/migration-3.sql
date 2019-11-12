@@ -1,0 +1,2 @@
+ALTER TABLE wicked.subscriptions
+ ADD COLUMN IF NOT EXISTS api_group CHARACTER VARYING(128);

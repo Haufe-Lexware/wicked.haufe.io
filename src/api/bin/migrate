@@ -1,0 +1,112 @@
+#!/usr/bin/env node
+
+'use strict';
+
+const fs = require('fs');
+
+// =====================================================
+
+if (process.argv.length < 3) {
+    console.log('Usage: node bin/migrate [--write-sample-config] <migration_config.json>');
+    console.log('   The migration tool needs a migration configuration; the command line switch --write-sample-config');
+    console.log('   can be used to write a sample migration configuration to stdout.');
+    process.exit(1);
+}
+
+// =====================================================
+
+if (process.argv[2] === '--write-sample-config') {
+    console.error('Writing sample configuration to stdout. Note that this can also be used to convert');
+    console.error('to and from Postgres and to and from JSON, also for non-legacy data, by specifying either "json" or');
+    console.error('"postgres" sources or targets.');
+
+    const sampleConfig = {
+        wipeTarget: true,
+        source: {
+            type: 'json',
+            config: {
+                basePath: '/path/to/var/portal-api/dynamic'
+            }
+        },
+        target: {
+            type: 'postgres',
+            config: {
+                host: 'localhost',
+                port: 5432,
+                user: 'kong',
+                password: 'kong',
+                database: 'wicked'
+            }
+        },
+        customIdMappings: {
+            defaultPrefix: null,
+            prefixes: {
+                Google: 'google',
+                Github: 'github'
+            }
+        }
+    };
+    console.log(JSON.stringify(sampleConfig, null, 2));
+    process.exit(0);
+}
+
+// =====================================================
+
+let migrationConfig = null;
+const fileName = process.argv[2];
+try {
+    console.log(`Attempting to read migration configuration from ${fileName}`);
+    if (!fs.existsSync(fileName)) {
+        console.error(`ERROR: File ${fileName} does not exist.`);
+        process.exit(1);
+    }
+
+    let content = fs.readFileSync(fileName, 'utf8');
+
+    // resolve variable substitutions 
+    content = content.replace(new RegExp("[$]\{([^\}]+)\}", "g"), function (_unused, varName) {
+
+        varName = varName.toUpperCase();
+
+        if (process.env[varName]) {
+            return process.env[varName];
+        } else {
+            return "${" + varName + "}";
+        }
+    });
+
+    migrationConfig = JSON.parse(content);
+} catch (err) {
+    console.error(`ERROR: Could not load migration config from ${fileName}`);
+    console.error(err);
+    process.exit(1);
+}
+
+// =====================================================
+
+if (!process.env.LOG_LEVEL) {
+    process.env.LOG_LEVEL = 'info';
+    console.log('Note: Setting LOG_LEVEL to info; if you need more info, e.g. for debugging, run this');
+    console.log('      with the env var LOG_LEVEL set to "debug".');
+}
+
+// =====================================================
+
+const DaoMigrator = require('../dao/migrate/migrate');
+
+const daoMigrator = new DaoMigrator(migrationConfig);
+daoMigrator.migrate((err) => {
+    let exitCode = 0;
+    if (err) {
+        console.error(err);
+        console.error('FAILURE!');
+        exitCode = 1;
+    } else {
+        console.log('SUCCESS');
+    }
+    cleanupAndExit(exitCode);
+});
+
+function cleanupAndExit(exitCode) {
+    process.exit(exitCode);
+}

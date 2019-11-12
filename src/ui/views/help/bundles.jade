@@ -1,0 +1,24 @@
+extends help_layout
+
+block help_content
+
+  +helpItem('bundles', 'API Bundles')
+
+  p.
+    Depending on the configuration of the APIs in the API Portal, some APIs may be "bundled" together in the sense that they share the access tokens.
+
+  p.
+    This means that an access token which was obtained for a subscription to a certain API can be re-used for accessing any other API which is part of the same "API Bundle". The API bundle an API belongs to is displayed both on the detail page of the specific API, as well as on the <a href="/apis">API index page</a>.
+
+  p.
+    Please note that only APIs which share all common properties can be part of an API Bundle:
+  
+  ul
+    li The authentication/authorization settings must be identical
+    li I.e., the APIs must support the same OAuth2 flows and belong to the same registration pool (if applicable)
+
+  p.
+    See also:
+
+  ul
+    li <a href="/help/api-access">API Access</a>

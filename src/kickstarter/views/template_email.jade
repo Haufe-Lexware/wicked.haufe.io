@@ -1,0 +1,43 @@
+extends layout
+
+block content
+    .jumbotron
+        .container
+            h1 Email template #{templateId}
+            
+            p Edit the email template to look like you want.
+            
+    .container
+        p.
+            You can assume the view model you can use with <a href='https://mustache.github.io/mustache.5.html' target='_blank'>Mustache</a>
+            templating mechanisms looks like this:
+        
+        pre.
+            {
+                title: "Your API Portal Name",
+                user: {
+                    id: "12687467834bfe9273bdb108882",
+                    firstName: "Dan",
+                    lastName: "Developer",
+                    name: "Dan Developer",
+                    email: "dan@developer.com"
+                },
+                verificationLink: "https://your.portal.com/verification/12357984579879dbef98234987920983024",
+                approvalsLink: "https://your.portal.com/admin/approvals",
+                portalEmail: "apiadmin@your.portal.com"
+            }
+        
+        form(role='form' action='/templates/email/#{templateId}' method='POST')
+            input(type='hidden' name='redirect' id='redirect' value='#{thisPage}')
+
+            textarea(name='emailTemplate' style='height:400px;').form-control= emailTemplate
+            
+            br
+            table(width='100%')
+                tr
+                    td
+                        button(type='submit' onClick='setRedirect("/templates/email/#{templateId}");').btn.btn-primary Save
+                        | &nbsp;
+                        button(type='submit' onClick='setRedirect("/templates");').btn.btn-primary Save &amp; Return &raquo;
+                    td(style='text-align:right')
+                        a(href='/templates').btn.btn-default Cancel

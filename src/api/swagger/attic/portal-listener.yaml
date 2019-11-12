@@ -1,0 +1,76 @@
+swagger: '2.0'
+info:
+  version: '0.9'
+  title: Portal Webhook Listener API
+  description: API which has to be implemented by a webhook listener for the Portal API.
+consumes:
+  - application/json
+produces:
+  - application/json
+paths:
+  /:
+    post:
+      produces:
+        - text/plain
+      parameters:
+        - name: events
+          in: body
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/eventType'
+          required: true
+      responses:
+        200:
+          description: Successfully received events, "OK"
+
+  /ping:
+    get:
+      responses:  
+        200:
+          description: Successful request
+          schema:
+            $ref: '#/definitions/healthType'
+
+definitions:
+  eventType:
+    type: object
+    required:
+      - id
+      - action
+      - entity
+    properties:
+      id:
+        type: string
+      action:
+        type: string
+      entity:
+        type: string
+      href:
+        type: string
+      data:
+        description: Any kind of data
+        type: object
+  
+  healthType:
+    type: object
+    properties:
+      name:
+        type: string
+        description: The name of the listener (short ID)
+      message:
+        type: string
+        description: A health message
+      uptime:
+        type: number
+        description: Uptime of the listener in seconds
+      healthy:
+        description: 0=not healthy, 1=healthy, 2=initializing
+        type: number
+        enum:
+          - 0
+          - 1
+          - 2
+      pingUrl:
+        type: string
+        description: The URL which the listener thinks it's reachable under

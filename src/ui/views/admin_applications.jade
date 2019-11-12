@@ -1,0 +1,53 @@
+extends layout
+block bodyScripts
+  script(type='text/javascript').
+    $(document).ready(function(){
+       $('#applicationsGrid').jsGrid({
+         width: "100%", pageSize: 10, sorting: true, paging: true, filtering: true, pageLoading:true, autoload: true,
+         controller: {
+          loadData: function (filter) {
+            var d = $.Deferred();
+        		$.ajax({
+                url: "/admin/applications",
+                data: filter,
+                dataType: "json"
+              }).done(function(result) {
+                d.resolve({
+                    data: result.applications.items,
+                    itemsCount: result.applications.count
+                });
+              });
+              return d.promise();
+          }
+        },
+        fields: [
+             { name: "id", type: "text", title: "ID", 
+               itemTemplate: function(value, item) {
+                 return $("<a>").attr("href", "/applications/"+item.id).text(value);
+                }
+             },
+             { name: "name", type: "text", title: "Name" },
+             { name: "ownerEmail", type: "text", title: "Owner",
+               itemTemplate: function(value, item) {
+                  return $("<a>").attr("href", "/users/"+item.ownerUserId).text(value);
+               }
+             },
+             { type: "control", width: "10", editButton: false, deleteButton: false,
+               _createFilterSwitchButton: function() {
+                return this._createOnOffSwitchButton("filtering", this.searchModeButtonClass, false);
+               }
+             }
+         ]
+       });
+       $("#applicationsGrid").jsGrid("option", "filtering", false);
+    });
+block content
+    .jumbotron.wicked-admin-title
+        .container.wicked-title-container
+            h1 All Applications
+
+            p Index of all applications in the API Portal.
+
+    .container.wicked-container
+        br
+        div#applicationsGrid

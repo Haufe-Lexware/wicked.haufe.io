@@ -1,0 +1,38 @@
+extends help_layout
+
+block help_content
+  +helpItem('introduction', 'Introduction')
+
+  p.
+    The <a href='/applications'>applications index page</a> contains a list of the applications you have registered for use in the API Portal. For a discussion on why applications are needed to create a coherent view on API subscriptions, see the <a href='application#why_applications'>Why Applications?</a> section of the <a href='application'>application help page</a>.
+
+  +helpItem('register', 'Register a new Application')
+
+  p.
+    By using the "Register a new Application" panel, you may register a new application for use with the API Portal. You have to supply both an ID and a friendly name for the Application. The ID may only contain lower case characters <code>a-z</code>, hyphens (<code>-</code>) and numbers <code>0-9</code>.
+  p.
+    The Application ID must be unique over the entire API Portal, i.e. the ID must not be taken when you register a new application. If there already exists an application with the same ID, the Portal will fail to create the new application, and you will have to supply a different application ID.
+  p.
+    It is not possible to change the application ID after it has been created (you can only delete the application registration entirely). The ID is though only used internally in the API Portal; when accessing APIs, you will only use generated credentials, and never the actual application ID. The Application ID will only be used in the application logs (which you as a developer do not have to deal with usually).
+  
+  +helpItem('app_list', 'Application List')
+
+  p.
+    The main content on the applications index page is the list of applications assigned to your user or owned by you. In the list of applications, the following information is displayed:
+
+  table.table.table-striped
+    thead
+      tr
+        th Information
+        th Description
+    tbody
+      tr
+        th ID
+        td The ID of the Application (which you supplied when creating it).
+      tr
+        th Name
+        td The friendly name of the Application
+      tr
+        th Role
+        td Your role for this application. See <a href='application-ownership'>application ownership</a> for a discussion of this.
+  

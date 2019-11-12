@@ -1,0 +1,85 @@
+extends layout
+
+block scripts
+    script(type='text/javascript').
+        var callbackBase = '#{glob.network.schema}://#{glob.network.portalHost}/';
+        if ('#{glob.network.portalHost}'.startsWith('$'))
+            var callbackBase = 'http://localhost:3000/';
+        function copyToAdfsCallback() {
+            $('#glob\\.auth\\.adfs\\.callbackURL').val(callbackBase + 'callback');
+        }
+        function copyToGithubCallback() {
+            $('#glob\\.auth\\.github\\.callbackURL').val(callbackBase + 'callback/github');
+        }
+        function copyToGoogleCallback() {
+            $('#glob\\.auth\\.google\\.callbackURL').val(callbackBase + 'callback/google');
+        }
+        function copyToOauth2Callback() {
+            $('#glob\\.auth\\.oauth2\\.callbackURL').val(callbackBase + 'callback/oauth2');
+        }
+
+
+block content
+    .jumbotron
+        .container
+            h1 Authentication configuration
+            
+            p Specify which means of authentication shall be supported by your API Portal. You will need at least one.
+    
+    .container
+        form(role='form' method='post' action='/auth')
+            
+            +checkPanel('glob.auth.local.useLocal', !!glob.auth.local.useLocal, 'Use Local Authentication (email/password)')
+                if (!glob.mailer.useMailer && !glob.auth.local.trustLocal)
+                    +dangerPanel('User will never be able to verify', 'You have not (yet) configured wicked to send out emails, e.g. for user verification. This means that email/password users will never be able to verify their email addresses, and thus never be able to create applications. Please review this setting, or configure <a href="/email">the SMTP server</a>.')
+                +checkBox('glob.auth.local.trustLocal', !!glob.auth.local.trustLocal, 'Trust local users (do not require email verification)')
+
+            img(src='/images/adfs-logo.png')
+            +checkPanel('glob.auth.adfs.useAdfs', !!glob.auth.adfs.useAdfs, 'Use ADFS 3.0 Authentication')
+                +inputField('glob.auth.adfs.authorizationURL', glob, 'Authorization URL')
+                +inputField('glob.auth.adfs.tokenURL', glob, 'Token URL')
+                +inputField('glob.auth.adfs.clientID', glob, 'Client ID')
+                +inputField('glob.auth.adfs.clientSecret', glob, 'Client Secret')
+                +inputField('glob.auth.adfs.callbackURL', glob, 'Callback URL')
+                a(href='javascript:copyToAdfsCallback();').btn.btn-default Get Callback URL from Portal Host
+                br
+                br
+                +inputField('glob.auth.adfs.resource', glob, 'ADFS Resource (claims)')
+                +inputField('glob.auth.adfs.customIdField', glob, 'Profile Field for ID')
+                +inputField('glob.auth.adfs.firstNameField', glob, 'Profile Field for First Name')
+                +inputField('glob.auth.adfs.lastNameField', glob, 'Profile Field for Last Name')
+                +inputField('glob.auth.adfs.emailField', glob, 'Profile Field for Email Address')
+                hr
+                +checkBox('glob.auth.adfs.verifyCert', glob, 'Verify Callback with Certificate')
+                +textareaField('glob.auth.adfs.publicCert', glob, 'Public Certificate to verify Callbacks with:', 200)
+                
+            img(src='/images/github-logo.png')
+            +checkPanel('glob.auth.github.useGithub', !!glob.auth.github.useGithub, 'Use Github Authentication')
+                +inputField('glob.auth.github.clientID', glob, 'Client ID')
+                +inputField('glob.auth.github.clientSecret', glob, 'Client Secret')
+                +inputField('glob.auth.github.callbackURL', glob, 'Callback URL')
+                a(href='javascript:copyToGithubCallback();').btn.btn-default  Get Callback URL from Portal Host
+            
+            img(src='/images/google-logo.png')
+            +checkPanel('glob.auth.google.useGoogle', !!glob.auth.google.useGoogle, 'Use Google Authentication')
+                +inputField('glob.auth.google.clientID', glob, 'Client ID')
+                +inputField('glob.auth.google.clientSecret', glob, 'Client Secret')
+                +inputField('glob.auth.google.callbackURL', glob, 'Callback URL')
+                a(href='javascript:copyToGoogleCallback();').btn.btn-default  Get Callback URL from Portal Host
+        
+            img(src='/images/oauth2-logo.png')
+            +checkPanel('glob.auth.oauth2.useOauth2', !!glob.auth.oauth2.useOauth2, 'Use Oauth 2.0 Authentication')
+                +inputField('glob.auth.oauth2.authorizationURL', glob, 'Authorization URL')
+                +inputField('glob.auth.oauth2.tokenURL', glob, 'Token URL')
+                +inputField('glob.auth.oauth2.clientID', glob, 'Client ID')
+                +inputField('glob.auth.oauth2.clientSecret', glob, 'Client Secret')
+                +inputField('glob.auth.oauth2.callbackURL', glob, 'Callback URL')
+                a(href='javascript:copyToOauth2Callback();').btn.btn-default  Get Callback URL from Portal Host
+                br
+                br
+                +inputField('glob.auth.oauth2.customIdField', glob, 'Profile Field for ID')
+                +inputField('glob.auth.oauth2.firstNameField', glob, 'Profile Field for First Name')
+                +inputField('glob.auth.oauth2.lastNameField', glob, 'Profile Field for Last Name')
+                +inputField('glob.auth.oauth2.emailField', glob, 'Profile Field for Email Address')
+          
+            +renderButtons('/auth', '/deploy', '/groups')

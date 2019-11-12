@@ -1,0 +1,70 @@
+version: '2'
+
+services:
+  auth-test-data:
+    env_file: ../variables.env  
+    build: 
+      context: .
+    volumes:
+    - "/var/portal-api/static"
+    environment:
+    - WICKED_STORAGE
+
+  portal-api:
+    env_file: ../variables.env  
+    image: ${DOCKER_PREFIX}api:${PORTAL_API_TAG}${BUILD_ALPINE}
+    links:
+    - postgres:postgres
+    volumes_from:
+    - "auth-test-data"
+    environment:
+    - NODE_ENV
+    - "PORTAL_API_HOOK_INTERVAL=200"
+    - WICKED_STORAGE
+    - PORTAL_STORAGE_PGHOST=postgres
+    - PORTAL_STORAGE_PGPORT=5432
+    - PORTAL_CONFIG_KEY=c2fcfe392235d6492990b62165462078dee88b96
+    # Override this chatty thing for this test
+    - LOG_LEVEL=info
+
+  portal-kong-adapter:
+    env_file: ../variables.env
+    image: ${DOCKER_PREFIX}kong-adapter:${PORTAL_KONG_ADAPTER_TAG}${BUILD_ALPINE}
+    depends_on:
+    - portal-api
+    - kong
+
+  portal-auth:
+    env_file: ../variables.env
+    image: ${DOCKER_PREFIX}auth:${PORTAL_AUTH_TAG}${BUILD_ALPINE}
+    depends_on:
+    - redis
+    - portal-api
+    environment:
+    - ALLOW_RENDER_JSON=true
+    - LOG_LEVEL=debug
+    - DEBUG=wicked-sdk
+  
+  postgres:
+    image: postgres:11-alpine
+    environment:
+    - "POSTGRES_USER=kong"
+    - "POSTGRES_PASSWORD=kong"
+    command:
+    - "postgres"
+    - "-c"
+    - "max_connections=500"
+    
+  kong:
+    image: ${DOCKER_PREFIX}kong:${KONG_TAG}
+    depends_on:
+    - "postgres"
+    links:
+    - postgres:postgres
+    environment:
+    - "KONG_PG_HOST=postgres"
+    security_opt:
+    - seccomp:unconfined
+
+  redis:
+    image: redis:5-alpine

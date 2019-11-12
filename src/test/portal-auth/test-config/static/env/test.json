@@ -1,0 +1,35 @@
+{
+    "PORTAL_NETWORK_APIHOST": {
+        "value": "kong:8000"
+    },
+    "PORTAL_NETWORK_PORTALHOST": {
+        "value": "not-set-here:3000"
+    },
+    "PORTAL_APIS_ECHOPASSTHROUGH_SCOPE_URL": {
+        "value": "http://localhost:3020"
+    },
+    "PORTAL_API_AESKEY": {
+        "value": "new property\r\nedit value"
+    },
+    "PORTAL_API_URL": {
+        "value": "http://portal-api:3001"
+    },
+    "PORTAL_AUTHSERVER_URL": {
+        "value": "http://portal-auth:3010"
+    },
+    "PORTAL_ECHO_URL": {
+        "value": "http://portal-api:3009"
+    },
+    "PORTAL_KONG_ADAPTER_URL": {
+        "value": "http://portal-kong-adapter:3002"
+    },
+    "PORTAL_KONG_ADMIN_URL": {
+        "value": "http://kong:8001"
+    },
+    "PORTAL_SESSIONSTORE_HOST": {
+        "value": "redis"
+    },
+    "PORTAL_SESSIONSTORE_PORT": {
+        "value": 6379
+    }
+}

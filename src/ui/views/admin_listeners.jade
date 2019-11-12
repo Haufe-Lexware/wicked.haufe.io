@@ -1,0 +1,26 @@
+extends layout
+
+block content
+    .jumbotron.wicked-admin-title
+        .container.wicked-title-container
+            h1= title
+            
+            p This page displays a list of connected webhook listeners.
+            
+    .container.wicked-container
+    
+        br
+        if listeners.length == 0
+            h3 No active webhook listeners currently
+        else
+            table(class='table table-striped')
+                thead
+                    tr
+                        th Listener ID
+                        th Webhook URL
+                tbody
+                    for listener in listeners
+                        tr
+                            td
+                                a(href='/admin/listeners/#{listener.id}')= listener.id
+                            td= listener.url

@@ -1,0 +1,31 @@
+version: '2'
+
+services:
+  api-test-data:
+    env_file: ../variables.env  
+    build: 
+      context: .
+    volumes:
+    - "/var/portal-api/static"
+    environment:
+    - WICKED_STORAGE
+
+  portal-api:
+    depends_on:
+    - postgres
+    links:
+    - postgres:postgres
+    env_file: ../variables.env
+    environment:
+    - WICKED_STORAGE
+    - PORTAL_STORAGE_PGHOST=postgres
+    - PORTAL_STORAGE_PGPORT=5432
+    image: ${DOCKER_PREFIX}api:${PORTAL_API_TAG}${BUILD_ALPINE}
+    volumes_from:
+    - "api-test-data"
+
+  postgres:
+    image: postgres:11-alpine
+    environment:
+    - POSTGRES_USER=kong
+    - POSTGRES_PASSWORD=kong

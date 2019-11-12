@@ -1,0 +1,19 @@
+extends layout
+
+block content
+    .jumbotron
+        .container
+            h1 Kong Adapter configuration
+            
+            p Wicked can make use of Kong Adapter configuration to ignore syncing of plugins present here.
+    
+    .container
+     
+        form(role='form' method='post' action='/kongadapter')
+            
+            +checkPanel('glob.kongAdapter.useKongAdapter', glob, 'Use Kong Adapter Configuration')
+             +inputField('glob.kongAdapter.ignoreList', glob, 'Ignore plugins:')
+             p Comma seperated plugin names which are to be ignored while syncing. These plugin will not be overwritten or re-synced once they are created.   
+
+             +renderButtons('/kongadapter', '/design', null)
+            

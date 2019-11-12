@@ -1,0 +1,17 @@
+{
+    "compilerOptions": {
+        "module": "commonjs",
+        "target": "es6",
+        "declaration": true,
+        "types": [
+            "node"
+        ],
+        "outDir": "./dist",
+        "noImplicitReturns": true,
+        "noFallthroughCasesInSwitch": true,
+        "noImplicitThis": true
+    },
+    "include": [
+        "src/**/*"
+    ]
+}

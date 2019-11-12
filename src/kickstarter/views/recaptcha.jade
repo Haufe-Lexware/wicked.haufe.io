@@ -1,0 +1,20 @@
+extends layout
+
+block content
+    .jumbotron
+        .container
+            h1 reCAPTCHA configuration
+            
+            p wicked can make use of reCAPTCHA for signup and lost password requests.
+    
+    .container
+        
+        p Get your credentials for this from the <a href='https://www.google.com/recaptcha' target='_blank'>reCAPTCHA developer's pages</a> at Google. It's free, so do it.
+    
+        form(role='form' method='post' action='/recaptcha')
+            
+            +checkPanel('glob.recaptcha.useRecaptcha', glob, 'Use reCAPTCHA')
+                +inputField('glob.recaptcha.websiteKey', glob, 'reCAPTCHA Website Key:')
+                +inputField('glob.recaptcha.secretKey', glob, 'reCAPTCHA Secret Key:')
+            
+            +renderButtons('/recaptcha', '/authservers', '/content')

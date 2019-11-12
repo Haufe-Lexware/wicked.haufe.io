@@ -1,0 +1,13 @@
+extends auth_layout
+
+block content
+  h2 Authentication Failed
+
+  p.
+    Authentication failed. If the problem persists, please contact the system administrator.
+
+  if correlationId
+    p Correlation Id: #{correlationId}
+      
+  if returnUrl
+    a(href=returnUrl) Return to calling application

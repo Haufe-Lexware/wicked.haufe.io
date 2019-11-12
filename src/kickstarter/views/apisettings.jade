@@ -1,0 +1,44 @@
+extends layout_plugin
+
+
+block scripts
+    -var isVuePage = true
+    script(src='/js/marked/marked.min.js')
+
+block content
+    .jumbotron
+        .container
+            h1= api.id
+            
+            p API Configuration
+    
+    .container
+        br
+
+        div(id='vueBase')
+            -var envPrefix = 'PORTAL_APIS_' + safeApiId.toUpperCase() + '_'
+            wicked-api(v-model="api" v-bind:auth-methods="authMethods" v-bind:groups="groups" v-bind:plans="plans" v-bind:pools="pools" env-prefix="#{envPrefix}")
+            wicked-api-kong(v-model="config" env-prefix="#{envPrefix}")
+            wicked-plugins(v-model="plugins" env-prefix="#{envPrefix}PLUGINS_")
+            wicked-api-desc(v-model="desc" env-prefix="#{envPrefix}")
+            //- wicked-input(v-model="desc" textarea=true env-var="WOOHA")
+            //- wicked-markdown(v-model="desc")
+            wicked-api-swagger(v-model="swagger" env-prefix="#{envPrefix}")
+
+            nav-buttons(return-link="/apis")
+
+block afterScripts
+    script(type="text/javascript").
+        const injectedData = {
+            api: !{JSON.stringify(api)},
+            config: !{JSON.stringify(config)},
+            plugins: !{JSON.stringify(plugins)},
+            desc: !{JSON.stringify(desc)},
+            swagger: !{JSON.stringify(swagger)},
+            authMethods: !{JSON.stringify(authMethods)},
+            groups: !{JSON.stringify(groups)},
+            plans: !{JSON.stringify(plans)},
+            pools: !{JSON.stringify(pools)}
+        };
+
+    script(src='/js/apisettings.js')

@@ -1,0 +1,8 @@
+{
+    "api": {
+        "upstream_url": "http://mockbin.com/",
+        "name": "deprecated",
+        "request_path": "/deprecated"
+    },
+    "plugins": []
+}

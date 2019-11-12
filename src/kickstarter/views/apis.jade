@@ -1,0 +1,81 @@
+extends layout
+
+mixin renderApi(api, i)
+    .row
+        .col-md-2
+            | &nbsp;
+        .col-md-8
+            .panel.panel-primary
+                .panel-heading
+                    table(width='100%')
+                        tr
+                            td
+                                h4.panel-title 
+                                    a(data-target='#collapse_#{i}' data-toggle='collapse') #{api.name} &raquo;
+                            td(style='text-align:right')
+                                if (api.deprecated)
+                                    button(type='submit' onclick="setAction('deleteApi', #{i});").btn.btn-danger Delete API
+                                else
+                                    i Cannot delete API (not deprecated)
+                div(id='collapse_#{i}').collapse.panel-collapse
+                    .panel-body
+                        a(href="/apis/#{api.id}" role="button").btn.btn-primary Configure API
+        .col-md-2
+            | &nbsp;
+
+block scripts
+    script(type='text/javascript').
+        function setAction(thisAction, index) {
+            $('#__action').val(thisAction);
+            $('#__object').val(index);
+        }
+
+        function checkAuth(apiIndex) {
+            var newAuth = $('#auth' + apiIndex).val();
+            if (newAuth.startsWith("oauth2")) {
+                $('#oauthSettings' + apiIndex).collapse("show");
+            } else {
+                $('#oauthSettings' + apiIndex).collapse("hide");
+            }
+        }
+
+        function confirmDelete() {
+            var action = $('#__action').val();
+            if (action === 'deleteApi')
+                return confirm("Are you sure you want to delete this API? If you still have active subscriptions to this API, the API Portal will not be able to start, so make sure all subscriptions are cancelled first.");
+            return true;
+        }
+
+block content
+    .jumbotron
+        .container
+            h1 API configuration
+            
+            p Configure which APIs you want to expose via your API Portal
+    
+    .container
+        form(role='form' method='post' action='/apis' onsubmit='return confirmDelete();')
+
+            input(type='hidden' id='__action', name='__action' value='none')
+            input(type='hidden' id='__object', name='__object' value='none')
+            
+            each anApi, i in apis
+                +renderApi(anApi, i)
+
+            .row
+                .col-md-2
+                    | &nbsp;
+                .col-md-8
+                    .panel.panel-success
+                        .panel-heading
+                            h4.panel-title Add an API
+                        .panel-body
+                            .form-group
+                                label New API ID:
+                                input(name='newApiId' value='').form-control
+                            button(type='submit' onclick='setAction("addApi");').btn.btn-success Add API &raquo;
+                .col-md-2
+                    | &nbsp;
+            
+            
+            +renderButtons('/apis', '/pools', '/authservers')

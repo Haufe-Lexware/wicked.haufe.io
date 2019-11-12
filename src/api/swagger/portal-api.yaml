@@ -1,0 +1,2367 @@
+swagger: '2.0'
+info:
+  version: '1.0.0'
+  title: wicked.haufe.io Portal API
+  description: The API which the API Portal uses to store and retrieve information
+ 
+# Under securityDefinitions we declare which security schemes can be used.
+# These definitions do not affect to the operations, but can be applied
+# using the 'security' key at the global level or the operation level.
+# In this sample, we'll see how to apply the security definition globally,
+# and override it at the operation level.
+#
+# Note that for Access Code Flow, you must provide the Token URL.
+securityDefinitions:
+  # For personalized access to data
+  accessCode:
+    type: oauth2
+    # This should be updated to the Token URL of your OAuth provider.
+    tokenUrl: https://api.portal.com/auth/local/portal-api/oauth2/token
+    # This should be updated to the Authorization URL of your OAuth provider.
+    authorizationUrl: https://api.portal.com/auth/local/portal-api/oauth2/authorize
+    flow: accessCode
+    scopes:
+      read_plans: Read plans
+      read_groups: Read user group definitions
+      read_content: Read custom/markdown/HTML content
+      health: Read out health information
+      read_templates: Read templates
+      read_auth_servers: Read authorization servers
+      read_apis: Read API definitions
+      read_users: Read user information
+      write_users: Write user information
+      read_applications: Read application data
+      write_applications: Write application data
+      read_subscriptions: Read subscriptions
+      write_subscriptions: Write/edit/delete subscriptions
+      read_approvals: Read pending approvals
+      read_verifications: Read email and password verifications
+      write_verifications: Create or delete verifications
+      read_registrations: Read user registrations
+      write_registrations: Write user registrations
+      read_grants: Read user API grants
+      write_grants: Write user API grants
+      webhooks: Access and change webhooks
+      restart_api: Restart the API components
+  
+  implicit:
+    type: oauth2
+    # This should be updated to the Token URL of your OAuth provider.
+    tokenUrl: https://api.portal.com/portal-api/v1/oauth2/token
+    # This should be updated to the Authorization URL of your OAuth provider.
+    authorizationUrl: https://api.portal.com/portal-auth/api/portal-api
+    flow: implicit
+    scopes:
+      read_plans: Read plans
+      read_groups: Read user group definitions
+      read_content: Read custom/markdown/HTML content
+      health: Read out health information
+      read_templates: Read templates
+      read_auth_servers: Read authorization servers
+      read_apis: Read API definitions
+      read_users: Read user information
+      write_users: Write user information
+      read_applications: Read application data
+      write_applications: Write application data
+      read_subscriptions: Read subscriptions
+      write_subscriptions: Write/edit/delete subscriptions
+      read_approvals: Read pending approvals
+      read_verifications: Read email and password verifications
+      write_verifications: Create or delete verifications
+      read_registrations: Read user registrations
+      write_registrations: Write user registrations
+      read_grants: Read user API grants
+      write_grants: Write user API grants
+      webhooks: Access and change webhooks
+
+  password:
+    type: oauth2
+    # This should be updated to the Token URL of your OAuth provider.
+    tokenUrl: https://api.portal.com/portal-api/v1/oauth2/token
+    flow: password
+    scopes:
+      read_plans: Read plans
+      read_groups: Read user group definitions
+      read_content: Read custom/markdown/HTML content
+      health: Read out health information
+      read_templates: Read templates
+      read_auth_servers: Read authorization servers
+      read_apis: Read API definitions
+      read_users: Read user information
+      write_users: Write user information
+      read_applications: Read application data
+      write_applications: Write application data
+      read_subscriptions: Read subscriptions
+      write_subscriptions: Write/edit/delete subscriptions
+      read_approvals: Read pending approvals
+      read_verifications: Read email and password verifications
+      write_verifications: Create or delete verifications
+      read_namespaces: Read registration pool namespaces
+      write_namespaces: Write registration pool namespaces
+      read_registrations: Read user registrations
+      write_registrations: Write user registrations
+      read_grants: Read user API grants
+      write_grants: Write user API grants
+      webhooks: Access and change webhooks
+
+  # For anonymous access to data
+  clientCredentials:
+    type: oauth2
+    tokenUrl: https://api.portal.com/portal-api/v1/oauth2/token
+    flow: application
+    scopes:
+      read_plans: Read plans
+      read_groups: Read user group definitions
+      read_content: Read custom/markdown/HTML content
+      health: Read out health information
+      read_templates: Read templates
+      read_auth_servers: Read authorization servers
+      read_apis: Read API definitions
+      read_users: Read user information
+      write_users: Write user information
+      read_applications: Read application data
+      write_applications: Write application data
+      read_subscriptions: Read subscriptions
+      write_subscriptions: Write/edit/delete subscriptions
+      read_approvals: Read pending approvals
+      read_verifications: Read email and password verifications
+      write_verifications: Create or delete verifications
+      read_namespaces: Read registration pool namespaces
+      write_namespaces: Write registration pool namespaces
+      read_registrations: Read user registrations
+      write_registrations: Write user registrations
+      read_grants: Read user API grants
+      write_grants: Write user API grants
+      webhooks: Access and change webhooks
+    
+produces:
+  - application/hal+json
+host: 'localhost:3001'
+basePath: /portal-api/v1
+tags:
+  - name: apis
+    description: API functions
+  - name: users
+    description: User management
+  - name: misc
+    description: Misc functionality
+  - name: applications
+    description: Application management
+  - name: verifications
+    description: Email verification functionality
+  - name: registrations
+    description: Registration pool functionality
+paths:
+  '/ping':
+    get:
+      security:
+      - accessCode: []
+      - implicit: []
+      - password: []
+      - clientCredentials: []
+      description: Simple end point which returns OK if the API is alive.
+      tags:
+        - misc
+      responses:
+        '200':
+          description: Returns a JSON representation of OK
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+  '/apis':
+    get:
+      security:
+      - accessCode: ['read_apis']
+      - implicit: ['read_apis']
+      - password: ['read_apis']
+      - clientCredentials: ['read_apis']
+      tags:
+        - apis
+      description: Gets the list of APIs of this API Portal.
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            type: object
+            properties:
+              apis:
+                title: ArrayOfApis
+                type: array
+                items:
+                  $ref: '#/definitions/apiType'
+              _links:
+                type: object
+                properties:
+                  self:
+                    $ref: '#/definitions/hrefType'
+                  plans:
+                    $ref: '#/definitions/hrefType'
+  '/apis/desc':
+    get:
+      security:
+      - accessCode: ['read_apis']
+      - implicit: ['read_apis']
+      - password: ['read_apis']
+      - clientCredentials: ['read_apis']
+      tags:
+        - apis
+      description: Returns a generic description of the APIs
+      produces:
+        - text/markdown
+      responses:
+        '200':
+          description: Successful response
+  '/apis/{apiId}/config':
+    get:
+      security:
+      - accessCode: ['read_apis']
+      - implicit: ['read_apis']
+      - password: ['read_apis']
+      - clientCredentials: ['client_credentials']
+      tags:
+        - apis
+      description: >-
+        Gets the API Gateway configuration for the API. This is Gateway specific
+        and thus not specified in detail.
+      parameters:
+        - name: apiId
+          in: path
+          type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+  '/apis/{apiId}/desc':
+    get:
+      security:
+      - accessCode: ['read_apis']
+      - implicit: ['read_apis']
+      - password: ['read_apis']
+      - clientCredentials: ['read_apis']
+      tags:
+        - apis
+      description: Returns a description of the API in markdown notation.
+      produces:
+        - text/markdown
+      parameters:
+        - name: apiId
+          in: path
+          type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+        '403':
+          description: Not allowed
+        '404':
+          description: Not found
+  '/apis/{apiId}/plans':
+    get:
+      security:
+      - accessCode: ['read_apis', 'read_plans']
+      - implicit: ['read_apis', 'read_plans']
+      - password: ['read_apis', 'read_plans']
+      - clientCredentials: ['read_apis', 'read_plans']
+      tags:
+        - apis
+      description: Returns a description of the API in markdown notation.
+      produces:
+        - text/markdown
+      parameters:
+        - name: apiId
+          in: path
+          type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/planType'
+        '403':
+          description: Not allowed
+        '404':
+          description: Not found
+  '/apis/{apiId}/swagger':
+    get:
+      security:
+      - accessCode: ['read_apis']
+      - implicit: ['read_apis']
+      - password: ['read_apis']
+      - clientCredentials: ['read_apis']
+      tags:
+        - apis
+      description: Returns the Swagger represenstation of the API as JSON
+      produces:
+        - application/json
+      parameters:
+        - name: apiId
+          in: path
+          type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+        '403':
+          description: Not allowed
+        '404':
+          description: Not found
+  '/apis/{apiId}/subscriptions':
+    get:
+      security:
+      - accessCode: ['read_apis', 'read_subscriptions']
+      - implicit: ['read_apis', 'read_subscriptions']
+      - password: ['read_apis', 'read_subscriptions']
+      tags:
+        - apis
+      description: Retrieve all applications subscribed to this API
+      produces:
+        - application/json
+      parameters:
+        - name: apiId
+          in: path
+          type: string
+          required: true
+      responses:
+        200:
+          description: Successful response
+          schema:
+            type: object
+            properties:
+              count:
+                type: number
+              count_cached:
+                type: boolean
+              offset:
+                type: number
+              limit:
+                type: number
+              items:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    application:
+                      type: string
+                    plan:
+                      type: string
+        403:
+          description: Not allowed (Admins only)
+        404:
+          description: Not found (unknown API)
+  '/plans':
+    get:
+      security:
+      - accessCode: ['read_plans']
+      - implicit: ['read_plans']
+      - password: ['read_plans']
+      - clientCredentials: ['read_plans']
+      tags:
+        - misc
+      description: Gets the available plans for APIs
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            title: ArrayOfPlans
+            type: array
+            items:
+              $ref: '#/definitions/planType'
+  '/groups':
+    get:
+      security:
+      - accessCode: ['read_groups']
+      - implicit: ['read_groups']
+      - password: ['read_groups']
+      - clientCredentials: ['read_groups']
+      tags:
+        - misc
+      description: Gets the list of available user groups
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            type: object
+            properties:
+              groups:
+                type: array
+                items:
+                  title: Group
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                    alt_ids:
+                      type: array
+                      items:
+                        type: string
+                    name:
+                      type: string
+                    adminGroup:
+                      type: boolean
+              _links:
+                type: object
+                properties:
+                  self:
+                    $ref: '#/definitions/hrefType'
+  '/users':
+    get:
+      security:
+      - accessCode: ['read_users']
+      - implicit: ['read_users']
+      - password: ['read_users']
+      tags:
+        - users
+      parameters:
+        - name: customId
+          description: Pass to retrieve user by customId
+          in: query
+          type: string
+          required: false
+        - name: email
+          description: Pass to retrieve user by email
+          in: query
+          type: string
+          required: false
+        - name: offset
+          in: query
+          type: number
+          required: false
+        - name: limit
+          in: query
+          type: number
+          required: false
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            type: object
+            properties:
+              items:
+                type: array
+                items:
+                  $ref: '#/definitions/userShortType'
+              count:
+                type: number
+              count_cached:
+                type: boolean
+              offset:
+                type: number
+              limit:
+                type: number
+
+    post:
+      security:
+      - accessCode: ['write_users']
+      - implicit: ['write_users']
+      - password: ['write_users']
+      tags:
+        - users
+      description: Create a new user; only admin users can call this end point
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/userCreateType'
+      responses:
+        '204':
+          description: Created
+          schema:
+            $ref: '#/definitions/userType'
+        '403':
+          description: Not allowed
+  
+  '/users/{userId}':
+    get:
+      security:
+      - accessCode: ['read_users']
+      - implicit: ['read_users']
+      - password: ['read_users']
+      tags:
+      - users
+      parameters:
+        - name: userId
+          in: path
+          description: The ID of the user to retrieve
+          type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/userType'
+        '403':
+          description: Not allowed
+    patch:
+      security:
+      - accessCode: ['write_users']
+      - implicit: ['write_users']
+      - password: ['write_users']
+      tags:
+        - users
+      parameters:
+        - name: userId
+          in: path
+          description: The ID of the user to patch
+          type: string
+          required: true
+        - name: user
+          description: The user data to patch
+          in: body
+          schema:
+            $ref: '#/definitions/userCreateType'
+          required: true
+        - name: X-VerificationId
+          in: header
+          description: 'A verification ID, this is used for updating lost passwords'
+          type: string
+          required: false
+      responses:
+        '200':
+          description: Patched
+          schema:
+            $ref: '#/definitions/userType'
+        '403':
+          description: Not allowed
+    delete:
+      security:
+      - accessCode: ['write_users']
+      - implicit: ['write_users']
+      - password: ['write_users']
+      tags:
+        - users
+      parameters:
+        - name: userId
+          in: path
+          description: The ID of the user to delete
+          type: string
+          required: true
+      responses:
+        '204':
+          description: Deleted
+        '403':
+          description: Not allowed
+  '/users/{userId}/password':
+    delete:
+      security:
+      - accessCode: ['write_users']
+      - implicit: ['write_users']
+      - password: ['write_users']
+      tags:
+        - users
+      parameters:
+        - name: userId
+          in: path
+          description: The ID of the user to remove the password from
+          type: string
+          required: true
+      responses:
+        '204':
+          description: Successfully deleted
+        '400':
+          description: Bad request
+        '403':
+          description: Not allowed
+        '404':
+          description: Not found
+#  '/users/{userId}/registrations':
+  
+#  '/users/{userId}/registrations/{poolId}':
+  
+  '/applications':
+    get:
+      description: Retrieve a list of all applications (admin)
+      security:
+      - accessCode: ['read_applications']
+      - implicit: ['read_applications']
+      - password: ['read_applications']
+      tags:
+        - applications
+      parameters:
+      - name: offset
+        in: query
+        type: number
+        required: false
+      - name: limit
+        in: query
+        type: number
+        required: false
+      - name: filter
+        in: query
+        type: string
+        required: false
+        description: URI-encoded JSON with filter terms (substring search), e.g. {"name":"michael"}. Only works with embed=1.
+      - name: order_by
+        in: query
+        type: string
+        required: false
+        description: Ordering of the list, e.g. "name ASC", or "id DESC". Only works with embed=1.
+      - name: embed
+        in: query
+        type: number
+        required: false
+        description: Pass embed=1 to embed the application data, otherwise only a list of IDs is passed on
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            type: object
+            properties:
+              items:
+                type: array
+                items:
+                  title: AppId
+                  type: object
+                  properties:
+                    id:
+                      type: string
+              count:
+                type: number
+              count_cached:
+                type: boolean
+              offset:
+                type: number
+              limit:
+                type: number
+        '403':
+          description: Not allowed
+    post:
+      security:
+      - accessCode: ['write_applications']
+      - implicit: ['write_applications']
+      - password: ['write_applications']
+      tags:
+        - applications
+      parameters:
+        - name: application
+          in: body
+          schema:
+            $ref: '#/definitions/applicationCreateType'
+      responses:
+        '201':
+          description: Created
+          schema:
+            $ref: '#/definitions/applicationType'
+  '/application/roles':
+    get:
+      security:
+      - accessCode: ['read_applications']
+      - implicit: ['read_applications']
+      - password: ['read_applications']
+      tags:
+        - applications
+      description: Returns a static list of user roles for applications
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            type: array
+            items:
+              title: RoleDescription
+              type: object
+              properties:
+                role:
+                  type: string
+                desc:
+                  type: string
+  '/applications/{appId}':
+    get:
+      security:
+      - accessCode: ['read_applications']
+      - implicit: ['read_applications']
+      - password: ['read_applications']
+      tags:
+        - applications
+      parameters:
+        - name: appId
+          in: path
+          description: ID of Application to retrieve
+          type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/applicationType'
+        '403':
+          description: Not allowed
+    patch:
+      security:
+      - accessCode: ['write_applications']
+      - implicit: ['write_applications']
+      - password: ['write_applications']
+      tags:
+        - applications
+      parameters:
+        - name: appId
+          in: path
+          description: ID of Application to create or update
+          type: string
+          required: true
+        - name: application
+          in: body
+          description: Application entity to patch
+          schema:
+            $ref: '#/definitions/applicationCreateType'
+          required: true
+      responses:
+        '200':
+          description: 'Success, patched'
+          schema:
+            $ref: '#/definitions/applicationType'
+        '400':
+          description: Bad request
+        '403':
+          description: Not allowed
+    delete:
+      security:
+      - accessCode: ['write_applications']
+      - implicit: ['write_applications']
+      - password: ['write_applications']
+      tags:
+        - applications
+      parameters:
+        - name: appId
+          in: path
+          description: ID of Application to delete
+          type: string
+          required: true
+      responses:
+        '204':
+          description: 'Deleted, no content'
+        '403':
+          description: Not allowed
+  '/applications/{appId}/owners':
+    post:
+      security:
+      - accessCode: ['write_applications']
+      - implicit: ['write_applications']
+      - password: ['write_applications']
+      tags:
+        - applications
+      description: Adds an Owner to an application
+      parameters:
+        - name: appId
+          in: path
+          description: ID of Application to delete
+          type: string
+          required: true
+        - name: body
+          in: body
+          required: true
+          schema:
+            type: object
+            properties:
+              email:
+                type: string
+              role:
+                type: string
+                enum:
+                  - admin
+                  - collaborator
+                  - reader
+      responses:
+        '200':
+          description: 'OK, owner was already present'
+          schema:
+            $ref: '#/definitions/applicationType'
+        '201':
+          description: Successfully added owner
+          schema:
+            $ref: '#/definitions/applicationType'
+        '400':
+          description: 'Bad request, i.e. email not found'
+        '403':
+          description: Not allowed
+    delete:
+      security:
+      - accessCode: ['write_applications']
+      - implicit: ['write_applications']
+      - password: ['write_applications']
+      tags:
+        - applications
+      description: Removes an owner from an application
+      parameters:
+        - name: appId
+          in: path
+          description: ID of Application to delete
+          type: string
+          required: true
+        - name: userEmail
+          in: query
+          description: The email address of the owner to remove from the application
+          type: string
+          required: true
+      responses:
+        '200':
+          description: Successfully deleted owner
+          schema:
+            $ref: '#/definitions/applicationType'
+        '403':
+          description: Not allowed
+        '404':
+          description: Not found
+  '/applications/{appId}/subscriptions':
+    get:
+      security:
+      - accessCode: ['read_subscriptions']
+      - implicit: ['read_subscriptions']
+      - password: ['read_subscriptions']
+      tags:
+        - subscriptions
+      description: Gets all subscriptions for a given application.
+      parameters:
+        - name: appId
+          in: path
+          description: The ID of the application to retrieve all subscriptions for
+          type: string
+          required: true
+      responses:
+        '200':
+          description: Successful request
+          schema:
+            title: ArrayOfSubscriptions
+            type: array
+            items:
+              $ref: '#/definitions/subscriptionType'
+        '403':
+          description: Not allowed
+    post:
+      security:
+      - accessCode: ['write_subscriptions']
+      - implicit: ['write_subscriptions']
+      - password: ['write_subscriptions']
+      tags:
+        - subscriptions
+      parameters:
+        - name: appId
+          in: path
+          description: The ID of the Application to add an API subscription to
+          type: string
+          required: true
+        - name: subscription
+          in: body
+          description: The subscription to add
+          required: true
+          schema:
+            $ref: '#/definitions/subscriptionCreateType'
+      responses:
+        '201':
+          description: 'Success, created'
+          schema:
+            $ref: '#/definitions/subscriptionType'
+        '403':
+          description: Not allowed
+  '/applications/{appId}/subscriptions/{apiId}':
+    get:
+      security:
+      - accessCode: ['read_subscriptions']
+      - implicit: ['read_subscriptions']
+      - password: ['read_subscriptions']
+      tags:
+        - subscriptions
+      description: Gets a specific API subscription
+      parameters:
+        - name: appId
+          description: The ID of the application for which to retrieve a subscription
+          required: true
+          in: path
+          type: string
+        - name: apiId
+          description: The ID of the API to retrieve the subscription for
+          required: true
+          in: path
+          type: string
+      responses:
+        '200':
+          description: Successful request
+          schema:
+            $ref: '#/definitions/subscriptionType'
+        '403':
+          description: Not allowed
+    delete:
+      security:
+      - accessCode: ['write_subscriptions']
+      - implicit: ['write_subscriptions']
+      - password: ['write_subscriptions']
+      tags:
+        - subscriptions
+      description: Deletes an application's API subscription
+      parameters:
+        - name: appId
+          description: The ID of the application of which to delete a subscription
+          required: true
+          in: path
+          type: string
+        - name: apiId
+          description: The ID of the API to delete the subscription for
+          required: true
+          in: path
+          type: string
+      responses:
+        '204':
+          description: 'Successfully deleted, no content'
+        '403':
+          description: Not allowed
+    patch:
+      security:
+      - accessCode: ['write_subscriptions']
+      - implicit: ['write_subscriptions']
+      - password: ['write_subscriptions']
+      tags:
+        - subscriptions
+      description: For approving or disapproving subscriptions
+      parameters:
+        - name: appId
+          description: The ID of the application of which to delete a subscription
+          required: true
+          in: path
+          type: string
+        - name: apiId
+          description: The ID of the API to delete the subscription for
+          required: true
+          in: path
+          type: string
+        - name: patchBody
+          in: body
+          required: true
+          schema:
+            type: object
+            title: SubscriptionPatch
+            properties:
+              approved:
+                type: boolean
+              trusted:
+                type: boolean
+      responses:
+        '200':
+          description: Succesfully updated
+          schema:
+            $ref: '#/definitions/subscriptionType'
+  '/content/*':
+    get:
+      security:
+      - accessCode: ['read_content']
+      - implicit: ['read_content']
+      - password: ['read_content']
+      - clientCredentials: ['read_content']
+      tags:
+        - misc
+      description: Returns data from the static content section of the repository.
+      produces:
+        - text/markdown
+        - image/jpeg
+        - image/png
+        - image/gif
+      responses:
+        '200':
+          description: Successful request
+        '403':
+          description: Not allowed
+        '404':
+          description: Not found
+  '/approvals':
+    get:
+      security:
+      - accessCode: ['read_approvals']
+      - implicit: ['read_approvals']
+      - password: ['read_approvals']
+      tags:
+        - misc
+      description: Gets all pending approvals (admin)
+      responses:
+        '200':
+          description: Successful request
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/approvalType'
+
+  '/approvals/{approvalId}':
+    get:
+      security:
+      - accessCode: ['read_approvals']
+      - implicit: ['read_approvals']
+      - password: ['read_approvals']
+      tags:
+        - misc
+      description: Gets all pending approvals (admin)
+      parameters:
+        - name: approvalId
+          in: path
+          type: string
+          required: true
+          description: The ID of the approval record to retrieve
+      responses:
+        '200':
+          description: Successful request
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/approvalType'
+        '403':
+          description: Not allowed
+        '404':
+          description: Not found
+
+
+  '/verifications':
+    post:
+      security:
+      - accessCode: ['write_verifications']
+      - implicit: ['write_verifications']
+      - password: ['write_verifications']
+      tags:
+        - verifications
+      description: >-
+        Registers for a new verification of email or a request for password
+        reset
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/verificationType'
+      responses:
+        '204':
+          description: >-
+            No content. The API will not return whether it was successful or
+            not.
+        '400':
+          description: Bad request
+    get:
+      security:
+      - accessCode: ['read_verifications']
+      - implicit: ['read_verifications']
+      - password: ['read_verifications']
+      tags:
+        - verifications
+      description: Returns a list of pending verifications (admin)
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/verificationType'
+        '403':
+          description: Not allowed.
+  '/verifications/{verificationId}':
+    get:
+      security:
+      - accessCode: ['read_verifications']
+      - implicit: ['read_verifications']
+      - password: ['read_verifications']
+      tags:
+        - verifications
+      parameters:
+        - name: verificationId
+          in: path
+          type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/verificationType'
+        '404':
+          description: Not found
+    delete:
+      security:
+      - accessCode: ['write_verifications']
+      - implicit: ['write_verifications']
+      - password: ['write_verifications']
+      tags:
+        - verifications
+      parameters:
+        - name: verificationId
+          in: path
+          type: string
+          required: true
+      responses:
+        '204':
+          description: 'Success, no content'
+        '404':
+          description: Not found.
+  '/systemhealth':
+    get:
+      description: Read out system health (admin)
+      security:
+      - accessCode: ['health']
+      - implicit: ['health']
+      - password: ['health']
+      tags:
+        - misc
+      responses:
+        200:
+          description: Successful response
+          schema:
+            type: array
+            items:
+              title: SystemHealth
+              type: object
+              properties:
+                name:
+                  type: string
+                message:
+                  type: string
+                uptime:
+                  type: number
+                healthy:
+                  description: 0=not healthy, 1=healthy, 2=initializing
+                  type: number
+                  enum:
+                    - 0
+                    - 1
+                    - 2
+                pingUrl:
+                  type: string
+                pendingEvents:
+                  description: Number of events in the event queue; healthy is 0
+                  type: number
+              
+        403:
+          description: Not allowed
+  
+  '/templates/chatbot':
+    get:
+      security:
+      - accessCode: ['read_templates']
+      - implicit: ['read_templates']
+      - password: ['read_templates']
+      description: Gets the Chatbot Mustache templates
+      tags:
+        - misc
+      responses:
+        200:
+          description: Successful response
+          schema:
+            type: object
+            properties:
+              userLoggedIn:
+                type: string
+              userSignedUp:
+                type: string
+              userValidatedEmail:
+                type: string
+              applicationAdded:
+                type: string
+              applicationDeleted:
+                type: string
+              subscriptionAdded:
+                type: string
+              subscriptionDeleted: 
+                type: string
+              approvalRequired:
+                type: string
+              lostPasswordRequest: 
+                type: string
+              verifyEmailRequest: 
+                type: string
+  '/templates/email/{templateId}':
+    get:
+      security:
+      - accessCode: ['read_templates']
+      - implicit: ['read_templates']
+      - password: ['read_templates']
+      description: Get the Mustache template for a certain type of email
+      tags:
+        - misc
+      parameters:
+        - name: templateId
+          in: path
+          type: string
+          enum:
+            - "lost_password"
+            - "pending_approval"
+            - "verify_email"
+          required: true
+      responses:
+        200:
+          description: Successful response
+        404:
+          description: Not found
+  
+  '/auth-servers':
+    get:
+      security:
+      - accessCode: ['read_auth_servers']
+      - implicit: ['read_auth_servers']
+      - password: ['read_auth_servers']
+      - clientCredentials: ['read_auth_servers']
+      description: Get a list of available authorization servers
+      tags:
+        - misc
+      responses:
+        200:
+          description: Successful response
+          schema:
+            type: array
+            items:
+              type: string
+
+  '/auth-servers/{serverId}':
+    get:
+      security:
+      - accessCode: ['read_auth_servers']
+      - implicit: ['read_auth_servers']
+      - password: ['read_auth_servers']
+      - clientCredentials: ['read_auth_servers']
+      description: Get information on a registered authorization serverId
+      tags:
+        - misc
+      parameters:
+        - name: serverId
+          in: path
+          required: true
+          description: The ID of the authorization server to retrieve
+          type: string
+      responses:
+        200:
+          description: Successful response
+          schema:
+            $ref: '#/definitions/authServerType'
+        404:
+          description: Not found
+
+  '/subscriptions/{client_id}':
+    get:
+      security:
+      - accessCode: ['read_subscriptions']
+      - implicit: ['read_subscriptions']
+      - password: ['read_subscriptions']
+      tags:
+        - subscriptions
+      description: For looking up a subscription by client_id (used for OAuth2 Implicit Grant)
+      parameters:
+        - name: client_id
+          required: true
+          description: The client_id created when creating a subscription
+          in: path
+          type: string
+      responses:
+        200:
+          description: Successful response
+          schema:
+            type: object
+            properties:
+              application:
+                type: object
+              subscription:
+                type: object
+        404:
+          description: Not found.
+
+  '/subscriptions':
+    get:
+      description: Retrieve a list of all subscriptions (admin/approvers)
+      security:
+      - accessCode: ['read_subscriptions']
+      - implicit: ['read_subscriptions']
+      - password: ['read_subscriptions']
+      tags:
+        - subscriptions
+      parameters:
+        - name: offset
+          in: query
+          type: number
+          required: false
+        - name: limit
+          in: query
+          type: number
+          required: false
+        - name: filter
+          in: query
+          type: string
+          required: false
+          description: URI-encoded JSON with filter terms (substring search), e.g. {"application_name":"demoapp"}. Only works with embed=1.
+        - name: order_by
+          in: query
+          type: string
+          required: false
+          description: Ordering of the list, e.g. "application_name ASC", or "application_name DESC". Only works with embed=1.
+        - name: embed
+          in: query
+          type: number
+          required: false
+          description: Pass embed=1 to embed the subscriptions data, otherwise only a list of IDs is passed on
+      responses:
+        200:
+          description: Successful request
+          schema:
+            title: ArrayOfSubscriptions
+            type: array
+            items:
+              $ref: '#/definitions/subscriptionType'
+        403:
+          description: Not allowed     
+
+  '/webhooks/listeners':
+    get:
+      security:
+      - accessCode: ['webhooks']
+      - implicit: ['webhooks']
+      - password: ['webhooks']
+      description: Read all webhook listeners (admin)
+      tags:
+        - webhooks
+      responses:
+        '200':
+          description: Returns a list of registered webhook listeners
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/listenerType'
+        '403':
+          description: Not allowed
+  '/webhooks/listeners/{listenerId}':
+    put:
+      security:
+      - accessCode: ['webhooks']
+      - implicit: ['webhooks']
+      - password: ['webhooks']
+      description: Update/create a webhook listener (admin)
+      tags:
+        - webhooks
+      parameters:
+        - name: listenerId
+          in: path
+          type: string
+          required: true
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/listenerType'
+      responses:
+        '200':
+          description: Success (update or create)
+        '400':
+          description: Bad request
+    delete:
+      security:
+      - accessCode: ['webhooks']
+      - implicit: ['webhooks']
+      - password: ['webhooks']
+      description: Deletes a webhook listener (admin)
+      tags:
+        - webhooks
+      parameters:
+        - name: listenerId
+          in: path
+          type: string
+          required: true
+      responses:
+        '204':
+          description: 'Success, no content'
+        '403':
+          description: Not allowed
+        '404':
+          description: Not found
+  '/webhooks/events/{listenerId}':
+    get:
+      security:
+      - accessCode: ['webhooks']
+      - implicit: ['webhooks']
+      - password: ['webhooks']
+      tags:
+        - webhooks
+      description: Gets the list of pending events (admin)
+      parameters:
+        - name: listenerId
+          in: path
+          type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            type: array
+            items:
+              title: WebhookEvent
+              type: object
+              required:
+                - id
+                - action
+                - entity
+              properties:
+                id:
+                  type: string
+                action:
+                  type: string
+                entity:
+                  type: string
+                href:
+                  type: string
+                data:
+                  description: Any kind of data
+                  type: object
+    delete:
+      security:
+      - accessCode: ['webhooks']
+      - implicit: ['webhooks']
+      - password: ['webhooks']
+      tags:
+        - webhooks
+      description: Flushes the event queue for this listener (admin)
+      parameters:
+        - name: listenerId
+          in: path
+          type: string
+          required: true
+      responses:
+        '204':
+          description: 'Successful flush, no content'
+        '403':
+          description: Not allowed
+          
+  '/webhooks/events/{listenerId}/{eventId}':
+    delete:
+      security:
+      - accessCode: ['webhooks']
+      - implicit: ['webhooks']
+      - password: ['webhooks']
+      tags:
+        - webhooks
+      description: Acknowledge/delete an event (admin)
+      parameters:
+        - name: listenerId
+          in: path
+          type: string
+          required: true
+        - name: eventId
+          in: path
+          type: string
+          required: true
+      responses:
+        '204':
+          description: Successfully deleted
+        '403':
+          description: Not allowed
+  
+  '/pools':
+    get:
+      security:
+      - accessCode: []
+      - implicit: []
+      - password: []
+      - clientCredentials: []
+      tags:
+        - registrations
+      description: Read registration pool information
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/poolMap'
+  '/pools/{poolId}':
+    get:
+      security:
+      - accessCode: []
+      - implicit: []
+      - password: []
+      - clientCredentials: []
+      tags:
+        - registrations
+      description: Read a single registration pool information
+      parameters:
+        - name: poolId
+          in: path
+          required: true
+          type: string
+          description: The ID of the pool to retrieve
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/poolType'
+
+  '/pools/{poolId}/namespaces':
+    get:
+      security:
+      - accessCode: ['read_namespaces']
+      - implicit: ['read_namespaces']
+      - password: ['read_namespaces']
+      tags:
+        - registrations
+      description: Read pool namespaces
+      parameters:
+      - name: poolId
+        in: path
+        required: true
+        type: string
+        description: The ID of the pool to retrieve namespaces for
+      - name: offset
+        in: query
+        type: number
+        required: false
+      - name: limit
+        in: query
+        type: number
+        required: false
+      - name: filter
+        in: query
+        type: string
+        required: false
+        description: URI-encoded JSON with filter terms (substring search), e.g. {"description":"company xyz"}
+      - name: order_by
+        in: query
+        type: string
+        required: false
+        description: Ordering of the list, e.g. "description ASC", or "id DESC"
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/namespaceCollection'
+        '403':
+          description: Not allowed
+        '404':
+          description: Not found
+
+  '/pools/{poolId}/namespaces/{namespaceId}':
+    get:
+      security:
+      - accessCode: ['read_namespaces']
+      - implicit: ['read_namespaces']
+      - password: ['read_namespaces']
+      tags:
+        - registrations
+      description: Retrieve a single pool namespace
+      parameters:
+      - name: poolId
+        in: path
+        type: string
+        required: true
+        description: The ID of the pool to retrieve the namespace for
+      - name: namespaceId
+        in: path
+        type: string
+        required: true
+        description: The ID of the namespace to retrieve
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/namespaceType'
+        '403':
+          description: Not allowed
+        '404':
+          description: Not found
+
+    put:
+      security:
+      - accessCode: ['write_namespaces']
+      - implicit: ['write_namespaces']
+      - password: ['write_namespaces']
+      tags:
+        - registrations
+      description: Upsert a single pool namespace
+      parameters:
+      - name: poolId
+        in: path
+        type: string
+        required: true
+        description: The ID of the pool to upsert the namespace for
+      - name: namespaceId
+        in: path
+        type: string
+        required: true
+        description: The ID of the namespace to upsert
+      - name: body
+        in: body
+        schema:
+          $ref: '#/definitions/namespaceType'
+        required: true
+      responses:
+        '200':
+          description: Success, either created or updated
+          schema:
+            $ref: '#/definitions/namespaceType'
+        '400':
+          description: Invalid request
+        '403':
+          description: Not allowed
+        '404':
+          description: Not found (pool not found)    
+    delete:
+      security:
+      - accessCode: ['write_namespaces']
+      - implicit: ['write_namespaces']
+      - password: ['write_namespaces']
+      tags:
+        - registrations
+      description: Delete a single pool namespace, INCLUDING all user registrations for this namespace (Admin only)
+      parameters:
+      - name: poolId
+        in: path
+        type: string
+        required: true
+        description: The ID of the pool to delete the namespace for
+      - name: namespaceId
+        in: path
+        type: string
+        required: true
+        description: The ID of the namespace to delete
+      responses:
+        '204':
+          description: Successfully deleted
+        '403':
+          description: Not allowed
+        '404':
+          description: Not found
+
+  '/registrations/pools/{poolId}':
+    get:
+      security:
+      - accessCode: ['read_registrations']
+      - implicit: ['read_registrations']
+      - password: ['read_registrations']
+      tags:
+      - registrations
+      description: Retrieve all registrations
+      parameters:
+      - name: poolId
+        in: path
+        type: string
+        required: true
+      - name: namespace
+        in: query
+        type: string
+        required: false
+      - name: name_filter
+        in: query
+        type: string
+        required: false
+      - name: offset
+        in: query
+        type: number
+        required: false
+      - name: limit
+        in: query
+        type: number
+        required: false
+      - name: no_cache
+        in: query
+        type: boolean
+        required: false
+      responses:
+        '403':
+          description: Forbidden
+        '200':
+          description: List of registered users
+          schema:
+            $ref: '#/definitions/registrationCollection'
+
+  '/registrations/pools/{poolId}/users/{userId}':
+    get:
+      security:
+      - accessCode: ['read_registrations']
+      - implicit: ['read_registrations']
+      - password: ['read_registrations']
+      tags:
+      - registrations
+      description: Retrieve user registrations for a given pool
+      parameters:
+      - name: poolId
+        in: path
+        type: string
+        required: true
+      - name: userId
+        in: path
+        type: string
+        required: true
+      responses:
+        '403':
+          description: Forbidden
+        '200':
+          description: User registrations
+          schema:
+            $ref: '#/definitions/registrationCollection'
+
+    put:
+      security:
+      - accessCode: ['write_registrations']
+      - implicit: ['write_registrations']
+      - password: ['write_registrations']
+      tags:
+      - registrations
+      description: Write a user registration for a registration pool; for pools requiring namespaces, the `namespace` is a required body parameter
+      parameters:
+      - name: poolId
+        in: path
+        type: string
+        required: true
+      - name: userId
+        in: path
+        type: string
+        required: true
+      - name: body
+        in: body
+        schema:
+          $ref: '#/definitions/registrationType'
+        required: true
+      responses:
+        '204':
+          description: Success, no result
+        '400':
+          description: Bad request
+        '403':
+          description: Forbidden
+
+    delete:
+      security:
+      - accessCode: ['write_registrations']
+      - implicit: ['write_registrations']
+      - password: ['write_registrations']
+      tags:
+      - registrations
+      description: Delete a user's pool registrations
+      parameters:
+      - name: poolId
+        in: path
+        type: string
+        required: true
+      - name: userId
+        in: path
+        type: string
+        required: true
+      - name: namespace
+        in: query
+        type: string
+        required: false
+        description: Required parameter for pools requiring namespace
+      responses:
+        '204':
+          description: Success, no result
+        '400':
+          description: Bad request
+        '403':
+          description: Forbidden
+
+  '/registrations/users/{userId}':
+    get:
+      security:
+      - accessCode: ['read_registrations']
+      - implicit: ['read_registrations']
+      - password: ['read_registrations']
+      tags:
+      - registrations
+      description: Retrieve a user's registrations
+      parameters:
+      - name: userId
+        in: path
+        type: string
+        required: true
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/registrationMap'
+        '403':
+          description: Forbidden
+        '404':
+          description: Not found
+
+  '/grants/{userId}':
+    get:
+      security:
+      - accessCode: ['read_grants']
+      - implicit: ['read_grants']
+      - password: ['read_grants']
+      tags:
+      - grants
+      description: Retrieve a list of all user API grants
+      parameters:
+      - name: userId
+        in: path
+        type: string
+        required: true
+      - name: offset
+        in: query
+        type: number
+        required: false
+      - name: limit
+        in: query
+        type: number
+        required: false
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/grantCollection'
+        '400':
+          description: Invalid Request
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+    delete:
+      security:
+      - accessCode: ['write_grants']
+      - implicit: ['write_grants']
+      - password: ['write_grants']
+      tags:
+      - grants
+      description: Delete all of a user's API grants
+      parameters:
+      - name: userId
+        in: path
+        type: string
+        required: true
+      responses:
+        '204':
+          description: Success, no result
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+      
+  '/grants/{userId}/applications/{applicationId}/apis/{apiId}':
+    parameters:
+    - name: userId
+      in: path
+      type: string
+      required: true
+    - name: applicationId
+      in: path
+      type: string
+      required: true
+    - name: apiId
+      in: path
+      type: string
+      required: true
+      
+    get:
+      security:
+      - accessCode: ['read_grants']
+      - implicit: ['read_grants']
+      - password: ['read_grants']
+      tags:
+      - grants
+      description: Read a user's grants for a specific API
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/grantType'
+        '403':
+          description: Forbidden
+        '404':
+          description: Not found
+
+    put:
+      security:
+      - accessCode: ['write_grants']
+      - implicit: ['write_grants']
+      - password: ['write_grants']
+      tags:
+      - grants
+      description: Write a user API grant
+      parameters:
+      - name: body
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/grantType'
+      responses:
+        '204':
+          description: Success, no result
+        '400':
+          description: Bad request
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+
+    delete:
+      security:
+      - accessCode: ['write_grants']
+      - implicit: ['write_grants']
+      - password: ['write_grants']
+      tags:
+      - grants
+      description: Delete a specific user API grant
+      responses:
+        '204':
+          description: Success, no result
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+
+definitions:
+  apiType:
+    title: Api
+    type: object
+    properties:
+      id:
+        type: string
+      name:
+        type: string
+      desc:
+        type: string
+      plans:
+        type: array
+        items:
+          type: string
+      requiredGroup:
+        description: 'Specify to restrict access to API, leave out to keep public'
+        type: string
+      tags:
+        description: 'Array of tags for this API, use as "Category"'
+        type: array
+        items:
+          type: string
+      registrationPool:
+        type: string
+      passthroughUsers:
+        type: boolean
+      passthroughScopeUrl:
+        type: string
+      authMethods:
+        description: Valid auth methods for this API, e.g. ["default:local", "default:google"]
+        type: array
+        items:
+          type: string
+
+  userType:
+    title: UserInfo
+    type: object
+    properties:
+      id:
+        type: string
+      customId:
+        type: string
+      # loggedIn:
+      #   type: boolean
+      email:
+        type: string
+      validated:
+        description: Has email address been validated
+        type: boolean
+      applications:
+        type: array
+        items:
+          title: Application
+          type: object
+          properties:
+            id:
+              type: string
+            _links:
+              type: object
+              properties:
+                application:
+                  $ref: '#/definitions/hrefType'
+      groups:
+        title: GroupIds
+        type: array
+        items:
+          type: string
+      _links:
+        type: object
+        properties:
+          self:
+            $ref: '#/definitions/hrefType'
+          groups:
+            $ref: '#/definitions/hrefType'
+  userShortType:
+    title: UserShortInfo
+    type: object
+    properties:
+      id:
+        type: string
+      name:
+        description: Read only full name (firstName + lastName)
+        type: string
+      customId:
+        type: string
+      email:
+        type: string
+  userCreateType:
+    title: UserInfo
+    type: object
+    properties:
+      customId:
+        type: string
+      email:
+        type: string
+      password:
+        type: string
+      validated:
+        description: Has email address been validated
+        type: boolean
+      groups:
+        title: GroupIds
+        type: array
+        items:
+          type: string
+  applicationType:
+    title: ApplicationInfo
+    type: object
+    properties:
+      id:
+        type: string
+      name:
+        type: string
+      redirectUri:
+        type: string
+      redirectUris:
+        type: array
+        items:
+          type: string
+      confidential:
+        type: boolean
+      clientType:
+        type: string
+        enum:
+          - public_spa
+          - confidential
+          - public_native
+      owners:
+        title: OwnerList
+        type: array
+        items:
+          $ref: '#/definitions/ownerType'
+      _links:
+        type: object
+        properties:
+          self:
+            $ref: '#/definitions/hrefType'
+  applicationCreateType:
+    title: ApplicationInfo
+    type: object
+    properties:
+      id:
+        type: string
+      name:
+        type: string
+      confidential:
+        type: boolean
+      redirectUri:
+        type: string
+      redirectUris:
+        type: array
+        items:
+          type: string
+      description:
+        type: string
+  ownerType:
+    title: Owner
+    type: object
+    properties:
+      userId:
+        type: string
+      email:
+        type: string
+      role:
+        type: string
+        enum:
+          - owner
+          - collaborator
+          - reader
+      _links:
+        type: object
+        properties:
+          user:
+            $ref: '#/definitions/hrefType'
+  subscriptionType:
+    title: SubscriptionInfo
+    type: object
+    properties:
+      application:
+        type: string
+      api:
+        type: string
+      plan:
+        type: string
+      auth:
+        type: string
+        enum:
+          - "key-auth"
+          - "oauth2"
+      apikey:
+        type: string
+        description: Used if key-auth API
+      clientId:
+        type: string
+        description: Used if oauth2 API
+      clientSecret:
+        type: string
+        description: Used if oauth2 API
+      approved:
+        type: boolean
+      trusted:
+        type: boolean
+      _links:
+        type: object
+        properties:
+          self:
+            $ref: '#/definitions/hrefType'
+          application:
+            $ref: '#/definitions/hrefType'
+          api:
+            $ref: '#/definitions/hrefType'
+          plan:
+            $ref: '#/definitions/hrefType'
+  subscriptionCreateType:
+    title: SubscriptionInfo
+    type: object
+    properties:
+      application:
+        type: string
+      api:
+        type: string
+      plan:
+        type: string
+      trusted:
+        description: Only an Admin can create trusted subscriptions
+        type: boolean
+      apikey:
+        description: Optional
+        type: string
+  planType:
+    title: Plan
+    type: object
+    properties:
+      id:
+        type: string
+      name:
+        type: string
+      desc:
+        type: string
+      needsApproval:
+        type: boolean
+      config:
+        description: Gateway configuration for plan
+        type: object
+  hrefType:
+    type: object
+    properties:
+      href:
+        type: string
+  approvalType:
+    type: object
+    properties:
+      user:
+        type: object
+        properties:
+          id:
+            type: string
+          name:
+            type: string
+          email:
+            type: string
+      api:
+        type: object
+        properties:
+          id:
+            type: string
+          name:
+            type: string
+      application:
+        type: object
+        properties:
+          id:
+            type: string
+          name:
+            type: string
+      plan:
+        type: object
+        properties:
+          id:
+            type: string
+          name:
+            type: string
+  verificationType:
+    type: object
+    properties:
+      id:
+        description: Verification ID
+        type: string
+      type:
+        description: Type of verification
+        type: string
+        enum:
+          - email
+          - lostpassword
+      email:
+        type: string
+        description: The E-Mail address concerned in the validation
+      userId:
+        type: string
+        description: 'When retrieved, this field will contain the associated user ID'
+      link:
+        type: string
+        description: The fully qualified link to the verification page, with a placeholder for the ID (mustache {{id}})
+  authServerType:
+    type: object
+    properties:
+      name:
+        type: string
+      desc:
+        type: string
+      url:
+        type: string
+  listenerType:
+    type: object
+    properties:
+      id:
+        type: string
+      url:
+        type: string
+  registrationType:
+    type: object
+    properties:
+      poolId:
+        type: string
+      namespace:
+        type: string
+      userId:
+        type: string
+      name:
+        type: string
+      # Plus other properties
+  registrationMap:
+    type: object
+    properties:
+      pools:
+        type: object
+        properties:
+          any_pool_id:
+            $ref: '#/definitions/registrationType'
+  registrationCollection:
+    type: object
+    properties:
+      items:
+        type: array
+        items:
+          $ref: '#/definitions/registrationType'
+      count:
+        type: number
+      count_cached:
+        type: boolean
+      offset:
+        type: number
+      limit:
+        type: number
+      _links:
+        type: object
+        properties: {}    
+  grantType:
+    type: object
+    properties:
+      userId:
+        type: string
+      apiId:
+        type: string
+      applicationId:
+        type: string
+      grants:
+        type: array
+        items:
+          $ref: '#/definitions/grantScopeType'
+  grantCollection:
+    type: object
+    properties:
+      items:
+        type: array
+        items:
+          $ref: '#/definitions/grantType'
+      count:
+        type: number
+      count_cached:
+        type: boolean
+      offset:
+        type: number
+      limit:
+        type: number
+      _links:
+        type: object
+        properties: {}
+  grantScopeType:
+    type: object
+    properties:
+      scope:
+        type: string
+      grantedDate:
+        type: string
+        format: date-time
+  poolMap:
+    type: object
+    properties:
+      any_property:
+        $ref: '#/definitions/poolType'
+
+  poolType:
+    type: object
+    properties:
+      id:
+        type: string
+      name:
+        type: string
+      requiresNamespace:
+        type: boolean
+      disallowRegister:
+        type: boolean
+      properties:
+        type: array
+        items:
+          $ref: '#/definitions/poolPropertyType'
+  poolPropertyType:
+    type: object
+    properties:
+      id:
+        type: string
+      description:
+        type: string
+      type:
+        type: string
+        enum:
+          - string
+      maxLength:
+        type: number
+      minLength:
+        type: number
+      oidcClaim:
+        type: string
+        description: Should match an OIDC claim, if applicable, or a unique claim name (namespaced)
+    required:
+      - id
+      - description
+      - type
+      - oidcClaim
+  
+  namespaceCollection:
+    type: object
+    properties:
+      items:
+        type: array
+        items:
+          $ref: '#/definitions/namespaceType'
+      count:
+        type: number
+      count_cached:
+        type: boolean
+      offset:
+        type: number
+      limit:
+        type: number
+      
+  namespaceType:
+    type: object
+    properties:
+      id:
+        type: string
+      poolId:
+        type: string
+      description:
+        type: string
+    required:
+      - id
+      - poolId
+      - description

@@ -1,0 +1,413 @@
+#!/usr/bin/env node
+
+'use strict';
+
+/**
+ * Module dependencies.
+ */
+
+const { debug, info, warn, error } = require('portal-env').Logger('portal:www');
+const async = require('async');
+const http = require('http');
+const request = require('request');
+const fs = require('fs');
+const path = require('path');
+const mustache = require('mustache');
+
+//const envReader = require('portal-env');
+const wicked = require('wicked-sdk');
+
+const utils = require('../routes/utils');
+const portalGlobals = require('../portalGlobals');
+
+const app = require('../app');
+
+/**
+ * Get port from environment and store in Express.
+ */
+const port = normalizePort(process.env.PORT || '3000');
+app.set('port', port);
+
+/**
+ * Create HTTP server.
+ */
+const server = http.createServer(app);
+
+/**
+ * Listen on provided port, on all network interfaces.
+ */
+server.listen(port);
+server.on('error', onError);
+server.on('listening', onListening);
+
+// Wait for Portal API to be available
+debug('Waiting for API to be available.');
+app.initState = 'Waiting for API...';
+
+const wickedOptions = {
+    userAgentName: 'wicked.portal',
+    userAgentVersion: utils.getVersion()
+};
+
+/**
+ * Register the Portal UI as application __portal, with owner "internal:portal"
+ * with the Portal API. This will give us client credentials which lets the Portal
+ * authenticate and authorize with Kong to get access to the Portal API anonymously
+ * or as an end user.
+ * 
+ * To do that, we use the wicked SDK; this is later not the case, as we're using the 
+ * API as a regular client after that, i.e. need to go via Kong. The wicked SDK goes
+ * directly to the backend end point inside the deployment, which is a no no later,
+ * for security reasons.
+ * 
+ * @param callback 
+ */
+function registerApplicationAndSubscribe(callback) {
+    debug('registerApplicationAndSubscribe()');
+    let callbackUrl = wicked.getExternalPortalUrl();
+    if (!callbackUrl.endsWith('/'))
+        callbackUrl = callbackUrl + '/';
+    callbackUrl = callbackUrl + 'login/callback';
+    debug('callbackUrl: ' + callbackUrl);
+
+    const appId = '__portal';
+    const appName = 'wicked.haufe.io Portal UI';
+    const desiredAppInfo = {
+        id: appId,
+        name: appName,
+        redirectUri: callbackUrl,
+        clientType: 'confidential'
+    };
+    const desiredSubsInfo = {
+        application: '__portal',
+        api: 'portal-api',
+        plan: '__internal_api_unlimited',
+        trusted: true
+    };
+
+    (async () => {
+        try {
+            info('Checking application for portal...');
+            let appInfo = await getApplication(appId);
+            if (!appInfo) {
+                info(`Application for portal not found, creating.`);
+                appInfo = await wicked.createApplication(desiredAppInfo);
+            } else {
+                info(`Application for portal found, checking...`);
+                // Check if the application matches
+                if (appInfo.name !== appName ||
+                    appInfo.redirectUri !== callbackUrl ||
+                    appInfo.clientType !== 'confidential') {
+                    info(`Configuration mismatch found, patching...`);
+                    appInfo = await wicked.patchApplication(appId, desiredAppInfo);
+                } else {
+                    info('Configuration is fine.');
+                }
+            }
+
+            info('Checking subscription to portal-api for portal...');
+            let subsInfo = await getSubscription(appId, 'portal-api');
+            if (!subsInfo) {
+                info('Portal does not have a subscription, creating...');
+                subsInfo = await wicked.createSubscription(appId, desiredSubsInfo);
+            }
+
+            debug('Subscription Info: ' + JSON.stringify(subsInfo));
+
+            const clientId = subsInfo.clientId;
+            const clientSecret = subsInfo.clientSecret;
+    
+            if (!clientId || !clientSecret) {
+                return callback(new Error('subscriptionInfo did not contain either clientId or clientSecret!'));
+            }
+    
+            // Now we know our application and set the id and secret for later use.
+            utils.setOAuth2Credentials(clientId, clientSecret, callbackUrl);
+    
+            return callback(null, {
+                clientId: clientId,
+                clientSecret: clientSecret
+            });
+        } catch (err) {
+            error(err);
+            error(err.stack);
+            const err2 = new Error('*** Could not register application and subscribe!');
+            return callback(err2);
+        }
+    })();
+}
+
+async function getApplication(appId) {
+    try {
+        const appInfo = await wicked.getApplication(appId);
+        return appInfo;
+    } catch (err) {
+        if (err.status && err.status === 404) {
+            return null;
+        }
+        throw err;
+    }
+}
+
+async function getSubscription(appId, apiId) {
+    try {
+        const subsInfo = await wicked.getSubscription(appId, apiId);
+        return subsInfo;
+    } catch (err) {
+        if (err.status && err.status === 404) {
+            return null;
+        }
+        throw err;
+    }
+}
+
+/**
+ * Find out which auth methods can be used for the portal; it's in the globals.json
+ */
+function configureAuthServer(callback) {
+    debug('configureAuthServer()');
+    // We already have access to the API, and the globals.
+    const globals = wicked.getGlobals();
+    if (!globals.portal)
+        return callback(new Error('globals.json does not contain a "portal" property.'));
+    if (!globals.portal.authMethods)
+        return callback(new Error('globals.json, property portal, does not contain an "authMethods" array.'));
+    wicked.apiGet('/auth-servers/default', function (err, defaultAuthServer) {
+        if (err)
+            return callback(err);
+
+        // Retrieve the URI on Kong the Auth Server resides on
+        if (!defaultAuthServer.config)
+            return callback(new Error('default auth server does not have a config property.'));
+        if (!defaultAuthServer.config.api)
+            return callback(new Error('default auth server does not have a config.api property.'));
+        if (!defaultAuthServer.config.api.uris)
+            return callback(new Error('default auth server does not have a config.api.uris property.'));
+        const authServerUri = defaultAuthServer.config.api.uris[0];
+        let apiUrl = wicked.getExternalApiUrl();
+        if (apiUrl.endsWith('/'))
+            apiUrl = apiUrl.substring(0, apiUrl.length - 1);
+        const authServerUrl = `${apiUrl}${authServerUri}`;
+        let internalApiUrl = wicked.getInternalKongProxyUrl();
+        if (internalApiUrl.endsWith('/'))
+            internalApiUrl = internalApiUrl.substring(0, internalApiUrl.length - 1);
+        const internalAuthServerUrl = `${internalApiUrl}${authServerUri}`;
+
+        // Now match the auth methods of the auth server with the desired auth methods for
+        // the portal-api.
+        const authMethods = [];
+        for (let i = 0; i < globals.portal.authMethods.length; ++i) {
+            const wantedAuthMethod = globals.portal.authMethods[i];
+            if (wantedAuthMethod.indexOf(':') < 0)
+                return callback(new Error(`wanted auth method ${wantedAuthMethod} does not have correct syntax "authserver:methodname", e.g. "default:local"`));
+            const tmp = wantedAuthMethod.split(':');
+            const authServer = tmp[0];
+            const authMethodName = tmp[1];
+            if (authServer !== 'default')
+                return callback(new Error(`currently, only default server auth methods are supported for portal login: ${wantedAuthMethod}`));
+            const defaultAuthMethod = defaultAuthServer.authMethods.find(am => am.name === authMethodName); // jshint ignore:line
+            if (!defaultAuthMethod) {
+                // We will not fail just because we couldn't retrieve a specific auth method,
+                // but we will warn about it in the logs.
+                warn(`Unknown/unsupported auth method ${wantedAuthMethod}`);
+                continue;
+            }
+            // Is this auth method enabled?
+            let enabled = true;
+            if (defaultAuthMethod.hasOwnProperty('enabled'))
+                enabled = utils.parseBool(defaultAuthMethod.enabled);
+            if (!enabled) {
+                warn(`Auth method ${wantedAuthMethod} is configured, but not enabled. Skipping.`);
+                continue;
+            }
+            const templateUrl = function (url) { // jshint ignore:line
+                return mustache.render(url, {
+                    name: authMethodName,
+                    api: 'portal-api'
+                });
+            };
+
+            // Template the URLs
+            const config = defaultAuthMethod.config;
+            debug('Found a valid auth config:');
+            debug(config);
+            if (!config)
+                return callback(new Error(`Auth method ${wantedAuthMethod} does not have a config property.`));
+
+            // Check for required end point configurations
+            if (!config.authorizeEndpoint)
+                return callback(new Error(`Auth method ${wantedAuthMethod} config does not have an authorizeEndpoint.`));
+            if (!config.tokenEndpoint)
+                return callback(new Error(`Auth method ${wantedAuthMethod} config does not have a tokenEndpoiunt.`));
+            if (!config.profileEndpoint)
+                return callback(new Error(`Auth method ${wantedAuthMethod} config does not have a profileEndpoiunt.`));
+
+            // Template the configuration properties, if necessary (mustache)
+            for (let key in config) {
+                if (typeof config[key] !== 'string')
+                    continue;
+                if (config[key].indexOf('{{') >= 0)
+                    config[key] = templateUrl(config[key]);
+            }
+
+            authMethods.push(defaultAuthMethod);
+        }
+        if (authMethods.length === 0)
+            return callback(new Error('no configured or no valid auth methods on globals.json'));
+        return callback(null, {
+            authMethods: authMethods,
+            authServerUrl: authServerUrl,
+            internalAuthServerUrl: internalAuthServerUrl
+        });
+    });
+}
+
+function readAuthServers(callback) {
+    debug(`readAuthServers()`);
+    wicked.apiGet('/auth-servers', (err, authServerNames) => {
+        if (err)
+            return callback(new Error('Could not read list of auth servers.'));
+        const authServerMap = {};
+        async.each(authServerNames, (authServerName, callback) => {
+            wicked.apiGet(`/auth-servers/${authServerName}`, (err, authServerInfo) => {
+                if (err)
+                    return callback(err);
+                if (!authServerInfo.config)
+                    return callback(new Error(`Auth server ${authServerName} does not have a config property.`));
+                if (!authServerInfo.config.api)
+                    return callback(new Error(`Auth server ${authServerName} does not have a config.api property.`));
+                if (!authServerInfo.config.api.uris)
+                    return callback(new Error(`Auth server ${authServerName} does not have a config.api.uris property.`));
+                if (!Array.isArray(authServerInfo.config.api.uris))
+                    return callback(new Error(`Auth server ${authServerName} config.api.uris property in not an array.`));
+                if (authServerInfo.config.api.uris.length <= 0)
+                    return callback(new Error(`Auth server ${authServerName} config.api.uris property does not have any entries.`));
+                authServerMap[authServerName] = authServerInfo;
+                return callback(null);
+            });
+        }, (err) => {
+            if (err)
+                return callback(err);
+            return callback(null, authServerMap);
+        });
+    });
+}
+
+async.series({
+    init: callback => wicked.initialize(wickedOptions, callback),
+    initMachineUser: callback => wicked.initMachineUser('portal', callback),
+    registerApp: callback => registerApplicationAndSubscribe(callback),
+    authServers: callback => readAuthServers(callback),
+    authConfig: callback => configureAuthServer(callback),
+}, function (err, results) {
+    if (err) {
+        error(err);
+        error(err.stack);
+        error('**** Could not initialize portal. See above error.');
+        process.exit(1);
+    }
+
+    let apiUrl = wicked.getInternalKongProxyUrl();
+    if (!apiUrl.endsWith('/')) // Add trailing slash
+        apiUrl = apiUrl + '/';
+    apiUrl = apiUrl + 'wicked/v1';
+
+    app.set('api_url', apiUrl);
+
+    debug('API is responding. Finishing initialization.');
+    app.initState = 'Finishing initialization...';
+
+    portalGlobals.glob = wicked.getGlobals();
+
+    app.portalGlobals = wicked.getGlobals();
+    app.portalGlobals.buildDate = getBuildDate();
+
+    app.authServers = results.authServers;
+    debug('Auth Server Configurations:');
+    debug(app.authServers);
+
+    app.authConfig = results.authConfig;
+    debug('Configured Portal Auth Methods:');
+    debug(JSON.stringify(app.authConfig.authMethods));
+    debug('Auth Server URL:');
+    debug(app.authConfig.authServerUrl);
+    debug('Internal Auth Server URL:');
+    debug(app.authConfig.internalAuthServerUrl);
+    app.clientCredentials = results.registerApp;
+    debug('Portal Client Credentials:');
+    debug(JSON.stringify(results.registerApp));
+
+    app.initialize(function () {
+        app.initialized = true;
+        app.initState = 'Initialized';
+    });
+});
+
+function getBuildDate() {
+    debug('getBuildDate()');
+    const buildDatePath = path.join(__dirname, '..', 'build_date');
+    debug('Looking for build date file at: ' + buildDatePath);
+    if (!fs.existsSync(buildDatePath))
+        return "(no build date found)";
+    return fs.readFileSync(buildDatePath, 'utf8');
+}
+
+/**
+ * Normalize a port into a number, string, or false.
+ */
+
+function normalizePort(val) {
+    const port = parseInt(val, 10);
+
+    if (isNaN(port)) {
+        // named pipe
+        return val;
+    }
+
+    if (port >= 0) {
+        // port number
+        return port;
+    }
+
+    return false;
+}
+
+/**
+ * Event listener for HTTP server "error" event.
+ */
+
+function onError(err) {
+    if (err.syscall !== 'listen') {
+        throw err;
+    }
+
+    const bind = typeof port === 'string' ?
+        'Pipe ' + port :
+        'Port ' + port;
+
+    // handle specific listen errors with friendly messages
+    switch (err.code) {
+        case 'EACCES':
+            error(bind + ' requires elevated privileges');
+            process.exit(1);
+            break;
+        case 'EADDRINUSE':
+            error(bind + ' is already in use');
+            process.exit(1);
+            break;
+        default:
+            throw err;
+    }
+}
+
+/**
+ * Event listener for HTTP server "listening" event.
+ */
+
+function onListening() {
+    const addr = server.address();
+    const bind = typeof addr === 'string' ?
+        'pipe ' + addr :
+        'port ' + addr.port;
+    debug('Listening on ' + bind);
+}

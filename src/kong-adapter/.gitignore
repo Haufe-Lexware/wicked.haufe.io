@@ -1,0 +1,10 @@
+# Dockerfile
+# Dockerfile-alpine
+node_modules
+.DS_Store
+*.log
+*.tgz
+dist
+package-lock.json
+build_date
+git_*

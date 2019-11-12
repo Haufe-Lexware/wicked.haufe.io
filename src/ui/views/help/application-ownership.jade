@@ -1,0 +1,116 @@
+extends help_layout
+
+mixin yes
+  span.glyphicon.glyphicon-ok(style='color:#0a0')
+
+mixin no
+  | -
+
+block help_content
+
+  +helpItem('ownership', 'Application Ownership')
+
+  p.
+    An <a href='application'>application</a> always needs to have at least one owner. The owner of an application is allowed to perform all kinds of operations on the application, e.g. subscribe to APIs, unsubscribe APIs, add and delete owners, and delete/unregister the application altogether.
+
+  p.
+    In addition to the owners of the application, there may be others which can interact with the application definition: Collaborators and Readers.
+
+  +helpItem('application_features', 'Collaboration on Applications')
+
+  p.
+    In many, if not most, use cases, a developer does not work alone on "his application", but is part of a team. In those cases, it may be necessary to share the knowledge of API keys/secret among multiple developers. The API Portal supports those cases via the notion of "application owners".
+
+  table.table.table-striped
+    thead
+      tr
+        th &nbsp;
+        th Description
+    tbody
+      tr
+        th Owner
+        td The owner of an application is usually the developer which originally registered the application in the API Portal. The original owner can add additional owners to the application (from the application's specific page). Further owners have exactly the same rights as the original owner.
+      tr
+        th Collaborator
+        td A collaborator for an application can subscribe to APIs and unsubscribe on behalf of the application. A collaborator <strong>cannot</strong> add other collaborators or owners to the application. Only owners can do that. 
+      tr
+        th Reader
+        td Readers of an application can view the subscriptions (API Keys/Secrets) of an application, but can neither add owners or collaborators nor change the API subscriptions. 
+  
+  p.
+    <strong>Note: </strong> If a developer/portal user belongs to an Admin group, he/she will be treated with the same rights to the Application as an Application Owner.
+
+
+  +helpItem('rights_matrix', 'Rights Matrix')
+
+  p.
+    The following matrix shows which rights an owner, collaborator or reader of an application has:
+
+  table.table.table-striped
+    thead
+      tr
+        th Rights description
+        th Reader
+        th Collaborator
+        th App Owner
+        th Admin
+    tbody
+      tr
+        th View subscriptions/credentials
+        td #[+yes]
+        td #[+yes]
+        td #[+yes]
+        td #[+yes]
+      tr
+        th Subscribe to APIs
+        td #[+no]
+        td #[+yes]
+        td #[+yes]
+        td #[+yes]
+      tr
+        th Unsubscribe an API
+        td #[+no]
+        td #[+yes]
+        td #[+yes]
+        td #[+yes]
+      tr
+        th Add owners, collaborators and readers
+        td #[+no]
+        td #[+no]
+        td #[+yes]
+        td #[+yes]
+      tr
+        th Delete owners, collaborators and readers
+        td #[+no]
+        td #[+no]
+        td #[+yes]
+        td #[+yes]
+      tr
+        th Unregister Application
+        td #[+no]
+        td #[+no]
+        td #[+yes]
+        td #[+yes]
+
+  +helpItem('adding_owner', 'Adding an Owner')
+
+  p.
+    In order to add an owner, collaborator or reader to an application, open the application's page (select the correct one from your <a href='/applications'>applications</a>), click "Owners", and subsequently "Register Additional Owner". <strong>Note:</strong> You can only add owners, collaborators or readers to an application if you are the owner of the application, or if you are an Admin on the API Portal.
+
+  p.
+    The additional owner must already be registered with the API Portal, and you need to know the owner's email address (the email address the new owner used to register with the API portal). Then select the role you want the new owner to have on the application: Owner, Collaborator or Reader.
+  
+  p.
+    <strong>Important:</strong> If you make the new owner a Co-Owner of the application, this means he has exactly the same rights as you have, including the possibility to remove you as an owner of the application. Owners are all equal in rights.
+
+  +helpItem('transfer_ownership', 'Transferring Ownership')
+
+  p.
+    In order to transfer ownership of an application, perform the following steps:
+
+  ol
+    li Add the new owner as Co-Owner of the application, using the above steps
+    li Remove the previous owner of the application from the owner list
+
+  p.
+    Removing the previous owner of the application can either be done by the previous owner himself, or by the new owner after he/she has been made co-owner. Note that it's not possible to remove a single owner with the "owner" role. An application always has to have at least one owner.

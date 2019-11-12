@@ -1,0 +1,177 @@
+mixin panelTitle(title, helpUrl, toggleTarget)
+    table(width='100%')
+        tr
+            td
+                if !toggleTarget
+                    h4.panel-title= title
+                else
+                    - var tt = toggleTarget.startsWith('#') ? toggleTarget : '#' + toggleTarget
+                    h4.panel-title
+                        a(data-toggle='collapse' data-target='#{tt}' role="button") #{title} <span class='glyphicon glyphicon-chevron-down'></span>
+            if helpUrl
+                td(style='text-align:right;')
+                    a(href='#{helpUrl}' target='_blank') Help
+
+doctype html
+html
+  head
+    title #{glob.title} - #{title}
+    link(rel='stylesheet', href='/assets/bootstrap/css/bootstrap.min.css')
+    link(rel='stylesheet', href='/content/wicked.css')
+    link(rel="stylesheet", href="/assets/highlight/css/default.css")
+    link(rel='stylesheet', href='/assets/jsgrid/jsgrid.min.css')
+    link(rel='stylesheet', href='/assets/jsgrid/jsgrid-theme.min.css')
+    link(rel='stylesheet', href='/assets/css/override.css')
+    script(src='/assets/highlight/highlight.js')
+    
+    block scripts
+  body
+    if authUser && authUser.id == '1'
+        br
+        br
+        .container
+            .panel.panel-danger
+                .panel-heading
+                    h4.panel-title You are logged in as the Admin superuser!
+                .panel-body
+                    p.
+                        You are currently logged in as the Admin Superuser. This is okay if you are starting the
+                        portal for the first time. You must only use this user to give your actual user admin rights
+                        to the portal; after that, delete the password for the superuser (with the ID '1'), so that
+                        it is no longer possible to log in as this user.
+
+                    p Your Todos right now are:
+
+                    ul
+                        li
+                            a(href='/admin/users') Go to the Admin/Users page, find your own user, and assign an 'admin' group to it
+                        li
+                            a(href='/users/1') Open this User's user profile, and delete the password from it
+
+                    p.
+                        If you don't have a user in your own name yet, please create that user first, either by signing
+                        up using email address or password, or by using one of the federated logins you have configured (if applicable).
+
+
+    nav(class="navbar navbar-default navbar-fixed-top")
+        .container
+            .navbar-header
+                button(type="button", class="navbar-toggle collapsed", data-toggle="collapse", data-target="#navbar", aria-expanded="false", aria-controls="navbar")
+                    span.sr-only Toggle navigation
+                    span.icon-bar
+                    span.icon-bar
+                    span.icon-bar
+                a.pull-left(href=glob.layouts.defautRootUrl target=glob.layouts.defautRootUrlTarget)
+                    if glob.layouts.defautRootUrlText != null
+                        span= glob.layouts.defautRootUrlText
+                    else
+                        img(src='/content/images/wicked-40.png' style='margin-top: 5px; margin-right: 5px;' title='wicked project home')
+
+            div(id="navbar", class="collapse navbar-collapse")
+                ul(class="nav navbar-nav")
+                    if (route == '/')
+                        li.active
+                            a(href="/")= glob.layouts.menu.homeLinkText
+                    else
+                        li
+                            a(href="/")= glob.layouts.menu.homeLinkText
+                    if route == '/apis'
+                        li.active
+                            a(href="/apis") APIs
+                    else if glob.layouts.menu.apisLinkVisibleToGuest || authUser
+                        li
+                            a(href="/apis") APIs
+                    if route == '/applications'
+                        li.active
+                            a(href='/applications') Applications
+                    else if glob.layouts.menu.applicationsLinkVisibleToGuest || authUser
+                        li
+                            a(href='/applications') Applications
+                    if route == '/content/contact'
+                        li.active
+                            a(href="/content/contact") Contact
+                    else if glob.layouts.menu.contactLinkVisibleToGuest || authUser
+                        li
+                            a(href="/content/contact") Contact
+                    if route == '/content/toc'
+                        li.active
+                            a(href="/content/toc") Content
+                    else if glob.layouts.menu.contentLinkVisibleToGuest || authUser
+                        li
+                            a(href="/content/toc") Content
+                ul(class='nav navbar-nav navbar-#{glob.layouts.menu.classForLoginSignupPosition}')
+                    if !authUser
+                        if route == '/login'
+                            li.active
+                                a(href="/login")= glob.layouts.menu.loginLinkText
+                        else
+                            li
+                                a(href="/login")= glob.layouts.menu.loginLinkText
+                if authUser
+                    ul(class='nav navbar-nav navbar-right')
+                        li
+                            a(href='/users/me')= authUser.name
+                        li(class='dropdown')
+                            a(href='#' class='dropdown-toggle' data-toggle='dropdown' role='button' aria-haspopup='true' aria-expanded='false')
+                                span(style='font-size: 16px;' class='glyphicon glyphicon-cog')
+                            ul(class='dropdown-menu')
+                                li
+                                    a(href='/help') Help
+                                li
+                                    a(href='/users/me') User Profile
+                                li
+                                    a(href='/login/logout') Log out
+                                if authUser.admin
+                                    li(role='separator' class='divider')
+                                    li
+                                        a(href='/admin/approvals') Pending Approvals
+                                    li
+                                        a(href='/admin/users') All Users
+                                    li
+                                        a(href='/admin/applications') All Applications
+                                    li
+                                        a(href='/admin/subscriptions') All Subscriptions
+                                    li
+                                        a(href='/admin/subscribe') Subscription Cheat Page
+                                    li(role='separator' class='divider')
+                                    li
+                                        a(href='/admin/listeners') Webhook Listeners
+                                    li
+                                        a(href='/admin/verifications') Pending Verifications
+                                    li
+                                        a(href='/admin/health') System Health
+                                else if authUser.approver
+                                    li(role='separator' class='divider')
+                                    li
+                                      a(href='/admin/approvals') Pending Approvals
+                                    li
+                                      a(href='/admin/subscriptions') All Subscriptions
+                       
+
+    block content
+
+    hr
+    .container
+        footer
+            table(width='100%')
+                tr
+                    td(style='text-align:left; color: #999999;')!= glob.footer
+                    td(style='text-align:right; color:#999999;')
+                        if glob.layouts.footer.showBuiltBy
+                            | Built by <a href='http://www.haufe-lexware.com' target='_blank'>Haufe-Lexware</a>, powered by <a href='https://www.konghq.com' target='_blank'>Kong</a>.
+                tr
+                    if (authUser && authUser.admin)
+                        td(colspan=2 style='text-align:right; color: #cccccc; font-size: 10pt;') Portal Build: #{glob.buildDate} -- <a href='/admin/health'>Config Build: #{glob.configDate}</a>
+                    else if glob.layouts.footer.showBuilds
+                        td(colspan=2 style='text-align:right; color: #cccccc; font-size: 10pt;') Portal Build: #{glob.buildDate} -- Config Build: #{glob.configDate}
+                if !glob.isProduction
+                    tr
+                        td(colspan=2 style='text-align:center; color: #ff0000; font-size:18pt;') PORTAL IS RUNNING IN DEVELOPMENT MODE
+
+    script(src='/assets/jquery/jquery.min.js')
+    script(src='/assets/bootstrap/js/bootstrap.min.js')
+    script(src='/assets/js/bootstrap-show-password.min.js')
+    script(src='/assets/jsgrid/jsgrid.min.js')
+    script(src='/assets/js/utils.js')
+
+    block bodyScripts

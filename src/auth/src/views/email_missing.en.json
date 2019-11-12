@@ -1,0 +1,11 @@
+{
+    "enter_email_address": "Please enter a value for the email address.",
+    "email_invalid": "Email address invalid.",
+    "confirm_email": "Please confirm your email address.",
+    "validation_error": "Validation errored! Check your input values.",
+    "specify_email": "Specify Email Address",
+    "specify_email_desc": "Using the API requires you to specify a valid email address, but your chosen identity provider does not provide one. The address <b>cannot be changed</b> after specifying it.",
+    "email_address": "Email address",
+    "email_address_confirm": "Email address (confirm)",
+    "save_email_address": "Save Email Address"
+}

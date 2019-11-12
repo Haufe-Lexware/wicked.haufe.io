@@ -1,0 +1,12 @@
+extends auth_layout
+
+block content
+  h2 Status #{status}
+  p= message
+
+  if correlationId
+    p Correlation Id: #{correlationId}
+
+  if (status !== 404)
+    p.
+      If the problem persists, please contact the system administrator.

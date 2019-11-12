@@ -1,0 +1,12 @@
+{
+  "api": {
+    "upstream_url": "${PORTAL_ECHO_URL}",
+    "name": "echo-woo",
+    "uris": [
+      "/echo-woo"
+    ],
+    "strip_uri": true,
+    "preserve_host": false
+  },
+  "plugins": []
+}

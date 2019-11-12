@@ -1,0 +1,32 @@
+extends layout_plugin
+
+
+block scripts
+    -var isVuePage = true
+
+block content
+    .jumbotron
+        .container
+            h1 Registration Pools
+            
+            p Specify registration pools and their corresponding registration properties; you can also change which fields wicked collects from your users by changing the "wicked" registration pool.
+    
+    .container
+        br
+
+        p.
+          <b>Note:</b> The registration pool <code>wicked</code> cannot be deleted, but you may change which fields are being
+          collected when a user registers.
+
+        div(id='vueBase')
+            wicked-pools(v-model="pools")
+
+            nav-buttons(this-page="pools")
+
+block afterScripts
+    script(type="text/javascript").
+        const injectedData = {
+            pools: !{JSON.stringify(pools)}
+        };
+
+    script(src='/js/pools.js')

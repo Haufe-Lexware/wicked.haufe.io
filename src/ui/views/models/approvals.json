@@ -1,0 +1,24 @@
+{
+    "title": "Approvals",
+    "approvals": [
+        {
+            "user": {
+                "id": "39438974934",
+                "name": "Dev User",
+                "email": "dev@foo.com"
+            },
+            "api": {
+                "id": "superduper",
+                "name": "Super Duper API"
+            },
+            "application": {
+                "id": "yay-app",
+                "name": "My Excellent App"
+            },
+            "plan": {
+                "id": "basic",
+                "name": "Basic Plan"
+            }
+        } 
+    ]
+}

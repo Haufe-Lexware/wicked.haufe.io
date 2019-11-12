@@ -1,0 +1,231 @@
+#!/usr/bin/env node
+
+'use strict';
+
+/* eslint-disable no-console */
+
+/**
+ * Module dependencies.
+ */
+
+const app = require('../app');
+const http = require('http');
+const envReader = require('portal-env'); // local dependency, in node_modules via package.json
+const { debug, info, warn, error } = require('portal-env').Logger('kickstarter:kickstart');
+
+const utils = require('../routes/utils');
+
+// Command line parameters.
+const path = require('path');
+const fs = require('fs-extra');
+
+if (process.argv.length < 3) {
+    console.log("Usage:");
+    console.log("  node bin/kickstart [--new] [/path/to/repo]");
+    console.log("");
+    console.log("  In case the kickstarter is running inside docker, the path to the");
+    console.log("  static configuration directory defaults to /var/portal-api.");
+    console.log("");
+    console.log("Examples: Create a new configuration repository.");
+    console.log("  Direct:");
+    console.log("    node bin/kickstart --new /path/to/empty/dir");
+    console.log("  Docker:");
+    console.log("    docker run -it --rm -v /path/to/empty/dir:/var/portal-api -p 3333:3333 <kickstarter-image> --new");
+    console.log("");
+    console.log("Example: Edit an existing configuration repository.");
+    console.log("  Direct:");
+    console.log("    node bin/kickstart /path/to/repo");
+    console.log("  Docker:");
+    console.log("    docker run -it --rm -v /path/to/repo:/var/portal-api -p 3333:3333 <kickstarter-image>");
+    process.exit(1);
+}
+
+// Docker special case
+if (process.argv.length == 3) {
+    if (process.argv[2] == '--new') {
+        info("Assuming configuration path to be /var/portal-api.");
+        process.argv.push('/var/portal-api');
+    }
+}
+
+let configPath;
+let basePath;
+
+if (process.argv.length == 4) {
+    const parameter = process.argv[2];
+    if (parameter != '--new') {
+        error("Expected parameter '--new', received '" + parameter + "'.");
+        process.exit(1);
+    }
+
+    basePath = process.argv[3];
+
+    if (fs.existsSync(path.join(basePath, 'static', 'globals.json'))) {
+        error("The given path '" + basePath + "' already contains a configuration repository. Will not create a new repository.");
+        process.exit(1);
+    }
+
+    info('Creating a new configuration directory...');
+    configPath = path.join(basePath, 'static');
+    if (!fs.existsSync(configPath)) {
+        info(`Creating directory ${configPath}...`);
+        fs.mkdirSync(configPath);
+    }
+
+    // Now copy the initial-config to the destination path.
+    const initialConfigPath = envReader.getInitialConfigPath();
+    fs.copySync(initialConfigPath, configPath);
+
+    // Create an envkey file
+    info('Setting up a new deploy.envkey...');
+    const deployKey = envReader.Crypt.createRandomId();
+    fs.writeFileSync(path.join(configPath, 'deploy.envkey'), deployKey, 'utf8');
+
+    info('Setting up PORTAL_API_AESKEY for API keys at rest...');
+    // Define an AES key for subscription keys at rest as well
+    const defaultJsonFile = path.join(configPath, 'env', 'default.json');
+    const defaultJson = JSON.parse(fs.readFileSync(defaultJsonFile, 'utf8'));
+    defaultJson.PORTAL_API_AESKEY = {
+        encrypted: true,
+        value: envReader.Crypt.apiEncrypt(deployKey, envReader.Crypt.createRandomId())
+    };
+    fs.writeFileSync(defaultJsonFile, JSON.stringify(defaultJson, null, 2), 'utf8');
+
+    const fileFilter = '*envkey\n.DS_Store\ncerts\ndynamic\n';
+    info('Creating a .gitignore file...');
+    fs.writeFileSync(path.join(basePath, '.gitignore'), fileFilter, 'utf8');
+    info('Creating a .dockerignore file...');
+    fs.writeFileSync(path.join(configPath, '.dockerignore'), fileFilter, 'utf8');
+
+    info('Done.');
+} else {
+    basePath = process.argv[2];
+    configPath = path.join(basePath, 'static');
+}
+
+const globalConfigFile = path.join(configPath, 'globals.json');
+// Verify the configuration repository.
+if (!fs.existsSync(globalConfigFile)) {
+    error("Expected 'globals.json' in directory '" + configPath + "'.");
+    error("Exiting.");
+    process.exit(1);
+}
+
+// Verify that we have a config key
+let configKeyFileName = findEnvKeyFileName(configPath);
+if (!configKeyFileName) {
+    warn('Did not find a *.envkey file in the configuration path. Creating a new one.');
+    warn('Setting up a new deploy.envkey...');
+    configKeyFileName = path.join(configPath, 'deploy.envkey');
+    fs.writeFileSync(configKeyFileName, envReader.Crypt.createRandomId(), 'utf8');
+}
+
+info('Found config key file ' + configKeyFileName);
+const configKey = fs.readFileSync(configKeyFileName, 'utf8').trim();
+
+// Check if we need to update the static DB?
+try {
+    envReader.updateConfig(configPath, utils.getInitialStaticConfigDir(), configKey);
+} catch (dbErr) {
+    error(dbErr);
+    throw Error("The Configuration update steps failed. Check log files for details.");
+}
+
+configPath = path.resolve(configPath);
+
+app.set('base_path', basePath);
+app.set('config_path', configPath);
+app.set('config_key', configKey);
+
+/**
+ * Get port from environment and store in Express.
+ */
+
+const port = normalizePort(process.env.PORT || '3333');
+app.set('port', port);
+
+/**
+ * Create HTTP server.
+ */
+
+const server = http.createServer(app);
+
+/**
+ * Listen on provided port, on all network interfaces.
+ */
+
+server.listen(port);
+server.on('error', onError);
+server.on('listening', onListening);
+
+/**
+ * Normalize a port into a number, string, or false.
+ */
+
+function normalizePort(val) {
+    const port = parseInt(val, 10);
+
+    if (isNaN(port)) {
+        // named pipe
+        return val;
+    }
+
+    if (port >= 0) {
+        // port number
+        return port;
+    }
+
+    return false;
+}
+
+/**
+ * Event listener for HTTP server "error" event.
+ */
+
+function onError(error) {
+    if (error.syscall !== 'listen') {
+        throw error;
+    }
+
+    const bind = typeof port === 'string' ?
+        'Pipe ' + port :
+        'Port ' + port;
+
+    // handle specific listen errors with friendly messages
+    switch (error.code) {
+        case 'EACCES':
+            console.error(bind + ' requires elevated privileges');
+            process.exit(1);
+            break;
+        case 'EADDRINUSE':
+            console.error(bind + ' is already in use');
+            process.exit(1);
+            break;
+        default:
+            throw error;
+    }
+}
+
+/**
+ * Event listener for HTTP server "listening" event.
+ */
+
+function onListening() {
+    const addr = server.address();
+    const bind = typeof addr === 'string' ?
+        'pipe ' + addr :
+        'port ' + addr.port;
+    debug('Listening on ' + bind);
+    info("Kickstarter running. Browse to http://localhost:" + port);
+    info("--> To shut down, use the 'shutdown' icon on the web page or press Ctrl-C.");
+}
+
+function findEnvKeyFileName(baseDir) {
+    const fileNames = fs.readdirSync(baseDir);
+    for (let i = 0; i < fileNames.length; ++i) {
+        const fileName = fileNames[i];
+        if (/[a-zA-Z0-9\._]*envkey/.test(fileName)) // eslint-disable-line
+            return path.join(baseDir, fileName);
+    }
+    return null;
+}

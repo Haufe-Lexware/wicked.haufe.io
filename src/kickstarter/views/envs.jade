@@ -1,0 +1,74 @@
+extends layout
+
+block scripts
+  script(type='text/javascript').
+    function confirmDelete() {
+      return confirm("Are you sure you want to delete the environment?");
+    }
+
+    function checkValidEnvName() {
+      var envName = $('#new_env').val();
+      if (!/^[a-z0-9\-]+$/.test(envName)) {
+        alert('Environment name is invalid, must only contain lower case letters, digits and hyphens: "' + envName + '"');
+        return false;
+      }
+      return true;
+    }
+
+block content
+  .jumbotron
+    .container
+      h1 Environments
+
+      p Define your deployment environments.
+  
+  .container
+
+    .panel.panel-default
+      .panel-heading
+        h4.panel-title About Environment Variables
+      .panel-body
+        p.
+          The API Portal draws (almost) its entire configuration from the static configuration (which you are currently editing using the Kickstarter). In order to add parametrization capabilities, some of the configuration variables can be read from environment variables. Due to the fact that it's often necessary to administer a lot of those environment variables, it is possible to predefine sets of those variables using the kickstarter itself. Environment variables should be used especially where it's necessary to pass in credentials (Google Secret,...) or where the content of a variable changes from deployment to deployment (Dev, Stage, Production,...).
+        p.
+          These sets are also called "Environments" (because that's what they are). There is always one default environment, which is called <code>default</code> (surprise!). In this set, all default settings can be stored. In additional environments, you only have to override those variables which differ between the different deployments.
+
+        p.
+          This mechanism is especially useful when testing locally or with development and testing environments.
+
+    table.table.table-striped
+      thead
+        tr
+          th Environment
+          th Action
+      tbody
+        tr
+          for env in envs
+            tr
+              td
+                a(href="envs/#{env}")= env
+              td
+                if env == 'default'
+                  | --
+                else
+                  form(role='form' action='/envs/#{env}/delete' method='post' onsubmit='return confirmDelete();')
+                    button(type='submit').btn.btn-danger Delete
+
+    .panel.panel-default
+      .panel-heading
+        h4.panel-title
+          a(data-toggle='collapse' data-target='#collapse') Create new Environment &raquo;
+      #collapse.collapse.panel-collapse
+        .panel-body
+          form(role='form' action='/envs' method='post' onsubmit='return checkValidEnvName()')
+            p.
+              Specify a name for the environment. It can contain lower case letters <code>a-z</code>, digits and hyphens <code>-</code>. The new environment will not contain any overridden variables. To create an environment for local node.js development, use the name <code>localhost</code>, and Kickstarter will specify some special values for you to help you with that.
+            
+            input(name='new_env' id='new_env' type='string').form-control
+            p.wicked-note The environment name must only contain lower case letters <code>a-z</code>, digits <code>0-9</code> and hyphens <code>-</code>
+          
+            br
+
+            button(type='submit').btn.btn-success Create
+
+    +renderButtons('/envs', null, '/ipconfig', null, true)

@@ -1,0 +1,160 @@
+extends layout
+
+block scripts
+  script(type='text/javascript').
+    function deleteComposeFile() {
+        $('#deleteCompose').val(true);
+    }
+
+block content
+    .jumbotron
+        .container
+            h1 Deployment Configuration
+            
+            p Help on getting wicked deployed.
+    
+    .container
+
+        .panel.panel-primary
+            .panel-heading
+                h4.panel-title Deployment Configuration
+            .panel-body
+                p.
+                    <b>READ THIS</b>: This page can help you in creating a <code>docker-compose.yml</code> file to deploy your
+                    wicked installation to a single docker host (and possibly to a swarm cluster). In case you want to deploy
+                    wicked to a Kubernetes cluster, this is <b>not</b> the place you will find the tooling for that.
+
+                p.
+                    The Kubernetes Helm chart can be found here: <a href="https://github.com/Haufe-Lexware/wicked.haufe.io/tree/master/wicked" target="_blank">wicked.haufe.io Kubernetes Helm Chart</a>.
+
+        .panel.panel-default
+            .panel-heading
+                h4.panel-title SSL helpers
+            .panel-body
+                p.
+                    The page <code>ssl</code> can help you get some self signed certificates; this is not usable for production! If you are deploying
+                    to Kubernetes, chances are good you do not need this.
+                a(href='ssl').btn.btn-primary SSL Tools &raquo;
+
+        form(role='form' method='post' action='/deploy')
+
+            if !hasDockerFiles
+
+                input(type="hidden" name="createDockerfiles" value="true")
+
+                .panel.panel-default
+                    .panel-heading
+                        h4.panel-title Create Compose file
+                    .panel-body
+                        p.
+                            This section helps you create a <code>docker-compose.yml</code> file which can be used to deploy wicked to a single docker host.
+                            Please make yourself acquainted with the modes of getting the git configuration into the API container when deciding on which
+                            type of method you want to use when getting the configuration (these directories).
+
+                        p.
+                            <b>IMPORTANT</b>: The created compose file is <b>just a proposal</b> on how you might want to deploy wicked to your premises.
+                            It's in no way "the only way" of doing it - especially the part with the HAproxy can be freely switched out to something else,
+                            or even a hardware load balancer if you have one ready. The important bit is how the routing is configured, and that can
+                            be done with any type of load balancer, not only HAproxy.
+
+                        .row
+                            .col-md-3
+                                | &nbsp;
+                            .col-md-6
+                                .panel.panel-default
+                                    .panel-heading
+                                        h4.panel-title Docker Image Settings
+                                    .panel-body
+                                        p.
+                                            Specify which docker images you want to use to run your API Portal. If in doubt, use the defaults (the official Haufe-Lexware ones),
+                                            or specify your own builds of the API Portal container images.
+                                        
+                                        .form-group
+                                            label HA Proxy Version: (<a href="https://hub.docker.com/r/dockercloud/haproxy/tags/" target="_blank">Tags</a>)
+                                            input(type="text" name="haProxyVersion" value="1.6.7").form-control
+
+                                        .form-group
+                                            label PostgreSQL Version: (<a href="https://hub.docker.com/r/library/postgres/tags/" target="_blank">Tags</a>)
+                                            input(type="text" name="postgresVersion" value="11-alpine").form-control
+
+                                        .form-group
+                                            label Redis Version: (<a href="https://hub.docker.com/r/library/redis/tags/" target="_blank">Tags</a>)
+                                            input(type="text" name="redisVersion" value="5-alpine").form-control
+                                        
+                                        .form-group
+                                            label Docker Base Image prefix:
+                                            input(type="text" name="dockerPrefix" value="haufelexware/wicked.").form-control
+
+                                        .form-group
+                                            label Docker Tag: (<a href="https://hub.docker.com/r/haufelexware/wicked.portal/tags/" target="_blank">Tags</a>)
+                                            input(type="text" name="dockerTag" value=dockerTag).form-control
+
+                                        .checkbox
+                                            label
+                                                input(name='alpine' id='alpine' checked='checked' type='checkbox')
+                                                b Use Alpine Images
+                                        
+                                        p Specify how the git configuration shall be injected into the <code>portal-api</code> container:
+                                        .form-group
+                                            select(name='injectType' id='injectType').form-control
+                                                option(value='git-clone' selected) Use git clone from remote repository (recommended)
+                                                option(value='build') Build data-only container (not recommended, for local testing)
+
+                                        p.
+                                            <b>Note:</b> When using the <code>git clone</code> method for getting the static configuration (this)
+                                            into the portal API container, you will need to specify the following environment variables when starting
+                                            the <code>portal-api</code> container:
+                                        ul
+                                            li <code>GIT_REPO</code> (required)
+                                            li <code>GIT_CREDENTIALS</code> (required)
+                                            li <code>GIT_BRANCH</code>
+                                            li <code>GIT_REVISION</code> (use branch <b>or</b> revision)
+
+                                        p.
+                                            Read the <a href="https://github.com/Haufe-Lexware/wicked.haufe.io/blob/master/doc/static-config-git-clone.md" target="_blank">documentation on the git clone method</a>.
+                                        br
+
+                                        .form-group
+                                            label API Host (env var is supported):
+                                            input(type="text" name="apiHost" value=apiHost).form-control
+
+                                        .form-group
+                                            label Portal Host (env var is supported):
+                                            input(type="text" name="portalHost" value=portalHost).form-control
+
+                                        if useChatbot
+                                            p The <code>docker-compose.yml</code> will contain a section for deploying the chatbot.
+                                        else
+                                            p The <code>docker-compose.yml</code> will <b>NOT</b> contain a section for deploying the chatbot. <a href="/chatbot">Configure the chatbot</a>.
+
+                                        if useMailer
+                                            p The <code>docker-compose.yml</code> will contain a section for deploying the mailer.
+                                        else
+                                            p The <code>docker-compose.yml</code> will <b>NOT</b> contain a section for deploying the mailer. <a href="/mailer">Configure the mailer</a>.
+
+                                        input(type="hidden" name="apiHostVarName" value=apiHostVarName)
+                                        input(type="hidden" name="portalHostVarName" value=portalHostVarName)
+            else
+
+                input(type="hidden" name="editDockerfiles" value="true")
+
+                // We have files to display
+                .panel.panel-default
+                    .panel-heading
+                        h4.panel-title 
+                            table(width="100%")
+                                tr
+                                    td <code>docker-compose.yml</code>
+                                    td(style='text-align: right')
+                                        button(onclick='deleteComposeFile()').btn.btn-danger Delete Docker Files
+                    .panel-body
+                        input(type='hidden' id='deleteCompose' name='deleteCompose')
+                        textarea(name='composeFile' style='height: 500px').form-control= dockerComposeFile
+                if dockerFile
+                    .panel.panel-default
+                        .panel-heading
+                            h4.panel-title <code>static/Dockerfile</code>
+                        .panel-body
+                            textarea(name='dockerFile' style='height: 500px').form-control= dockerFile
+
+            +renderButtons('/deploy', '/ipconfig', '/users')

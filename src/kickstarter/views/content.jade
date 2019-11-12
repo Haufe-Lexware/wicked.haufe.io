@@ -1,0 +1,111 @@
+extends layout
+
+mixin renderContent(pathUri, title)
+    tr
+        td <code>/content#{pathUri.path}</code>
+        if ('/contact' == pathUri.path)
+            td Contact Page
+        else
+            td= title
+        td= pathUri.type
+        td
+            a(href='/content#{pathUri.path}').btn.btn-sm.btn-default Preview
+        td
+            a(href='/editcontent#{pathUri.path}').btn.btn-sm.btn-success Edit
+        td
+            input(type='string' readonly value='#{pathUri.localPath}').form-control
+
+block content
+    .jumbotron
+        .container
+            h1 Content configuration
+            
+            p As a default, wicked serves markdown files in the <code>content</code> subdirectory via the <code>/content/*</code> endpoint. Configure things here.
+    
+    .container
+    
+        .panel.panel-success
+            .panel-heading
+                h4.panel-title NOTE: Editing Markdown/Jade Files
+            .panel-body
+                p.
+                    While it is perfectly possible to edit the markdown files inside the kickstarter, things are probably easier if you do
+                    it with a real markdown editor, and then just use this UI to set the title, subtitle and rights.
+    
+        p.
+            In addition to the following markdown files, wicked will serve the following file types from the <code>content</code> directory
+            and it subdirectories as public files:
+        ul
+            li JPEG/JPG Images
+            li PNG images
+            li GIF images
+            li CSS files
+
+    hr
+    .container            
+        h3 Markdown and Jade Content
+        table.table.table-striped
+            thead
+                tr
+                    th Path URI
+                    th &nbsp;
+                    th Type
+                    th Preview
+                    th Edit
+                    th Local Path
+            tbody
+                +renderContent({ path: '/index', type: '' }, 'Home Page (Index)')
+                each pathUri, i in pathUris
+                    +renderContent(pathUri, '')
+        .panel.panel-default
+            .panel-heading
+                h4.panel-title New Content
+            .panel-body
+                p Specify a URI path to the new content you want to add, e.g. <code>tutorials/using-sso</code>; do not specify the suffix (<code>.md</code> or <code>.jade</code>), it will be added automatically.
+
+                form(role='form' action='/content' method='post')
+                    .form-group
+                        label Content Type:
+                        select(name='contentType').form-control
+                            option(value='markdown') Markdown
+                            option(value='jade') Jade
+                    table
+                        tr
+                            td <code>/content/</code>
+                            td(width='400px')
+                                input(name='newContent').form-control
+                            td &nbsp;
+                            td
+                                button(type='submit').btn.btn-success Create New File
+                    
+    hr
+    .container            
+        h3 Other Public Content
+        
+        p.
+            If you need to serve images, just drop them into the directory from where you want them to be served. You can then reference to
+            them using the usual markdown syntax <code>![Title](/content/path/to/image.jpg)</code>.
+        table.table.table-striped
+            thead
+                tr
+                    td Path URI
+            tbody
+                each publicUri, i in publicUris
+                    tr
+                        td
+                            | <a href='/content#{publicUri}'><code>/content#{publicUri}</code></a>
+                
+                                
+    
+        //form(role='form' method='post' action='/content')
+        //    
+        //    +renderButtons('/content', '/recaptcha', '/email')
+        
+        table(width='100%')
+            tr
+                td
+                    a(href='/recaptcha').btn.btn-primary &laquo; Previous
+                td(style='text-align:right')
+                    a(href='/').btn.btn-default Home
+                    | &nbsp;
+                    a(href='/email').btn.btn-primary Next &raquo;

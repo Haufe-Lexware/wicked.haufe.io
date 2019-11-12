@@ -1,0 +1,104 @@
+extends layout
+
+block scripts
+    script(type='text/javascript').
+        function checkTrust() {
+            var planData = !{JSON.stringify(apiPlans)};
+            var wantTrusted = $('#trusted').is(':checked');
+
+            for (var i = 0; i < planData.length; ++i) {
+                var needsApproval = wantTrusted || planData[i].needsApproval;
+                var spanId = '#plan_' + planData[i].id;
+                $(spanId).text(needsApproval ? 'Yes' : 'No');
+            }
+        }
+
+        // Called from utils.js
+        function localInit() {
+            $('#trusted').on('change', checkTrust);
+        }
+
+block content
+    .jumbotron.wicked-api-title
+        .container.wicked-title-container
+            h1= title
+            
+            p Please select which plan you want to subscribe to the current API with. Some plans may need manual approval by an administrator.
+    
+    .container.wicked-container
+    
+        h3 Application '#{application.name}'
+    
+        p.
+            Specify which plan you want to subscribe to for the selected application.
+       
+        if subscribeError
+            .panel.panel-danger
+                .panel-heading
+                    h4.panel-title Error
+                .panel-body
+                    p= subscribeError
+        if subscribeWarning
+            .panel.panel-warning
+                .panel-heading
+                    h4.panel-title Warning
+                .panel-body
+                    p= subscribeWarning
+
+        if allowSubscribe
+            form(role='form' action='/applications/#{application.id}/subscribe/#{apiInfo.id}' method='post')
+                if apiPlans && apiPlans.length > 0
+
+                    if apiInfo.auth == 'oauth2'
+                        .panel.panel-default
+                            .panel-heading
+                                +panelTitle('Trusted Application/Subscription', '/help/trusted')
+                            .panel-body
+                                p.
+                                    Check this check box if you want the subscription to this API to be a trusted subscription for this application.
+                                    Please note that this will require approval, regardless of the chosen API plan. See the help page for more information.
+
+                                .form-check
+                                    input(type="checkbox" id="trusted" name="trusted").form-check-input
+                                    label(for="trusted").form-check-label &nbsp;Trust this application
+                    else
+                        input(type='hidden' name='trusted' id='trusted' value='')
+
+                    table(class='table table-striped')
+                        thead
+                            tr
+                                th Select
+                                th Plan Name
+                                th Description
+                                th Needs Approval
+
+                        tbody
+                            each plan, index in apiPlans
+                                tr
+                                    td
+                                        if index == 0
+                                            input(type='radio' name='plan' value='#{plan.id}' checked='checked')
+                                        else
+                                            input(type='radio' name='plan' value='#{plan.id}')
+                                    td
+                                        p= plan.name
+                                    td
+                                        p= plan.desc
+                                    td
+                                        p
+                                            span(id="plan_#{plan.id}")= plan.needsApproval ? "Yes" : "No"
+                else
+                    i There are no subscription plans available for you for this API. Please contact your API Portal administrator in case this is not correct.
+
+                if (application._links.addSubscription)
+                    p
+                    button(id='subscribeButton').btn.btn-success Subscribe!
+                else
+                    p We are sorry, you don't have sufficient rights to subscribe to this API. Please ask your API Portal administrator to either
+                    ul
+                        li Assign the appropriate user group for you to be able to subscribe to the API,
+                        li Subscribe to the application for you, or
+                        li Make you an owner of this application, if that is not the case.
+        else
+            p.
+                Subscribing not possible.

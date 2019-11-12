@@ -1,0 +1,6 @@
+{
+    "showTitle": true,
+    "title": "Example of restricted page",
+    "subTitle": "To be able to see this page, you have to be a member of the \"dev\" group.",
+    "requiredGroup": "dev"
+}

@@ -1,0 +1,37 @@
+extends layout
+
+block content
+
+  .jumbotron.wicked-error-title
+    .container.wicked-title-container
+      h1 Configuration Mismatch
+
+      h2 Status Code: #{error.status}
+
+      p= message
+      
+      a(class='btn btn-lg btn-warning' onclick='window.history.back();') Go back &raquo
+  
+  .container.wicked-container
+
+    img(src='/images/wicked-256.png').center-block
+
+    br
+    br
+
+    h4.
+      The configuration has changed, or the Portal runs a different version of wicked.haufe.io than the underlying API.
+
+    p.
+      Please check back in a minute. This may be intended behavior, and the portal will restart shortly.
+      If the problem persists, please notify the maintainer of this API Portal.
+
+    br
+    br
+    br
+
+    p.
+      Correlation ID: <code>#{correlationId}</code>
+
+    if error.stack
+      pre #{error.stack}

@@ -1,0 +1,48 @@
+extends layout
+
+block content
+    .jumbotron
+        .container
+            h1 Templates Configuration
+            
+            p.
+                Configure the Chatbot and Email templates you want to use with your API portal.
+
+    .container
+        .panel.panel-primary
+            .panel-heading
+                h4.panel-title Email templates
+            .panel-body
+                each emailTmpl, i in emailTemplates
+                    a(href='/templates/email/#{emailTmpl.id}').btn.btn-success.btn-block #{emailTmpl.name} 
+    
+        form(role='form' action='/templates' method='POST')
+            .panel.panel-primary
+                .panel-heading
+                    h4.panel-title Chatbot Templates
+                .panel-body
+                    p.
+                        You can assume the following view model (only fields which make sense for the different types of
+                        notifications will actually be filled):
+                        
+                    pre.
+                        {
+                            userId: "abcd93794nndcnnabcbba",
+                            name: "Dan Developer",
+                            email: "dan@developer.com",
+                            firstName: "Dan",
+                            lastName: "Developer",
+                            apiId: "brilliant",
+                            applicationId: "dans-super-app",
+                            approvalsLink: "https://your.portal.com/admin/approvals",
+                            userLink: "https://your.portal.com/users/abcd93794nndcnnabcbba",
+                            applicationLink: "https://your.portal.com/applications/dans-super-app"
+                        }                
+                    each tmpl, i in chatbotTemplates
+                        .form-group
+                            label #{tmpl.id}:
+                            input(type='hidden' name='chatbotTemplates[#{i}].id' value='#{tmpl.id}')
+                            input(type='string' name='chatbotTemplates[#{i}].message' value='#{tmpl.message}').form-control
+                        //+inputField2()
+            
+            +renderButtons('/templates', '/chatbot', '/design')

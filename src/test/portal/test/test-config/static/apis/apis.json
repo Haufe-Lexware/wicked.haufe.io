@@ -1,0 +1,78 @@
+{
+    "apis": [
+        {
+            "name": "Brilliant API",
+            "id": "brilliant",
+            "plans": [
+                "basic",
+                "unlimited"
+            ],
+            "desc": "Lorem ipsum dolormin ibuprofenium paracetamolam innocent in expectam malus.",
+            "tags": ["Content"],
+            "auth": "key-auth"
+        },
+        {
+            "name": "Super duper API",
+            "id": "superduper",
+            "plans": [
+                "basic",
+                "unlimited",
+                "godlike"
+            ],
+            "desc": "Lorem ipsum dolormin ibuprofenium paracetamolam innocent in expectam malus.",
+            "tags": ["Super"],
+            "auth": "oauth2"
+        },
+        {
+            "name": "User Management API",
+            "id": "users",
+            "plans": [
+                "basic",
+                "unlimited"
+            ],
+            "requiredGroup": "dev",
+            "desc": "Lorem ipsum dolormin ibuprofenium paracetamolam innocent in expectam malus.",
+            "tags": ["Super"]
+        },
+        {
+            "name": "Partner API",
+            "id": "partner",
+            "plans": [
+                "basic",
+                "unlimited"
+            ],
+            "requiredGroup": "dev",
+            "desc": "Lorem ipsum dolormin ibuprofenium paracetamolam innocent in expectam malus.",
+            "tags": ["Super", "Content"]
+        },
+        {
+            "name": "Ordering API",
+            "id": "orders",
+            "plans": [
+                "restricted_basic",
+                "restricted_unlimited"
+            ],
+            "requiredGroup": "dev",
+            "desc": "Lorem ipsum dolormin ibuprofenium paracetamolam innocent in expectam malus.",
+            "tags": ["Invoice", "Content"]
+        },
+        {
+            "name": "Very Restricted",
+            "id": "restricted",
+            "plans": [
+                "restricted_basic"
+            ],
+            "requiredGroup": "superdev",
+            "desc": "Lorem ipsum dolormin ibuprofenium paracetamolam innocent in expectam malus.",
+            "tags": []
+        }
+    ],
+    "_links": {
+        "self": {
+            "href": "/apis"
+        },
+        "plans": {
+            "href": "/plans"
+        }
+    }
+}

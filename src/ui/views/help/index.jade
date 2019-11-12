@@ -1,0 +1,16 @@
+extends ../layout
+
+block content
+  .jumbotron.wicked-api-title
+    .container.wicked-title-container
+      h1 Help
+
+      p This is the index of help pages of the API Portal
+    
+  .container.wicked-container
+    .row
+      .col-md-6.col-md-push-3
+        each topic, link in helpPages
+          p
+            a(href='/help/#{link}').btn.btn-default.btn-block= topic
+  

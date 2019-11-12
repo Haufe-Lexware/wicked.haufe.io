@@ -1,0 +1,17 @@
+{
+  "api": {
+    "name": "portal-api",
+    "upstream_url": "${PORTAL_API_URL}",
+    "uris": ["/wicked/v1"],
+    "strip_uri": true
+  },
+  "plugins": [
+    {
+      "config": {
+        "header_name": "Correlation-Id",
+        "generator": "uuid"
+      },
+      "name": "correlation-id"
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+{
+    "api": {
+        "upstream_url": "http://mockbin.com/",
+        "name": "restricted",
+        "request_path": "/restricted"
+    },
+    "plugins": [
+        {
+            "name": "correlation-id",
+            "config": {
+                "header_name": "Correlation-Id",
+                "generator": "uuid",
+                "echo_downstream": false
+            }
+        }
+    ]
+}

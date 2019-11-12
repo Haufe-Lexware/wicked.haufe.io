@@ -1,0 +1,25 @@
+{
+    "application": {
+        "id": "app_id",
+        "name": "Application Name",
+        "owners": [
+            {
+                "userId": "abcf387478dbebd",
+                "email": "dev@bar.com",
+                "role": "owner",
+                "_links": {
+                    "deleteOwner": { "href": "..." }
+                }
+            }
+        ],
+        "_links": {
+            "addOwner": { "href": "..." }
+        }
+    },
+    "roles": [
+        { "role": "owner",
+          "desc": "Bla bal blablabla "},
+        { "role": "owner",
+          "desc": "Bla bal blablabla "}
+    ]
+}

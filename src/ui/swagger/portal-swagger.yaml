@@ -1,0 +1,501 @@
+swagger: '2.0'
+info:
+  version: '0.9'
+  title: Portal
+  description: >-
+    The API of the Portal (the UI). All of these API calls may return different results
+    depending on the current session; you will need to login to get access to restricted
+    resources, e.g. to APIs or Content. Most of these end points require an
+    `Accept: application/json` header to return machine readable results, otherwise you
+    will be served the corresponding HTML page. The data you get back from these end points
+    corresponds 1:1 with the data visible on the pages; in most cases it's just that the
+    rendering has been left out.
+tags:
+  - name: api
+    description: API related methods
+  - name: application
+    description: Application related methods
+  - name: user
+    description: User related methods
+  - name: admin
+    description: Admin methods
+  - name: misc
+    description: Misc methods
+paths:
+  /apis:
+    get:
+      description: Retrieve information on available APIs
+      tags:
+        - api
+      responses:
+        200:
+          description: Successful response
+  
+  /apis/{apiId}:
+    get:
+      description: >-
+        Retrieve information on a specific API, including applications and subscriptions
+      tags:
+        - api
+      parameters:
+        - name: apiId
+          required: true
+          in: path
+          description: The API ID to retrieve information on
+          type: string
+      responses:
+        200:
+          description: Successful response
+  
+  /admin/approvals:
+    get:
+      description: Retrieve a list of pending subscription approvals (admins only)
+      tags:
+        - admin
+      responses:
+        200:
+          description: Successful response
+        403:
+          description: Not allowed (only Admin)
+          
+  /admin/approvals/approve:
+    post:
+      description: Approve of a specific subscription (admin only)
+      tags:
+        - admin
+      parameters:
+        - name: body
+          in: body
+          description: Subscription to approve of
+          schema:
+            type: object
+            properties:
+              app:
+                type: string
+                description: Application ID to approve subscription for
+              api:
+                type: string
+                description: API ID to approve subscription for
+      responses:
+        200:
+          description: Successfully approved subscription
+        403:
+          description: Not allowed.
+          
+  /admin/approvals/decline:
+    post:
+      description: Decline a specific subscription (admin only)
+      tags:
+        - admin
+      parameters:
+        - name: body
+          in: body
+          description: Subscription to decline
+          schema:
+            type: object
+            properties:
+              app:
+                type: string
+                description: Application ID to approve subscription for
+              api:
+                type: string
+                description: API ID to approve subscription for
+      responses:
+        204:
+          description: Successfully declined subscription
+        403:
+          description: Not allowed
+          
+  /admin/users:
+    get:
+      description: Retrieve a list of all users (short info) (admin only)
+      tags:
+        - admin
+      responses:
+        200:
+          description: Successful response
+        403:
+          description: Not allowed (only Admin)
+          
+  /admin/applications:
+    get:
+      description: Retrive a list of all applications (admin only)
+      tags:
+        - admin
+      responses:
+        200:
+          description: Successful response
+        403:
+          description: Not allowed (only Admin)
+          
+  /admin/listeners:
+    get:
+      description: Retrieve a list of all webhook listeners (admin only)
+      tags:
+        - admin
+      responses:
+        200:
+          description: Successful response
+        403:
+          description: Not allowed (only Admin)
+          
+  /admin/listeners/{listenerId}:
+    get:
+      description: Retrieve information on a specific listener (admin only)
+      tags:
+        - admin
+      parameters:
+        - name: listenerId
+          in: path
+          type: string
+          required: true
+          description: The ID of the listener to retrieve information on
+      responses:
+        200:
+          description: Successful response
+        403:
+          description: Not allowed (only Admin)
+          
+  /admin/verifications:
+    get:
+      description: Retrieve information on pending verifications (email, password) (admin only)
+      tags:
+        - admin
+      responses:
+        200:
+          description: Successful response
+        403:
+          description: Not allowed (only Admin)
+  /admin/health:
+    get:
+      description: Retrieve system health data
+      tags:
+        - admin
+      responses:
+        200:
+          description: Successful response
+        403:
+          description: Not allowed (only Admin)
+  /applications:
+    get:
+      description: Retrieve information on your applications
+      tags:
+        - application
+      responses:
+        200:
+          description: Successful response
+          
+  /applications/register:
+    post:
+      description: Register a new application
+      tags:
+        - application
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            type: object
+            properties:
+              appid:
+                type: string
+                description: ID of application to create
+              appname:
+                type: string
+                description: Friendly name of application to create
+              hasredirecturi:
+                type: boolean
+                description: Pass true if application has/needs a redirect URI
+              redirecturi:
+                type: string
+                description: The redirect URI of the application (for OAuth2 implicit flow)
+                
+      responses:
+        201:
+          description: Created
+        400:
+          description: Bad request
+
+  /applications/{appId}:
+    get:
+      description: Retrieve information on an application; includes API credentials
+      tags:
+        - application
+      parameters:
+        - name: appId
+          in: path
+          required: true
+          type: string
+          description: The ID of the application to retrieve information on
+      responses:
+        200:
+          description: Successful response
+          
+  /applications/{appId}/unregister:
+    post:
+      description: Unregisters (deletes) an application
+      tags:
+        - application
+      parameters:
+        - name: appId
+          in: path
+          required: true
+          type: string
+          description: The ID of the application to unregister (delete)
+      responses:
+        204:
+          description: Successful response (no content)
+        400:
+          description: Bad request
+        403:
+          description: Not allowed
+        
+  /applications/{appId}/owners/add:
+    post:
+      description: Adds an owner (by email) to an application
+      tags:
+        - application
+      parameters:
+        - name: appId
+          in: path
+          required: true
+          type: string
+          description: The ID of the application to add an owner for
+        - name: body
+          in: body
+          schema:
+            type: object
+            properties:
+              owneremail:
+                type: string
+                description: Email address of owner to add (has to exist)
+              ownerrole:
+                type: string
+                description: Role of owner
+                enum:
+                  - "owner"
+                  - "collaborator"
+                  - "reader"
+      responses:
+        201:
+          description: Successfully added owner
+          
+  /applications/{appId}/owners/delete:
+    post:
+      description: Deletes an owner (by email) from an application
+      tags:
+        - application
+      parameters:
+        - name: appId
+          in: path
+          required: true
+          type: string
+          description: The ID of the application to delete an owner for
+        - name: body
+          in: body
+          schema:
+            type: object
+            properties:
+              owneremail:
+                type: string
+                description: Email address of owner to delete (has to exist)
+      responses:
+        200:
+          description: Successfully deleted owner
+        
+  /application/{appId}/patch:
+    post:
+      description: Renames an application (only friendly name)
+      tags:
+        - application
+      parameters:
+        - name: appId
+          in: path
+          required: true
+          type: string
+          description: The ID of the application to patch the name of
+        - name: body
+          in: body
+          required: true
+          schema:
+            type: object
+            properties:
+              appname:
+                type: string
+                description: New friendly name of application
+      responses:
+        200:
+          description: Successfully patched name
+
+  /application/{appId}/subscribe/{apiId}:
+    get:
+      description: Retrieve information on plans for a subscription
+      tags:
+        - application
+      parameters:
+        - name: appId
+          in: path
+          type: string
+          required: true
+          description: Application ID to add a subscription to
+        - name: apiId
+          in: path
+          type: string
+          required: true
+          description: API ID to add a subscription to
+      responses:
+        200:
+          description: Successful response
+  
+    post:
+      description: Adds a subscription to an API for an Application
+      tags:
+        - application
+      parameters:
+        - name: appId
+          in: path
+          type: string
+          required: true
+          description: Application ID to add a subscription to
+        - name: apiId
+          in: path
+          type: string
+          required: true
+          description: API ID to add a subscription to
+        - name: body
+          in: body
+          required: true
+          description: Subscription Parameters
+          schema:
+            type: object
+            properties:
+              application:
+                type: string
+                description: Application ID (once more)
+              api:
+                type: string
+                description: API ID (once more)
+              plan:
+                type: string
+                description: Plan ID to subscribe to (has to fit to API and user)
+      responses:
+        201:
+          description: Successfully added subscription
+
+  /application/{appId}/unsubscribe/{apiId}:
+    post:
+      description: Removes a subscription to an API for an Application
+      tags:
+        - application
+      parameters:
+        - name: appId
+          in: path
+          type: string
+          required: true
+          description: Application ID to add a subscription to
+        - name: apiId
+          in: path
+          type: string
+          required: true
+          description: API ID to add a subscription to
+      responses:
+        204:
+          description: Successfully unsubscribed to subscription
+  
+  /login/local:
+    post:
+      description: Log in endpoint for local users (only way to use the API currently)
+      tags:
+        - misc
+      parameters:
+        - name: body
+          in: body
+          description: Login parameters
+          schema:
+            type: object
+            properties:
+              email:
+                type: string
+              password:
+                type: string
+      responses:
+        302:
+          description: Redirect to either /signup (success) or /login (failure)
+  
+  /ping:
+    get:
+      description: Retrieves health information on the Portal UI
+      tags:
+        - misc
+      responses:
+        200:
+          description: Successful response
+    
+  /users/{userId}:
+    get:
+      description: Retrieve information on a user
+      tags:
+        - user
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          description: The ID of the user to retrieve information on
+          type: string
+      responses:
+        200:
+          description: Successful response
+        403:
+          description: Not allowed. You can only retrieve yourself if not admin
+    post:
+      description: Update a user, or delete password for a user
+      tags:
+        - user
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          description: The ID of the user to update
+          type: string
+        - name: body
+          in: body
+          required: true
+          schema:
+            type: object
+            properties:
+              __action:
+                type: string
+                description: >-
+                  Set to `deletePassword` to delete a user's password, otherwise leave blank
+              firstname:
+                type: string
+              lastname:
+                type: string
+              password:
+                type: string
+              __updategroups:
+                type: boolean
+                description: >-
+                  Set to `true` to update the groups. Add the group names as properties in the body, containing the group name as value, e.g. `"dev":"dev"` or `"admin":"admin"`.
+      responses:
+        200:
+          description: Successfully patched user.
+        204:
+          description: Successfully deleted password.
+  
+  /users/{userId}/delete:
+    post:
+      description: Deletes a user
+      tags:
+        - user
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          description: The ID of the user to delete
+          type: string
+      responses:
+        204:
+          description: User successfully delete
+        403:
+          description: Not allowed. You can only delete yourself or if you are an admin.

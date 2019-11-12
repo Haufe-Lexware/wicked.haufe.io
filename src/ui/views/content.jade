@@ -1,0 +1,15 @@
+extends layout
+
+block content
+    if showTitle
+        .jumbotron.wicked-content-title
+            .container.wicked-title-container
+                h1= title
+                if subTitle
+                    != subTitle
+
+    if !omitContainer    
+        .container.wicked-container
+            != content
+    else
+        != content

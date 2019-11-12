@@ -1,0 +1,22 @@
+version: '2'
+
+services:    
+  portal-test-data:
+    env_file: ../variables.env  
+    build: 
+      context: .
+    volumes:
+    - "/var/portal-api/static"
+
+  portal-api:
+    env_file: ../variables.env  
+    image: ${DOCKER_PREFIX}portal-api:${PORTAL_API_TAG}${BUILD_ALPINE}
+    volumes_from:
+    - "portal-test-data"
+
+  portal:
+    env_file: ../variables.env
+    image: ${DOCKER_PREFIX}portal:${PORTAL_TAG}${BUILD_ALPINE}
+
+  portal-redis:
+    image: redis:5-alpine

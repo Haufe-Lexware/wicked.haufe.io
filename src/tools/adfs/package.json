@@ -1,0 +1,27 @@
+{
+  "version": "1.0.0",
+  "license": "Apache-2.0",
+  "author": "Martin Danielsson",
+  "description": "Get ADFS Signing Certificate",
+  "dependencies": {
+    "async": "2.0.1",
+    "js-yaml": "3.10.0",
+    "request": "2.74.0",
+    "xml2js": "0.4.17"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "api",
+    "portal",
+    "wicked",
+    "haufe"
+  ],
+  "main": "get-adfs-signing-cert.js",
+  "jshintConfig": {
+    "node": true,
+    "esversion": 6
+  },
+  "name": "wicked.get-adfs-signing-cert"
+}

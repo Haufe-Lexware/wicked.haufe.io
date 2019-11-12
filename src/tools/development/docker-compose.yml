@@ -1,0 +1,49 @@
+version: '2'
+
+services:
+  kong-database:
+    image: postgres:11.1-alpine
+    environment:
+    - "POSTGRES_USER=kong"
+    - "POSTGRES_PASSWORD=kong"
+    restart: unless-stopped
+    ports:
+    - "5432:5432"
+
+  kong:
+    image: wicked.kong:local
+    depends_on:
+    - "kong-database"
+    links:
+    - kong-database:kong-database
+    security_opt:
+    - seccomp:unconfined
+    ports:
+    - "8000:8000"
+    - "8443:8443"
+    - "8001:8001"
+    restart: unless-stopped
+    environment:
+    - "PROXY_SSL_KEY"
+    - "PROXY_SSL_CERT"
+
+  redis:
+    image: redis:5.0-alpine
+    ports:
+    - "6379:6379"
+    restart: unless-stopped
+
+  prometheus-config:
+    build: 
+      context: prometheus
+    volumes:
+    - "/etc/prometheus"
+    command: "/bin/true"
+
+  prometheus:
+    image: prom/prometheus:v2.6.0
+    ports:
+    - "9090:9090"
+    restart: unless-stopped
+    volumes_from:
+    - prometheus-config

@@ -1,0 +1,51 @@
+{
+    "PORTAL_NETWORK_SCHEMA": {
+        "encrypted": false,
+        "value": "http"
+    },
+    "PORTAL_NETWORK_APIHOST": {
+        "encrypted": false,
+        "value": "localhost:8000"
+    },
+    "PORTAL_NETWORK_PORTALHOST": {
+        "encrypted": false,
+        "value": "localhost:3000"
+    },
+    "PORTAL_API_URL": {
+      "value": "http://localhost:3001"
+    },
+    "PORTAL_ECHO_URL": {
+      "value": "http://localhost:3009"
+    },
+    "PORTAL_CHATBOT_URL": {
+      "value": "http://localhost:3004"
+    },
+    "PORTAL_AUTHSERVER_URL": {
+      "value": "http://localhost:3010"
+    },
+    "PORTAL_KONG_ADAPTER_URL": {
+      "value": "http://localhost:3002"
+    },
+    "PORTAL_KONG_ADMIN_URL": {
+      "value": "http://localhost:8001"
+    },
+    "PORTAL_KONG_PROXY_URL": {
+      "value": "http://localhost:8000"
+    },
+    "PORTAL_MAILER_URL": {
+      "value": "http://localhost:3003"
+    },
+    "PORTAL_PORTAL_URL": {
+      "value": "http://localhost:3000"
+    },
+    "PORTAL_SESSIONSTORE_HOST": {
+      "value": "localhost"
+    },
+    "PORTAL_STORAGE_PGHOST": {
+      "value": "${DOCKER_HOST}"
+    },
+    "DOCKER_HOST": {
+      "value": "host.docker.internal"
+    }
+  }
+  

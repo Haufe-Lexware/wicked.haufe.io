@@ -1,0 +1,29 @@
+{
+    "title": "API title",
+    "apiInfo": {
+        "id": "brilliant",
+        "desc": "Cool API, long text"
+    },
+    "userInfo": {
+        "applications": [
+            {
+                "id": "app_id",
+                "name": "Application name",
+                "hasSubscription": true,
+                "plan": {
+                    "id": "basic",
+                    "name": "Basic Plan"
+                },
+                "apiKey": "orieuroiueioru4545"
+            }
+        ]
+    },
+    "apiPlans": [
+        {
+            "id": "basic",
+            "name": "Basic Plan",
+            "desc": "Long description of the plan",
+            "needsApproval": true
+        }
+    ]
+}

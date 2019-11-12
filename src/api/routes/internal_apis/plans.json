@@ -1,0 +1,32 @@
+{
+    "plans": [
+        {
+            "id": "__internal_api_basic",
+            "name": "Portal API Basic Plan",
+            "desc": "Basic access to the Portal API, limited to 100 calls per hour.",
+            "needsApproval": false,
+            "requiredGroup": "",
+            "config": {
+                "plugins": [
+                    {
+                        "config": {
+                            "hour": 100,
+                            "fault_tolerant": true
+                        },
+                        "name": "rate-limiting"
+                    }
+                ]
+            }
+        },
+        {
+            "id": "__internal_api_unlimited",
+            "name": "Portal API Unlimited Plan",
+            "desc": "Unlimited access to the Portal API.",
+            "needsApproval": true,
+            "requiredGroup": "admin",
+            "config": {
+                "plugins": []
+            }
+        }
+    ]
+}

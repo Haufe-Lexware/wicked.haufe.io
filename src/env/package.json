@@ -1,0 +1,26 @@
+{
+  "version": "1.0.0-rc.10",
+  "license": "Apache-2.0",
+  "author": "Martin Danielsson",
+  "description": "Base package for the portal; contains all package dependencies to speed up Docker build.",
+  "dependencies": {
+    "containerized": "1.0.2",
+    "node-uuid": "1.4.8",
+    "prom-client": "11.1.1",
+    "request": "2.88.0",
+    "winston": "3.2.1"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "main": "env-reader.js",
+  "jshintConfig": {
+    "node": true,
+    "esversion": 6
+  },
+  "name": "portal-env",
+  "devDependencies": {
+    "chai": "^4.1.2",
+    "semver": "^6.0.0"
+  }
+}

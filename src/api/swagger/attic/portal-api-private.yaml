@@ -1,0 +1,333 @@
+swagger: '2.0'
+info:
+  version: 0.9.0
+  title: Haufe API Portal API - Private Parts
+schemes:
+  - http
+produces:
+  - application/hal+json
+host: 'localhost:3001'
+basePath: /
+tags:
+  - name: users
+    description: User management
+  - name: misc
+    description: Misc functionality
+  - name: webhooks
+    description: Webhooks
+paths:
+  /users:
+    post:
+      tags:
+        - users
+      parameters:
+        - name: user
+          in: body
+          schema:
+            $ref: '#/definitions/userCreateType'
+      responses:
+        '201':
+          description: Created
+          schema:
+            $ref: '#/definitions/userType'
+        '403':
+          description: Not allowed
+        '409':
+          description: Duplicate user email
+  '/login':
+    post:
+      tags:
+        - users
+      parameters:
+        - name: body
+          in: body
+          schema:
+            type: object
+            properties:
+              email:
+                type: string
+              passwor:
+                type: string
+          required: true
+      responses:
+        400:
+          description: Bad request, user has no password
+        404:
+          description: Not found, user not found
+        403:
+          description: Not allowed, password incorrect
+        200:
+          description: Successful request
+          schema:
+            $ref: '#/definitions/userType'
+  /subscriptions/{client_id}:
+    get:
+      tags:
+        - subscriptions
+      description: For looking up a subscription by client_id (used for OAuth2 Implicit Grant)
+      parameters:
+        - name: client_id
+          required: true
+          description: The client_id created when creating a subscription
+          in: path
+          type: string
+      responses:
+        200:
+          description: Successful response
+          schema:
+            type: object
+            properties:
+              application:
+                type: object
+              subscription:
+                type: object
+        404:
+          description: Not found.
+  /webhooks/listeners:
+    get:
+      tags:
+        - webhooks
+      parameters:
+        - name: X-UserId
+          description: An Admin user ID
+          required: true
+          type: string
+          in: header
+      responses:
+        '200':
+          description: Returns a list of registered webhook listeners
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/listenerType'
+        '403':
+          description: Not allowed
+  '/webhooks/listeners/{listenerId}':
+    put:
+      tags:
+        - webhooks
+      parameters:
+        - name: listenerId
+          in: path
+          type: string
+          required: true
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/listenerType'
+        - name: X-UserId
+          description: An Admin user ID
+          required: true
+          type: string
+          in: header
+      responses:
+        '200':
+          description: Success (update or create)
+        '400':
+          description: Bad request
+    delete:
+      tags:
+        - webhooks
+      parameters:
+        - name: listenerId
+          in: path
+          type: string
+          required: true
+      responses:
+        '204':
+          description: 'Success, no content'
+        '403':
+          description: Not allowed
+        '404':
+          description: Not found
+  '/webhooks/events/{listenerId}':
+    get:
+      tags:
+        - webhooks
+      description: Gets the list of pending events
+      parameters:
+        - name: listenerId
+          in: path
+          type: string
+          required: true
+        - name: X-UserId
+          description: An Admin user ID
+          required: true
+          type: string
+          in: header
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            type: array
+            items:
+              title: WebhookEvent
+              type: object
+              required:
+                - id
+                - action
+                - entity
+              properties:
+                id:
+                  type: string
+                action:
+                  type: string
+                entity:
+                  type: string
+                href:
+                  type: string
+                data:
+                  description: Any kind of data
+                  type: object
+    delete:
+      tags:
+        - webhooks
+      description: Flushes the event queue for this listener
+      parameters:
+        - name: listenerId
+          in: path
+          type: string
+          required: true
+        - name: X-UserId
+          description: An Admin user ID
+          required: true
+          type: string
+          in: header
+      responses:
+        '204':
+          description: 'Successful flush, no content'
+        '403':
+          description: Not allowed
+  '/webhooks/events/{listenerId}/{eventId}':
+    delete:
+      tags:
+        - webhooks
+      description: Acknowledge/delete an event
+      parameters:
+        - name: listenerId
+          in: path
+          type: string
+          required: true
+        - name: eventId
+          in: path
+          type: string
+          required: true
+        - name: X-UserId
+          description: An Admin user ID
+          required: true
+          type: string
+          in: header
+      responses:
+        '204':
+          description: Successfully deleted
+        '403':
+          description: Not allowed
+
+  /globals:
+    get:
+      tags:
+        - misc
+      description: Gets global settings for Portal
+      responses:
+        '200':
+          description: Successful request
+  /kill:
+    post:
+      tags:
+        - misc
+      description: Kills the running API process (used for test automation)
+      parameters:
+        - name: Authorization
+          in: header
+          type: string
+          required: true
+          description: Pass the PORTAL_CONFIG_KEY here for Authorization
+      responses:
+        '204':
+          description: Successfully shut down API
+        '403':
+          description: Not allowed
+
+definitions:
+  userType:
+    title: UserInfo
+    type: object
+    properties:
+      id:
+        type: string
+      customId:
+        type: string
+      loggedIn:
+        type: boolean
+      firstName:
+        type: string
+      lastName:
+        type: string
+      email:
+        type: string
+      validated:
+        description: Has email address been validated
+        type: boolean
+      applications:
+        type: array
+        items:
+          title: Application
+          type: object
+          properties:
+            id:
+              type: string
+            _links:
+              type: object
+              properties:
+                application:
+                  $ref: '#/definitions/hrefType'
+      groups:
+        title: GroupIds
+        type: array
+        items:
+          type: string
+      _links:
+        type: object
+        properties:
+          self:
+            $ref: '#/definitions/hrefType'
+          groups:
+            $ref: '#/definitions/hrefType'
+
+  userCreateType:
+    title: UserInfo
+    type: object
+    properties:
+      customId:
+        type: string
+      firstName:
+        type: string
+      lastName:
+        type: string
+      email:
+        type: string
+      password:
+        type: string
+      validated:
+        description: Has email address been validated
+        type: boolean
+      groups:
+        title: GroupIds
+        type: array
+        items:
+          type: string
+
+  hrefType:
+    type: object
+    properties:
+      href:
+        type: string
+
+  listenerType:
+    type: object
+    properties:
+      id:
+        type: string
+      url:
+        type: string

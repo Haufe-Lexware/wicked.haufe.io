@@ -1,0 +1,75 @@
+extends layout
+
+block content
+
+    //if !isIndex
+    br
+    br
+    .container
+        form(role='form' action='/content#{pathUri}' method='post')
+            .row
+                .col-md-6
+                    .panel-group
+                        .panel.panel-success
+                            .panel-heading
+                                table(width='100%')
+                                    tr
+                                        td
+                                            h4.panel-title
+                                                a(data-target='#collapse' data-toggle='collapse')
+                                                    | PREVIEW MODE -- Content Setting (click to change) &raquo;&nbsp;
+                                                    if requiredGroup != '<none>'
+                                                        span.label.label-success= requiredGroup 
+                                        td(style='text-align:right')
+                                            a(href='/editcontent#{pathUri}').btn.btn-default Edit Content &raquo;
+                            div(id='collapse').collapse.panel-collapse
+                                .panel-body
+                                    +checkBox('showTitle', showTitle, 'Show Title Panel (Jumbotron)')
+                                    +checkBox('omitContainer', omitContainer, 'Omit Content Container <code>div(class="container")</code>, provide your own')
+                                    +inputField2('title', title, 'Page Title (also used in <head>):')
+                                    +inputField2('subTitleRaw', subTitleRaw, 'Sub Title (for jumbotron):', 'string', 'May contain Markdown')
+                                    if !isIndex
+                                        .form-group
+                                            label Required Group:
+                                            select(name='requiredGroup').form-control
+                                                if (requiredGroup == '<none>')
+                                                    option(selected) &lt;none&gt;
+                                                else
+                                                    option &lt;none&gt;
+                                                each group, i in groups
+                                                    if (requiredGroup == group.id)
+                                                        option(selected)= group.id
+                                                    else
+                                                        option= group.id
+                                    else
+                                        p
+                                            i The index.md file must always be publicly available.
+                                    button(type='submit').btn.btn-success Save Settings
+                .col-md-6
+                    .panel-group
+                        .panel.panel-default
+                            .panel-heading
+                                h4.panel-title
+                                    a(data-target='#model_collapse' data-toggle='collapse') View Model &raquo;
+                            div(id='model_collapse').collapse.panel-collapse
+                                .panel-body
+                                    p.
+                                        Use the following JSON data to try out different states of your page, e.g. with or 
+                                        without <code>authUser</code> defined. Please note that this is only applicable for
+                                        Jade pages, not for Markdown. 
+                                    textarea(name='viewModel' style='height: 400px').form-control= viewModel
+                                    br
+                                    button(type='submit').btn.btn-default Apply Viewmodel
+
+    if showTitle
+        .jumbotron.wicked-content-title
+            .container.wicked-title-container
+                h1= title
+                if subTitle
+                    != subTitle
+
+    if !omitContainer    
+        .container.wicked-container
+            != content
+    else
+        != content

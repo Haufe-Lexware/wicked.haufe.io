@@ -1,0 +1,75 @@
+extends help_layout
+
+block help_content
+  +helpItem('key_access', 'Accessing using an API Key')
+
+  p.
+    If the API you subscribe to is secured via an API Key, you will have to pass on this API Key to the API Gateway in a HTTP Header. Using <code>curl</code>, this will look as follows:
+
+  pre.
+    $ curl -H '#{glob.api.headerName}: (your API Key)' #{glob.network.schema}://#{glob.network.apiHost}/desired_api/some_endpoint
+
+  p.
+    If you pass on a correct API Key, the API Gateway will let you call the backend API, using the plan you selected when subscribing to the API, for your application.
+
+  p.
+    <strong>Note:</strong> Please be aware that the API key is bound to the <a href='/help/application'>application</a> it was generated for. You should have different API keys for different applications. Do not re-use the API Keys, even if it is possible (the API Gateway cannot notice).
+
+  +helpItem('oauth2_access', 'Accessing using OAuth 2.0 Client Credentials Flow')
+
+  p.
+    If the API you have subscribed to is secured via the <a href='https://tools.ietf.org/html/rfc6749' target='_blank'>OAuth 2.0 Client Credentials Flow</a>, you will first need to acquire an Access Token for the API before you can call any of the API end points.
+
+  p.
+    Leveraging <code>curl</code>, the call has to look as follows:
+  
+  pre.
+    $ curl -X POST --header 'Content-Type: application/x-www-form-urlencoded' -d 'grant_type=client_credentials&client_id=(your client id)&client_secret=(your client secret)' '#{glob.network.schema}://#{glob.network.apiHost}/auth/(auth method)/api/(desired api)/token'
+
+  p.
+    Please note that the same kind of request has to be used regardless of the API in the backend. The <code>/oauth2/token</code> end point is not actually provided by the backend API, but by the API Gateway. This means the authorization calls will always look the same, no matter which API (here e.g. <code>/desired_api/</code>) is to be used.
+
+  p.
+    If the <code>POST</code> request was successful, you will receive an access token which is valid for a certain period of time:
+  p
+    code {"token_type":"bearer","access_token": "<strong style='color:#0a0'>db530d89558843a99ec80f639434faa8</strong>","expires_in": 3600}
+  
+  p.
+    In green above, the access token is highlighted. This can in turn be used for real calls to the API in the background, using the same example URL as above, this would be:
+
+  pre.
+    $ curl --header 'Authorization: Bearer db530d89558843a99ec80f639434faa8' #{glob.network.schema}://#{glob.network.apiHost}/desired_api/some_endpoint
+
+  p.
+    Chances are good that this kind of authorization is automatically supported in case you are using common frameworks when implementing your application, such as Java Spring. For you, calling an API would be transparent, as long as you provide your framework with Client ID and Client Secret. This is though very implementation specific and is not covered further here.
+
+  p See also:
+  ul
+    li <a href="/help/oauth2_client_credentials">OAuth2 Client Credentials Flow</a>
+    li <a href="/help/oauth2_password_grant">OAuth2 Resource Owner Password Grant</a>
+    li <a href="/help/oauth2_implicit_grant">OAuth2 Implicit Grant</a>
+    li <a href="/help/oauth2_authorization_code">OAuth2 Authorization Code Grant</a>
+
+  p.
+    Depending on the API and the type of authentication (auth method), wicked supports all the above OAuth2 flows.
+
+  //- +helpItem('oauth2_implicit', 'Accessing using OAuth 2.0 Implicit Grant Flow')
+
+  //- p.
+  //-   APIs which are secured over the OAuth 2.0 Implicit Grant Flow are explicitly intended for client side applications, such as JavaScript driven applications (e.g. Anuglar 2 Apps, React Apps). Such APIs work differently than the other two types, which are intended only for <b>machine to machine communication</b>. This kind of API needs <b>consumer scope</b> and an actual end user <b>authentication</b> and <b>authorization</b>.
+
+  //- p.
+  //-   The authentication and authorization has to be done over the authorization server which is defined for the API. View the API page for more details on which authorization server has to be used for the API, and under which URI you can access it.
+
+  //- p.
+  //-   Implement your client application as follows:
+  //- ol
+  //-   li Create an application in the API Portal, giving the redirect URI of your application; this is the URI the API Portal will call you back under after authentication and authorization has been done. E.g., <code>https://mobile-app.mycompany.com/callback</code>
+  //-   li Subscribe to the API you want to use in your Client Side (browser only) application
+  //-   li Note down the <code>client_id</code> which is issued when you subscribe to the API
+  //-   li To retrieve an Access Token, redirect the end user (in the browser) to the URI of the authorization server, passing the <code>client_id</code> as a parameter, e.g. <code>http://api.mycompany.com/auth-server/some-api?client_id=ab8378734dbebce9298d</code>
+  //-   li If the authorization server manages to (a) authenticate and (b) authorize the user (this is an API/Business specific implementation), it will call you back under your registered redirect URI, passing an access token to the API in the <b>fragment</b> of the URI, e.g. <code>https://mobile-app.mycompany.com/callback#access_token=ba937db972fd92873bd018d7d52b&amp;expires_in=3600&amp;token_type=bearer</code>
+  //-   li Use the access token in your AJAX calls to the API, passing it as an <code>Authorization</code> header, e.g. <code>Authorization: Bearer ba937db972fd92873bd018d7d52b</code>
+
+  //- p.
+  //-   Depending on the implementation of your authorization server, you will have to repeat this process after the access token has expired; the OAuth 2.0 implicit grant does <b>not</b> specify the use of refresh tokens.

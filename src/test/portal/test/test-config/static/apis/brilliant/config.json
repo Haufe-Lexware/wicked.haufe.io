@@ -1,0 +1,40 @@
+{
+    "api": {
+        "upstream_url": "http://mockbin.com/",
+        "name": "mockbin",
+        "request_host": "",
+        "request_path": "/mock"
+    },
+    "plugins": [
+        {
+            "name": "acl",
+            "enabled": true,
+            "config": {
+                "whitelist": [
+                    "api-consumer",
+                    "api-abuser"
+                ]
+            }
+        },
+        {
+            "name": "key-auth",
+            "enabled": true,
+            "config": {
+                "key_names": [
+                    "X-Apim-Subscription-Key",
+                    "X-Api-Key"
+                ],
+                "hide_credentials": true
+            }
+        },
+        {
+            "name": "rate-limiting",
+            "enabled": true,
+            "config": {
+                "async": false,
+                "day": 100,
+                "continue_on_error": false
+            }
+        }
+    ]
+}

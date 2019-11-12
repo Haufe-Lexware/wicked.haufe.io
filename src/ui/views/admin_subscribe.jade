@@ -1,0 +1,35 @@
+extends layout
+
+block scripts
+    script(type='text/javascript').
+        function gotoSubscription() {
+            var app = $('#application').val();
+            var api = $('#api').val();
+            
+            //alert('App: ' + app + ', API: ' + api);
+            window.location.href = '/applications/' + app + '/subscribe/' + api;
+        }
+        
+block content
+    .jumbotron.wicked-admin-title
+        .container.wicked-title-container
+            h1= title
+            
+            p To be able, as an admin, to subscribe applications to APIs, use this page.
+    
+    .container.wicked-container
+    
+        br
+        .form-group
+            label(for='application') Application:
+            select(name='application' id='application').form-control
+                for app in apps
+                    option(value='#{app.id}') #{app.id}
+        
+        .form-group
+            label(for='api') API:
+            select(name='api' id='api').form-control
+                for api in apis
+                    option(value='#{api.id}') #{api.id} (#{api.name})
+
+        a(onclick='gotoSubscription();').btn.btn-primary Go &raquo;

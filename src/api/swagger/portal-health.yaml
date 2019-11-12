@@ -1,0 +1,58 @@
+swagger: '2.0'
+info:
+  version: 0.9.0
+  title: Haufe API Portal API - Health
+schemes:
+  - http
+produces:
+  - application/json
+host: 'localhost:3001'
+basePath: /portal-health/v1
+paths:
+  /ping:
+    get:
+      description: Simple end point which returns OK if the API is alive.
+      tags:
+        - misc
+      responses:
+        '200':
+          description: Returns a JSON representation of OK
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+  '/systemhealth':
+    get:
+      tags:
+        - misc
+      responses:
+        200:
+          description: Successful response
+          schema:
+            type: array
+            items:
+              title: SystemHealth
+              type: object
+              properties:
+                name:
+                  type: string
+                message:
+                  type: string
+                uptime:
+                  type: number
+                healthy:
+                  description: 0=not healthy, 1=healthy, 2=initializing
+                  type: number
+                  enum:
+                    - 0
+                    - 1
+                    - 2
+                pingUrl:
+                  type: string
+                pendingEvents:
+                  description: Number of events in the event queue; healthy is 0, -1 is not applicable
+                  type: number
+              
+        403:
+          description: Not allowed

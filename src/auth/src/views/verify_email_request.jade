@@ -1,0 +1,18 @@
+extends auth_layout
+
+block content
+    h2 Verify Email Address
+    
+    if profile.email_verified
+        p Your email address has already been verified.
+        
+        h5 You may close this window.
+    else
+        p Click the button, and we will send you an email with instructions on how to verify your email address.
+        
+        form(role='form' action='#{baseUrl}/#{verifyEmailUrl}' method='post')
+            input(type='hidden' name='_csrf' value='#{csrfToken}')
+
+            button(class='btn btn-lg btn-primary btn-block' type='submit') 
+                span(aria-hidden="true").glyphicon.glyphicon-envelope
+                | &nbsp; Send verification link

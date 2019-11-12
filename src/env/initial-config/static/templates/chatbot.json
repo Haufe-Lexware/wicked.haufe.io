@@ -1,0 +1,12 @@
+{
+    "userLoggedIn": "User '{{name}}' (<{{{userLink}}}|{{{email}}}>) has logged in.",
+    "userSignedUp": "New user '{{name}}' (<{{{userLink}}}|{{{email}}}>) just signed up! Yay!",
+    "userValidatedEmail": "User '{{name}}' (<{{{userLink}}}|{{{email}}}>) just validated his or her email address.",
+    "applicationAdded": "User '{{name}}' (<{{{userLink}}}|{{{email}}}>) just registered a new application <{{{applicationLink}}}|{{applicationId}}>.",
+    "applicationDeleted": "User '{{name}}' (<{{{userLink}}}|{{{email}}}>) just deleted the application <{{{applicationLink}}}|{{applicationId}}>.",
+    "subscriptionAdded": "User '{{name}}' (<{{{userLink}}}|{{{email}}}>) just added a subscription to API '{{apiId}}' for application <{{{applicationLink}}}|{{applicationId}}>.",
+    "subscriptionDeleted": "User '{{name}}' (<{{{userLink}}}|{{{email}}}>) deleted a subscription to API '{{apiId}}' for application <{{{applicationLink}}}|{{applicationId}}>.",
+    "approvalRequired": "There's a new approval request for API '{{apiId}}'. Go here: <{{{approvalsLink}}}|Approvals>.",
+    "lostPasswordRequest": "User '{{name}}' (<{{{userLink}}}|{{{email}}}>) apparently forgot his password. He requested to set a new one.",
+    "verifyEmailRequest": "User '{{name}}' (<{{{userLink}}}|{{{email}}}>) has received a request for email validation."
+}

@@ -1,0 +1,51 @@
+extends layout
+
+block content
+    .jumbotron
+        .container
+            h1 Authorization Servers
+            
+            p wicked comes with a default Authorization Server which is used both for authenticating portal users, and for securing access to APIs using OAuth2 flows.
+    
+    .container
+        //- h4 
+        
+        //- p <b>Outdated:</b> For a discussion on how to implement an Authorization Server and sample projects, see the documentation of wicked.haufe.io on github: <a href="https://github.com/Haufe-Lexware/wicked.haufe.io/blob/master/doc/authorization-servers.md">Authorization Servers</a>.
+        
+        br
+
+        .panel.panel-success
+            .panel-heading
+                h4.panel-title Registered Servers
+            .panel-body
+                ul
+                    for authServer in authServers
+                        li
+                            a(href='authservers/#{authServer}')= authServer
+        
+        //- .panel.panel-default
+        //-     .panel-heading
+        //-         h4.panel-title New Authorization Server Registration
+        //-     .panel-body
+        //-         p.
+        //-             Register an Authorization Server here. Please not that this does <b>not</b> mean it is automatically implemented and deployed, you will have to adapt
+        //-             your deployment scripts manually to make this happen. This will only make sure that you have an additional API registered with the API Gateway which
+        //-             maps to something in your backend which you have to implement yourself. Please also note that if you have multiple Authorization Servers, you will
+        //-             need to change the <code>request_path</code> in the settings.
+        //-         p.
+        //-             Note that for most usual use cases, the default authorization server which is deployed with wicked is enough.
+
+        //-         form(role='form' method='post' action='/authservers')
+        //-             .form-group
+        //-                 label(for='servername') Server Name
+        //-                 input(type='string' name='servername' id='servername').form-control
+        //-             button(type='submit').btn.btn-success Register new Server
+        
+        table(width='100%')
+            tr
+                td
+                    a(href='/apis').btn.btn-primary &laquo; Previous
+                td(style='text-align:right')
+                    a(href='/').btn.btn-default Home
+                    | &nbsp;
+                    a(href='/recaptcha').btn.btn-primary Next &raquo;

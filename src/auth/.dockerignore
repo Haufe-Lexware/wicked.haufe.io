@@ -1,0 +1,8 @@
+node_modules
+.gitignore
+Dockerfile-build
+.DS_Store
+certs
+sessions
+*.tgz
+dist

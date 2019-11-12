@@ -1,0 +1,19 @@
+{
+  "api": {
+    "name": "echo",
+    "upstream_url": "${PORTAL_ECHO_URL}",
+    "uris": [
+      "/wicked-echo/v1"
+    ],
+    "strip_uri": true
+  },
+  "plugins": [
+    {
+      "config": {
+        "header_name": "Correlation-Id",
+        "generator": "uuid"
+      },
+      "name": "correlation-id"
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+{
+    "api": {
+        "upstream_url": "http://mockbin.com/",
+        "name": "brilliant",
+        "request_path": "/brilliant"
+    },
+    "plugins": [
+        {
+            "name": "rate-limiting",
+            "enabled": true,
+            "config": {
+                "async": false,
+                "day": 100,
+                "continue_on_error": true
+            }
+        }
+    ]
+}

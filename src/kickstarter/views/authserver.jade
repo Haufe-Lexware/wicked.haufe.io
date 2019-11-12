@@ -1,0 +1,41 @@
+extends layout_plugin
+
+block scripts
+    -var isVuePage = true
+
+block content
+    .jumbotron
+        .container
+            h1= authServer.id
+            
+            p Authorization Server Settings
+    
+    .container
+        br
+        p The Authorization Server is just a special case of an API (without Authentication), provided by the wicked framework. This means you can also use any kind of plugin which makes sense to your configuration, just like  you could for an API. The <code>upstream_url</code> will depend on your implementation of an Authorization Server, and must reflect the deployment environment/your <code>docker-compose.yml</code> file (or whatever you are using to deploy your docker containers).
+
+        div(id='authserverBase')
+            -var envPrefix = 'PORTAL_AUTHSERVER_' + safeServerId.toUpperCase()
+            -var envPrefixPlugins = envPrefix + '_PLUGINS_'
+            password-validation(v-model="glob" v-bind:strategies="passwordStrategies")
+
+            auth-server(v-model="authServer" env-prefix="#{envPrefix}" server-id="#{safeServerId}" v-bind:groups="groups")
+            
+            wicked-plugins(v-model="plugins" env-prefix="#{envPrefixPlugins}" disable-aws-lambda=true hint="This section is for configuring plugins for the Authorization Server. The Authorization Server is registered as an API with the API Gateway, and thus you may use the usual plugins for it.")
+            br
+            nav-buttons(return-link="/authservers")
+
+block afterScripts
+    script(type="text/javascript").
+        const injectedData = {
+            serverId: "#{serverId}",
+            safeServerId: "#{safeServerId}",
+            authServer: !{JSON.stringify(authServer)},
+            plugins: !{JSON.stringify(plugins)},
+            groups: !{JSON.stringify(groups)},
+            glob: !{JSON.stringify(glob)},
+            passwordStrategies: !{JSON.stringify(passwordStrategies)},
+            oauthApis: !{JSON.stringify(oauthApis)}
+        };
+
+    script(src='/js/authserver.js')

@@ -1,0 +1,23 @@
+{
+    "PORTAL_TITLE": {
+        "value": "Portal Title"
+    },
+    "PORTAL_COMPANY": {
+        "value": "Company"
+    },
+    "PORTAL_REC1": {
+        "value": "${PORTAL_REC2} ${PORTAL_REC2}"
+    },
+    "PORTAL_REC2": {
+        "value": "Recursive"
+    },
+    "PORTAL_STORAGE_PGHOST": {
+        "value": "localhost"
+    },
+    "PORTAL_STORAGE_PGPORT": {
+        "value": "7654"
+    },
+    "PORTAL_KONG_ADAPTER_URL": {
+        "value": "http://portal-kong-adapter:3002/"
+    }
+}

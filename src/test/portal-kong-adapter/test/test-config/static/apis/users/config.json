@@ -1,0 +1,8 @@
+{
+    "api": {
+        "upstream_url": "http://mockbin.com/",
+        "name": "users",
+        "request_path": "/users"
+    },
+    "plugins": []
+}

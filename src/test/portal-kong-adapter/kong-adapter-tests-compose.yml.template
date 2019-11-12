@@ -1,0 +1,48 @@
+version: '2'
+
+services:
+  kong-adapter-test-data:
+    env_file: ../variables.env  
+    build: 
+      context: .
+    volumes:
+    - "/var/portal-api/static"
+    environment:
+    - WICKED_STORAGE
+
+  portal-api:
+    env_file: ../variables.env  
+    image: ${DOCKER_PREFIX}api:${PORTAL_API_TAG}${BUILD_ALPINE}
+    links:
+    - postgres:postgres
+    volumes_from:
+    - "kong-adapter-test-data"
+    environment:
+    - "PORTAL_API_HOOK_INTERVAL=200"
+    - WICKED_STORAGE
+    - PORTAL_STORAGE_PGHOST=postgres
+    - PORTAL_STORAGE_PGPORT=5432
+
+  portal-kong-adapter:
+    env_file: ../variables.env
+    image: ${DOCKER_PREFIX}kong-adapter:${PORTAL_KONG_ADAPTER_TAG}${BUILD_ALPINE}
+    depends_on:
+    - portal-api
+    - kong
+  
+  postgres:
+    image: postgres:11-alpine
+    environment:
+    - "POSTGRES_USER=kong"
+    - "POSTGRES_PASSWORD=kong"
+
+  kong:
+    image: ${DOCKER_PREFIX}kong:${KONG_TAG}
+    depends_on:
+    - "postgres"
+    links:
+    - postgres:postgres
+    environment:
+    - "KONG_PG_HOST=postgres"
+    security_opt:
+    - seccomp:unconfined

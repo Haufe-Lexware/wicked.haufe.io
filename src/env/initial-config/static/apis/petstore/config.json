@@ -1,0 +1,10 @@
+{
+    "api": {
+        "upstream_url": "http://petstore.swagger.io/v2",
+        "request_path": "/petstore",
+        "preserve_host": false,
+        "strip_request_path": true,
+        "name": "petstore"
+    },
+    "plugins": []
+}

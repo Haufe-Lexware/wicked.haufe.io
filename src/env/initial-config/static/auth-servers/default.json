@@ -1,0 +1,37 @@
+{
+    "id": "default-auth",
+    "desc": "Default Authorization Server",
+    "authMethods": [
+        {
+            "enabled": true,
+            "name": "local",
+            "type": "local",
+            "friendlyShort": "Username and Password",
+            "friendlyLong": "Log in using a local username and password.",
+            "config": {
+                "trustUsers": false
+            }
+        }
+    ],
+    "config": {
+        "api": {
+            "name": "default-auth",
+            "upstream_url": "$PORTAL_AUTHSERVER_URL",
+            "preserve_host": false,
+            "uris": [
+                "/auth"
+            ],
+            "strip_uri": false
+        },
+        "plugins": [
+            {
+                "name": "correlation-id",
+                "config": {
+                    "header_name": "Correlation-Id",
+                    "generator": "uuid",
+                    "echo_downstream": false
+                }
+            }
+        ]
+    }
+}

@@ -1,0 +1,34 @@
+doctype html
+html
+  head
+    title #{glob.title} - #{title}
+    link(rel='stylesheet', href='/assets/bootstrap/css/bootstrap.min.css')
+    link(rel='stylesheet', href='/assets/css/bootstrap-social.css')
+    link(rel='stylesheet', href='/content/wicked.css')
+    link(rel="stylesheet", href="/assets/highlight/css/default.css")
+    link(rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css")
+    script(src='/assets/highlight/highlight.js')
+    
+    block scripts
+
+  body.wicked-auth
+
+    .container
+        span.center-block
+
+    .container
+        .row
+            .col-md-12
+                div(style='margin-left:auto;margin-right:auto;text-align:center')
+                    a(href='/')
+                        img(src='/content/images/wicked-auth-page-120.png')
+                        //img(src='/images/wicked-text-64.png')
+            .col-md-6.col-md-offset-3
+                .panel.panel-default
+                    .panel-body
+                        .jumbotron.wicked-login-title
+                            
+                            block content
+
+    script(src='/assets/jquery/jquery.min.js')
+    script(src='/assets/bootstrap/js/bootstrap.min.js')

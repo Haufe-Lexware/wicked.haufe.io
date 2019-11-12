@@ -1,0 +1,9 @@
+node_modules
+*.log
+.gitignore
+Dockerfile
+dynamic
+static
+Dockerfile
+git_*
+

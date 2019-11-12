@@ -1,0 +1,20 @@
+{
+    "title": "Subscribe to API",
+    "subTitle": "Specify the plan",
+    "apiInfo": {
+        "id": "brilliant",
+        "desc": "Cool API, long text"
+    },
+    "apiPlans": [
+        {
+            "id": "basic",
+            "name": "Basic Plan",
+            "desc": "Long description of the plan",
+            "needsApproval": true
+        }
+    ],
+    "application": {
+        "id": "yay-app",
+        "name": "My Super Cool Application"
+    }
+}

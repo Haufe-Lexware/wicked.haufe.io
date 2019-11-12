@@ -1,0 +1,33 @@
+extends help_layout
+
+block help_content
+
+  +helpItem('api_types', 'API Types')
+
+  p.
+    The API Portal currently supports the following types of APIs:
+
+  ul
+    li APIs secured by API Keys
+    li APIs secured by OAuth 2.0
+
+  p.
+    APIs secured by an API Key are displayed with the following icon on the API page and on the <a href='/apis'>API Index page</a>:
+  
+  p
+    img(src='/images/key-icon-64.png').center-block
+
+  p.
+    In case an API is secured by OAuth 2.0, the following icon is displayed:
+
+  p
+    img(src='/images/oauth2-icon-64.png').center-block
+  
+  p.
+    Accessing an API differs from both types, and how this can be done is described in the following sections.
+
+  +helpItem('accessing_apis', 'Accessing APIs')
+
+  p.
+    For information on how to access an API programmatically, please confer to the <a href='api-access'>API Access Help Page</a>.
+    

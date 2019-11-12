@@ -1,0 +1,151 @@
+{
+    "apis": [
+        {
+            "name": "Brilliant API",
+            "id": "brilliant",
+            "plans": [
+                "basic",
+                "unlimited"
+            ],
+            "desc": "Lorem ipsum dolormin ibuprofenium paracetamolam innocent in expectam malus.",
+            "tags": [
+                "Content"
+            ],
+            "auth": "key-auth"
+        },
+        {
+            "name": "Super duper API",
+            "id": "superduper",
+            "plans": [
+                "basic",
+                "unlimited",
+                "godlike"
+            ],
+            "desc": "Lorem ipsum dolormin ibuprofenium paracetamolam innocent in expectam malus.",
+            "tags": [
+                "Super"
+            ],
+            "auth": "oauth2",
+            "authMethods": ["default:local", "sample-server:local"]
+        },
+        {
+            "name": "User Management API",
+            "id": "users",
+            "plans": [
+                "basic",
+                "unlimited"
+            ],
+            "requiredGroup": "dev",
+            "desc": "Lorem ipsum dolormin ibuprofenium paracetamolam innocent in expectam malus.",
+            "tags": [
+                "Super"
+            ]
+        },
+        {
+            "name": "Partner API",
+            "id": "partner",
+            "plans": [
+                "basic",
+                "unlimited"
+            ],
+            "requiredGroup": "dev",
+            "desc": "Lorem ipsum dolormin ibuprofenium paracetamolam innocent in expectam malus.",
+            "tags": [
+                "Super",
+                "Content"
+            ]
+        },
+        {
+            "name": "Ordering API",
+            "id": "orders",
+            "plans": [
+                "restricted_basic",
+                "restricted_unlimited"
+            ],
+            "requiredGroup": "dev",
+            "desc": "Lorem ipsum dolormin ibuprofenium paracetamolam innocent in expectam malus.",
+            "tags": [
+                "Invoice",
+                "Content"
+            ]
+        },
+        {
+            "name": "Very Restricted",
+            "id": "restricted",
+            "plans": [
+                "restricted_basic",
+                "restricted_unlimited"
+            ],
+            "requiredGroup": "superdev",
+            "desc": "Lorem ipsum dolormin ibuprofenium paracetamolam innocent in expectam malus.",
+            "tags": []
+        },
+        {
+            "name": "Mobile API",
+            "id": "mobile",
+            "plans": [
+                "basic",
+                "unlimited"
+            ],
+            "desc": "This is an OAuth2 Implicit Flow secured API",
+            "tags": [],
+            "authMethods": ["default:local", "sample-server:local"],
+            "auth": "oauth2",
+            "settings": {
+                "enable_implicit_grant": true
+            }
+        },
+        {
+            "name": "Deprecated API",
+            "id": "deprecated",
+            "deprecated": true,
+            "plans": [
+                "basic",
+                "unlimited"
+            ],
+            "desc": "This is a deprecated API",
+            "tags": [],
+            "requiredGroup": "dev",
+            "auth": "key-auth"
+        },
+        {
+            "name": "OAuth2 API",
+            "id": "oauth2-api",
+            "plans": [
+                "basic",
+                "unlimited"
+            ],
+            "desc": "This is an OAuth2 enabled API",
+            "tags": [],
+            "requiredGroup": "dev",
+            "auth": "oauth2",
+            "authMethods": ["default:local", "sample-server:local"],
+            "settings": {
+                "enable_client_credentials": true,
+                "enable_implicit_grant": true,
+                "enable_authorization_code": true,
+                "enable_password_grant": true,
+                "token_expiration": "120",
+                "scopes": {
+                    "read": {
+                        "description": "Read data"
+                    },
+                    "write": {
+                        "description": "Write data"
+                    },
+                    "admin": {
+                        "description": "Super access"
+                    }
+                }
+            }
+        }
+    ],
+    "_links": {
+        "self": {
+            "href": "/apis"
+        },
+        "plans": {
+            "href": "/plans"
+        }
+    }
+}

@@ -1,0 +1,61 @@
+.jumbotron.wicked-index-title
+  .container.feature-container
+    h1 #{title}
+
+    p This is a sample API hub. It's built on the open source API portal platform <strong>wicked</strong> by <a href='https://github.com/Haufe-Lexware'>Haufe-Lexware</a>.
+    
+    if authUser
+      p Hello, #{authUser.name}! Good to see you!
+
+    p &nbsp;
+
+    a(href='http://wicked.haufe.io' target='_blank')
+      img(src='/images/wicked-256.png' alt='wicked.io').image-fluid.center-block
+
+.container
+  .row.featurette
+    .col-md-7
+      h2.featurette-heading
+        if !authUser
+          | <a href='login'>Sign up</a> for the portal.
+        else
+          | Sign up for the Portal. 
+        span.text-muted Create your personal user for this API Portal.
+      p.lead
+        | You can sign up using email and password, or using one of the supported social logins.
+    .col-md-5 &nbsp;
+  //hr.featurette-divider
+  .row.featurette
+    .col-md-7.col-md-push-5
+      h2.featurette-heading
+        if !authUser
+          | Register your application.
+        else
+          | <a href='applications?register=true'>Register</a> your application. 
+        span.text-muted Tell the API Portal which application you are working on.
+      p.lead
+        | The application is what gets a subscription to an API, not the developer. Thus you need to register
+        | an application first. This is the API client.  
+    .col-md-5.col-md-pull-7.pad80
+      img.featurette-image.img-responsive(src='content/images/arrow-right.png').pull-right
+  //hr.featurette-divider
+  .row.featurette
+    .col-md-7
+      h2.featurette-heading
+        | Subscribe to an API. 
+        span.text-muted Find the API you need for your application.
+      p.lead
+        | From the <a href='apis'>APIs page</a>, select the API you need for your application. Select a plan,
+        | and then subscribe to the API. This will give you credentials for accessing the API. 
+    .col-md-5.pad80
+      img.featurette-image.img-responsive.center-block(src='content/images/arrow-left.png').pull-left
+  //hr.featurette-divider
+  .row.featurette
+    .col-md-7.col-md-push-5
+      h2.featurette-heading
+        | Use the API. 
+        span.text-muted Now you are set to use the API in your application.
+      p.lead
+        | With the provided credentials, you may now use the API from your application according to the plan you subscribed for.
+    .col-md-5.col-md-pull-7.pad80
+      img.featurette-image.img-responsive.center-block(src='content/images/arrow-right.png').pull-right

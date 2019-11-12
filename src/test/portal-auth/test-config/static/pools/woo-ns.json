@@ -1,0 +1,35 @@
+{
+  "id": "woo-ns",
+  "name": "Woo Users",
+  "requiresNamespace": true,
+  "disallowRegister": true,
+  "properties": [
+    {
+      "id": "name",
+      "description": "Full name of the user",
+      "type": "string",
+      "maxLength": 255,
+      "minLength": 1,
+      "required": true,
+      "oidcClaim": "name"
+    },
+    {
+      "id": "company",
+      "description": "Company",
+      "type": "string",
+      "maxLength": 255,
+      "minLength": 0,
+      "required": false,
+      "oidcClaim": "wicked.haufe.io:company"
+    },
+    {
+      "id": "phone",
+      "description": "Telephone number",
+      "type": "string",
+      "maxLength": 63,
+      "minLength": 0,
+      "required": false,
+      "oidcClaim": "phone_number"
+    }
+  ]
+}

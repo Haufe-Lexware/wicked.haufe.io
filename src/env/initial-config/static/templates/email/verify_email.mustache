@@ -1,0 +1,22 @@
+Hello {{ user.name }},
+
+Thanks for signing up to the {{ title }}.
+
+We would like to ask you to validate your email address by clicking the following link:
+
+{{! triple mustache to render as-is, not HTML escaped }}
+{{{ verificationLink }}}
+
+This link is valid for 60 minutes (one hour). After this time span, you will have to request a new verification link using the "User Profile" page.
+
+After validating your email address, you may
+
+* Add a new application
+* Subscribe to APIs
+
+These are actions which are not allowed for users not having validated email addresses.
+
+Best regards,
+The API Portal Team
+
+Remark: This email was sent upon your signing up to the portal or upon your explicit request. If you did not register for the {{ title }}, please inform us at {{ portalEmail }} so that we can remove the faulty account. Thanks in advance.

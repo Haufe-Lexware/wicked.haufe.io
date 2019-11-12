@@ -1,0 +1,121 @@
+html
+  head
+    title= title
+
+    link(href='#{glob.network.schema}://#{glob.network.portalHost}/content/swagger-override.css' media='screen' rel='stylesheet' type='text/css')
+    link(href='swagger-ui.css' media='screen' rel='stylesheet' type='text/css')
+    script(src='#{glob.network.schema}://#{glob.network.portalHost}/assets/jquery/jquery.min.js')
+
+    script(src='swagger-ui-bundle.js' type='text/javascript')
+    script(src='swagger-ui-standalone-preset.js' type='text/javascript')
+
+    script(type="text/javascript").
+      $(function () {
+        var url = window.location.search.match(/url=([^&]+)/);
+        if (url && url.length > 1) {
+          url = decodeURIComponent(url[1]);
+        } else {
+          url = "http://petstore.swagger.io/v2/swagger.json";
+        }
+        var apikey = window.location.search.match(/apikey=([a-zA-Z0-9]+)\&/);
+        if (apikey && apikey.length > 1)
+          apikey = decodeURIComponent(apikey[1]);
+        else
+          apikey = null;
+        var client_id = window.location.search.match(/client_id=([a-zA-Z0-9]+)\&/);
+        if (client_id && client_id.length > 1)
+          client_id = decodeURIComponent(client_id[1]);
+        else
+          client_id = null;
+        var client_secret = window.location.search.match(/client_secret=([a-zA-Z0-9]+)\&/);
+        if (client_secret && client_secret.length > 1)
+          client_secret = decodeURIComponent(client_secret[1]);
+        else
+          client_secret = null;
+
+        var application = window.location.search.match(/application=([^&]+)/);
+        if (application && application.length > 1)
+          application = decodeURIComponent(application[1]);
+        else
+          application = null;
+        var redirect_uri = window.location.search.match(/redirect_uri=([^&]+)/);
+        if (redirect_uri && redirect_uri.length > 1)
+          redirect_uri = decodeURIComponent(redirect_uri[1]);
+        else
+          redirect_uri = null;
+
+        var supportedMethods = [];
+        if (apikey || client_id)
+          supportedMethods = ['get', 'post', 'put', 'delete', 'patch'];
+
+        // Pre load translate...
+        if(window.SwaggerTranslator) {
+          window.SwaggerTranslator.translate();
+        }
+        const ui = SwaggerUIBundle({
+          url: url,
+          supportedSubmitMethods: supportedMethods,
+          dom_id: '#swagger-ui-container',
+          oauth2RedirectUrl: redirect_uri,
+          presets: [
+            SwaggerUIBundle.presets.apis,
+            SwaggerUIBundle.SwaggerUIStandalonePreset
+          ],
+          onComplete: function(swaggerApi, swaggerUi){
+            if(typeof ui.initOAuth == "function") {
+              ui.initOAuth({
+                clientId: client_id,
+                clientSecret: client_secret,
+                realm: "your-realms",
+                appName: application,
+                scopeSeparator: ",",
+                additionalQueryStringParams: {}
+              });
+            }
+            if (apikey)
+              ui.preauthorizeApiKey("key", apikey);
+            if ("http" == "#{glob.network.schema}")
+              $('input[name=x-forwarded-proto]').val('https');
+          },
+          onFailure: function(data) {
+            log("Unable to Load SwaggerUI");
+          },
+          jsonEditor: false,
+          apisSorter: "alpha",
+          defaultModelRendering: 'schema',
+          showRequestHeaders: false
+        });
+        window.swaggerUi = ui;
+        function log() {
+          if ('console' in window) {
+            console.log.apply(console, arguments);
+          }
+        }
+      });
+
+
+body
+
+  div(id='header')
+    div(style="color:#cccccc;").swagger-ui-wrap
+      a(id="logo" href="#{glob.network.schema}://#{glob.network.portalHost}/apis")
+      a(href="#{glob.network.schema}://#{glob.network.portalHost}/").header-item= glob.layouts.swaggerUi.menu.homeLinkText
+      a(href="#{glob.network.schema}://#{glob.network.portalHost}/apis").header-item APIs
+      a(href="#{glob.network.schema}://#{glob.network.portalHost}/applications").header-item Applications
+      if glob.layouts.swaggerUi.menu.showContactLink
+        a(href="#{glob.network.schema}://#{glob.network.portalHost}/content/contact").header-item Contact
+      if glob.layouts.swaggerUi.menu.showContentLink
+        a(href="#{glob.network.schema}://#{glob.network.portalHost}/content/toc").header-item Content
+
+  div(id="message-bar" class="swagger-ui-wrap" data-sw-translate) &nbsp;
+  div(id="swagger-ui-container" class="swagger-ui-wrap")
+
+  br
+  hr
+  .swagger-ui-wrap
+    footer
+      table(width='100%')
+        tr
+          td(style='text-align:left; color: #999999;')!= glob.footer
+          td(style='text-align:right; color:#999999;')
+            | Built by <a href='http://www.haufe-lexware.com' target='_blank'>Haufe-Lexware</a>, powered by <a href='https://www.konghq.com' target='_blank'>Kong</a>.

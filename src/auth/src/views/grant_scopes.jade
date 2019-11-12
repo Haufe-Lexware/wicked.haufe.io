@@ -1,0 +1,25 @@
+extends auth_layout
+
+block content
+    h2 Grant Access
+    
+    p The application &quot;#{appInfo.name}&quot; wants to access following aspects of the API &quot;#{apiInfo.name}&quot; on your behalf:
+
+    ul
+        each grantRequest, index in grantRequests
+            li <b>#{grantRequest.description}</b> <small><i>#{grantRequest.scope}</i></small>
+
+    br
+
+    .row
+        .col-md-6
+            form(role='form' action='#{baseUrl}/#{grantUrl}' method='post')
+                input(type='hidden' name='_csrf' value='#{csrfToken}')
+                input(type='hidden' name='_action' value='deny')
+                button(class='btn btn-lg btn-default btn-block' type='submit') Deny
+
+        .col-md-6
+            form(role='form' action='#{baseUrl}/#{grantUrl}' method='post')
+                input(type='hidden' name='_csrf' value='#{csrfToken}')
+                input(type='hidden' name='_action' value='allow')
+                button(class='btn btn-lg btn-primary btn-block' type='submit') Allow

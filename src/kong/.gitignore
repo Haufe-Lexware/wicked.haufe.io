@@ -1,0 +1,6 @@
+.DS_Store
+*.pem
+Dockerfile-alpine
+docker-entrypoint.sh
+git_*
+build_date

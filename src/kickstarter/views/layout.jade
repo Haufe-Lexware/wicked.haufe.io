@@ -1,0 +1,292 @@
+mixin renderButtons(thisPage, prevPage, nextPage, returnText, renderLinks)
+  - var returnLabel = '&laquo; Save &amp; Previous'
+  if returnText
+    - returnLabel = returnText
+  else if renderLinks
+    - returnLabel = "&laquo; Previous"
+  input(type='hidden' name='redirect' id='redirect' value='#{thisPage}')
+  table(width='100%')
+    tr
+      td
+        if prevPage
+          if !renderLinks
+            button(type="submit" onclick='setRedirect("#{prevPage}");').btn.btn-primary!= returnLabel
+          else
+            a(href="#{prevPage}").btn.btn-primary!= returnLabel
+        else
+          | &nbsp;
+      td(style='text-align: right')
+        a(href='/').btn.btn-default Home
+        | &nbsp; 
+        if !renderLinks
+          button(type="submit" onclick='setRedirect("#{thisPage}");').btn.btn-primary Save
+        if nextPage
+          | &nbsp;
+          if !renderLinks
+            button(type="submit" onclick='setRedirect("#{nextPage}");').btn.btn-primary Save &amp; Next &raquo;
+          else
+            a(href="#{nextPage}").btn.btn-primary Next &raquo;
+
+
+mixin inputField(source, dummy, label, inType, desc, envVarName_)
+  - var inputId = source
+  - var jInputId = inputId.replace(/[\.\[\]]/g, '')
+  - var inputValue = eval(source)
+  if (!inputValue)
+    - inputValue = ''
+  - var allowEnv = !source.endsWith(']') 
+  - var fromEnv = allowEnv ? eval(source + '_') : false
+  - var fromEncrypted = fromEnv ? eval(source + '__') : false
+  - var inputType = "string"
+  - var sourceWithoutGlob = source.startsWith('glob.') ? source.substring(5) : source
+  - var envVarName = 'PORTAL_' + sourceWithoutGlob.replace(/[\.-]/g, '_').toUpperCase().replace(/[\[\]]/g, '');
+  if envVarName_
+    - envVarName = envVarName_
+  if inType
+    - inputType = inType
+  .form-group
+    label(for='#{inputId}')= label
+    input(name='#{inputId}' id='#{inputId}' type='#{inputType}' value='#{inputValue}').form-control
+    if desc
+      p.wicked-note!= desc
+      // p.wicked-note inputValueTest = #{inputValueTest}
+    if allowEnv
+      small
+        table
+          tr
+            td
+              .checkbox
+                label
+                  if fromEnv
+                    input(type='checkbox' name='#{inputId}_' id='#{jInputId}_' checked='checked' onchange='checkChange(event, "#{jInputId}_");')
+                  else
+                    input(type='checkbox' name='#{inputId}_' id='#{jInputId}_' onchange='checkChange(event, "#{jInputId}_");')
+                  | Use environment variable <code>#{envVarName}</code>
+            td &nbsp;&nbsp;
+            td
+              .checkbox
+                label
+                  if fromEncrypted
+                    input(type='checkbox' name='#{inputId}__' id='#{jInputId}__' checked='checked')
+                  else if fromEnv
+                    input(type='checkbox' name='#{inputId}__' id='#{jInputId}__')
+                  else
+                    input(type='checkbox' name='#{inputId}__' id='#{jInputId}__' disabled)
+                  | Encrypt
+            
+mixin textareaField(source, dummy, label, heightPx)
+  - var inputId = source
+  - var inputValue = eval(source)
+  if (!inputValue)
+    - inputValue = ''
+  - var fromEnv = eval(source + '_')
+  - var sourceWithoutGlob = source.startsWith('glob.') ? source.substring(5) : source
+  - var envVarName = 'PORTAL_' + sourceWithoutGlob.replace(/[\.-]/g, '_').toUpperCase().replace(/[\[\]]/g, '');
+  .form-group
+    label(for='#{inputId}')= label
+    textarea(name='#{inputId}' id='#{inputId}' style='height:#{heightPx}px').form-control= inputValue
+    small
+      .checkbox
+        label
+          if fromEnv
+            input(type='checkbox' name='#{inputId}_' checked='checked')
+          else
+            input(type='checkbox' name='#{inputId}_')
+          | Use environment variable <code>#{envVarName}</code>
+            
+mixin textareaField2(source, dummy, label, heightPx)
+  - var inputId = source
+  - var inputValue = eval(source)
+  if (!inputValue)
+    - inputValue = ''
+  .form-group
+    label(for='#{inputId}')= label
+    textarea(name='#{inputId}' id='#{inputId}' style='height:#{heightPx}px').form-control= inputValue
+
+mixin inputField2(source, dfkjldksjflsdjflsdf, label, inType, desc, readonly)
+  - var inputId = source
+  - var inputValue = eval(source)
+  if(inType=='array')
+   - inputId = inputId+'[]'
+  if (!inputValue)
+    - inputValue = ''
+  - var inputType = "string"
+  if inType
+    - inputType = inType
+  .form-group
+    label(for='#{inputId}')= label
+    if !readonly
+      input(name='#{inputId}' id='#{inputId}' type='#{inputType}' value='#{inputValue}').form-control
+    else
+      input(name='#{inputId}' id='#{inputId}' type='#{inputType}' value='#{inputValue}' readonly).form-control
+    if desc
+      p.wicked-note!= desc
+
+mixin checkBox(source, thisIsNotUsedButApparentlyJadeNeedsItSomebodyCanExplainPlease, label, desc)
+  - var inputId = source
+  - var inputValue = eval(source)
+  .checkbox
+    label
+      if inputValue && inputValue != 'false'
+        input(name='#{inputId}' id='#{inputId}' checked='checked' type='checkbox')
+        | !{label}
+      else
+        input(name='#{inputId}' id='#{inputId}' type='checkbox')
+        | !{label}
+
+mixin checkPanel(source, thisIsNotUsedButApparentlyJadeNeedsItSomebodyCanExplainPlease, label)
+  - var inputId = source
+  - var inputValue = eval(source)
+  - var collapseId = 'collapse_' + source.replace(/\./g, '_')
+  div(id='accordion').panel-group
+    .panel.panel-primary
+      .panel-heading
+          .checkbox
+            label(data-toggle="collapse" data-target='##{collapseId}')
+              if inputValue
+                input(name='#{inputId}' id='#{inputId}' checked='checked' type='checkbox')
+                | #{label}
+              else
+                input(name='#{inputId}' id='#{inputId}' type='checkbox')
+                | #{label}
+      if inputValue
+        div(id='#{collapseId}').panel-collapse.collapse.in
+          .panel-body
+            block
+      else
+        div(id='#{collapseId}').panel-collapse.collapse
+          .panel-body
+            block
+
+mixin dangerPanel(dangerTitle, dangerText)
+  .panel.panel-danger
+    .panel-heading
+      h4.panel-title DANGER: !{dangerTitle}
+    .panel-body
+      p!= dangerText
+
+doctype html
+html
+  head
+    title wicked - Kickstarter
+    link(rel='stylesheet', href='/css/bootstrap.min.css')
+    link(rel='stylesheet', href='/stylesheets/style.css')
+    script(src='/js/jquery.min.js')
+    script(src='/js/vue/vue.js')
+    script(src='/js/uiv/uiv.min.js')
+    script(src='/js/kickstarter-components.js')
+    
+    script(type='text/javascript').
+      function setRedirect(target) {
+        document.getElementById('redirect').value = target;
+      }
+
+      function checkChange(event, checkboxId) {
+        var isChecked = $("#" + checkboxId).prop("checked");
+        var encryptCbId = checkboxId + '_';
+        var encryptChecked = $("#" + encryptCbId).prop("checked");
+        if (!isChecked && encryptChecked)
+          $("#" + encryptCbId).prop("checked", false);
+        if (isChecked)
+          $("#" + encryptCbId).removeAttr("disabled");
+        else
+          $("#" + encryptCbId).attr("disabled", true);
+      }
+
+    block scripts
+
+    block moreScripts
+  body
+    //- <!-- Modal -->
+    .modal.fade(id="modalDialog" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true")
+      .modal-dialog(role="document")
+        .modal-content
+          .modal-header
+            h5.modal-title(id="modalTitle") Modal dialog
+            button(type="button" class="close" data-dismiss="modal" aria-label="Close")
+              span(aria-hidden="true") &times;
+          .modal-body
+            div(id="modalContent")
+          .modal-footer
+            button(type="button" data-dismiss="modal").btn.btn-secondary Close
+
+    nav(class="navbar navbar-inverse navbar-fixed-top")
+      .container
+        .navbar-header
+          button(type="button", class="navbar-toggle collapsed", data-toggle="collapse", data-target="#navbar", aria-expanded="false", aria-controls="navbar")
+            span.sr-only Toggle navigation
+            span.icon-bar
+            span.icon-bar
+            span.icon-bar
+
+        div(id="navbar", class="collapse navbar-collapse")
+            ul(class="nav navbar-nav")
+              li
+                a(href="/") Home
+              li(class="dropdown")
+                a(href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false") Configuration <span class="caret"></span>
+                ul(class="dropdown-menu")
+                  li
+                    a(href="/envs") Environments
+                  li
+                    a(href="/ipconfig") IP Config
+                  li
+                    a(href="/deploy") Deployment
+                  li
+                    a(href='/users') Users
+                  li
+                    a(href="/auth") Authentication
+                  li
+                    a(href="/groups") Groups
+                  li
+                    a(href="/plans") Plans
+                  li
+                    a(href="/apis") APIs
+                  li
+                    a(href="/authservers") Authorization Servers
+                  li
+                    a(href='/recaptcha') reCAPTCHA
+                  li
+                    a(href='/content') Content
+                  li
+                    a(href='/email') Email
+                  li
+                    a(href='/chatbot') Chatbot
+                  li
+                    a(href='/templates') Templates
+                  li
+                    a(href='/design') Design
+                  li
+                    a(href='/kongadapter') Kong Adapter  
+            ul.nav.navbar-nav.navbar-right
+              if isVuePage
+                li(style="padding-top:10px")
+                  button(onclick="storeData();" class="btn btn-primary") Save
+                  span &nbsp;&nbsp;&nbsp;&nbsp;
+              li
+                a(href='/shutdown' style='text-decoration:none' title='Shut down Kickstarter')
+                  span(style='font-size:1.5em').glyphicon.glyphicon-off
+
+    block content
+
+  footer.footer
+    .container(style='padding-top:5px')
+      table(width='100%')
+        tr
+          td        
+            | <strong>Configuration Path: </strong><code>#{configPath}</code><br>
+          td(style='text-align:right;width:50px;')
+            a(href='/shutdown' style='text-decoration:none' title='Shut down Kickstarter')
+              span(style='font-size:1.5em').glyphicon.glyphicon-off
+          //td
+          //  | <strong>Environment File: </strong><code>#{envFile}</code>
+      table(width='100%')
+        tr
+          td(style='text-align:left; color: #999999;') &copy; 2016-2017 Haufe-Lexware GmbH &amp; Co. KG
+          td(style='text-align:right; color:#999999;')
+            | Built by <a href='http://www.haufe-lexware.com' target='_blank'>Haufe-Lexware</a>, powered by <a href='http://getkong.org' target='_blank'>Mashape Kong</a>.
+
+  script(src='/js/bootstrap.min.js')
+  script(src='/js/bootstrap-show-password.min.js')
+
+  block afterScripts

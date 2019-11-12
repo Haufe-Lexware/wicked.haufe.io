@@ -1,0 +1,18 @@
+{
+    "email_error": "Bitte geben Sie eine E-Mail-Adresse ein.",
+    "email_invalid": "Die E-Mail-Adresse ist ungültig.",
+    "enter_password": "Bitte geben Sie ein Passwort ein.",
+    "repeat_password": "Bitte wiederholen Sie das Passwort.",
+    "password_mismatch": "Die Passwörter stimmen nicht überein.",
+    "validation_error": "Validierungsfehler. Bitte prüfen Sie Ihre Eingaben.",
+    "signup": "Konto erstellen",
+    "welcome_to": "Willkommen zu",
+    "redirect_message": "Sie werden auf die gewünschte Seite weitergeleitet, sobald Sie eingeloggt sind.",
+    "username": "E-Mail-Address (Benutzername)",
+    "password": "Passwort",
+    "password_repeat": "Passwort (wiederholen)",
+    "login_existing": "Ich habe bereits einen Benutzer",
+    "forgot_password": "Passwort vergessen?",
+    "password_regex": "<injected>",
+    "password_rules": "<injected>"
+}

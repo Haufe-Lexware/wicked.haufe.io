@@ -1,0 +1,57 @@
+extends auth_layout
+
+block scripts
+    script(type='text/javascript').
+        function validateEmail() {
+            var email = $('#email').val();
+            var email2 = $('#email2').val();
+            var emailError = '';
+            var email2Error = '';
+            if (!email)
+                emailError = '#{i18n.enter_email_address}';
+            else if (!/^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(email))
+                emailError = '#{i18n.email_invalid}';
+            if (!email2)
+                email2Error = '#{i18n.confirm_email}';
+
+            try {
+                $('#errorEmail').text(emailError);
+                $('#errorEmail2').text(email2Error);
+            } catch (err) {
+                alert('#{i18n.validation_error}');
+                return false;
+            }
+            
+            var somethingBad = !!emailError
+                || !!email2Error;
+            
+            return !somethingBad;
+        }
+
+block content
+    h2 #{i18n.specify_email}
+    
+        p.
+            !{i18n.specify_email_desc}
+
+        h4.
+            By having signed up and registering, you agree to our <a target='_blank' href='#{portalUrl}content/terms-and-conditions'>Terms
+            and Conditions</a> and the <a target='_blank' href='#{portalUrl}content/privacy-policy'>Privacy/Cookie Policy</a>.
+        
+        form(role='form' action='#{baseUrl}/#{emailMissingUrl}' method='post' onsubmit='return validateEmail();')
+            input(type='hidden' name='_csrf' value='#{csrfToken}')
+
+            .form-group
+                label(for='email') #{i18n.email_address}:
+                input(type='string' name='email' id='email').form-control
+                small 
+                    span(id='errorEmail' style='color:red')
+            .form-group
+                label(for='email') #{i18n.email_address_confirm}:
+                input(type='string' name='email2' id='email2').form-control
+                small 
+                    span(id='errorEmail2' style='color:red')
+                        
+            button(class='btn btn-lg btn-primary btn-block' type='submit') 
+                span(aria-hidden="true").glyphicon.glyphicon-envelope
+                | &nbsp; #{i18n.save_email_address}

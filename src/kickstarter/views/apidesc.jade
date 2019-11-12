@@ -1,0 +1,33 @@
+extends layout
+
+block scripts
+    script(src='/js/marked/marked.min.js')
+
+block content
+    .jumbotron
+        .container
+            h1 API Description - #{apiId}
+            
+            p You may edit the longer API description here (it's markdown). Or use something more suitable, like MarkdownPad or Mou.
+    
+    .container
+    
+        form(role='form' action='/apidesc/#{apiId}' method='post')
+            +renderButtons('/apidesc/' + apiId, '/apis', null, '&laquo; Save &amp; Return')
+            br
+            .row
+                .col-md-6
+                    textarea(name='desc' id='desc' style='height:500px').form-control= desc
+                .col-m6-6
+                    div(id='markdown')
+
+block afterScripts
+    script(type='text/javascript').
+    
+        $('#desc').on('change keyup paste', function() {
+            var text = $('#desc').val();
+            $('#markdown').html(marked(text));
+        });
+        
+        // First time
+        $('#markdown').html(marked($('#desc').val()));    

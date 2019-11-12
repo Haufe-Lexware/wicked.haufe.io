@@ -1,0 +1,1238 @@
+swagger: '2.0'
+info:
+  version: 0.9.0
+  title: Haufe API Portal API - Public
+schemes:
+  - http
+produces:
+  - application/hal+json
+host: 'localhost:3001'
+basePath: /portal-api/v1
+tags:
+  - name: apis
+    description: API functions
+  - name: users
+    description: User management
+  - name: misc
+    description: Misc functionality
+  - name: applications
+    description: Application management
+  - name: verifications
+    description: Email verification functionality
+paths:
+  /ping:
+    get:
+      description: Simple end point which returns OK if the API is alive.
+      tags:
+        - misc
+      responses:
+        '200':
+          description: Returns a JSON representation of OK
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+  /apis:
+    get:
+      tags:
+        - apis
+      parameters:
+        - name: X-UserId
+          in: header
+          description: The ID of the logged in user; omit if not logged in
+          type: string
+          required: false
+      description: Gets the list of APIs of this API Portal.
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            type: object
+            properties:
+              apis:
+                title: ArrayOfApis
+                type: array
+                items:
+                  $ref: '#/definitions/apiType'
+              _links:
+                type: object
+                properties:
+                  self:
+                    $ref: '#/definitions/hrefType'
+                  plans:
+                    $ref: '#/definitions/hrefType'
+  /apis/desc:
+    get:
+      tags:
+        - apis
+      description: Returns a generic description of the APIs
+      produces:
+        - text/markdown
+      responses:
+        '200':
+          description: Successful response
+  '/apis/{apiId}/config':
+    get:
+      tags:
+        - apis
+      description: >-
+        Gets the API Gateway configuration for the API. This is Gateway specific
+        and thus not specified in detail.
+      parameters:
+        - name: apiId
+          in: path
+          type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+  '/apis/{apiId}/desc':
+    get:
+      tags:
+        - apis
+      description: Returns a description of the API in markdown notation.
+      produces:
+        - text/markdown
+      parameters:
+        - name: apiId
+          in: path
+          type: string
+          required: true
+        - name: X-UserId
+          in: header
+          description: The ID of the logged in user
+          type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+        '403':
+          description: Not allowed
+        '404':
+          description: Not found
+  '/apis/{apiId}/plans':
+    get:
+      tags:
+        - apis
+      description: Returns a description of the API in markdown notation.
+      produces:
+        - text/markdown
+      parameters:
+        - name: apiId
+          in: path
+          type: string
+          required: true
+        - name: X-UserId
+          in: header
+          description: The ID of the logged in user
+          type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/planType'
+        '403':
+          description: Not allowed
+        '404':
+          description: Not found
+  '/apis/{apiId}/swagger':
+    get:
+      tags:
+        - apis
+      description: Returns the Swagger represenstation of the API as JSON
+      produces:
+        - application/json
+      parameters:
+        - name: apiId
+          in: path
+          type: string
+          required: true
+        - name: X-UserId
+          in: header
+          description: The ID of the logged in user
+          type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+        '403':
+          description: Not allowed
+        '404':
+          description: Not found
+  '/apis/{apiId}/subscriptions':
+    get:
+      tags:
+        - apis
+      description: Retrieve all applications subscribed to this API
+      produces:
+        - application/json
+      parameters:
+        - name: apiId
+          in: path
+          type: string
+          required: true
+        - name: X-UserId
+          in: header
+          description: The ID of the logged in user
+          type: string
+          required: true
+      responses:
+        200:
+          description: Successful response
+          schema:
+            type: array
+            items:
+              type: object
+              properties:
+                application:
+                  type: string
+                plan:
+                  type: string
+        403:
+          description: Not allowed (Admins only)
+        404:
+          description: Not found (unknown API)
+  /plans:
+    get:
+      tags:
+        - misc
+      parameters:
+        - name: X-UserId
+          in: header
+          description: The ID of the logged in user; omit if not logged in
+          type: string
+          required: false
+      description: Gets the available plans for APIs
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            title: ArrayOfPlans
+            type: array
+            items:
+              $ref: '#/definitions/planType'
+  /groups:
+    get:
+      tags:
+        - misc
+      description: Gets the list of available user groups
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            type: object
+            properties:
+              groups:
+                type: array
+                items:
+                  title: Group
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                    alt_ids:
+                      type: array
+                      items:
+                        type: string
+                    name:
+                      type: string
+                    adminGroup:
+                      type: boolean
+                    approverGroup:
+                      type: boolean
+              _links:
+                type: object
+                properties:
+                  self:
+                    $ref: '#/definitions/hrefType'
+  /users:
+    get:
+      tags:
+        - users
+      parameters:
+        - name: customId
+          description: Pass to retrieve user by customId
+          in: query
+          type: string
+          required: false
+        - name: email
+          description: Pass to retrieve user by email
+          in: query
+          type: string
+          required: false
+        - name: X-UserId
+          in: header
+          type: string
+          description: >-
+            Logged in user, only required if all other query parameters are
+            omitted. Only admins are allowed to get user list.
+          required: false
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/userShortType'
+  '/users/{userId}':
+    get:
+      tags:
+        - users
+      parameters:
+        - name: userId
+          in: path
+          description: The ID of the user to retrieve
+          type: string
+          required: true
+        - name: X-UserId
+          in: header
+          description: The ID of the logged in user
+          type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/userType'
+        '403':
+          description: Not allowed
+    patch:
+      tags:
+        - users
+      parameters:
+        - name: userId
+          in: path
+          description: The ID of the user to patch
+          type: string
+          required: true
+        - name: user
+          description: The user data to patch
+          in: body
+          schema:
+            $ref: '#/definitions/userCreateType'
+          required: true
+        - name: X-UserId
+          in: header
+          description: The ID of the logged in user
+          type: string
+          required: false
+        - name: X-VerificationId
+          in: header
+          description: 'A verification ID, this is used for updating lost passwords'
+          type: string
+          required: false
+      responses:
+        '200':
+          description: Patched
+          schema:
+            $ref: '#/definitions/userType'
+        '403':
+          description: Not allowed
+    delete:
+      tags:
+        - users
+      parameters:
+        - name: userId
+          in: path
+          description: The ID of the user to delete
+          type: string
+          required: true
+        - name: X-UserId
+          in: header
+          description: The ID of the logged in User
+          required: true
+          type: string
+      responses:
+        '204':
+          description: Deleted
+        '403':
+          description: Not allowed
+  '/users/{userId}/password':
+    delete:
+      tags:
+        - users
+      parameters:
+        - name: userId
+          in: path
+          description: The ID of the user to remove the password from
+          type: string
+          required: true
+        - name: X-UserId
+          in: header
+          description: The ID of the logged in user
+          type: string
+          required: true
+      responses:
+        '204':
+          description: Successfully deleted
+        '400':
+          description: Bad request
+        '403':
+          description: Not allowed
+        '404':
+          description: Not found
+  /applications:
+    get:
+      tags:
+        - applications
+      parameters:
+        - name: X-UserId
+          in: header
+          description: 'The ID of the logged in user, only Admins can call this'
+          type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            title: ApplicationIdArray
+            type: array
+            items:
+              title: AppId
+              type: object
+              properties:
+                id:
+                  type: string
+        '403':
+          description: Not allowed
+    post:
+      tags:
+        - applications
+      parameters:
+        - name: application
+          in: body
+          schema:
+            $ref: '#/definitions/applicationCreateType'
+        - name: X-UserId
+          in: header
+          description: The ID of the logged in user
+          type: string
+          required: true
+      responses:
+        '201':
+          description: Created
+          schema:
+            $ref: '#/definitions/applicationType'
+  /application/roles:
+    get:
+      tags:
+        - applications
+      description: Returns a static list of user roles for applications
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            type: array
+            items:
+              title: RoleDescription
+              type: object
+              properties:
+                role:
+                  type: string
+                desc:
+                  type: string
+  '/applications/{appId}':
+    get:
+      tags:
+        - applications
+      parameters:
+        - name: appId
+          in: path
+          description: ID of Application to retrieve
+          type: string
+          required: true
+        - name: X-UserId
+          in: header
+          description: The ID of the logged in user
+          type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/applicationType'
+        '403':
+          description: Not allowed
+    patch:
+      tags:
+        - applications
+      parameters:
+        - name: appId
+          in: path
+          description: ID of Application to create or update
+          type: string
+          required: true
+        - name: application
+          in: body
+          description: Application entity to patch
+          schema:
+            $ref: '#/definitions/applicationCreateType'
+          required: true
+        - name: X-UserId
+          in: header
+          description: The ID of the logged in user
+          type: string
+          required: true
+      responses:
+        '200':
+          description: 'Success, patched'
+          schema:
+            $ref: '#/definitions/applicationType'
+        '400':
+          description: Bad request
+        '403':
+          description: Not allowed
+    delete:
+      tags:
+        - applications
+      parameters:
+        - name: appId
+          in: path
+          description: ID of Application to delete
+          type: string
+          required: true
+        - name: X-UserId
+          in: header
+          description: The ID of the logged in user
+          type: string
+          required: true
+      responses:
+        '204':
+          description: 'Deleted, no content'
+        '403':
+          description: Not allowed
+  '/applications/{appId}/owners':
+    post:
+      tags:
+        - applications
+      description: Adds an Owner to an application
+      parameters:
+        - name: appId
+          in: path
+          description: ID of Application to delete
+          type: string
+          required: true
+        - name: body
+          in: body
+          required: true
+          schema:
+            type: object
+            properties:
+              email:
+                type: string
+              role:
+                type: string
+                enum:
+                  - admin
+                  - collaborator
+                  - reader
+        - name: X-UserId
+          in: header
+          description: The ID of the logged in user
+          type: string
+          required: true
+      responses:
+        '200':
+          description: 'OK, owner was already present'
+          schema:
+            $ref: '#/definitions/applicationType'
+        '201':
+          description: Successfully added owner
+          schema:
+            $ref: '#/definitions/applicationType'
+        '400':
+          description: 'Bad request, i.e. email not found'
+        '403':
+          description: Not allowed
+    delete:
+      tags:
+        - applications
+      description: Removes an owner from an application
+      parameters:
+        - name: appId
+          in: path
+          description: ID of Application to delete
+          type: string
+          required: true
+        - name: userEmail
+          in: query
+          description: The email address of the owner to remove from the application
+          type: string
+          required: true
+        - name: X-UserId
+          in: header
+          description: The ID of the logged in user
+          type: string
+          required: true
+      responses:
+        '200':
+          description: Successfully deleted owner
+          schema:
+            $ref: '#/definitions/applicationType'
+        '403':
+          description: Not allowed
+        '404':
+          description: Not found
+  '/applications/{appId}/subscriptions':
+    get:
+      tags:
+        - subscriptions
+      description: Gets all subscriptions for a given application.
+      parameters:
+        - name: appId
+          in: path
+          description: The ID of the application to retrieve all subscriptions for
+          type: string
+          required: true
+        - name: X-UserId
+          in: header
+          description: The ID of the logged in user
+          type: string
+          required: true
+      responses:
+        '200':
+          description: Successful request
+          schema:
+            title: ArrayOfSubscriptions
+            type: array
+            items:
+              $ref: '#/definitions/subscriptionType'
+        '403':
+          description: Not allowed
+    post:
+      tags:
+        - subscriptions
+      parameters:
+        - name: appId
+          in: path
+          description: The ID of the Application to add an API subscription to
+          type: string
+          required: true
+        - name: subscription
+          in: body
+          description: The subscription to add
+          required: true
+          schema:
+            $ref: '#/definitions/subscriptionCreateType'
+        - name: X-UserId
+          in: header
+          description: The ID of the logged in user
+          type: string
+          required: true
+      responses:
+        '201':
+          description: 'Success, created'
+          schema:
+            $ref: '#/definitions/subscriptionType'
+        '403':
+          description: Not allowed
+  '/applications/{appId}/subscriptions/{apiId}':
+    get:
+      tags:
+        - subscriptions
+      description: Gets a specific API subscription
+      parameters:
+        - name: appId
+          description: The ID of the application for which to retrieve a subscription
+          required: true
+          in: path
+          type: string
+        - name: apiId
+          description: The ID of the API to retrieve the subscription for
+          required: true
+          in: path
+          type: string
+        - name: X-UserId
+          in: header
+          description: The ID of the logged in user
+          type: string
+          required: true
+      responses:
+        '200':
+          description: Successful request
+          schema:
+            $ref: '#/definitions/subscriptionType'
+        '403':
+          description: Not allowed
+    delete:
+      tags:
+        - subscriptions
+      description: Deletes an application's API subscription
+      parameters:
+        - name: appId
+          description: The ID of the application of which to delete a subscription
+          required: true
+          in: path
+          type: string
+        - name: apiId
+          description: The ID of the API to delete the subscription for
+          required: true
+          in: path
+          type: string
+        - name: X-UserId
+          in: header
+          description: The ID of the logged in user
+          type: string
+          required: true
+      responses:
+        '204':
+          description: 'Successfully deleted, no content'
+        '403':
+          description: Not allowed
+    patch:
+      tags:
+        - subscriptions
+      description: For approving or disapproving subscriptions
+      parameters:
+        - name: appId
+          description: The ID of the application of which to delete a subscription
+          required: true
+          in: path
+          type: string
+        - name: apiId
+          description: The ID of the API to delete the subscription for
+          required: true
+          in: path
+          type: string
+        - name: X-UserId
+          in: header
+          description: 'The ID of the logged in user, only Admins can do this'
+          type: string
+          required: true
+        - name: patchBody
+          in: body
+          required: true
+          schema:
+            type: object
+            title: SubscriptionPatch
+            properties:
+              approved:
+                type: boolean
+      responses:
+        '200':
+          description: Succesfully updated
+          schema:
+            $ref: '#/definitions/subscriptionType'
+  /content/*:
+    get:
+      tags:
+        - misc
+      description: Returns data from the static content section of the repository.
+      produces:
+        - text/markdown
+        - image/jpeg
+        - image/png
+        - image/gif
+      parameters:
+        - name: X-UserId
+          in: header
+          description: User ID of the logged in user. Leave out if no user is logged in.
+          type: string
+          required: false
+      responses:
+        '200':
+          description: Successful request
+        '403':
+          description: Not allowed
+        '404':
+          description: Not found
+  /approvals:
+    get:
+      tags:
+        - misc
+      description: Gets all pending approvals
+      parameters:
+        - name: X-UserId
+          in: header
+          required: true
+          description: ID of the logged in user; will only accept Admins here
+          type: string
+      responses:
+        '200':
+          description: Successful request
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/approvalType'
+
+  /verifications:
+    post:
+      tags:
+        - verifications
+      description: >-
+        Registers for a new verification of email or a request for password
+        reset
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/verificationType'
+      responses:
+        '204':
+          description: >-
+            No content. The API will not return whether it was successful or
+            not.
+        '400':
+          description: Bad request
+    get:
+      tags:
+        - verifications
+      description: Returns a list of pending verifications
+      parameters:
+        - name: X-UserId
+          in: header
+          required: true
+          description: ID of the logged in user; will only accept Admins here
+          type: string
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/verificationType'
+        '403':
+          description: Not allowed.
+  '/verifications/{verificationId}':
+    get:
+      tags:
+        - verifications
+      parameters:
+        - name: verificationId
+          in: path
+          type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/verificationType'
+        '404':
+          description: Not found
+    delete:
+      tags:
+        - verifications
+      parameters:
+        - name: verificationId
+          in: path
+          type: string
+          required: true
+      responses:
+        '204':
+          description: 'Success, no content'
+        '404':
+          description: Not found.
+  '/systemhealth':
+    get:
+      tags:
+        - misc
+      parameters:
+        - name: X-UserId
+          in: header
+          required: true
+          description: ID of the logged in user; will only accept Admins here
+          type: string
+      responses:
+        200:
+          description: Successful response
+          schema:
+            type: array
+            items:
+              title: SystemHealth
+              type: object
+              properties:
+                name:
+                  type: string
+                message:
+                  type: string
+                uptime:
+                  type: number
+                healthy:
+                  description: 0=not healthy, 1=healthy, 2=initializing
+                  type: number
+                  enum:
+                    - 0
+                    - 1
+                    - 2
+                pingUrl:
+                  type: string
+                pendingEvents:
+                  description: Number of events in the event queue; healthy is 0
+                  type: number
+
+        403:
+          description: Not allowed
+
+  /templates/chatbot:
+    get:
+      description: Gets the Chatbot Mustache templates
+      tags:
+        - misc
+      responses:
+        200:
+          description: Successful response
+          schema:
+            type: object
+            properties:
+              userLoggedIn:
+                type: string
+              userSignedUp:
+                type: string
+              userValidatedEmail:
+                type: string
+              applicationAdded:
+                type: string
+              applicationDeleted:
+                type: string
+              subscriptionAdded:
+                type: string
+              subscriptionDeleted:
+                type: string
+              approvalRequired:
+                type: string
+              lostPasswordRequest:
+                type: string
+              verifyEmailRequest:
+                type: string
+  /templates/email/{templateId}:
+    get:
+      description: Get the Mustache template for a certain type of email
+      tags:
+        - misc
+      parameters:
+        - name: templateId
+          in: path
+          type: string
+          enum:
+            - "lost_password"
+            - "pending_approval"
+            - "verify_email"
+          required: true
+      responses:
+        200:
+          description: Successful response
+        404:
+          description: Not found
+
+  '/auth-servers':
+    get:
+      description: Get a list of available authorization servers
+      tags:
+        - misc
+      responses:
+        200:
+          description: Successful response
+          schema:
+            type: array
+            items:
+              type: string
+
+  '/auth-servers/{serverId}':
+    get:
+      description: Get information on a registered authorization serverId
+      tags:
+        - misc
+      parameters:
+        - name: serverId
+          in: path
+          required: true
+          description: The ID of the authorization server to retrieve
+          type: string
+      responses:
+        200:
+          description: Successful response
+          schema:
+            $ref: '#/definitions/authServerType'
+        404:
+          description: Not found
+
+definitions:
+  apiType:
+    title: Api
+    type: object
+    properties:
+      id:
+        type: string
+      name:
+        type: string
+      desc:
+        type: string
+      plans:
+        type: array
+        items:
+          type: string
+      requiredGroup:
+        description: 'Specify to restrict access to API, leave out to keep public'
+        type: string
+      tags:
+        description: 'Array of tags for this API, use as "Category"'
+        type: array
+        items:
+          type: string
+      authServer:
+        description: The authorization server for this API (this is optional and only applies to OAuth2 flows other than the client credentials flow)
+        type: string
+  userType:
+    title: UserInfo
+    type: object
+    properties:
+      id:
+        type: string
+      customId:
+        type: string
+      loggedIn:
+        type: boolean
+      firstName:
+        type: string
+      lastName:
+        type: string
+      email:
+        type: string
+      validated:
+        description: Has email address been validated
+        type: boolean
+      applications:
+        type: array
+        items:
+          title: Application
+          type: object
+          properties:
+            id:
+              type: string
+            _links:
+              type: object
+              properties:
+                application:
+                  $ref: '#/definitions/hrefType'
+      groups:
+        title: GroupIds
+        type: array
+        items:
+          type: string
+      _links:
+        type: object
+        properties:
+          self:
+            $ref: '#/definitions/hrefType'
+          groups:
+            $ref: '#/definitions/hrefType'
+  userShortType:
+    title: UserShortInfo
+    type: object
+    properties:
+      id:
+        type: string
+      name:
+        description: Read only full name (firstName + lastName)
+        type: string
+      customId:
+        type: string
+      email:
+        type: string
+  userCreateType:
+    title: UserInfo
+    type: object
+    properties:
+      customId:
+        type: string
+      firstName:
+        type: string
+      lastName:
+        type: string
+      email:
+        type: string
+      password:
+        type: string
+      validated:
+        description: Has email address been validated
+        type: boolean
+      groups:
+        title: GroupIds
+        type: array
+        items:
+          type: string
+  applicationType:
+    title: ApplicationInfo
+    type: object
+    properties:
+      id:
+        type: string
+      name:
+        type: string
+      redirectUri:
+        type: string
+      owners:
+        title: OwnerList
+        type: array
+        items:
+          $ref: '#/definitions/ownerType'
+      _links:
+        type: object
+        properties:
+          self:
+            $ref: '#/definitions/hrefType'
+  applicationCreateType:
+    title: ApplicationInfo
+    type: object
+    properties:
+      id:
+        type: string
+      name:
+        type: string
+      redirectUri:
+        type: string
+  ownerType:
+    title: Owner
+    type: object
+    properties:
+      userId:
+        type: string
+      email:
+        type: string
+      role:
+        type: string
+        enum:
+          - owner
+          - collaborator
+          - reader
+      _links:
+        type: object
+        properties:
+          user:
+            $ref: '#/definitions/hrefType'
+  subscriptionType:
+    title: SubscriptionInfo
+    type: object
+    properties:
+      application:
+        type: string
+      api:
+        type: string
+      plan:
+        type: string
+      auth:
+        type: string
+        enum:
+          - "key-auth"
+          - "oauth2"
+          - "oauth2-implicit"
+      apikey:
+        type: string
+        description: Used if key-auth API
+      clientId:
+        type: string
+        description: Used if oauth2 API
+      clientSecret:
+        type: string
+        description: Used if oauth2 API
+      approved:
+        type: boolean
+      _links:
+        type: object
+        properties:
+          self:
+            $ref: '#/definitions/hrefType'
+          application:
+            $ref: '#/definitions/hrefType'
+          api:
+            $ref: '#/definitions/hrefType'
+          plan:
+            $ref: '#/definitions/hrefType'
+  subscriptionCreateType:
+    title: SubscriptionInfo
+    type: object
+    properties:
+      application:
+        type: string
+      api:
+        type: string
+      plan:
+        type: string
+      apikey:
+        description: Optional
+        type: string
+  planType:
+    title: Plan
+    type: object
+    properties:
+      id:
+        type: string
+      name:
+        type: string
+      desc:
+        type: string
+      needsApproval:
+        type: boolean
+      config:
+        description: Gateway configuration for plan
+        type: object
+  hrefType:
+    type: object
+    properties:
+      href:
+        type: string
+  approvalType:
+    type: object
+    properties:
+      user:
+        type: object
+        properties:
+          id:
+            type: string
+          name:
+            type: string
+          email:
+            type: string
+      api:
+        type: object
+        properties:
+          id:
+            type: string
+          name:
+            type: string
+      application:
+        type: object
+        properties:
+          id:
+            type: string
+          name:
+            type: string
+      plan:
+        type: object
+        properties:
+          id:
+            type: string
+          name:
+            type: string
+  verificationType:
+    type: object
+    properties:
+      id:
+        description: Verification ID
+        type: string
+      type:
+        description: Type of verification
+        type: string
+        enum:
+          - email
+          - lostpassword
+      email:
+        type: string
+        description: The E-Mail address concerned in the validation
+      userId:
+        type: string
+        description: 'When retrieved, this field will contain the associated user ID'
+  authServerType:
+    type: object
+    properties:
+      name:
+        type: string
+      desc:
+        type: string
+      url:
+        type: string

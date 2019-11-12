@@ -1,0 +1,30 @@
+{
+  "version": "1.0.0-rc.10",
+  "private": true,
+  "main": "bin/api",
+  "dependencies": {
+    "async": "2.6.2",
+    "bcrypt-nodejs": "0.0.3",
+    "body-parser": "1.18.3",
+    "chai": "3.5.0",
+    "express": "4.16.3",
+    "folder-hash": "2.1.2",
+    "js-yaml": "3.13.1",
+    "morgan": "1.9.1",
+    "mustache": "2.2.1",
+    "ncp": "2.0.0",
+    "node-uuid": "1.4.8",
+    "pg": "7.12.1",
+    "portal-env": "file:../portal-env.tgz",
+    "request": "2.88.0",
+    "rimraf": "2.6.2"
+  },
+  "scripts": {
+    "start": "node ./bin/api"
+  },
+  "jshintConfig": {
+    "node": true,
+    "esversion": 6
+  },
+  "name": "portal-api"
+}

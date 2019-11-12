@@ -1,0 +1,19 @@
+{
+    "userInfo": {
+        "applications": [
+            {
+                "id": "app-id",
+                "name": "Application Name",
+                "subscriptions": [
+                    {
+                        "apiInfo": {
+                            "id": "api_id",
+                            "name": "API Name"
+                        },
+                        "apikey": "49374938497398473"
+                    }
+                ]
+            }
+        ]
+    }
+}

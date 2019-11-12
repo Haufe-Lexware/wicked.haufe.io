@@ -1,0 +1,8 @@
+node_modules
+*.log
+test_results
+.DS_Store
+*compose.yml
+backup
+tmp
+package-lock.json

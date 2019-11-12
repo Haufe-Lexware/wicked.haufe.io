@@ -1,0 +1,79 @@
+extends layout
+
+block content
+  .jumbotron
+    .container
+      h1 SSL Helper Tools
+
+      p This page gives you some tooling and advice on how to get SSL certificates
+
+  .container
+    .panel.panel-default
+      .panel-heading
+        h4.panel-title General Advice on getting SSL certificates
+      .panel-body
+        p.
+          The API Portal needs SSL certificates to operate correctly. When using the standard
+          deployment techniques using <code>docker-compose</code>, the certificates need to
+          be present in the following two environment variables:
+        ul
+          li <code>PORTAL_PEM</code>: The PEM certificate for the API Portal UI itself
+          li <code>GATEWAY_PEM</code>: The PEM certificate for the API Gateway (aka Kong)
+        
+        p.
+          The environment variables need to be filled with the content of the "key" and "cert"
+          files from your certificate creation process. This can be done e.g. using the following
+          command line:
+
+        pre.
+          export GATEWAY_PEM=$(cat /&lt;gateway path&gt;/key.pem /&lt;gateway path&gt;/cert.pem | tr -d '\015' | awk 1 ORS='\\n')
+          export PORTAL_PEM=$(cat /&lt;portal path&gt;/key.pem /&lt;portal path&gt;/cert.pem | tr -d '\015' | awk 1 ORS='\\n')
+
+        p.
+          Production-ready certificates can be obtained via the usual ways (trust authorities), or
+          using a service like <a href="https://letsencrypt.org" target="_blank">Let's Encrypt</a>.
+          Let's Encrypt certificates will work with the API Portal, even if some development tools
+          still do not accept those certificates as completely valid.
+
+        p.
+          <strong>Keep in mind</strong>: Certificates do not belong into your configuration repository,
+          but should be injected into environment variables at deployment time, using some suitable mechanism.
+          This depends highly on your CI/CD environment; with <a href="https://www.go.cd" target="_blank">go.cd</a>
+          at Haufe, we are at least using "Secure Environment Variables".
+    
+    .panel.panel-danger
+      .panel-heading
+        h4.panel-title Self-signed SSL Certificate Helper
+      .panel-body
+        p.
+          For <strong>testing purposes</strong>, you can use this tool to create self signed certificates
+          for your environment deployments. THESE CERTIFICATES ARE NOT SUITABLE FOR PRODUCTION. Make that <strong>bold face</strong>.
+        
+        p.
+          Clicking the below button will do the following for you:
+        ul
+          li Create a <code>certs</code> directory in your repository base folder
+          li For each environment, generate certificate files in sub folders of <code>certs</code>
+          li.
+            Create a <code>bash</code> script <code>&lt;environment&gt;.sh</code> which sets the above
+            environment variables (for testing purposes only!), and additionally the following: 
+            <code>NODE_ENV</code>, <code>PORTAL_NETWORK_APIHOST</code>, <code>PORTAL_NETWORK_PORTALHOST</code>
+            and <code>PORTAL_CONFIG_KEY</code>. <strong>NEVER EVER CHECK IN THIS FILE</strong>. 
+          li The API host and Portal Hosts need to have been configured correctly for this to work
+
+        if hasCertificates
+          strong(style='color: red;').
+            There is already a <code>certs</code> folder in your base configuration folder. The tool
+            will overwrite any existing files.  
+
+        br
+        br
+
+        .row
+          .col-md-6
+            form(action='/ssl' method='post')
+              .form-group
+                label Certificate Validity (days):
+                input(type="text" name="validDays" value="365").form-control
+              
+              button(type='submit').btn.btn-danger Create Certificates

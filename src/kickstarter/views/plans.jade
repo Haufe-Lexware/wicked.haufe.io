@@ -1,0 +1,108 @@
+extends layout_plugin
+
+mixin planPanel(plan, index, groups)
+    - var planId = 'plans[' + index + ']';
+    .row
+        .col-md-2
+            | &nbsp;
+        .col-md-8
+            .panel-group
+                .panel.panel-primary
+                    .panel-heading
+                        table(width='100%')
+                            tr
+                                td
+                                    h4.panel-title
+                                        a(data-target='#collapse_#{plan.id}' data-toggle='collapse') #{plan.name} - #{plan.id} &raquo;
+                                td(style='text-align:right')
+                                    button(type='submit' onclick='setAction("deletePlan", #{index});').btn.btn-danger Delete Plan
+                    - var collapseIn = ''
+                    if (plan.id == "newplan")
+                        - collapseIn = ' in'
+                    div(id='collapse_#{plan.id}' class='collapse panel-collapse#{collapseIn}')
+                        .panel-body
+                            .form-group
+                                label Plan ID:
+                                input(type='string' name='#{planId}.id' value='#{plan.id}').form-control
+                            .form-group
+                                label Plan Name:
+                                input(type='string' name='#{planId}.name' value='#{plan.name}').form-control
+                            .form-group
+                                label Plan Description:
+                                input(type='string' name='#{planId}.desc' value='#{plan.desc}').form-control
+                                p.wicked-note May contain Markdown.
+                            .checkbox
+                                label
+                                    if plan.needsApproval
+                                        input(type='checkbox' name='#{planId}.needsApproval' checked='checked')
+                                    else
+                                        input(type='checkbox' name='#{planId}.needsApproval')
+                                    | <strong>Plan needs Approval</strong> (for non-admin users)
+                            .form-group
+                                label Required User Group:
+                                select(name='#{planId}.requiredGroup').form-control
+                                    if !plan.requiredGroup
+                                        option(selected) &lt;none&gt;
+                                    else
+                                        option &lt;none&gt;
+                                    for group in groups
+                                        if group.id == plan.requiredGroup
+                                            option(selected)= group.id
+                                        else
+                                            option= group.id
+                            hr
+                            h4.panel-title Plugin Configuration
+                            +rateLimitingPanel(planId + '.config.', plan.config.plugins)
+                            +otherPluginsPanel(planId + '.config.', plan.config.plugins, 'PORTAL_PLANS_' + plan.id)
+        .col-md-2
+            | &nbsp;
+                        
+block scripts
+    script(type='text/javascript').
+        function setAction(thisAction, index) {
+            $('#__action').val(thisAction);
+            if (index)
+                $('#__object').val(index);
+        }
+
+block content
+    .jumbotron
+        .container
+            h1 Plans configuration
+            
+            p Configure the subscription plans you want to use for your APIs.
+    
+    .container
+        p.
+            Specify all the subscriptions your APIs will want to use. In some cases you will have
+            to create multiple subscription plans and/or special subscription plans for specific APIs
+            in order to achieve the behaviour you want, and give them the same developer visible name,
+            e.g. <code>standard_api1</code> and <code>standard_api2</code>, where the only thing which
+            may differ is e.g. rate limiting. Then you use the first one for API 1, and the second one
+            for API 2. The developer using your portal will never notice.
+        p.
+            It is also possible to restrict the plans by <a href='/groups'>developer group</a>. This enables
+            you to create APIs which are visible, but to which it is not possible to subscribe without
+            having the appropriate groups.
+            
+        if (!(glob.mailer && glob.mailer.useMailer) && hasPlanWithApproval)
+            +dangerPanel('Plans with Approval, email not configured', 'You have one or more plans which require approval by an administrator, but you do not have a valid email configuration in place. This means wicked will not be able to send out emails to the administrator in order to approve or deny approval requests. Please either remove the need for approvals on your plans, or configure the <a href="/email">SMTP Server</a>; otherwise you will need to keep close track of what is coming in to your portal.')
+    hr
+    .container
+
+        form(role='form' method='post' action='/plans')
+            
+            input(type='hidden' id='__action', name='__action' value='none')
+            input(type='hidden' id='__object', name='__object' value='none')
+
+            each plan, i in plans
+                .row
+                    +planPanel(plan, i, groups)
+            
+            table(width='100%')
+                tr
+                    td(style='text-align:right')
+                        button(type='submit' onclick='setAction("addPlan");').btn.btn-success Add Plan &raquo;
+            br
+            
+            +renderButtons('/plans', '/groups', '/apis')

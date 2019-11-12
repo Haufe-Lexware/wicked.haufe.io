@@ -1,0 +1,22 @@
+{
+  "name": "wicked.release",
+  "version": "1.0.0",
+  "description": "Wicked release tooling",
+  "main": "verify-chart-versions.js",
+  "dependencies": {
+    "async": "2.6.0",
+    "js-yaml": "3.11.0",
+    "request": "^2.88.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "wicked",
+    "release",
+    "tooling"
+  ],
+  "author": "Martin Danielsson <martin.danielsson@haufe-lexware.com>",
+  "license": "Apache-2.0"
+}

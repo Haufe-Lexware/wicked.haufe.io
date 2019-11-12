@@ -1,0 +1,30 @@
+extends layout
+
+block scripts
+    -var isVuePage = true
+
+block content
+    .jumbotron
+        .container
+            h1 Groups configuration
+
+            p Specify the user groups you need and want in your API portal. These can be used to restrict access to things like APIs or Content.
+
+    .container
+
+
+        div(id="vueBase")
+            wicked-default-group(v-model="glob" v-bind:groups="groups")
+            br
+            wicked-groups(v-model="groups")
+            br
+            nav-buttons(this-page="groups")
+
+block afterScripts
+    script(type="text/javascript").
+        const injectedData = {
+            groups: !{JSON.stringify(groups)},
+            glob: !{JSON.stringify(glob)}
+        };
+
+    script(src='/js/groups.js')

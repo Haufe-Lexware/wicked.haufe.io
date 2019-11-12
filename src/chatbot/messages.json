@@ -1,0 +1,42 @@
+{
+    "userLoggedIn": {
+        "entity": "user",
+        "action": "login"
+    },
+    "userSignedUp": {
+        "entity": "user",
+        "action": "add"
+    },
+    "userValidatedEmail": {
+        "entity": "user",
+        "action": "validated"
+    },
+    "applicationAdded": {
+        "entity": "application",
+        "action": "add"
+    },
+    "applicationDeleted": {
+        "entity": "application",
+        "action": "delete"
+    },
+    "subscriptionAdded": {
+        "entity": "subscription",
+        "action": "add"
+    },
+    "subscriptionDeleted": {
+        "entity": "subscription",
+        "action": "delete"
+    },
+    "approvalRequired": {
+        "entity": "approval",
+        "action": "add"
+    },
+    "lostPasswordRequest": {
+        "entity": "verification_lostpassword",
+        "action": "add"
+    },
+    "verifyEmailRequest": {
+        "entity": "verification_email",
+        "action": "add"
+    }
+}

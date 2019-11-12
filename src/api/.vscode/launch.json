@@ -1,0 +1,45 @@
+{
+    // Verwendet IntelliSense zum Ermitteln möglicher Attribute.
+    // Zeigen Sie auf vorhandene Attribute, um die zugehörigen Beschreibungen anzuzeigen.
+    // Weitere Informationen finden Sie unter https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Postgres Backend",
+            "program": "${workspaceFolder}/bin/api",
+            "env": {
+                "PORTAL_CONFIG_BASE": "../wicked-sample-config",
+                "DEBUG": "*",
+                "NODE_ENV": "portal_local",
+                "PORTAL_STORAGE_TYPE": "postgres"
+            }
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "JSON Backend",
+            "program": "${workspaceFolder}/bin/api",
+            "env": {
+                "PORTAL_CONFIG_BASE": "../wicked-sample-config",
+                "DEBUG": "*",
+                "NODE_ENV": "portal_local",
+                "PORTAL_STORAGE_TYPE": "json"
+            }
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Migrate",
+            "program": "${workspaceFolder}/bin/migrate",
+            "args": "/Users/martind/Projects/wicked.github/tmp/migrate/migration_config_local.json",
+            "env": {
+                // "PORTAL_CONFIG_BASE": "../wicked-sample-config",
+                // "DEBUG": "*",
+                // "NODE_ENV": "localhost_json"
+            }
+        }
+    ]
+}

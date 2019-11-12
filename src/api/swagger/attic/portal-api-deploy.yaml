@@ -1,0 +1,206 @@
+swagger: '2.0'
+info:
+  version: 0.9.0
+  title: Deployment API
+  description: Deployment API for the Portal API.
+paths:
+  /deploy/export:
+    post:
+      description: Starts an export job for blue/green deployments; this action will put the entire portal into read-only mode until its end of life, or until the export job ID is deleted, or until a minute has passed (auto un-lock)
+      tags:
+        - deploy
+      parameters:
+        - name: Authorization
+          in: header
+          required: true
+          type: string
+          description: The deployment AES key of this installation; used for encryption and authorization
+      responses:
+        201:
+          description: Accepted
+          schema:
+            type: object
+            properties:
+              exportId:
+                type: string
+              _links:
+                type: object
+                properties:
+                  status:
+                    $ref: '#/definitions/hrefType'
+        409:
+          description: Conflict, data is already locked
+
+  /deploy/export/{exportId}:
+    delete:
+      description: Cancels an export job; will re-enable write access (remove locks) to the portal.
+      tags:
+        - deploy
+      parameters:
+        - name: Authorization
+          in: header
+          required: true
+          type: string
+          description: The deployment AES key of this installation; used for encryption and authorization (`PORTAL_CONFIG_KEY`)
+        - name: exportId
+          in: path
+          type: string
+          required: true
+      responses:
+        204:
+          description: Success, no content
+          schema:
+            $ref: '#/definitions/messageType'
+        400:
+          description: Bad request, no export in process
+          schema:
+            $ref: '#/definitions/messageType'
+        404:
+          description: Export ID not found
+          schema:
+            $ref: '#/definitions/messageType'
+
+  /deploy/export/{exportId}/status:
+    get:
+      description: Retrieves the status of an export process
+      tags:
+        - deploy
+      parameters:
+        - name: Authorization
+          in: header
+          required: true
+          type: string
+          description: The deployment AES key of this installation; used for encryption and authorization (`PORTAL_CONFIG_KEY`)
+        - name: exportId
+          in: path
+          type: string
+          required: true
+      responses:
+        200:
+          description: Ready
+          schema:
+            $ref: '#/definitions/statusType'
+        204:
+          description: No Content, not yet ready
+          schema:
+            $ref: '#/definitions/statusType'
+        404:
+          description: ID not found
+          schema:
+            $ref: '#/definitions/statusType'
+        422:
+          description: Export failed
+          schema:
+            $ref: '#/definitions/statusType'
+  
+  /deploy/export/{exportId}/data:
+    get:
+      description: Downloads a previously initiated export archive
+      tags:
+        - deploy
+      produces:
+        - application/octet-stream
+      parameters:
+        - name: Authorization
+          in: header
+          required: true
+          type: string
+          description: The deployment AES key of this installation; used for encryption and authorization (`PORTAL_CONFIG_KEY`)
+        - name: exportId
+          in: path
+          type: string
+          required: true
+      responses:
+        200:
+          description: Successful data download
+        404:
+          description: Not found (not finished)
+
+  /deploy/import:
+    post:
+      description: Imports an archive of dynamic configuration data (users, ...)
+      tags:
+        - deploy
+      consumes:
+        - application/octet-stream
+      parameters:
+        - name: Authorization
+          in: header
+          required: true
+          type: string
+          description: The deployment AES key of this installation; used for encryption and authorization (`PORTAL_CONFIG_KEY`)
+      responses:
+        201:
+          description: Accepted
+          schema:
+            type: object
+            properties:
+              importId:
+                type: string
+              _links:
+                type: object
+                properties:
+                  status:
+                    $ref: '#/definitions/hrefType'
+
+  /deploy/import/{importId}/status:
+    get:
+      description: Retrieves the status of an ongoing import process
+      tags:
+        - deploy
+      parameters:
+        - name: Authorization
+          in: header
+          required: true
+          type: string
+          description: The deployment AES key of this installation; used for encryption and authorization (`PORTAL_CONFIG_KEY`)
+        - name: importId
+          in: path
+          type: string
+          required: true
+      responses:
+        200:
+          description: Import finished
+          schema:
+            $ref: '#/definitions/statusType'
+        204:
+          description: No content, processing
+          schema:
+            $ref: '#/definitions/statusType'
+        404:
+          description: Import ID not found
+          schema:
+            $ref: '#/definitions/statusType'
+        422:
+          description: Import failed
+          schema:
+            $ref: '#/definitions/statusType'
+
+definitions:
+  hrefType:
+    type: object
+    properties:
+      href:
+        type: string
+  
+  messageType:
+    type: object
+    properties:
+      message:
+        type: string
+  
+  statusType:
+    description: Represents an import or export status
+    type: object
+    properties:
+      status:
+        type: integer
+        enum:
+          - 0
+          - 1
+          - 2
+          - 3
+          - 4
+        description: 0 - NO, 1 - PROCESSING, 2 - DONE, 3 - FAILED, 4 - CANCELLED
+      message:
+        type: string

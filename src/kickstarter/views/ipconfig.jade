@@ -1,0 +1,26 @@
+extends layout
+
+block scripts
+    -var isVuePage = true
+
+block content
+    .jumbotron
+        .container
+            h1 IP, DB and DNS
+            
+            p Specify IP, database paths and DNS configuration
+    
+    .container
+
+        div(id="vueBase")
+            wicked-ipconfig(v-model="glob")
+            br
+            nav-buttons(this-page="ipconfig")
+
+block afterScripts
+    script(type="text/javascript").
+        const injectedData = {
+            glob: !{JSON.stringify(glob)}
+        };
+
+    script(src='/js/ipconfig.js')

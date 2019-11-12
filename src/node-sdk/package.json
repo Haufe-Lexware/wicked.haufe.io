@@ -1,0 +1,41 @@
+{
+  "name": "wicked-sdk",
+  "version": "1.0.0-rc.11",
+  "description": "node.js SDK for wicked.haufe.io",
+  "keywords": [
+    "api",
+    "wicked",
+    "sdk",
+    "management"
+  ],
+  "main": "dist/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Haufe-Lexware/wicked.node-sdk.git"
+  },
+  "author": "Martin Danielsson <martin.danielsson@haufe-lexware.com> (https://github.com/Haufe-Lexware)",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/Haufe-Lexware/wicked.node-sdk/issues"
+  },
+  "homepage": "https://github.com/Haufe-Lexware/wicked.node-sdk#readme",
+  "dependencies": {
+    "@types/node": "^10.12.26",
+    "async": "2.6.1",
+    "containerized": "1.0.2",
+    "debug": "3.1.0",
+    "node-uuid": "1.4.7",
+    "request": "2.88.0",
+    "semver": "5.6.0"
+  },
+  "jshintConfig": {
+    "node": true,
+    "esversion": 6
+  },
+  "devDependencies": {
+    "typescript": "3.4.1"
+  }
+}

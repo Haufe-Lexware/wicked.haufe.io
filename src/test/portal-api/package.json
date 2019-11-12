@@ -1,0 +1,33 @@
+{
+  "name": "test-api",
+  "version": "1.0.0-rc.10",
+  "description": "Tests for portal-api",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Haufe-Lexware/wicked.test.git"
+  },
+  "author": "Martin Danielsson",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/Haufe-Lexware/wicked.test/issues"
+  },
+  "homepage": "https://github.com/Haufe-Lexware/wicked.test#readme",
+  "dependencies": {
+    "async": "2.6.2",
+    "chai": "3.5.0",
+    "mocha": "5.2.0",
+    "portal-env": "file:../../portal-env.tgz",
+    "request": "2.88.0"
+  },
+  "jshintConfig": {
+    "node": true,
+    "esversion": 6
+  }
+}

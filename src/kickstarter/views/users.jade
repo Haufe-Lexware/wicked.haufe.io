@@ -1,0 +1,72 @@
+extends layout
+
+mixin renderUser(userInfo, index)
+    - var userPrefix = 'glob.initialUsers[' + index + '].';
+    .col-md-6
+        .panel.panel-primary
+            .panel-heading
+                table(width='100%')
+                    tr
+                        td
+                            h4.panel-title #{userInfo.firstName} #{userInfo.lastName}
+                        td(style='text-align:right')
+                            if (userInfo.id != '1')
+                                button(type='submit' onclick='setAction("deleteUser", #{index});').btn.btn-danger Delete User
+                            else
+                                i Not deletable
+            .panel-body
+                +inputField2(userPrefix + 'id', glob, 'User ID:', 'string', '', 'readonly')
+                +inputField2(userPrefix + 'firstName', glob, 'First Name:')
+                +inputField2(userPrefix + 'lastName', glob, 'Last Name:')
+                +inputField2(userPrefix + 'email', glob, 'Email Address:')
+                +inputField(userPrefix + 'password', glob, 'Password:', 'password')
+                .panel.panel-default
+                    .panel-heading
+                        h4.panel-title Groups
+                    .panel-body
+                        each group, i in groups
+                            .checkbox
+                                label
+                                    if userInfo.groups.find(function(g) { return g == group.id; })
+                                        input(type='checkbox' name='#{userPrefix}groups.#{group.id}' checked='checked')
+                                    else
+                                        input(type='checkbox' name='#{userPrefix}groups.#{group.id}')
+                                    | #{group.id} - #{group.name}
+
+block scripts
+    script(type='text/javascript').
+        function setAction(thisAction, index) {
+            $('#__action').val(thisAction);
+            if (index)
+                $('#__object').val(index);
+        }
+
+block content
+    .jumbotron
+        .container
+            h1 Initial Users Configuration
+            
+            p Here you may configure a list of initial users and passwords. Usually you will only need the first one temporarily.
+    
+    .container
+        form(role='form' method='post' action='/users')
+
+            input(type='hidden' id='__action', name='__action' value='none')
+            input(type='hidden' id='__object', name='__object' value='none')
+        
+            if glob.initialUsers
+                each user, i in glob.initialUsers
+                    if (i % 2 == 0)
+                        .row
+                            +renderUser(user, i)
+                            if ((i+1) < glob.initialUsers.length)
+                                +renderUser(glob.initialUsers[i+1], i+1)
+            else
+                i There are no preconfigured users currently.
+                            
+            table(width='100%')
+                tr
+                    td(style='text-align:right')
+                        button(type='submit' onclick='setAction("addUser");').btn.btn-success Add User &raquo;
+            br
+            +renderButtons('/users', '/deploy', '/auth')

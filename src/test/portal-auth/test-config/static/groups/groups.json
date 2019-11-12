@@ -1,0 +1,30 @@
+{
+  "groups": [
+    {
+      "id": "admin",
+      "name": "Administrator",
+      "adminGroup": true
+    },
+    {
+      "id": "dev",
+      "name": "Developer",
+      "adminGroup": false
+    },
+    {
+      "id": "superdev",
+      "name": "Super Developer",
+      "adminGroup": false
+    },
+    {
+      "id": "approver",
+      "name": "Approver Group",
+      "adminGroup": false,
+      "approverGroup": true
+    }
+  ],
+  "_links": {
+    "self": {
+      "href": "/groups"
+    }
+  }
+}

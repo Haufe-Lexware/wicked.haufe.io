@@ -1,0 +1,40 @@
+extends layout
+
+block content
+    .jumbotron
+        .container
+            h1 Email configuration
+            
+            p Specify how wicked is supposed to send emails
+    
+    .container
+        h4 Introduction
+        
+        p For some actions, wicked sends out emails, e.g. the following things:
+        
+        ul
+            li User email verification requests
+            li User lost password requests (reset requests)
+            li New approvals of subscriptions pending
+            
+            
+        p.
+            In order to do this, the package <code>portal-mailer</code> needs to have
+            access to an SMTP server. This can be your own SMTP server, or you can use
+            a service like <a href="http://www.mailgun.com" target="_blank">MailGun</a>.
+    
+        form(role='form' method='post' action='/email')
+
+            +checkPanel('glob.mailer.useMailer', !!glob.mailer.useMailer, 'Send Emails')
+                +inputField('glob.mailer.senderEmail', glob, 'Sender email address:', 'string', 'This is the email address of the mail account which sends mail on behalf of the portal, e.g. "super-api-portal@mycompany.com".')
+                +inputField('glob.mailer.senderName', glob, 'Sender name:', 'string', 'The friendly name of the mailer account for the email address above, e.g. "Super API Portal"')
+                +inputField('glob.mailer.smtpHost', glob, 'SMTP Server Host:')
+                +inputField2('glob.mailer.smtpPort', glob, 'SMTP Port:', 'string', 'The SMTP Port; <code>25</code> (insecure) or <code>465</code> for <code>smtps</code>.')
+                +checkBox('glob.mailer.forceSecure', glob, 'Force SSL and a valid SMTP Server SSL Certificate; do not check if your SMTP uses a self signed certificate.')
+                +checkBox('glob.mailer.anonymous', glob, 'Access SMTP server anonymously')
+                +inputField('glob.mailer.username', glob, 'SMTP Server Username:')
+                +inputField('glob.mailer.password', glob, 'SMTP Server Password:', 'password')
+                +inputField('glob.mailer.adminEmail', glob, 'API Portal Admin email address:', 'string', 'The email address of the administrator of the portal; used for sending subscription approval requests etc.')
+                +inputField('glob.mailer.adminName', glob, 'API Portal Admin name', 'string', 'The friendly name of the administrator; e.g. "API Portal Admin Group"')
+            
+            +renderButtons('/email', '/content', '/chatbot')

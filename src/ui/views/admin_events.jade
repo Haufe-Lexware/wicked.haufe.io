@@ -1,0 +1,48 @@
+extends layout
+
+block content
+    .jumbotron.wicked-admin-title
+        .container.wicked-title-container
+            h1= title
+            
+            p Review pending webhook events.
+    .container.wicked-container
+    
+        br
+        if events.length == 0
+            h3 There are no pending webhook events
+        else
+            table(class='table table-striped')
+                thead
+                    tr
+                        th Action
+                        th Entity Type
+                        th Source User ID
+                        th Application
+                        th API
+                        th Time Stamp
+                tbody
+                    for event in events
+                        tr
+                            td= event.action
+                            td= event.entity
+                            td
+                                if event.data && event.data.userId
+                                    a(href='/users/#{event.data.userId}')= event.data.userId
+                                else
+                                    | --
+                            td
+                                if event.data && event.data.applicationId
+                                    a(href='/applications/#{event.data.applicationId}')= event.data.applicationId
+                                else
+                                    | --
+                            td
+                                if event.data && event.data.apiId
+                                    a(href='/apis/#{event.data.apiId}')= event.data.apiId
+                                else
+                                    | --
+                            td
+                                if event.utc
+                                    = new Date(event.utc * 1000).toLocaleString()
+                                else
+                                    | --

@@ -1,0 +1,33 @@
+extends layout
+
+block content
+
+  .jumbotron.wicked-error-title
+    .container.wicked-title-container
+      h1 Something Went Wrong
+
+      h2 Status Code: #{error.status}
+
+      p= message
+      
+      a(class='btn btn-lg btn-warning' onclick='window.history.back();') Go back &raquo
+  
+  .container.wicked-container
+
+    h4.
+      Something went wrong in the API Portal.
+
+    p.
+      We logged that, of course.
+    p.
+      If this is a reoccurring problem which isn't fixed in the course of the next couple of days, please contact the <a href='/content/contact'>API Portal Administrator</a> to make sure it is investigated. Likewise if this is preventing you from getting your work done. We're sorry, and thank you for understanding!
+
+    br
+    br
+    br
+
+    p.
+      Correlation ID: <code>#{correlationId}</code>
+
+    if error.stack
+      pre #{error.stack}

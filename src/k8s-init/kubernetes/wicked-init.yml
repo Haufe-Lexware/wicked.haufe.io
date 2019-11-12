@@ -1,0 +1,28 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: wicked-init
+spec:
+  activeDeadlineSeconds: 60
+  template:
+    metadata:
+      name: wicked-init
+    spec:
+      containers:
+      - name: wicked-init
+        image: haufelexware/wicked.k8s-init:latest
+        imagePullPolicy: Always
+        env:
+        - name: APP_ID
+          value: wicked-app-id
+        - name: API_ID
+          value: wicked-api-id
+        - name: PLAN_ID
+          value: wicked-plan-id
+        - name: NAMESPACE
+          value: default
+        - name: REDIRECT_URI
+          value: "https://uri.of.your.app.com/callback"
+        - name: SECRET_NAME
+          value: wicked-app-secret
+      restartPolicy: Never

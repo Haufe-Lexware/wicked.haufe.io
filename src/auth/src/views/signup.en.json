@@ -1,0 +1,18 @@
+{
+    "email_error": "Please enter a value for the email address.",
+    "email_invalid": "Email has to be a valid email address.",
+    "enter_password": "Please enter your password.",
+    "repeat_password": "Please repeat your password.",
+    "password_mismatch": "Passwords do not match",
+    "validation_error": "Validation errored! Check your input values.",
+    "signup": "Sign up",
+    "welcome_to": "Welcome to",
+    "redirect_message": "You will be redirected to the desired page right after successfully logging in.",
+    "username": "Email address (user name)",
+    "password": "Password",
+    "password_repeat": "Password (repeat)",
+    "login_existing": "Log in with an existing user",
+    "forgot_password": "Forgot password?",
+    "password_regex": "<injected>",
+    "password_rules": "<injected>"
+}

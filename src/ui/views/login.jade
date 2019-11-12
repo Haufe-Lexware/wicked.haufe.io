@@ -1,0 +1,42 @@
+extends auth_layout
+
+block scripts
+    if authUser
+        meta(http-equiv="refresh" content="0; url=/")
+
+block content
+    h2 Log in
+    
+    p Welcome to the #{glob.title}.
+
+    if displayRedirectMessage
+        h4 You will be redirected to the desired page right after successfully logging in.
+
+    if authConfig.authMethods.length > 1
+        p Please select the desired method of authentication.
+
+    -var hasProtected = false
+    each authMethod in authConfig.authMethods
+        //- Protected auth methods will only be displayed if they are passed in as a cookie
+        //- to the login page.
+        if !authMethod.protected || (cookieAuthMethod === authMethod.name)
+            br
+
+            //- p= authMethod.name
+            - var buttonClass = 'btn btn-block btn-social btn-lg btn-default'
+            - var faClass = 'fa fa-key fa-lg'
+            - if (authMethod.type === 'google') { buttonClass = 'btn btn-block btn-social btn-lg btn-google'; faClass = 'fa fa-google fa-lg' }
+            - if (authMethod.type === 'github') { buttonClass = 'btn btn-block btn-social btn-lg btn-github'; faClass = 'fa fa-github fa-lg' }
+            - if (authMethod.type === 'adfs') { buttonClass = 'btn btn-block btn-social btn-lg btn-github'; faClass = 'fa fa-cloud fa-lg' }
+            - if (authMethod.type === 'twitter') { buttonClass = 'btn btn-block btn-social btn-lg btn-twitter'; faClass = 'fa fa-twitter fa-lg' }
+            - if (authMethod.type === 'oauth2') { buttonClass = 'btn btn-block btn-social btn-lg btn-openid'; faClass = 'fa fa-openid fa-lg' }
+            - if (authMethod.type === 'facebook') { buttonClass = 'btn btn-block btn-social btn-lg btn-facebook'; faClass = 'fa fa-facebook fa-lg' }
+            a(href=authMethod.authUrl class=buttonClass)
+                i(class=faClass)
+                span &nbsp; #{authMethod.friendlyShort}
+        else
+            -hasProtected = true
+    
+    if hasProtected
+        br
+        p For further methods of authentication, e.g. enterprise SSO, please contact the developer portal administrator.

@@ -1,0 +1,164 @@
+#!/usr/bin/env node
+
+'use strict';
+
+/**
+ * Module dependencies.
+ */
+
+const app = require('../app');
+const mailer = require('../mailer');
+const { debug, info, warn, error } = require('portal-env').Logger('portal-mailer:main');
+const http = require('http');
+const nodeMailer = require('nodemailer');
+const async = require('async');
+const wicked = require('wicked-sdk');
+const utils = require('../utils');
+
+/**
+ * Get port from environment and store in Express.
+ */
+
+const port = normalizePort(process.env.PORT || '3003');
+app.set('port', port);
+
+// Create HTTP server.
+const server = http.createServer(app);
+
+// Listen on provided port, on all network interfaces.
+server.listen(port);
+server.on('error', onError);
+server.on('listening', onListening);
+
+const wickedOptions = {
+    userAgentName: 'wicked.portal-mailer',
+    userAgentVersion: utils.getVersion()
+};
+
+async.series([
+    callback => wicked.initialize(wickedOptions, callback),
+    callback => wicked.initMachineUser('mailer', callback)
+], function (err) {
+    if (err) {
+        debug('Failed waiting for API.');
+        throw err;
+    }
+
+    // Remember my URL.
+    app.set('my_url', wicked.getInternalMailerUrl());
+
+    mailer.init(app, function (err) {
+        if (err) {
+            error("Could not intialize the Portal Mailer.");
+            throw err;
+        }
+
+        const mailerOptions = app.mailerGlobals.mailer;
+        debug('mailerOptions:');
+        debug(mailerOptions);
+
+        const smtpHost = mailerOptions.smtpHost;
+
+        const transportOptions = {
+            host: mailerOptions.smtpHost
+        };
+
+        if (!mailerOptions.anonymous) {
+            transportOptions.auth = {
+                user: mailerOptions.username,
+                pass: mailerOptions.password
+            };
+        }
+
+        if (mailerOptions.smtpPort)
+            transportOptions.port = mailerOptions.smtpPort;
+        else
+            transportOptions.port = 465; // smtps
+
+        if (mailerOptions.forceSecure) {
+            transportOptions.secure = true;
+        } else {
+            transportOptions.secure = false;
+            transportOptions.tls = {
+                rejectUnauthorized: false
+            };
+        }
+
+        debug('transportOptions:');
+        debug(transportOptions);
+
+        // Configure nodemailer
+        mailer.smtpTransporter = nodeMailer.createTransport(transportOptions);
+
+        // Graceful shutdown
+        process.on('SIGINT', function () {
+            info("Attempting unregistering from portal API.");
+            mailer.deinit(app, function (err) {
+                process.exit();
+            });
+        });
+
+        info('====== INITIALIZATION FINISHED ======');
+        app.initialized = true;
+    });
+});
+
+/**
+ * Normalize a port into a number, string, or false.
+ */
+
+function normalizePort(val) {
+    const port = parseInt(val, 10);
+
+    if (isNaN(port)) {
+        // named pipe
+        return val;
+    }
+
+    if (port >= 0) {
+        // port number
+        return port;
+    }
+
+    return false;
+}
+
+/**
+ * Event listener for HTTP server "error" event.
+ */
+
+function onError(err) {
+    if (err.syscall !== 'listen') {
+        throw err;
+    }
+
+    const bind = typeof port === 'string' ?
+        'Pipe ' + port :
+        'Port ' + port;
+
+    // handle specific listen errors with friendly messages
+    switch (err.code) {
+        case 'EACCES':
+            error(bind + ' requires elevated privileges');
+            process.exit(1);
+            break;
+        case 'EADDRINUSE':
+            error(bind + ' is already in use');
+            process.exit(1);
+            break;
+        default:
+            throw err;
+    }
+}
+
+/**
+ * Event listener for HTTP server "listening" event.
+ */
+
+function onListening() {
+    const addr = server.address();
+    const bind = typeof addr === 'string' ?
+        'pipe ' + addr :
+        'port ' + addr.port;
+    info('Listening on ' + bind);
+}

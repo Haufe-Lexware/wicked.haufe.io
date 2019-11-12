@@ -1,0 +1,78 @@
+extends layout
+
+mixin renderSign(state)
+  if state == 1
+    span(style='color:red;').glyphicon.glyphicon-exclamation-sign
+  if state == 2
+    span(style='color:#cccc00;').glyphicon.glyphicon-question-sign
+  if state == 3
+    span(style='color:#00cc00;').glyphicon.glyphicon-ok-sign
+
+mixin section(target, kick, headline, content, altTarget)
+  - var kickTarget = altTarget ? altTarget : target; 
+  .col-md-4
+    table(width='100%')
+      tr
+        td
+          h4
+            a(href='#{target}')= headline
+        td(style='text-align:right')
+          if kick
+            if kick[kickTarget]
+              +renderSign(kick[kickTarget])
+    p= content
+    a(href='#{target}').btn.btn-default Configure &raquo;
+
+block content
+  .jumbotron
+    .container
+      h1 The wicked Kickstarter
+      p This web application will help you in creating or changing a configuration for your wicked API Portal.
+
+  .container
+
+    h3 What does this do?
+    
+    p.
+      In order to get your API portal up and running, you need to configure a couple of things.
+      Pages with a red exclamation mark (<span style='color:red' class='glyphicon glyphicon-exclamation-sign'></span>) 
+      definitely need attention. Those with yellow ones should also be looked into, and the others
+      can be changed when there is need for it.
+
+    .row
+      +section('envs', kickstarter, 'Environments Configuration', 'The API Portal configuration is designed to be parametrized for different environments, such as Dev, Test and Prod.', 'env')
+      +section('ipconfig', kickstarter, 'IP and DNS Configuration', 'This is needed in order to enable the API portal to correctly route the calls from Swagger UI to the API Gateway and back.')
+      +section('database', kickstarter, 'Database Configuration', 'Configure the databases which wicked and Kong are using (Postgres and Redis).')
+  hr
+  .container
+    .row
+      +section('users', kickstarter, 'Initial Users', 'Which users shall be created initially? You will need at least an Admin Account which can be used to transfer admin rights to your personal user.')
+      +section('auth', kickstarter, 'Authentication', 'Which authentication methods should the portal support? You can configure: Local, ADFS, Github, Google and Oauth2 authentication.')
+      +section('groups', kickstarter, 'User Groups', 'Which user groups are needed? wicked supports user groups which can be used to configure access to APIs and Content. They can be linked to ADFS groups as well.')
+  hr
+  .container
+    .row
+      +section('plans', kickstarter, 'Plans', 'Which API Plans are needed? Specify plans to be applied to API subscriptions; this can be rate limiting, or whether a subscription needs to be approved of or not.')
+      +section('pools', kickstarter, 'Registration Pools', 'Configure API registration pools; wicked can collect registration information on OAuth2 enabled APIs.')
+      +section('apis', kickstarter, 'API Configuration', 'Which APIs will be published with which security mechanism? wicked supports both securing via API Keys as well as using OAuth2 Client Credentials. You will need to specify which method you want. Here you also specify additional API level plugins. And Swagger files.')
+  hr
+  .container
+    .row
+      +section('authservers', kickstarter, 'Authorization Servers', 'In case you are using OAuth2 flows other than the Client Credentials Flow, you will need an Authorization Server. Register it here.')
+      +section('recaptcha', kickstarter, 'reCAPTCHA', 'Do you want to configure reCAPTCHA? The wicked API portal can make use of reCAPTCHA for user registration and for retrieving lost passwords.')
+      +section('content', kickstarter, 'Markdown Content', 'Do you need custom content? You may add additional Markdown files to the portal which can also be contained within the static configuration. This even includes restricting to groups.')
+  hr
+  .container
+    .row
+      +section('email', kickstarter, 'Email', 'How should wicked send emails? Some things in wicked require emails to be sent. Here you can configure which SMTP server should be used.')
+      +section('chatbot', kickstarter, 'Chatbot', 'wicked may integrate to IRC style chat systems which work like Slack or Microsoft Teams; it has been tested with Slack, Rocket.Chat and Microsoft Teams.')
+      +section('templates', kickstarter, 'Templates', 'Specify templates for the mailer and the chatbot.')
+    .row
+  hr
+  .container
+    .row
+      +section('design', kickstarter, 'Design', 'Which styles and design do you want to use? Portal main title and footer, a couple of colors and design elements are prepared for customization without actually changing the code. Configure it here.')
+      +section('kongAdapter', kickstarter, 'Kong Adapter', 'Do you want to configure Kong Adapter? The wicked can make use of Kong Adapter configuration to ignore syncing of specified plugins')
+      +section('deploy', kickstarter, 'Deployment Configuration', 'Defining how you want to deploy your configuration, creating docker compose files etc. SSL options.')
+    .row
+      .col-md-12 &nbsp;

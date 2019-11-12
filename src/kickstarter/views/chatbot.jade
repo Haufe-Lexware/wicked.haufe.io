@@ -1,0 +1,69 @@
+extends layout
+
+block scripts
+    script(type='text/javascript').
+        function setAction(thisAction, index) {
+            $('#__action').val(thisAction);
+            if (index)
+                $('#__object').val(index);
+        }
+
+block content
+    .jumbotron
+        .container
+            h1 Chatbot configuration
+            
+            p wicked may integrate with both Slack, Rocket.Chat and MS Teams. Specify hook URLs and other configuration options.
+    
+    .container
+        form(role='form' method='post' action='/chatbot')
+
+            input(type='hidden' id='__action', name='__action' value='none')
+            input(type='hidden' id='__object', name='__object' value='none')
+
+            +checkPanel('glob.chatbot.useChatbot', glob, 'Use wicked\'s Chatbot')
+                +inputField('glob.chatbot.username', glob, 'Chatbot user name', 'This is how you want the Chatbot\'s messages to appear in your chat application; the user does not have to exist, it is just a name')
+                +inputField('glob.chatbot.icon_url', glob, 'Icon URL', 'An URL of an icon (about 32-40 pixel square) publicly available which the chatbot will use.')
+
+                .panel.panel-default
+                    .panel-heading
+                        table(width='100%')
+                            tr
+                                td
+                                    h4.panel-title Targets
+                                td(style='text-align:right')
+                                    button(type='submit' onclick='setAction("addTarget");').btn.btn-sm.btn-success Add target
+                    .panel-body
+                        each targets, i in glob.chatbot.targets
+                            - var thisTarget = 'glob.chatbot.targets['+i+']'
+                            .panel.panel-default
+                                .panel-body
+
+                                    label Messenger type
+                                        select(name=thisTarget + '.type').form-control
+                                            each item in glob.chatbot.types
+                                                option(value=item selected=glob.chatbot.targets[i].type === item) #{item}
+                                    +inputField(thisTarget + '.hookUrl', glob, 'Hook URL', 'See documentation of you messaging tool on how to get one of these.')
+                                    p
+                                        button(type='submit' onclick='setAction("deleteTarget", #{i});').btn.btn-sm.btn-danger Delete this target
+
+                                    br
+                                    // The possible events
+                                    .panel.panel-default
+                                        .panel-heading
+                                            h4.panel-title Configure notifications
+                                        .panel-body
+                                            h4.panel-title Send out a message
+                                            +checkBox(thisTarget + '.events.userSignedUp', glob, 'When a new user signs up to your portal')
+                                            +checkBox(thisTarget + '.events.userValidatedEmail', glob, 'When a user successfully validated his email address')
+                                            +checkBox(thisTarget + '.events.applicationAdded', glob, 'When an application has been created')
+                                            +checkBox(thisTarget + '.events.applicationDeleted', glob, 'When an application has been deleted')
+                                            +checkBox(thisTarget + '.events.subscriptionAdded', glob, 'When a new subscription to an API has been created')
+                                            +checkBox(thisTarget + '.events.subscriptionDeleted', glob, 'When a subscription has been cancelled')
+                                            +checkBox(thisTarget + '.events.approvalRequired', glob, 'When new subscription approval requests have been filed')
+                                            +checkBox(thisTarget + '.events.lostPasswordRequest', glob, 'When a user requests to reset his or her password')
+                                            +checkBox(thisTarget + '.events.verifyEmailRequest', glob, 'When a user wants to validate his or her email address')
+
+                                    br
+
+            +renderButtons('/chatbot', '/email', '/templates')

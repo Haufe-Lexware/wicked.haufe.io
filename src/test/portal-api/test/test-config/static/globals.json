@@ -1,0 +1,88 @@
+{
+    "title": "$PORTAL_TITLE",
+    "footer": "Recursive ${PORTAL_REC1}",
+    "storage": {
+        "type": "${WICKED_STORAGE}",
+        "pgHost": "${PORTAL_STORAGE_PGHOST}",
+        "pgPort": "${PORTAL_STORAGE_PGPORT}",
+        "pgUser": "kong",
+        "pgPassword": "kong"
+    },
+    "network": {
+        "schema": "http",
+        "portalHost": "localhost:3000",
+        "apiHost": "localhost:8000",
+        "apiUrl": "$PORTAL_API_URL",
+        "portalUrl": "$PORTAL_PORTAL_URL",
+        "kongAdapterUrl": "$PORTAL_KONG_ADAPTER_URL",
+        "kongAdminUrl": "$PORTAL_KONG_ADMIN_URL",
+        "mailerUrl": "$PORTAL_MAILER_URL",
+        "chatbotUrl": "$PORTAL_CHATBOT_URL"
+    },
+    "validatedUserGroup": "dev",
+    "api": {
+        "headerName": "X-ApiKey",
+        "portal": {
+            "enableApi": true,
+            "requiredGroup": "dev"
+        }        
+    },
+    "auth": {
+        "local": {
+            "useLocal": true,
+            "trustLocal": false
+        },
+        "adfs": {
+            "useAdfs": false
+        },
+        "github": {
+            "useGithub": false
+        },
+        "google": {
+            "useGoogle": false
+        }
+    },
+    "initialUsers": [
+        {
+            "id": "1",
+            "firstName": "Admin",
+            "lastName": "User",
+            "email": "foo@bar.com",
+            "validated": true,
+            "groups": [
+                "admin"
+            ]
+        },
+        {
+            "id": "1234567890",
+            "firstName": "Initial",
+            "lastName": "User",
+            "email": "initial@user.com",
+            "password": "password",
+            "validated": true,
+            "groups": [
+                "admin"
+            ]
+        },
+        {
+            "id": "9876543210",
+            "firstName": "Unvalidated",
+            "lastName": "User",
+            "email": "unvalidated@user.com",
+            "password": "password",
+            "validated": false,
+            "groups": []
+        },
+        {
+            "id": "11",
+            "firstName": "Fred",
+            "lastName": "Flintstone",
+            "email": "fred@flintstone.com",
+            "password": "pebbles",
+            "validated": true,
+            "groups": [
+                "dev"
+            ]
+        }
+    ]
+}

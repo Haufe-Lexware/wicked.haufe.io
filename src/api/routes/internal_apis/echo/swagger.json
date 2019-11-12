@@ -1,0 +1,148 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "1.0.0",
+    "title": "wicked Echo Server"
+  },
+  "schemes": [
+    "http"
+  ],
+  "host": "localhost:3009",
+  "basePath": "/portal-health/v1",
+  "securityDefinitions": {
+    "accessCode": {
+      "type": "oauth2",
+      "flow": "accessCode",
+      "tokenUrl": "https://api.portal.com/auth/local/echo/oauth2/token",
+      "authorizationUrl": "https://api.portal.com/auth/local/echo/oauth2/authorize",
+      "scopes": {
+        "get": "GET",
+        "post": "POST",
+        "patch": "PATCH",
+        "put": "PUT",
+        "delete": "DELETE"
+      }
+    },
+    "implicit": {
+      "flow": "implicit",
+      "type": "oauth2",
+      "tokenUrl": "https://api.portal.com/auth/local/echo/oauth2/token",
+      "authorizationUrl": "https://api.portal.com/auth/local/echo/oauth2/authorize",
+      "scopes": {
+        "get": "GET",
+        "post": "POST",
+        "patch": "PATCH",
+        "put": "PUT",
+        "delete": "DELETE"
+      }
+    },
+    "password": {
+      "type": "oauth2",
+      "flow": "password",
+      "tokenUrl": "https://api.portal.com/auth/local/echo/oauth2/token",
+      "scopes": {
+        "get": "GET",
+        "post": "POST",
+        "patch": "PATCH",
+        "put": "PUT",
+        "delete": "DELETE"
+      }
+    },
+    "clientCredentials": {
+      "type": "oauth2",
+      "flow": "application",
+      "tokenUrl": "https://api.portal.com/auth/local/echo/oauth2/token",
+      "scopes": {
+        "get": "GET",
+        "post": "POST",
+        "patch": "PATCH",
+        "put": "PUT",
+        "delete": "DELETE"
+      }
+    }
+  },
+  "paths": {
+    "/*": {
+      "get": {
+        "description": "Returns the path and headers of the requet",
+        "responses": {
+          "200": {
+            "description": "Returns a JSON representation of the requets",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "description": "Returns the path and headers of the request",
+        "responses": {
+          "200": {
+            "description": "Returns a JSON representation of the requets",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "description": "Returns the path and headers of the request",
+        "responses": {
+          "200": {
+            "description": "Returns a JSON representation of the requets",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "description": "Returns the path and headers of the requet",
+        "responses": {
+          "200": {
+            "description": "Returns a JSON representation of the requets",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "description": "Returns the path and headers of the requet",
+        "responses": {
+          "200": {
+            "description": "Returns a JSON representation of the requets",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

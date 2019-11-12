@@ -1,0 +1,5 @@
+.DS_Store
+node_modules
+git_last_commit
+git_branch
+package-lock.json

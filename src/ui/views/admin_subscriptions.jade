@@ -1,0 +1,82 @@
+extends layout
+block bodyScripts
+  script(type='text/javascript').
+    $(document).ready(function(){
+       $('#subscriptionsGrid').jsGrid({
+         width: "100%", pageSize: 10, sorting: true, paging: true, filtering: true, pageLoading:true, autoload: true,
+         controller: {
+          loadData: function (filter) {
+            var d = $.Deferred();
+        		$.ajax({
+                url: "/admin/subscriptions",
+                data: filter,
+                dataType: "json"
+              }).done(function(result) {
+                d.resolve({
+                    data: result.subscriptions.items,
+                    itemsCount: result.subscriptions.count
+                });
+              });
+              return d.promise();
+          }
+        },
+        fields: [
+          { name: "status", type: "text", title: "Status", width: 50, editing: false, filtering: false,
+             itemTemplate: function(value, item) {
+                let status = (item.approved) ? `Approved` : `Pending`;
+                status = (item.trusted) ? `${status}, (Trusted)` : status;
+                return $("<div>").text(status);
+              }
+          },
+          { name: "application_name", type: "text", title: "Application", width: 110, editing: false,
+              itemTemplate: function(value, item) {
+                return $("<a>").attr("href", item._links.application.href.toLowerCase()).text(value);
+              }
+          },    
+          { name: "owner", type: "text", title: "Owners", width: 160, 
+             itemTemplate: function(value, item) {
+                 let resp = [];
+                 item.owner_data.forEach(function(owner){
+                   resp.push("<a href=\'/users/"+owner.users_id+"\'>"+owner.email+"</a>");
+                 });
+                 return resp.join(', ');
+            }
+          },
+          { name: "user", type: "text", title: "Users", width: 160, 
+             itemTemplate: function(value, item) {
+                 let resp = [];
+                 item.owner_data.forEach(function(owner){
+                   resp.push(owner.name);
+                 });
+                 return resp.join(', ');
+            }
+          },
+         { name: "api", type: "text", title: "API", width: 50, editing: false, 
+             itemTemplate: function(value, item) {
+                 return $("<a>").attr("href", item._links.apis.href+'/'+item.api).text(value);
+              }
+          },
+          { name: "plan", type: "text", title: "Plan",  width: 50, editing: false},
+          { type: "control", width: "15", editButton: false, deleteButton: false,
+               _createFilterSwitchButton: function() {
+                return this._createOnOffSwitchButton("filtering", this.searchModeButtonClass, false);
+               }
+          }
+        ]
+       });
+       $("#subscriptionsGrid").jsGrid("option", "filtering", false);
+    });
+block content
+    .jumbotron.wicked-admin-title
+        .container.wicked-title-container
+            h1 All Subscriptions
+
+            p Index of all subscriptions in the API Portal.
+
+    .container.wicked-container
+        br
+        div#subscriptionsGrid
+        br
+        p
+          a(href='/admin/subscriptions_csv').btn.btn-success Download as CSV
+

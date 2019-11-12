@@ -1,0 +1,30 @@
+{
+  "version": "1.0.0-rc.10",
+  "private": true,
+  "dependencies": {
+    "async": "2.6.2",
+    "body-parser": "1.18.3",
+    "express": "4.16.3",
+    "morgan": "1.9.1",
+    "request": "2.88.0"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "./build-typescript.sh",
+    "build-and-start": "./build-typescript.sh && node ./dist/bin/kong-adapter.js",
+    "start": "node ./dist/bin/kong-adapter.js",
+    "postinstall": "npm link wicked-sdk && npm link portal-env"
+  },
+  "jshintConfig": {
+    "node": true,
+    "esversion": 6
+  },
+  "name": "portal-kong-adapter",
+  "config": {
+    "kongversion": "0.14.1"
+  },
+  "devDependencies": {
+    "@types/node": "^10.11.3",
+    "typescript": "3.4.1"
+  }
+}

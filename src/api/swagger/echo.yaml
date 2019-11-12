@@ -1,0 +1,115 @@
+swagger: '2.0'
+info:
+  version: 1.0.0
+  title: wicked Echo Server
+schemes:
+  - http
+host: 'localhost:3009'
+basePath: /portal-health/v1
+securityDefinitions:
+  # For personalized access to data
+  accessCode:
+    type: oauth2
+    flow: accessCode
+    # This should be updated to the Token URL of your OAuth provider.
+    tokenUrl: https://api.portal.com/auth/local/echo/oauth2/token
+    # This should be updated to the Authorization URL of your OAuth provider.
+    authorizationUrl: https://api.portal.com/auth/local/echo/oauth2/authorize
+    scopes:
+      get: GET
+      post: POST
+      patch: PATCH
+      put: PUT
+      delete: DELETE
+  
+  implicit:
+    flow: implicit
+    type: oauth2
+    # This should be updated to the Token URL of your OAuth provider.
+    tokenUrl: https://api.portal.com/auth/local/echo/oauth2/token
+    # This should be updated to the Authorization URL of your OAuth provider.
+    authorizationUrl: https://api.portal.com/auth/local/echo/oauth2/authorize
+    scopes:
+      get: GET
+      post: POST
+      patch: PATCH
+      put: PUT
+      delete: DELETE
+
+  password:
+    type: oauth2
+    flow: password
+    # This should be updated to the Token URL of your OAuth provider.
+    tokenUrl: https://api.portal.com/auth/local/echo/oauth2/token
+    scopes:
+      get: GET
+      post: POST
+      patch: PATCH
+      put: PUT
+      delete: DELETE
+
+  # For anonymous access to data
+  clientCredentials:
+    type: oauth2
+    flow: application
+    # This should be updated to the Token URL of your OAuth provider.
+    tokenUrl: https://api.portal.com/auth/local/echo/oauth2/token
+    scopes:
+      get: GET
+      post: POST
+      patch: PATCH
+      put: PUT
+      delete: DELETE
+
+paths:
+  /*:
+    get:
+      description: Returns the path and headers of the requet
+      responses:
+        '200':
+          description: Returns a JSON representation of the requets
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+    put:
+      description: Returns the path and headers of the request
+      responses:
+        '200':
+          description: Returns a JSON representation of the requets
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+    post:
+      description: Returns the path and headers of the request
+      responses:
+        '200':
+          description: Returns a JSON representation of the requets
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+    patch:
+      description: Returns the path and headers of the requet
+      responses:
+        '200':
+          description: Returns a JSON representation of the requets
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+    delete:
+      description: Returns the path and headers of the requet
+      responses:
+        '200':
+          description: Returns a JSON representation of the requets
+          schema:
+            type: object
+            properties:
+              message:
+                type: string

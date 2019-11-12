@@ -1,0 +1,15 @@
+.dockerignore
+.gitignore
+Dockerfile-publish
+*.sh
+.DS_Store
+*.log
+*.tgz
+src
+tsconfig.json
+docs
+docs-git
+Dockerfile*
+publish.sh
+Jenkinsfile
+.eslint*

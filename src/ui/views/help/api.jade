@@ -1,0 +1,54 @@
+extends help_layout
+
+block help_content
+
+  +helpItem('api_settings', 'API Settings')
+
+  p.
+    In the API Settings section for a specific API, the end point of the API on the API Gateway is displayed. This is the endpoint you will use in your <a href='application'>application</a> (see also <a href='/applications'>your applications</a>) to speak to the API with.
+
+  p.
+    In case the API is secured via the OAuth 2.0 Implicit Grant Flow, this section will also include the Authorization Server you will need to redirect to in order to retrieve an access token for the API into your Client Side application (e.g. JavaScript SPA). 
+
+  p.
+    See also the <a href='apis'>API Index Help Page</a> for a discussion on the different ways of accessing a secured API, using API Keys or the OAuth 2.0 Client Credentials Flow.
+
+  +helpItem('description', 'API Description')
+
+  p.
+    Click on the "Description" headline to display a description of the API. This section also contains a link to the "Swagger" documentation of the end points of the specific API. If you use this button (and not the "Try it" buttons described below), you will retrieve a read only documentation of the API, in Swagger UI. Swagger UI is also able to let you actually interact with the API, but that requires a subscription.
+  
+  +helpItem('applications', 'Applications')
+
+  p.
+    The "Applications" section contains all your registered applications (see also <a href='application'>application help page</a>), and their relation to the current API. In case you have existing subscriptions, you will be able to display the credentials for this API. In case you don't have a subscription for the API for a specific application, you may add a subscription by clicking the <a class='btn btn-sm btn-success'>Subscribe</a> button.
+  
+  p.
+    In case an application having a subscription to the API, this is also the place where you can <a class='btn btn-sm btn-danger'>Unsubscribe</a> from the API, in case you have the appropriates <a href='application-ownership'>rights to do so</a>. In the table of applications, the following information will be displayed:
+
+  table.table.table-striped
+    thead
+      tr
+        th Information
+        th Description
+    tbody
+      tr
+        td
+          strong Application
+        td The list of your applications will be displayed here.
+      tr
+        td
+          strong Plan
+        td In case the application has a subscription to the current API, the selected subscription Plan will be displayed here. Hover with the mouse above it, or click it, to display information on the selected plan.
+      tr
+        td 
+          strong API Key or Client ID and Secret
+        td In case you have an active subscription to the API, the API credentials are displayed here. You will need to click the reveal button (<span class='glyphicon glyphicon-eye-open'></span>) to actually show the keys.
+      tr
+        td
+          strong Action
+        td This is the action you can perform with the application; either "Subscribe", "Unsubscribe", or none of both, e.g. if you are only have a <a href='application-ownership'>Reader role</a> on the application.
+      tr
+        td
+          strong Try it!
+        td Click the "Try it!" button to view the Swagger documentation of the API in interactive mode. This button is only availabel in case the application has a current subscription to the API.

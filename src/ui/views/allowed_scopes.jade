@@ -1,0 +1,84 @@
+extends layout
+
+block scripts
+  script(type='text/javascript').
+    function clickHandler(what) {
+      switch (what) {
+        case 'all':
+        case 'none':
+          $('#scopes').hide();
+          break;
+        default:
+          $('#scopes').show();
+          break;
+      }
+    }
+
+block content
+  .jumbotron.wicked-application-title
+    .container.wicked-title-container
+      h1 Allowed Scope
+      
+      p.
+        This page lets an Administrator select which scope of an OAuth2 secured API
+        an application is <a href="/help/allowed_scopes" target="_blank">allowed to request</a>.
+        If this is specified, this applies to all OAuth2 Flows, but is especially useful for the
+        Client Credentials Flow.
+
+  .container.wicked-container
+    h2
+      a(href='/applications/#{application.id}')= application.name
+
+    br
+    if subscription.trusted
+      p.
+        The application's subscription is a <a href="/help/trusted">trusted subscription</a>. This means that any scope request done by this
+        application will be granted without any further action from neither the system nor the resource owner.
+
+      a(href='/applications/#{application.id}').btn.btn-success Back to application
+    else
+      if readOnly
+        h4 Only Portal API Administrators can manage the scope permissions of a subscription.
+
+        p You may review the mode with which the scope permissions of this application are calculated:
+      else
+        p Specify the mode with which the scope permissions are calculated:
+      
+      form(role='form' action='/applications/#{application.id}/subscriptions/#{api.id}' method='post')
+        .radio
+          label
+            input(type='radio' name='scope_mode' value='all' checked=(subscription.allowedScopesMode=='all') onchange='javascript:clickHandler("all")' disabled=readOnly)
+            | <b>All</b>: The subscription is allowed to request any scope (all aspects are allowed).
+        .radio
+          label
+            input(type='radio' name='scope_mode' value='none' checked=(subscription.allowedScopesMode=='none') onchange='javascript:clickHandler("none")' disabled=readOnly)
+            | <b>None</b>: The subscription is not allowed to request any scope at all, only the empty scope is allowed.
+        .radio
+          label
+            input(type='radio' name='scope_mode' value='select' checked=(subscription.allowedScopesMode=='select') onchange='javascript:clickHandler("select")' disabled=readOnly)
+            | <b>Select</b>: The subscription is allowed to request the specified scope. Please specify below.
+
+        - var initialStyle = subscription.allowedScopesMode == 'select' ? null : 'display:none'
+
+        div
+          div(id='scopes' style=initialStyle).panel.panel-default
+            .panel-heading
+              +panelTitle('Allowed Scopes', null, '#allowed_scopes')
+            #allowed_scopes.collapse.panel-collapse.in
+              .panel-body
+                if api.settings && api.settings.scopes
+                  for scope, key in api.settings.scopes
+                    - var isChecked = subscription.allowedScopes.find(s => s == key) ? true : false
+                    .checkbox
+                      label
+                        input(type='checkbox' name='scope' value=key checked=isChecked disabled=readOnly)
+                        | <b>#{scope.description}</b> (#{key})
+                else
+                  i The selected API does not have any defined scopes.
+
+        if readOnly
+          p
+            a(href='/applications/#{application.id}').btn.btn-default Back to application
+        else
+          p
+            button.btn.btn-success Save

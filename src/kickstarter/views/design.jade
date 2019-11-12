@@ -1,0 +1,23 @@
+extends layout
+
+block content
+    .jumbotron
+        .container
+            h1 Design configuration
+            
+            p Design? Well. Ehm. Yes. There's this CSS file you can change some colors in.
+    
+    .container
+        form(role='form' method='post' action='/design')
+
+            .panel.panel-primary
+                .panel-heading
+                    h4.panel-title Title and Footer
+                .panel-body
+                    +inputField('glob.title', glob, 'Portal Title:')
+                    +inputField('glob.company', glob, 'Your Company Name:')
+                    +inputField('glob.footer', glob, 'Portal Page Footer:')
+
+            +renderButtons('/design', '/templates', '/kongadapter')
+            br
+            textarea(name='wicked_css' style='height: 600px').form-control= wicked_css

@@ -1,0 +1,5 @@
+{
+    "SESSION_STORE_TYPE": {
+        "value": "file"
+    }
+}

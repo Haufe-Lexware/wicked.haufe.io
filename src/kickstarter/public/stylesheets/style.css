@@ -1,0 +1,37 @@
+/* You can change all the settings in CSS you need and want here. */
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+body {
+  padding-top: 40px;
+  margin-bottom: 80px;
+}
+
+a {
+  color: #00B7FF;
+}
+
+.wicked-note {
+  font-size: 12px;
+  color: #777777
+}
+
+textarea {
+  font-family: "Lucida Console", Monaco, monospace;
+  font-size: 11px;
+}
+
+.footer {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  /* Set the fixed height of the footer here */
+  height: 70px;
+  background-color: #f5f5f5;
+}
+
+.scopecell {
+  padding: 2px;
+}

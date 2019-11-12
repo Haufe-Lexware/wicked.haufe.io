@@ -1,0 +1,9 @@
+node_modules
+.DS_Store
+*.tgz
+*.log
+dist
+docs
+docs-git
+git_*
+build_date
