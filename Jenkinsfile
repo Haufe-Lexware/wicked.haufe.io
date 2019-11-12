@@ -1,3 +1,62 @@
+pipeline {
+    agent {
+        docker {
+            image 'haufelexware/wicked.build-agent:latest'
+            // Add docker group
+            args '--group-add 999'
+        }
+    }
+    triggers {
+        pollSCM "H/10 * * * *"
+    }
+
+    stages {
+        // stage('SonarQube analysis') {
+        //     steps {
+        //         script {
+        //             sh 'id'
+        //             def dockerTag = env.BRANCH_NAME.replaceAll('/', '-')
+        //             if (dockerTag == 'next') {
+        //                 // requires SonarQube Scanner 2.8+
+        //                 def scannerHome = tool 'wicked-sonar';
+        //                 withSonarQubeEnv('sonar') {
+        //                     sh "${scannerHome}/bin/sonar-scanner"
+        //                 }
+        //             } else {
+        //                 echo 'Skipping SonarQube, not "next" branch.'
+        //             }
+        //         }
+        //     }
+        // }
+
+        script {
+            env.DOCKER_TAG = env.BRANCH_NAME.replaceAll('/', '-')
+        }
+
+        stage('Build') {
+            steps {
+                script {
+                    sh './src/build.sh'
+                }
+            }
+        }
+
+        stage('Push') {
+            steps {
+                script {
+                    withCredentials([
+                        usernamePassword(credentialsId: 'dockerhub_wicked', usernameVariable: 'DOCKER_REGISTRY_USER', passwordVariable: 'DOCKER_REGISTRY_PASSWORD')
+                    ]) {
+                        sh './src/build.sh'
+                    }
+                }
+            }
+        }
+    }
+}
+
+
+/*
 properties([
     pipelineTriggers([
         [$class: "SCMTrigger", scmpoll_spec: "H/10 * * * *"]
@@ -16,15 +75,19 @@ node('docker') {
     env.DOCKER_PREFIX = 'haufelexware/wicked.'
 
     stage('Build and Push') {
+        sh './src/build.sh'
+    }
+
+    stage('Push') {
         withCredentials([
             usernamePassword(credentialsId: 'dockerhub_wicked', usernameVariable: 'DOCKER_REGISTRY_USER', passwordVariable: 'DOCKER_REGISTRY_PASSWORD')
         ]) {
-            
-            sh './src/build.sh'
             sh './src/push.sh'
-
         }
     }
+}
+
+node('docker') {
 
     stage('API Tests (postgres)') {
         env.BUILD_POSTGRES = '';
@@ -73,3 +136,4 @@ node('docker') {
         echo 'Here be dragons.'
     }
 }
+*/
