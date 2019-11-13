@@ -13,6 +13,7 @@ pipeline {
 
     environment {
         DOCKER_TAG = env.BRANCH_NAME.replaceAll('/', '-')
+        DOCKER_PREFIX = 'haufelexware/wicked.'
     }
 
     stages {

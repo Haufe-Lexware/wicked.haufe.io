@@ -7,6 +7,8 @@ if [ -z ${DOCKER_REGISTRY_USER} ] || [ -z ${DOCKER_REGISTRY_PASSWORD} ]; then
     exit 1
 fi
 
+docker login -u ${DOCKER_REGISTRY_USER} -p ${DOCKER_REGISTRY_PASSWORD}
+
 branch=$(git rev-parse --abbrev-ref HEAD)
 export TAG=${branch}
 if [ ! -z "${DOCKER_TAG}" ]; then
