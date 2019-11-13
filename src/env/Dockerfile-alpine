@@ -34,10 +34,6 @@ RUN cd ../portal-env \
 # We install all node_modules in this base image; no need to do it later
 ONBUILD RUN date -u "+%Y-%m-%d %H:%M:%S" > /usr/src/app/build_date
 ONBUILD COPY . /usr/src/app
-ONBUILD RUN if [ -d ".git" ]; then \
-        git log -1 --decorate=short > /usr/src/app/git_last_commit && \
-        git rev-parse --abbrev-ref HEAD > /usr/src/app/git_branch; \
-    fi
 
 ENTRYPOINT ["/usr/bin/dumb-init", "--"]
 CMD ["./forever.sh", "npm", "start" ]
