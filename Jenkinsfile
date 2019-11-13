@@ -1,10 +1,10 @@
 pipeline {
     agent {
         docker {
-            label 'docker'
+            // label 'docker'
             image 'haufelexware/wicked.build-agent:latest'
             // Add docker group
-            args '--group-add 999'
+            // args '--group-add 999'
         }
     }
     triggers {
@@ -47,7 +47,7 @@ pipeline {
                     withCredentials([
                         usernamePassword(credentialsId: 'dockerhub_wicked', usernameVariable: 'DOCKER_REGISTRY_USER', passwordVariable: 'DOCKER_REGISTRY_PASSWORD')
                     ]) {
-                        sh './src/build.sh'
+                        sh './src/push.sh'
                     }
                 }
             }
