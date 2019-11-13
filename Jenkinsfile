@@ -59,8 +59,10 @@ pipeline {
                 BUILD_POSTGRES = 'true';
                 BUILD_ALPINE = '';
             }
-            script {
-                sh './src/test/run-api-tests.sh'
+            steps {
+                script {
+                    sh './src/test/run-api-tests.sh'
+                }
             }
         }
 
@@ -69,8 +71,10 @@ pipeline {
                 BUILD_POSTGRES = 'true';
                 BUILD_ALPINE = '-alpine';
             }
-            script {
-                sh './src/test/run-api-tests.sh'
+            steps {
+                script {
+                    sh './src/test/run-api-tests.sh'
+                }
             }
         }
 
@@ -81,8 +85,10 @@ pipeline {
                 BUILD_ALPINE = ''
                 BUILD_POSTGRES = 'true'
             }
-            script {
-                sh './src/test/run-kong-adapter-tests.sh'
+            steps {
+                script {
+                    sh './src/test/run-kong-adapter-tests.sh'
+                }
             }
         }
 
@@ -91,8 +97,10 @@ pipeline {
                 BUILD_ALPINE = '-alpine'
                 BUILD_POSTGRES = 'true'
             }
-            script {
-                sh './src/test/run-kong-adapter-tests.sh'
+            steps {
+                script {
+                    sh './src/test/run-kong-adapter-tests.sh'
+                }
             }
         }
 
@@ -103,8 +111,10 @@ pipeline {
                 BUILD_ALPINE = ''
                 BUILD_POSTGRES = 'true'
             }
-            script {
-                sh './src/test/run-auth-tests.sh'
+            steps {
+                script {
+                    sh './src/test/run-auth-tests.sh'
+                }
             }
         }
 
@@ -113,8 +123,10 @@ pipeline {
                 BUILD_ALPINE = '-alpine'
                 BUILD_POSTGRES = 'true'
             }
-            script {
-                sh './src/test/run-auth-tests.sh'
+            steps {
+                script {
+                    sh './src/test/run-auth-tests.sh'
+                }
             }
         }
     }
