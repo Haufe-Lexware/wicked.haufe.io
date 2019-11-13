@@ -53,6 +53,70 @@ pipeline {
                 }
             }
         }
+
+        stage('API Tests (postgres)') {
+            environment {
+                BUILD_POSTGRES = 'true';
+                BUILD_ALPINE = '';
+            }
+            script {
+                sh './src/test/run-api-tests.sh'
+            }
+        }
+
+        stage('API Tests (postgres, alpine)') {
+            environment {
+                BUILD_POSTGRES = 'true';
+                BUILD_ALPINE = '-alpine';
+            }
+            script {
+                sh './src/test/run-api-tests.sh'
+            }
+        }
+
+        // ===========================
+
+        stage('Kong Adapter Tests (postgres)') {
+            environment {
+                BUILD_ALPINE = ''
+                BUILD_POSTGRES = 'true'
+            }
+            script {
+                sh './src/test/run-kong-adapter-tests.sh'
+            }
+        }
+
+        stage('Kong Adapter Tests (postgres, alpine)') {
+            environment {
+                BUILD_ALPINE = '-alpine'
+                BUILD_POSTGRES = 'true'
+            }
+            script {
+                sh './src/test/run-kong-adapter-tests.sh'
+            }
+        }
+
+        // ===========================
+
+        stage('Auth Server Tests (postgres)') {
+            environment {
+                BUILD_ALPINE = ''
+                BUILD_POSTGRES = 'true'
+            }
+            script {
+                sh './src/test/run-auth-tests.sh'
+            }
+        }
+
+        stage('Auth Server Tests (postgres, alpine)') {
+            environment {
+                BUILD_ALPINE = '-alpine'
+                BUILD_POSTGRES = 'true'
+            }
+            script {
+                sh './src/test/run-auth-tests.sh'
+            }
+        }
     }
 }
 
