@@ -2,6 +2,9 @@
 
 set -e
 
+this_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )"
+pushd ${this_dir}
+
 buildLocal=""
 
 export NODE_ENV=test
@@ -200,3 +203,5 @@ fi
 
 echo "INFO: SUCCESS"
 fat_separator
+
+popd
