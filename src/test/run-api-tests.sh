@@ -126,7 +126,7 @@ if [ -z "$buildLocal" ]; then
     echo "INFO: Using prebuilt images: Pulling images..."
     separator
     docker-compose -p ${PROJECT_NAME} -f portal-api/api-tests-compose.yml pull
-    docker pull ${DOCKER_PREFIX}portal-env:${PORTAL_ENV_TAG}${BUILD_ALPINE}
+    docker pull ${DOCKER_PREFIX}env:${PORTAL_ENV_TAG}${BUILD_ALPINE}
     separator
 fi
 

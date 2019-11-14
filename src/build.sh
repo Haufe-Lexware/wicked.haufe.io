@@ -7,16 +7,16 @@ this_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )"
 pushd ${this_dir}
 
 branch=$(git rev-parse --abbrev-ref HEAD)
-git_sha=$(git log -1 --decorate=short)
+git_last_commit=$(git log -1 --decorate=short)
 
 echo ${branch} > ./env/git_branch
-echo ${git_sha} > ./env/git_last_commit
+echo ${git_last_commit} > ./env/git_last_commit
 echo ${branch} > ./kong/git_branch
-echo ${git_sha} > ./kong/git_last_commit
+echo ${git_last_commit} > ./kong/git_last_commit
 echo ${branch} > ./k8s-init/git_branch
-echo ${git_sha} > ./k8s-init/git_last_commit
+echo ${git_last_commit} > ./k8s-init/git_last_commit
 echo ${branch} > ./k8s-tool/src/git_branch
-echo ${git_sha} > ./k8s-tool/src/git_last_commit
+echo ${git_last_commit} > ./k8s-tool/src/git_last_commit
 
 echo "======================================================"
 echo "BUILDING BRANCH ${branch}"

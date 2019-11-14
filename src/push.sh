@@ -32,7 +32,7 @@ function check_image {
     image=$1
     imageTag=$2
 
-    echo "INFO: Checking image ${image}..."
+    echo "INFO: Checking image haufelexware/wicked.${image}..."
     repo_digests=$(docker inspect wicked.${image} | jq .[0].RepoDigests)
     if [[ "$repo_digests" == "[]" ]]; then
         echo "INFO: Image has not been pushed."
