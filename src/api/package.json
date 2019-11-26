@@ -15,12 +15,12 @@
     "ncp": "2.0.0",
     "node-uuid": "1.4.8",
     "pg": "7.12.1",
-    "portal-env": "file:../portal-env.tgz",
     "request": "2.88.0",
     "rimraf": "2.6.2"
   },
   "scripts": {
-    "start": "node ./bin/api"
+    "start": "node ./bin/api",
+    "postinstall": "npm link portal-env"
   },
   "jshintConfig": {
     "node": true,

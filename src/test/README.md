@@ -2,33 +2,7 @@
 
 This repository contains the integration testing code for the API Portal docker containers.
 
-## STATE FOR WICKED 1.0.0
-
-**IMPORTANT**: Currently, the Portal and Kong Adapter tests are not running (in the `wicked_1_0` branch). They need to be reworked quite some, as the entire authentication and authorization pieces have been reworked.
-
 ## Running the tests on locally built container images
-
-In order to run the integration tests locally on your own machine, the following prerequisites needs to be fulfilled.
-
-#### Repository layout
-
-The wicked repositories need to be cloned in the following way:
-
-```
-wicked
-  |
-  +-- wicked.ui
-  |
-  +-- wicked.api
-  |
-  +-- wicked.test
-  |
-  +-- wicked.kong
-  |
-  +-- wicked.kong-adapter
-```
-
-This is the default if you are using the `checkout.sh` from the [wicked.tools](https://github.com/apim-haufe-io/wicked.tools) repository. There you will find `checkout.sh` in the `development` subfolder (**IMPORTANT**: Until wicked 1.0.0, you must check out the `wicked_1_0` branch to get the full set of development tooling).
 
 #### Docker
 
@@ -58,17 +32,17 @@ $ BUILD_ALPINE=true BUILD_POSTGRES=true ./run-api-tests.sh
 ...
 ```
 
-In Jenkins (see the [Jenkinsfile](Jenkinsfile), all four permutations are run (with JSON or Postgres, Alpine or Debian).
+In Jenkins (see the [Jenkinsfile](../../Jenkinsfile), permutations are run (with Alpine or Debian, currently only Postgres is tested).
 
 ## Running the tests on prebuilt container images
 
 In order to run the integration tests on already prebuilt containers (e.g. the official docker images from Haufe-Lexware), use the following syntax:
 
 ```bash
-$ DOCKER_PREFIX=haufelexware/wicked. DOCKER_TAG=latest ./run-<api|portal|kong-adapter>-tests.sh
+$ DOCKER_PREFIX=haufelexware/wicked. DOCKER_TAG=next ./run-<api|portal|kong-adapter>-tests.sh
 ```
 
-The above line will run the integration tests for the official Haufe-Lexware wicked.haufe.io docker images, having the `latest` tag. This will require that you will have checked out the `master` branch of `wicked.test`, otherwise chances are good that the test suite will not match the container images' versions.
+The above line will run the integration tests for the official Haufe-Lexware wicked.haufe.io docker images, having the `next` tag. This will require that you will have checked out the `next` branch of this repository, otherwise chances are good that the test suite will not match the container images' versions.
 
 In case your images are located on a private registry, you may also use the following environment variables:
 

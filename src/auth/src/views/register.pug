@@ -1,0 +1,77 @@
+extends auth_layout
+
+block scripts
+    script(type='text/javascript').
+        function validateRegister() {
+            const model = !{JSON.stringify(poolInfo)};
+            try {
+                let somethingBad = false;
+                for (let i=0; i<model.properties.length; ++i) {
+                    const propInfo = model.properties[i];
+                    const propName = propInfo.id;
+                    const content = $('#' + propName).val();
+                    if (propInfo.type !== 'string')
+                        continue;
+                    let errMessage = '';
+                    if (propInfo.required && !content) {
+                        errMessage = 'Field is required, it cannot be empty.';
+                    } else if (content) {
+                        if (propInfo.minLength && content.length < propInfo.minLength)
+                            errMessage = 'Entry has to be at least ' + propInfo.minLength + ' characters.';
+                        else if (propInfo.maxLength && content.length > propInfo.maxLength)
+                            errMessage = 'Too many characters, maximum ' + propInfo.maxLength + ' allowed.';
+                    }
+                    if (errMessage)
+                        somethingBad = true;
+                    $('#error' + propName).text(errMessage);
+                }
+                return !somethingBad;
+            } catch (err) {
+                alert('An error occurred: ' + err);
+                return false;
+            }
+        }
+
+block content
+    h2 Registration
+    
+    p Access to this API requires registration.
+
+    if displayRedirectMessage
+        h4 You will be redirected to the desired page right after successfully logging in.
+
+    h4.
+        By having signed up and registering, you agree to our <a target='_blank' href='#{portalUrl}content/terms-and-conditions'>Terms
+        and Conditions</a> and the <a target='_blank' href='#{portalUrl}content/privacy-policy'>Privacy/Cookie Policy</a>.
+
+    if errorMessage
+        +flashMessage('error', errorMessage)
+
+    form(role='form' action=`${baseUrl}/${registerUrl}` method='post' onsubmit='return validateRegister();')
+
+        input(type='hidden' name='_csrf' value=csrfToken)
+        input(type='hidden' name='nonce' value=nonce)
+
+        if custom_id
+            .form-group
+                label(for='custom_id') ID:
+                input(type='string' name='custom_id' id='custom_id' readonly value=customId).form-control
+        .form-group
+            label(for='email') E-Mail:
+            input(type='string' name='email' id='email' readonly value=defaultProfile.email).form-control
+
+        each propInfo, i in poolInfo.properties
+            .form-group
+                -var required = propInfo.required ? ' (*)' : ''
+                label(for=propInfo.id) #{propInfo.description}#{required}:
+                -var thisValue = defaultProfile.hasOwnProperty(propInfo.oidcClaim) ? defaultProfile[propInfo.oidcClaim] : '';
+                input(type='string' name=propInfo.id id=propInfo.id value=thisValue).form-control
+                small
+                    span(id=`error${propInfo.id}` style='color:red')
+
+        p Fields marked with (*) are required.
+
+        button(class='btn btn-lg btn-primary btn-block' type='submit') Register
+    
+    h5
+        a(href=`${baseUrl}/${logoutUrl}`) Log out

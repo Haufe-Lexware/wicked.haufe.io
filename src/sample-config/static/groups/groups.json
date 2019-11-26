@@ -1,0 +1,15 @@
+{
+  "groups": [
+    {
+      "id": "admin",
+      "name": "Administrator",
+      "alt_ids": [],
+      "adminGroup": true
+    },
+    {
+      "id": "dev",
+      "name": "Developer",
+      "alt_ids": []
+    }
+  ]
+}

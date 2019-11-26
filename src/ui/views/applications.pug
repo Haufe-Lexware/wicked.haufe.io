@@ -1,0 +1,196 @@
+extends layout  
+
+block bodyScripts
+    script(src='/assets/marked/marked.min.js')
+    script(type='text/javascript').
+      
+        function validateNewApplication() {
+            var appid = $('#appid').val();
+            var appname = $('#appname').val();
+            var hasredirecturi = $('#hasredirecturi').is(':checked');
+            var redirecturi = $('#redirecturi').val();
+
+            var appidError = '';
+            var appnameError = '';
+            var redirectError = '';
+            if (!appid)
+                appidError = 'Please enter a value for the application ID.';
+            if (!appname)
+                appnameError = 'Please enter a value for the application name.';
+
+            if (hasredirecturi) {
+                try {
+                    var url = new URL(redirecturi);
+                    // if (!url.host)
+                    //     redirectError = 'Redirect URI is a valid URL, but must contain a host. Please check documentation.';
+                } catch (ex) {
+                    redirectError = 'Redirect URI is not a valid URL. Please check documentation for an explanation.';
+                }
+            }
+
+            try {
+                $('#errorAppid').text(appidError);
+                $('#errorAppname').text(appnameError);
+                $('#errorRedirect').text(redirectError);
+            } catch (err) {
+                alert('Validation errored! Check your input values.');
+                return;
+            }
+            
+            var somethingBad = !!appidError
+                || !!appnameError
+                || !!redirectError;
+
+            if (!somethingBad) {
+                $('#submit_new').prop("disabled", true);
+                $.post('/applications/check-app', {
+                    app_id: appid
+                }, function (data, status) {
+                    $('#submit_new').prop("disabled", false);
+                    if (!data.valid) {
+                        $('#errorAppid').text(data.message);
+                    } else {
+                        $('#new_app_form').submit();
+                    }
+                });
+            }
+        }
+
+         $(document).ready(function(){
+            var showSwagger = '#{showSwagger}';
+            if (showSwagger) {
+                $('#appid').val('swagger-ui-' + Math.random().toString(36).substr(2, 9));
+                $('#appname').val('Swagger UI app');
+                $('#hasredirecturi').prop('checked', true);
+                $('#clienttype').val('confidential');
+                $('#redirecturi').val('#{glob.network.schema}://#{glob.network.apiHost}/swagger-ui/oauth2-redirect.html')
+                                 .prop('readonly', true);
+                $('#desc').val('The Swagger UI app enables you to test out Oauth2 authenticated APIs that require the use of redirects, via Swagger. With the exception of the Redirect URI field, you may edit all application fields, including this description.');
+            }
+            $('#desc').on('change keyup paste', function() {
+                var text = $('#desc').val();
+                $('#markdown').html(marked(text, { sanitize: true }));
+            });
+            // First time
+            $('#markdown').html(marked($('#desc').val(), { sanitize: true }));      
+      
+            $('#applicationsGrid').jsGrid({
+                width: "100%", pageSize: 10, sorting: true, paging: true, filtering: true, autoload: true,
+                controller: {
+                    loadData: function (filter) {
+                        var d = $.Deferred();
+                        var data = !{applications};
+                        if (isEmptyGridFilter(filter)) {
+                            d.resolve(data);
+                            return d.promise();
+                        }
+                        data = $.grep(data, function (item) {
+                            if (applyGridFilter(filter, item))
+                            return item;
+                        });
+                        d.resolve(data);
+                        return d.promise();
+                    }
+                },
+                fields: [
+                    { name: "id", type: "text", title: "ID" },
+                    { name: "name", type: "text", title: "Name", 
+                        itemTemplate: function(value, item) {
+                            return $("<a>").attr("href", "/applications/"+item.id).text(value);
+                        }
+                    },
+                    { name: "userRole", type: "text", title: "Role" },
+                    { type: "control", width: "10", editButton: false, deleteButton: false,
+                        _createFilterSwitchButton: function() {
+                            return this._createOnOffSwitchButton("filtering", this.searchModeButtonClass, false);
+                        }
+                    }
+                ]
+            });
+            $("#applicationsGrid").jsGrid("option", "filtering", false);
+        });
+
+block content
+    .jumbotron.wicked-application-title
+        .container.wicked-title-container
+            h1 Register and View Your Applications
+
+            p= glob.views.applications.titleTagline
+
+    .container.wicked-container
+
+        p.
+            An application is the entity to which you attach your API subscriptions. You can own or co-own applications with other developers. Once you have registered an application, you can create and assign APIs that use it. You can assign only one application to an API.
+
+        if !authUser
+            .panel.panel-danger
+                .panel-heading
+                    h4.panel-title Not logged in
+                .panel-body
+                    p You are not logged in. Applications can only be created if you are logged in.
+
+                    a(href="/login?redirect=/applications").btn.btn-default Log in &raquo;
+
+        else
+            .panel-group
+                div(class='panel panel-default')
+                    .panel-heading
+                        +panelTitle('Register a new Application', '/help/applications', '#collapse')
+                    div(id='collapse' class=`panel-collapse collapse ${showRegister}`)
+                        .panel-body
+                            form(role='form' id='new_app_form' action='/applications/register' method='POST')
+                                .form-group
+                                    label(for='appid') Application ID:
+                                    input(type='string' id='appid' name='appid').form-control
+                                    small Application IDs must be all lower case, and may only contain the following characters: a-z, 0-9, -, _
+                                    small 
+                                        span(id='errorAppid' style='color:red')
+                                .form-group
+                                    label(for='appname') Application Name:
+                                    input(type='string' id='appname' name='appname').form-control
+                                    small A human readable description/name of the your application, e.g. 'My Awesome Application'
+                                    small 
+                                        span(id='errorAppname' style='color:red')
+                                .form-group
+                                    label(for='appdesc') Application Description:
+                                    textarea(name='appdesc' id='desc' style='height:100px').form-control= appdesc
+                                    small The Application Description field can be used to provide additional details about your application use case, including any relevant URLs. If you are subscribing to an API that requires approvals, completing this field will aid in processing time
+                                    div(id='markdown')
+                                .form-group
+                                    label(for='clienttype') Client Type:
+                                    select(name='clienttype' id='clienttype').form-control
+                                        option(value='public_spa') Public: Single Page Application (browser based app)
+                                        option(value='public_native') Public: Native/Mobile Application (Android/iOS app)
+                                        option(value='confidential') Confidential: Server side application, can keep secrets confidential
+                                    small See the <a href="/help/client_types" target="_blank">help page on client types</a> for more information.
+                                .checkbox
+                                    label
+                                        input(type='checkbox' id='hasredirecturi' name='hasredirecturi' data-toggle='collapse' data-target='#redirecturipanel')
+                                        strong This application will use OAuth2.0 Flows
+                                        | &nbsp;(other than the Client Credentials flow, i.e. using redirects)
+
+                                div(id='redirecturipanel' class=`panel-collapse collapse ${showSwagger}`)
+                                            
+                                    .form-group
+                                        label(for='redirecturi') Redirect URI:
+                                        input(type='string' id='redirecturi' name='redirecturi' value='https://').form-control
+                                        small.
+                                            The callback under which your web application can be called back, either with a token (<a href="/help/oauth2_implicit_grant" target="_blank">Implicit Grant</a>),
+                                            or with an authorization code (<a href="/help/oauth2_authorization_code" target="_blank">Authorization Code Grant</a>).
+                                            Check the documentation for a <a href="https://github.com/Haufe-Lexware/wicked.haufe.io/blob/master/doc/valid-redirect-uris.md" target="_blank">list of valid redirect URIs</a>.
+                                            In case you need multiple redirect URIs, first create the application, then add more redirect URIs on the application's page.
+                                        small 
+                                            span(id='errorRedirect' style='color:red')
+                            // Note that this button is _outside_ of the form, and calls submit() over jQuery
+                            // in Javascript. It validates the data partly over an Ajax call.
+                            p
+                                button(id='submit_new' onclick='javascript:validateNewApplication()').btn.btn-success Register Application
+
+            hr
+
+            if count == 0
+                br
+                h4 You don't have any registered applications
+            else
+                p To review owners, view API keys for this application or to unregister an application, please click the application name.
+                div#applicationsGrid

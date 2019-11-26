@@ -1,0 +1,37 @@
+extends ../layout
+
+mixin helpItem(anchor, title)
+  if (toc.length > 0)
+    br
+  - toc.push({ anchor: anchor, title: title })
+  a(name=anchor)
+  h4= title
+
+mixin important()
+  div(style='padding:5px; border-style:solid; border-width:1px; border-color: #000; background-color:#faa')
+    block
+
+mixin hint()
+  div(style='padding:5px; border-style:solid; border-width:1px; border-color: #000; background-color:#afa')
+    block
+
+block content
+  - var toc = []
+
+  .container(style='padding-top: 50px')
+    .row
+      .col-md-8
+
+        block help_content
+
+      .col-md-4.col-md-push-8(style='position:fixed')
+
+        h3
+          a(href='/help') Help Index
+
+        h4 Site Map
+
+        ul
+          for tocItem in toc
+            li
+              a(href=`#${tocItem.anchor}`)= tocItem.title

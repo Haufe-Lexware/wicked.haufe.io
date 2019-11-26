@@ -194,14 +194,14 @@ redisContainer=${tmpDir}_redis
 docker run -d --name ${redisContainer} -p ${redisPort}:6379 redis:5-alpine &> /dev/null
 
 echo "INFO: Starting portal API..."
-pushd ../wicked.api &> /dev/null
+pushd ../api &> /dev/null
 PORT=${apiPort} node bin/api &> ${thisDir}/logs/kong-adapter-test-local-api.log &
 apiPid=$!
 echo "INFO: API running as PID ${apiPid}."
 popd &> /dev/null
 
 echo "INFO: Building Kong Adapter..."
-pushd ../wicked.kong-adapter &> /dev/null
+pushd ../kong-adapter &> /dev/null
 npm run build &> /dev/null
 echo "INFO: Starting Kong Adapter..."
 DEBUG=wicked-sdk PORT=${kongAdapterPort} node ./dist/bin/kong-adapter.js &> ${thisDir}/logs/kong-adapter-test-local-kong-adapter.log &

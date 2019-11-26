@@ -7,6 +7,6 @@ sessions
 dist
 # Dockerfile
 # Dockerfile-alpine
-package-lock.json
+# package-lock.json
 build_date
 git_*

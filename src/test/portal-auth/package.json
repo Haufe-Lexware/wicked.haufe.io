@@ -7,7 +7,8 @@
     "test": "test"
   },
   "scripts": {
-    "test": "mocha"
+    "test": "mocha",
+    "postinstall": "npm link wicked-sdk && npm link portal-env"
   },
   "repository": {
     "type": "git",
@@ -23,9 +24,7 @@
     "async": "2.6.2",
     "chai": "3.5.0",
     "mocha": "5.2.0",
-    "portal-env": "file:../../portal-env.tgz",
-    "request": "2.88.0",
-    "wicked-sdk": "file:wicked-sdk.tgz"
+    "request": "2.88.0"
   },
   "jshintConfig": {
     "node": true,

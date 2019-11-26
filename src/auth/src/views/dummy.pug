@@ -1,0 +1,21 @@
+extends auth_layout
+
+block scripts
+    if authUser
+        meta(http-equiv="refresh" content="0; url=/")
+
+block content
+    h2 Log in
+    
+    p Welcome to the #{title}.
+
+    if displayRedirectMessage
+        h4 You will be redirected to the desired page right after successfully logging in.
+
+    if errorMessage
+        +flashMessage('error', errorMessage)
+
+    form(role='form' action=`${baseUrl}/${loginUrl}` method='post')
+
+        input(type='hidden' name='_csrf' value=csrfToken)
+        button(class='btn btn-lg btn-primary btn-block' type='submit') Login

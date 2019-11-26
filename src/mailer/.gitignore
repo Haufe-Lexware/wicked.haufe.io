@@ -1,6 +1,6 @@
 # Dockerfile
 node_modules
 *.tgz
-package-lock.json
+# package-lock.json
 git_*
 build_date

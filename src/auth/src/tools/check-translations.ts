@@ -11,10 +11,10 @@ const viewFiles = fs.readdirSync(viewDir) as string[];
 let isOk = true;
 for (let i = 0; i < viewFiles.length; ++i) {
     const fileName = viewFiles[i];
-    if (!fileName.endsWith('.jade'))
+    if (!fileName.endsWith('pug'))
         continue;
 
-    isOk = isOk && checkJadeFile(path.join(viewDir, fileName));
+    isOk = isOk && checkPugFile(path.join(viewDir, fileName));
 }
 
 if (!isOk)
@@ -23,10 +23,10 @@ process.exit(0);
 
 // ===================================
 
-function checkJadeFile(fileName: string): boolean {
+function checkPugFile(fileName: string): boolean {
     console.log(`Checking ${fileName}...`);
     const labels = extractLabels(fileName);
-    const fileBase = fileName.substring(0, fileName.length - 4); // strip "jade"
+    const fileBase = fileName.substring(0, fileName.length - 3); // strip "pug"
     let isOk = true;
     for (let i = 0; i < languages.length; ++i) {
         const langFile = fileBase + languages[i] + '.json';

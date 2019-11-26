@@ -1,0 +1,83 @@
+{
+  "PORTAL_INITIALUSERS0_PASSWORD": {
+    "value": "wicked"
+  },
+  "HELM_NAME": {
+    "value": "undefined-undefined"
+  },
+  "K8S_NAMESPACE": {
+    "value": "default"
+  },
+  "PORTAL_API_AESKEY": {
+    "value": "8ecce76c5d11a7841f94d5cbc0eda05f9b05a4a1cecf126d03dcc2b3f28166dd4cb5862b104c76697eaaacbfe08ace3ab01a6a83f72f06508b740f24c00b834f5d730f42a083baeed86231a2d22fba93",
+    "encrypted": true
+  },
+  "PORTAL_API_DYNAMIC_CONFIG": {
+    "value": "${PORTAL_CONFIG_BASE}/dynamic"
+  },
+  "PORTAL_API_STATIC_CONFIG": {
+    "value": "${PORTAL_CONFIG_BASE}/static"
+  },
+  "PORTAL_CONFIG_BASE": {
+    "value": "/var/portal-api"
+  },
+  "PORTAL_API_URL": {
+    "value": "http://portal-api:3001"
+  },
+  "PORTAL_CHATBOT_URL": {
+    "value": "http://portal-chatbot:3004"
+  },
+  "PORTAL_KONG_ADAPTER_URL": {
+    "value": "http://portal-kong-adapter:3002"
+  },
+  "PORTAL_KONG_ADMIN_URL": {
+    "value": "http://kong:8001"
+  },
+  "PORTAL_KONG_PROXY_URL": {
+    "value": "http://kong:8000"
+  },
+  "PORTAL_MAILER_URL": {
+    "value": "http://portal-mailer:3003"
+  },
+  "PORTAL_NETWORK_PORTALHOST": {
+    "value": "portal.com"
+  },
+  "PORTAL_PORTAL_URL": {
+    "value": "http://portal:3000"
+  },
+  "PORTAL_NETWORK_APIHOST": {
+    "value": "api.portal.com"
+  },
+  "PORTAL_SESSIONSTORE_HOST": {
+    "value": "redis"
+  },
+  "PORTAL_AUTHSERVER_URL": {
+    "encrypted": false,
+    "value": "http://portal-auth:3010"
+  },
+  "PORTAL_ECHO_URL": {
+    "encrypted": false,
+    "value": "http://portal-api:3009"
+  },
+  "PORTAL_STORAGE_PGHOST": {
+    "value": "wicked-database"
+  },
+  "PORTAL_STORAGE_PGPASSWORD": {
+    "value": "kong"
+  },
+  "PORTAL_NETWORK_SCHEMA": {
+    "value": "https"
+  },
+  "DOCKER_HOST": {
+    "value": "not-defined"
+  },
+  "PORTAL_STORAGE_PGPORT": {
+    "value": "5432"
+  },
+  "PORTAL_STORAGE_PGUSER": {
+    "value": "kong"
+  },
+  "PORTAL_STORAGE_PGDATABASE": {
+    "value": "wicked"
+  }
+}

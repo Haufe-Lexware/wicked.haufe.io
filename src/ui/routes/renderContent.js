@@ -3,7 +3,7 @@
 const { debug, info, warn, error } = require('portal-env').Logger('portal:renderMarkdown');
 const marked = require('marked');
 const highlightJs = require('highlight.js');
-const jade = require('jade');
+const pug = require('pug');
 
 const renderer = function () { };
 
@@ -45,7 +45,7 @@ renderer.renderContent = function (req, res, subRoute, layout, apiResponse, body
     };
 
     if ("text/jade" == contentType) {
-        viewModel.content = jade.render(body, viewModel);
+        viewModel.content = pug.render(body, viewModel);
     } else { // Assume markdown
         viewModel.content = marked(body);
     }

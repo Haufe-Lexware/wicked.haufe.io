@@ -1,0 +1,176 @@
+{
+  "version": 21,
+  "title": "wicked.haufe.io API Portal",
+  "footer": "&copy; 2016-2017 Your Company Ltd.",
+  "api": {
+    "headerName": "X-ApiKey",
+    "apiUserGroup": "",
+    "echoUserGroup": ""
+  },
+  "network": {
+    "schema": "$PORTAL_NETWORK_SCHEMA",
+    "portalHost": "$PORTAL_NETWORK_PORTALHOST",
+    "apiHost": "$PORTAL_NETWORK_APIHOST",
+    "apiUrl": "$PORTAL_API_URL",
+    "portalUrl": "$PORTAL_PORTAL_URL",
+    "kongAdapterUrl": "$PORTAL_KONG_ADAPTER_URL",
+    "kongAdminUrl": "$PORTAL_KONG_ADMIN_URL",
+    "kongProxyUrl": "$PORTAL_KONG_PROXY_URL",
+    "mailerUrl": "$PORTAL_MAILER_URL",
+    "chatbotUrl": "$PORTAL_CHATBOT_URL"
+  },
+  "db": {
+    "staticConfig": "$PORTAL_API_STATIC_CONFIG",
+    "dynamicConfig": "$PORTAL_API_DYNAMIC_CONFIG"
+  },
+  "initialUsers": [
+    {
+      "id": "1",
+      "firstName": "Admin",
+      "lastName": "User",
+      "email": "admin@foo.com",
+      "password": "$PORTAL_INITIALUSERS0_PASSWORD",
+      "groups": [
+        "admin"
+      ]
+    }
+  ],
+  "recaptcha": {
+    "websiteKey": "reCaptchaWebsiteKey",
+    "secretKey": "reCaptchaSecretKey"
+  },
+  "mailer": {
+    "senderEmail": "apiportal@yourcompany.com",
+    "senderName": "The wicked API Portal",
+    "smtpHost": "smtp.yourcompany.com",
+    "smtpPort": 465,
+    "username": "smtpuser",
+    "password": "smtppassword",
+    "adminEmail": "adminemail@yourcompany.com",
+    "adminName": "Admin Name"
+  },
+  "chatbot": {
+    "username": "wicked.haufe.io",
+    "icon_url": "https://raw.githubusercontent.com/Haufe-Lexware/wicked.haufe.io/master/public/wicked-40.png",
+    "targets": [
+      {
+        "type": "slack",
+        "hookUrl": "https://yourinstance.slack.com/thisisahookurlyouneedtogetfromyourslackadmin",
+        "events": {
+          "userSignedUp": true,
+          "userValidatedEmail": true,
+          "applicationAdded": true,
+          "applicationDeleted": true,
+          "subscriptionAdded": true,
+          "subscriptionDeleted": true,
+          "approvalRequired": true,
+          "lostPasswordRequest": true,
+          "verifyEmailRequest": true
+        }
+      }
+    ]
+  },
+  "auth": {
+    "local": {
+      "useLocal": true,
+      "trustLocal": true
+    },
+    "adfs": {
+      "authorizationURL": "https://identity.yourcompany.com/adfs/oauth2/authorize",
+      "tokenURL": "https://identity.yourcompany.com/adfs/oauth2/token",
+      "clientID": "this-is-your-client-id",
+      "clientSecret": "this-is-your-client-secret",
+      "callbackURL": "https://portal.yourcompany.com/callback",
+      "resource": "https://api.yourcompany.com",
+      "customIdField": "upn",
+      "firstNameField": "given_name",
+      "lastNameField": "family_name",
+      "emailField": "email",
+      "verifyCert": true,
+      "publicCert": "----BEGIN CERTIFICATE-----\r\nfdkjhfkljdshglkdfhgklsdfhgkldsfhgkjsdfkgjhf\r\n------END----"
+    },
+    "github": {
+      "clientID": "github-client-id",
+      "clientSecret": "github-client-secret",
+      "callbackURL": "https://portal.yourcompany.com/callback/github"
+    },
+    "google": {
+      "clientID": "google-app-client-id",
+      "clientSecret": "google-client-secret",
+      "callbackURL": "https://portal.yourcompany.com/callback/google"
+    }
+  },
+  "company": "wicked.haufe.io API Portal",
+  "validatedUserGroup": "dev",
+  "configKeyCheck": "889be2360b15f58310c7d49e97eda55bc802f1f79dcd176f0edec6e4a68937da16b2852d421b253e2ffbaab0e3d5cc3be4163ed0f62f065adc2b097a9b5f81490b710819a4d0e1e28b3135a2d47ab4ce0d01a94ea744",
+  "layouts": {
+    "defautRootUrl": "http://wicked.haufe.io",
+    "defautRootUrlTarget": "_blank",
+    "defautRootUrlText": null,
+    "menu": {
+      "homeLinkText": "Home",
+      "apisLinkVisibleToGuest": true,
+      "applicationsLinkVisibleToGuest": true,
+      "contactLinkVisibleToGuest": true,
+      "contentLinkVisibleToGuest": true,
+      "classForLoginSignupPosition": "left",
+      "showSignupLink": true,
+      "loginLinkText": "Log in"
+    },
+    "footer": {
+      "showBuiltBy": true,
+      "showBuilds": true
+    },
+    "swaggerUi": {
+      "menu": {
+        "homeLinkText": "Home",
+        "showContactLink": true,
+        "showContentLink": false
+      }
+    }
+  },
+  "views": {
+    "apis": {
+      "showApiIcon": true,
+      "titleTagline": "This is the index of APIs which are available for this API Portal."
+    },
+    "applications": {
+      "titleTagline": "This page displays all your registered applications. It also allows you to register a new application."
+    },
+    "application": {
+      "titleTagline": "This page lets you administer the owners of this application. You can add and remove co-owners of the application. New co-owners must be already be registered in the portal in order to make them co-owners of the application."
+    }
+  },
+  "sessionStore": {
+    "type": "redis",
+    "host": "$PORTAL_SESSIONSTORE_HOST",
+    "port": 6379,
+    "password": ""
+  },
+  "kongAdapter": {
+    "useKongAdapter": true,
+    "ignoreList": [
+      "plugin-name"
+    ]
+  },
+  "portal": {
+    "authMethods": [
+      "default:local",
+      "default:google",
+      "default:github",
+      "default:twitter",
+      "default:oauth2",
+      "default:facebook",
+      "default:adfs"
+    ]
+  },
+  "storage": {
+    "type": "postgres",
+    "pgHost": "$PORTAL_STORAGE_PGHOST",
+    "pgPort": "$PORTAL_STORAGE_PGPORT",
+    "pgUser": "$PORTAL_STORAGE_PGUSER",
+    "pgPassword": "$PORTAL_STORAGE_PGPASSWORD",
+    "pgDatabase": "$PORTAL_STORAGE_PGDATABASE"
+  },
+  "passwordStrategy": "PW_6_24"
+}

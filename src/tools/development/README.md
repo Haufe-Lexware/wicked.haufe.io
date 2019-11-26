@@ -17,40 +17,40 @@ Still, the following are the current known prerequisites:
 
 ## Setting up the environment
 
-### Step 1: Clone all the repositories
+### Step 1: Clone the wicked.haufe.io repository
 
 To get your wicked development environment up and running as fast as possible, perform the following steps in a new blank directory, which is presumed to be called `wicked` here:
 
 ```bash
-~/Projects$ mkdir wicked
-~/Projects/wicked$ cd wicked
-~/Projects/wicked$ git clone https://github.com/apim-haufe-io/wicked.tools
+~/Projects$ git clone https://github.com/Haufe-Lexware/wicked.haufe.io
 ...
-~/Projects/wicked$ cd wicked.tools
-~/Projects/wicked/wicked.tools$ git checkout next
-~/Projects/wicked/wicked.tools$ cd development
-~/Projects/wicked/wicked.tools/development$ ./checkout.sh <branch> --install
+~/Projects$ cd wicked.haufe.io
+~/Projects/wicked.haufe.io$ git checkout next
+~/Projects/wicked.haufe.io$ cd src/tools/development
+~/Projects/wicked/wicked.tools/development$ ./install.sh
 ```
-
-Please replace `<branch>` with the branch you want to check out. Please note that these scripts will only work as intended for wicked 1.0 and later, and not for the 0.x releases. The branch which used for development of features which will "soon" make it into a release, i.e. into the next release, are residing on the `next` branch. In some cases larger features which need larger changes in multiple repositories will get its own cross-repository branch (much like how `wicked_1_0` was used for the development towards the wicked 1.0.0 version). 
-
-```
-~/Projects/wicked/wicked.tools/development$ ./checkout.sh next --install
-```
-
-This will checkout all repositories which are needed to run wicked locally, plus install all the necessary `node_modules`. This may take a while, but it's mostly only the first time.
 
 ### Step 2: Build a local Kong image
 
 As wicked adds a couple of minor things to the original Kong docker image, you will need to build your Kong image locally before you can start it:
 
 ```
-~/Projects/wicked/wicked.tools/development$ ./build-kong.sh
+~/Projects/wicked.haufe.io/src/tools/development$ ./build-kong.sh
 ```
 
 This will create a local docker image (on your machine) called `wicked.kong:local`; this image will be referenced to in the next step (in the [`docker-compose.yml`](docker-compose.yml) file).
 
-### Step 3: Start a local Postgres, Redis and Kong instances
+<!-- ### Step 3: Create entries in /etc/hosts
+
+**NOTE**: This assumes you are on macOS or Linux.
+
+Run the following to create entries `portal.com` and `api.portal.com` to point to your `127.0.0.1` device:
+
+```bash
+~/Projects/wicked/wicked.tools/development$ sudo ./update-etc-hosts.sh
+``` -->
+
+### Step 3: Start the local environment
 
 Now it's assumed that you have a local `docker` daemon running, and that you have a recent `docker-compose` binary in your path. Then just run:
 
@@ -76,19 +76,15 @@ Creating development_kong_1              ... done
 
 **NOTE**: This assumes that the ports 5432 (Postgres), 6379 (Redis), 8000, 8001 (Kong) and 9090 (Prometheus) are not already used on your local machine.
 
+wicked has now also been started via `pm2`; you can check on the status of the components by running `pm2 status`.
+
+The API portal will be available at [http://localhost:3000](http://localhost:3000), and the API gateway will be available as [http://localhost:8000](http://localhost:8000) (please note that Kong will answer a request directly to this path with a `{"message":"no route and no API found with those values"}`, this is completely fine and normal).
+
+The configuration the local installation uses is the [`sample-config` configuration](../../sample-config), which is also located in this repository. It's located at the same level in your source code tree as all the other repositories.
+
 To delete the running environment, run the `stop-devenv.sh` script.
 
-### Step 4: Create entries in /etc/hosts
-
-**NOTE**: This assumes you are on macOS or Linux.
-
-Run the following to create entries `portal.com` and `api.portal.com` to point to your `127.0.0.1` device:
-
-```bash
-~/Projects/wicked/wicked.tools/development$ sudo ./update-etc-hosts.sh
-```
-
-### Step 5: Use pm2 to start wicked locally
+### Step 4: Use pm2 to start wicked locally
 
 Now you can start wicked using pm2:
 
@@ -109,11 +105,7 @@ Now you can start wicked using pm2:
 └─────────────────────┴────┴──────┴───────┴────────┴─────────┴────────┴─────┴───────────┴─────────┴──────────┘
 ```
 
-The API portal will be available at [http://localhost:3000](http://localhost:3000). Note that the wicked portal will immediately redirect to the IP address of your local machine instead of using the `localhost` alias. This has various reasons, the most important one being that Kong must be able to reach the services run via pm2, such as `portal-api:3001`. This is only possible if Kong actually knows the local IP.
-
-The configuration the local installation uses is the `wicked-sample-config` configuration, which is also automatically checked out by the `checkout.sh` script. It's located at the same level in your source code tree as all the other repositories.
-
-## Now what?
+<!-- ## Now what?
 
 Now that you have a local development environment of wicked running, you can start developing. It's assumed that you have check in rights to the `apim-haufe-io` repositories, and that you are allowed to create a branch. If this is not the case, you will still be able to work locally, or with a fork, but that's not covered here.
 
@@ -192,7 +184,7 @@ Now you can restart everything again:
 ```
 ~/Projects/wicked/wicked.tools/development$ docker-compose up -d
 ~/Projects/wicked/wicked.tools/development$ pm2 start wicked-pm2.config.js
-```
+``` -->
 
 ### Reload a node.js component
 
@@ -225,7 +217,7 @@ Now you can run the debugger e.g. from VS Code, just as usual.
 In order to be able to debug in `wicked.api`, you will have to make sure your debugger sets a series of environment variables correctly, to make sure the portal API is able to start correctly. You can retrieve the data from [wicked-pm2.config.js](wicked-pm2.config.js); the following variables need to be defined:
 
 * `NODE_ENV=localhost`
-* `PORTAL_CONFIG_BASE=../wicked-sample-config`
+* `PORTAL_CONFIG_BASE=../sample-config`
 * `LOG_LEVEL` can optionally be changed to either `info` or `debug`; `debug` is the default, and outputs **lots** of information
 
 The env var `PORTAL_CONFIG_BASE` can be set to something else, but this is the sample configuration repository which usually works for development. If you want to test other configurations, go ahead and change this to use your own configuration.
@@ -236,9 +228,17 @@ The storage type in the sample repository is set to `postgres` as a default; if 
 
 This will create a `dynamic` sub dir to `../wicked-sample-config` (in addition to the `static` one containing the portal configuration).
 
+**NOTE**: The JSON backend is no longer support for production use, and newer features will also no longer be implemented for this backend type; please use Postgres.
+
 ### Update wicked.env
 
-In those cases where you need to make a change in the `env` (e.g. change/add a static configuration update or similar), you will need to propagate those changes to the two projects `wicked.api` and `wicked.kickstarter`; this is done using a shell script in the `wicked.env` repository:
+In case you need to make changes to the `env` parts, you can just do this. You will have to make sure to restart the other components afterwards to make them pick up the changes. This is (currently) not automatically done, but may be in the future.
+
+Use `pm2 restart all` to restart all components.
+
+The `env` is linked into the other repositories via `npm link`; in case you need to install additional packages to the `env` package, please run `npm link` again afterwards. The depending projects automatically run `npm link portal-env` at `npm install`, so this should be fine.
+
+<!-- In those cases where you need to make a change in the `env` (e.g. change/add a static configuration update or similar), you will need to propagate those changes to the two projects `wicked.api` and `wicked.kickstarter`; this is done using a shell script in the `wicked.env` repository:
 
 ```
 ~/Projects/wicked/wicked.env$ ./local-update-portal-env.sh
@@ -246,11 +246,15 @@ In those cases where you need to make a change in the `env` (e.g. change/add a s
 
 This script will run an `npm pack` on the `env` repository and install it to the API and to the Kickstarter. Subsequently, you can use `pm2 restart all` to refresh the node.js components.
 
-**Note**: This script is automatically called when invoking the `checkout.sh` script with the `--install` option.
+**Note**: This script is automatically called when invoking the `checkout.sh` script with the `--install` option. -->
 
 ### Update wicked-sdk
 
-Similarly, if you need to propagate changes to the wicked SDK locally, you can use the following script:
+Similarly, if you need to propagate changes to the wicked SDK locally, just make sure to restart the depending service to make it pick up the change from the node SDK.
+
+The node SDK is written in TypeScript, but the compilation/transpilation is done automatically when pm2 detects a change to the node SDK source `.ts` files.
+
+<!-- Similarly, if you need to propagate changes to the wicked SDK locally, you can use the following script:
 
 ```
 ~/Projects/wicked/wicked.env$ ./install-local-sdk.sh
@@ -258,13 +262,13 @@ Similarly, if you need to propagate changes to the wicked SDK locally, you can u
 
 If will pack up the current version of the wicked SDK and install it into the repositories where it's needed.
 
-**Note**: This script is automatically called when invoking the `checkout.sh` script with the `--install` option.
+**Note**: This script is automatically called when invoking the `checkout.sh` script with the `--install` option. -->
 
 ### Run the kickstarter
 
 There is also [`kickstarter.config.js`](kickstarter.config.js) pm2 configuration file you may use to start the wicked Kickstarter, if you just want to run it on a previously existing configuration.
 
-In the pm2 configuration file, the configuration repository is hard coded to `../wicked-sample-config`; if you need to load a different configuration or if you need to create a new configuration, `cd` into the `wicked.kickstarter` repository and run
+In the pm2 configuration file, the configuration repository is hard coded to `../sample-config`; if you need to load a different configuration or if you need to create a new configuration, `cd` into the `wicked.kickstarter` repository and run
 
 ``` 
 ~/Projects/wicked/wicked.kickstarter$ node bin/kickstart

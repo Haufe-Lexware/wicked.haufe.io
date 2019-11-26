@@ -1,0 +1,88 @@
+extends layout
+
+mixin checkBox(source, value)
+  - var inputId = source
+  - var inputValue = value
+  - var label = source
+  .checkbox
+    label
+      if inputValue
+        input(name=inputId id=inputId class='tag' checked='checked' type='checkbox')
+        | !{label}
+      else
+        input(name=inputId id=inputId class='tag' type='checkbox')
+        | !{label}
+
+mixin apiCategories(apiTags, params)
+    .panel.panel-default
+      .panel-body.wicked-api-body
+        form(role='form' action='/apis' method='GET')
+          .form-group
+            b API Categories
+            input(name='filter' id='filter' value='on' type='hidden')
+            each tag, i in apiTags
+              +checkBox(tag, params[tag])
+            button(type='submit' onclick='checkCategoryFilter()').btn.btn-primary Filter
+            | &nbsp;
+            a(class="btn btn-primary" href="/apis" role="button") Clear
+
+mixin apiDef(anApi)
+    .col-md-4
+      .panel.panel-default
+        .panel-body.wicked-api-body
+          if glob.views.apis.showApiIcon
+            img(src='/images/api-icon.png')
+          if anApi.auth == 'oauth2'
+            a(href='/help/apis' target='_blank')
+              img(src='/images/oauth2-icon-32.png' align='right' title='Secured with OAuth2 Access')
+          else if anApi.auth == 'none'
+          else
+            a(href='/help/apis' target='_blank')
+              img(src='/images/key-icon-32.png' align='right' title='Secured with API Key Access')
+          a(href=`/apis/${anApi.id}`)
+            h4= anApi.name
+          if anApi.deprecated
+            p(style='color:red;') <b>Deprecated</b>
+          p!= anApi.desc
+          p
+            a(class="btn btn-default" href=`/apis/${anApi.id}` role="button") Information &raquo;
+          if anApi.bundle
+            p
+              a(href='/help/bundles')
+                span.label.label-info= anApi.bundle
+
+block scripts
+  script(type='text/javascript').
+    function checkCategoryFilter() {
+      if($(".tag:checked").length <= 0){
+        $("input[id='filter']").remove();
+      }
+    }
+
+block content
+    .jumbotron.wicked-api-title
+      .container.wicked-title-container
+        h1= title
+
+        p= glob.views.apis.titleTagline
+
+    .container.wicked-container
+      if desc
+        p!= desc
+      p &nbsp;
+      div(class="row")
+        - var length = apilist.length
+        - var apiClass = "col-md-12"
+        if (apiTags.length > 0)
+          div(class="col-md-3")
+            +apiCategories(apiTags, params)
+          - apiClass = "col-md-9"
+        div(class=apiClass)
+            each api, i in apilist
+                if (i % 3 == 0)
+                  div(class="row")
+                    +apiDef(apilist[i])
+                    if (i+1) < length
+                      +apiDef(apilist[i+1])
+                    if (i+2) < length
+                      +apiDef(apilist[i+2])

@@ -1,4 +1,4 @@
 wicked-sdk*
 kill-env.sh
-package-lock.json
+# package-lock.json
 Dockerfile

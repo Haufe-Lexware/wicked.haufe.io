@@ -5,21 +5,29 @@ module.exports = {
    */
   apps : [
     {
+      name     : 'node-sdk',
+      script   : 'npm',
+      args     : 'run build-and-watch',
+      cwd      : '../../node-sdk',
+      watch    : true,
+      ignore_watch: ['.git', 'node_modules', 'dist']
+    },
+    {
       name      : 'api',
       script    : 'bin/api',
-      cwd       : '../../wicked.api',
+      cwd       : '../../api',
       watch     : true,
       ignore_watch: ['.git', 'node_modules', 'routes/internal_apis/**/swagger.json'],
       env: {
-        NODE_ENV: 'portal_local',
+        NODE_ENV: 'localhost',
         LOG_LEVEL: 'debug',
-        PORTAL_CONFIG_BASE: '../wicked-sample-config'
+        PORTAL_CONFIG_BASE: '../sample-config'
       }
     },
     {
       name      : 'ui',
       script    : 'bin/www',
-      cwd       : '../../wicked.ui',
+      cwd       : '../../ui',
       watch     : true,
       ignore_watch: ['.git', 'node_modules'],
       env: {
@@ -31,7 +39,7 @@ module.exports = {
       name      : 'kong-adapter',
       script    : 'npm',
       args      : 'run build-and-start',
-      cwd       : '../../wicked.kong-adapter',
+      cwd       : '../../kong-adapter',
       watch     : true,
       ignore_watch: ['.git', 'node_modules', 'dist'],
       env: {
@@ -43,7 +51,7 @@ module.exports = {
       name      : 'auth',
       script    : 'npm',
       args      : 'run build-and-start',
-      cwd       : '../../wicked.auth',
+      cwd       : '../../auth',
       watch     : true,
       ignore_watch: ['.git', 'node_modules', 'dist'],
       env: {

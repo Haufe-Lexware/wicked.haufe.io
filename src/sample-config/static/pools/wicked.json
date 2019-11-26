@@ -1,0 +1,33 @@
+{
+    "id": "wicked",
+    "name": "Portal Users",
+    "properties": [
+        {
+            "id": "name",
+            "description": "Your display name (e.g. given and last names)",
+            "type": "string",
+            "maxLength": 255,
+            "minLength": 1,
+            "required": true,
+            "oidcClaim": "name"
+        },
+        {
+            "id": "company",
+            "description": "Company",
+            "type": "string",
+            "maxLength": 255,
+            "minLength": 0,
+            "required": false,
+            "oidcClaim": "wicked.haufe.io:company"
+        },
+        {
+            "id": "phone",
+            "description": "Telephone number",
+            "type": "string",
+            "maxLength": 63,
+            "minLength": 0,
+            "required": false,
+            "oidcClaim": "phone_number"
+        }
+    ]
+}

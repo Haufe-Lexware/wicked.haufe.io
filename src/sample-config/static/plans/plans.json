@@ -1,0 +1,28 @@
+{
+  "plans": [
+    {
+      "id": "basic",
+      "name": "Basic Plan",
+      "desc": "Basic access to the API, limits access to 100 calls per hour.",
+      "config": {
+        "plugins": [
+          {
+            "config": {
+              "hour": 100
+            },
+            "name": "rate-limiting"
+          }
+        ]
+      }
+    },
+    {
+      "id": "unlimited",
+      "name": "Unlimited Plan",
+      "desc": "Unlimited access to the API, no limits in terms of calls.",
+      "needsApproval": true,
+      "config": {
+        "plugins": []
+      }
+    }
+  ]
+}

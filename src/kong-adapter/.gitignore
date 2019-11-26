@@ -5,6 +5,6 @@ node_modules
 *.log
 *.tgz
 dist
-package-lock.json
+# package-lock.json
 build_date
 git_*

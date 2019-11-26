@@ -206,14 +206,14 @@ redisContainer=${tmpDir}_redis
 docker run -d --name ${redisContainer} -p ${redisPort}:6379 redis:5-alpine &> /dev/null
 
 echo "INFO: Starting portal API..."
-pushd ../wicked.api &> /dev/null
+pushd ../api &> /dev/null
 PORT=${apiPort} node bin/api &> ${thisDir}/logs/auth-test-local-api.log &
 apiPid=$!
 echo "INFO: API running as PID ${apiPid}."
 popd &> /dev/null
 
 echo "INFO: Building Auth Server..."
-pushd ../wicked.auth &> /dev/null
+pushd ../auth &> /dev/null
 npm run build &> /dev/null
 echo "INFO: Starting Auth Server..."
 ALLOW_RENDER_JSON=true PORT=${authPort} node ./dist/authz.js &> ${thisDir}/logs/auth-test-local-auth-server.log &
@@ -222,7 +222,7 @@ echo "INFO: Auth server running as PID ${authPid}."
 popd &> /dev/null
 
 echo "INFO: Building Kong Adapter..."
-pushd ../wicked.kong-adapter &> /dev/null
+pushd ../kong-adapter &> /dev/null
 npm run build &> /dev/null
 echo "INFO: Starting Kong Adapter..."
 PORT=${kongAdapterPort} node ./dist/bin/kong-adapter.js &> ${thisDir}/logs/auth-test-local-kong-adapter.log &

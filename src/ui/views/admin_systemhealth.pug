@@ -1,0 +1,88 @@
+extends layout
+
+block bodyScripts
+    script(type='text/javascript').
+        // Enable Popovers
+        $(document).ready(function(){
+            $('[data-toggle="popover"]').popover(); 
+        });
+
+        function confirmRestart() {
+            return confirm('Please confirm that you want to restart the API Portal. This will lead to a small amount of downtime.');
+        }
+
+block content
+    .jumbotron.wicked-admin-title
+        .container.wicked-title-container
+            h1 System Health
+            
+            p Check the health of the wicked system components
+    
+    .container.wicked-container
+        br
+        table(class='table table-striped')
+            thead
+                tr
+                    th ID
+                    th Status
+                    th Message
+                    th Pending Events
+                    th Uptime
+            tbody
+                for info in health
+                    tr
+                        td
+                            if info.version && info.kongVersion && info.kongStatus
+                                a(href='#' data-toggle='popover' data-trigger='hover' data-html="true" data-content=`<b>Version:</b> ${info.version}<br/><b>Branch:</b> ${info.gitBranch}<br/><b>Build date:</b> ${info.buildDate}<br><pre>${info.gitLastCommit}</pre><br><b>Kong Version:</b> ${info.kongVersion}<br><b>Kong Status:</b><br><pre>${info.kongStatus}</pre>`)= info.name
+                            else if info.version
+                                a(href='#' data-toggle='popover' data-trigger='hover' data-html="true" data-content=`<b>Version:</b> ${info.version}<br/><b>Branch:</b> ${info.gitBranch}<br/><b>Build date:</b> ${info.buildDate}<br><pre>${info.gitLastCommit}</pre>`)= info.name
+                            else if info.name == 'kong'
+                                a(href='#' data-toggle='popover' data-trigger='hover' data-html="true" data-content='See <code>kong-adapter</code> for information on Kong.')= info.name
+                            else
+                                | #{info.name}
+                        td
+                            if info.healthy == 1
+                                span.label.label-success Healthy
+                            else if info.healthy == 2
+                                span.label.label-warning Initializing
+                            else
+                                span.label.label-danger Unhealthy
+                        td= info.message
+                        td
+                            if info.pendingEvents > 0
+                                != info.pendingEvents
+                            else if info.pendingEvents == 0
+                                | none
+                            else
+                                | ---
+                        td
+                            if info.healthy || (info.uptime > 0 && info.uptimeText)
+                                | #{info.uptimeText}
+                            else
+                                | ---
+                    if info.error
+                        tr
+                            td &nbsp;
+                            td &nbsp;
+                            td
+                                pre!= info.error
+                            td &nbsp;
+                            td &nbsp;
+        
+        h5 Latest Commit:
+
+        pre= glob.lastCommit
+
+        .panel.panel-danger
+            .panel-heading
+                +panelTitle('Reload Configuration', null, 'dangerzone')
+            div(id='dangerzone').collapse.panel-collapse
+                .panel-body
+                    p.
+                        By clicking this button, you may reload the configuration of this API portal. Technically speaking,
+                        this will restart the API container/process, which in turn will lead to all other components restarting,
+                        one after the other. Please note that this will lead to <b>a certain amount of downtime</b> of the API
+                        Portal and the Authorization Server, but <b>not</b> of the actual Gateway.
+
+                    form(role='form' action='/admin/restart' method='POST' onsubmit='return confirmRestart();')
+                        button(class='btn btn-danger' type='submit') Restart Components/Reload Configuration

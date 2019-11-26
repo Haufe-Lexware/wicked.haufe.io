@@ -4,6 +4,6 @@ node_modules
 .DS_Store
 *.log
 *.tgz
-package-lock.json
+# package-lock.json
 build_date
 git_*

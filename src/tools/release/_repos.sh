@@ -32,6 +32,7 @@ imageRepos="${baseRepos} \
     wicked.box"
 
 imageBases=$(for r in ${imageRepos}; do echo ${r:7}; done)
+versionDirBases=$(for v in ${versionDirs}; do echo ${v:7}; done)
 
 alpineImageBases="env \
     auth \

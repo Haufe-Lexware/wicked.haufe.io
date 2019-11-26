@@ -1,0 +1,54 @@
+{
+  "PORTAL_INITIALUSERS0_PASSWORD": {
+    "value": "wicked"
+  },
+  "HELM_NAME": {
+    "value": "undefined-undefined"
+  },
+  "K8S_NAMESPACE": {
+    "value": "default"
+  },
+  "PORTAL_API_AESKEY": {
+    "value": "8ecce76c5d11a7841f94d5cbc0eda05f9b05a4a1cecf126d03dcc2b3f28166dd4cb5862b104c76697eaaacbfe08ace3ab01a6a83f72f06508b740f24c00b834f5d730f42a083baeed86231a2d22fba93",
+    "encrypted": true
+  },
+  "PORTAL_API_DYNAMIC_CONFIG": {
+    "value": "/var/portal-api/dynamic"
+  },
+  "PORTAL_API_STATIC_CONFIG": {
+    "value": "/var/portal-api/static"
+  },
+  "PORTAL_API_URL": {
+    "value": "http://${HELM_NAME}-api.${K8S_NAMESPACE}.svc.cluster.local:3001"
+  },
+  "PORTAL_CHATBOT_URL": {
+    "value": "http://${HELM_NAME}-chatbot.${K8S_NAMESPACE}.svc.cluster.local:3004"
+  },
+  "PORTAL_KONG_ADAPTER_URL": {
+    "value": "http://${HELM_NAME}-kong-adapter.${K8S_NAMESPACE}.svc.cluster.local:3002"
+  },
+  "PORTAL_KONG_ADMIN_URL": {
+    "value": "http://${HELM_NAME}-kong.${K8S_NAMESPACE}.svc.cluster.local:8001"
+  },
+  "PORTAL_KONG_PROXY_URL": {
+    "value": "http://${HELM_NAME}-kong.${K8S_NAMESPACE}.svc.cluster.local:8000"
+  },
+  "PORTAL_MAILER_URL": {
+    "value": "http://${HELM_NAME}-mailer.${K8S_NAMESPACE}.svc.cluster.local:3003"
+  },
+  "PORTAL_PORTAL_URL": {
+    "value": "http://${HELM_NAME}-portal.${K8S_NAMESPACE}.svc.cluster.local:3000"
+  },
+  "PORTAL_SESSIONSTORE_HOST": {
+    "value": "${HELM_NAME}-redis.${K8S_NAMESPACE}.svc.cluster.local"
+  },
+  "PORTAL_AUTHSERVER_URL": {
+    "value": "http://${HELM_NAME}-auth.${K8S_NAMESPACE}.svc.cluster.local:3010"
+  },
+  "PORTAL_ECHO_URL": {
+    "value": "http://${HELM_NAME}-api.${K8S_NAMESPACE}.svc.cluster.local:3009"
+  },
+  "PORTAL_STORAGE_PGHOST": {
+    "value": "${HELM_NAME}-kong-database.${K8S_NAMESPACE}.svc.cluster.local"
+  }
+}

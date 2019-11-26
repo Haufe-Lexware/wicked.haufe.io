@@ -7,8 +7,8 @@ module.exports = {
       {
         name      : 'kickstarter',
         script    : 'bin/kickstart',
-        args      : '../wicked-sample-config',
-        cwd       : '../../wicked.kickstarter',
+        args      : '../sample-config',
+        cwd       : '../../kickstarter',
         env: {
           DEBUG: 'portal-env:*,kickstarter:*'
         }

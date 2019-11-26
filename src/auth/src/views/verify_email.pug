@@ -1,0 +1,16 @@
+extends auth_layout
+
+block content
+    h2 Verify Email
+    
+    p Click the button below to verify your email address: 
+    
+    p <code>#{email}</code>
+
+    form(role='form' action=`${baseUrl}/${verifyPostUrl}` method='post')
+
+        input(type='hidden' name='_csrf' value=csrfToken)
+        input(type='hidden' name='verification_id' value=id)
+        input(type='hidden' name='type' value='email')
+
+        button(class='btn btn-lg btn-primary btn-block' type='submit') Verify Email

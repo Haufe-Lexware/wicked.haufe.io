@@ -1,0 +1,47 @@
+{
+  "PORTAL_API_URL": {
+    "value": "http://${LOCAL_IP}:3001"
+  },
+  "PORTAL_AUTHSERVER_URL": {
+    "value": "http://${LOCAL_IP}:3010"
+  },
+  "PORTAL_CHATBOT_URL": {
+    "value": "http://${LOCAL_IP}:3004"
+  },
+  "PORTAL_CONFIG_BASE": {
+    "value": "/override/this/"
+  },
+  "PORTAL_ECHO_URL": {
+    "value": "http://${LOCAL_IP}:3009"
+  },
+  "PORTAL_KONG_ADAPTER_URL": {
+    "value": "http://${LOCAL_IP}:3002"
+  },
+  "PORTAL_KONG_ADMIN_URL": {
+    "value": "http://${LOCAL_IP}:8001"
+  },
+  "PORTAL_KONG_PROXY_URL": {
+    "value": "http://${LOCAL_IP}:8000"
+  },
+  "PORTAL_MAILER_URL": {
+    "value": "http://${LOCAL_IP}:3003"
+  },
+  "PORTAL_NETWORK_APIHOST": {
+    "value": "api.portal.com:8000"
+  },
+  "PORTAL_NETWORK_PORTALHOST": {
+    "value": "portal.com:3000"
+  },
+  "PORTAL_NETWORK_SCHEMA": {
+    "value": "http"
+  },
+  "PORTAL_PORTAL_URL": {
+    "value": "http://${LOCAL_IP}:3000"
+  },
+  "PORTAL_SESSIONSTORE_HOST": {
+    "value": "${LOCAL_IP}"
+  },
+  "PORTAL_STORAGE_PGHOST": {
+    "value": "${LOCAL_IP}"
+  }
+}

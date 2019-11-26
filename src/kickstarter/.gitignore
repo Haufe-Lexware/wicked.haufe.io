@@ -5,6 +5,6 @@ dynamic
 node_modules
 static
 # Dockerfile
-package-lock.json
+# package-lock.json
 build_date
 git_*

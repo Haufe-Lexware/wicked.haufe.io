@@ -1,0 +1,5 @@
+{
+    "showTitle": true,
+    "title": "This is the title",
+    "subTitle": "Title and subtitle, and whether you want a *restriction* on the page or not, is defined in the JSON companion file."
+}
