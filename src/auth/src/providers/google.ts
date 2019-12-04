@@ -1,7 +1,7 @@
 'use strict';
 
 import { GenericOAuth2Router } from '../common/generic-router';
-import { IdpOptions, IdentityProvider, GoogleIdpConfig, ExpressHandler, AuthResponse, EndpointDefinition, AuthRequest, CheckRefreshDecision } from '../common/types';
+import { IdpOptions, IdentityProvider, GoogleIdpConfig, ExpressHandler, AuthResponse, EndpointDefinition, AuthRequest, CheckRefreshDecision, ErrorLink } from '../common/types';
 import { OidcProfile, Callback, WickedApi, getAuthServer } from 'wicked-sdk';
 const { debug, info, warn, error } = require('portal-env').Logger('portal-auth:google');
 const Router = require('express').Router;
@@ -120,6 +120,10 @@ export class GoogleIdP implements IdentityProvider {
             allowRefresh: true
         });
     };
+    
+    public getErrorLinks(): ErrorLink {
+        return null;
+    }
 
     // Instance function, on purpose; this is used as a passport callback
     private verifyProfile = (accessToken, refreshToken, profile, done: Callback<AuthResponse>) => {

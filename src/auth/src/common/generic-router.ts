@@ -121,6 +121,13 @@ export class GenericOAuth2Router {
                 }
             }
 
+            // Check for links to display in the error message
+            const errorLinks = instance.idp.getErrorLinks();
+            if (errorLinks) {
+                err.errorLink = errorLinks.url;
+                err.errorLinkDescription = errorLinks.description;
+            }
+
             // Whatever has not been handled yet, delegate to generic error handler (app.ts)
             return next(err);
         });

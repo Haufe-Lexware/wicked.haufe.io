@@ -1,7 +1,7 @@
 'use strict';
 
 import { GenericOAuth2Router } from '../common/generic-router';
-import { AuthRequest, AuthResponse, IdentityProvider, EndpointDefinition, IdpOptions, LocalIdpConfig, CheckRefreshDecision, BooleanCallback } from '../common/types';
+import { AuthRequest, AuthResponse, IdentityProvider, EndpointDefinition, IdpOptions, LocalIdpConfig, CheckRefreshDecision, BooleanCallback, ErrorLink } from '../common/types';
 import { OidcProfile, WickedUserInfo, Callback, WickedApi } from 'wicked-sdk';
 const { debug, info, warn, error } = require('portal-env').Logger('portal-auth:local');
 import * as wicked from 'wicked-sdk';
@@ -75,6 +75,10 @@ export class LocalIdP implements IdentityProvider {
         return callback(null, {
             allowRefresh: true
         });
+    }
+
+    public getErrorLinks(): ErrorLink {
+        return null;
     }
 
     public endpoints(): EndpointDefinition[] {

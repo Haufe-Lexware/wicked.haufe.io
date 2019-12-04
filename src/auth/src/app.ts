@@ -327,7 +327,9 @@ app.initApp = function (authServerConfig: WickedAuthServer, callback: SimpleCall
                 baseUrl: req.app.get('base_path'),
                 correlationId: req.correlationId,
                 message: err.message,
-                status: err.status
+                status: err.status,
+                errorLink: err.errorLink,
+                errorLinkDescription: err.errorLinkDescription
             });
         }
     });

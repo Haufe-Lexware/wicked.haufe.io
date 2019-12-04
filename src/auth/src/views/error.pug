@@ -10,3 +10,7 @@ block content
   if (status !== 404)
     p.
       If the problem persists, please contact the system administrator.
+
+  if (errorLink && errorLinkDescription)
+    p
+      a(href=errorLink) #{errorLinkDescription}

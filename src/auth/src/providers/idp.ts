@@ -1,7 +1,7 @@
 'use strict';
 
 import { GenericOAuth2Router } from '../common/generic-router';
-import { AuthRequest, EndpointDefinition, AuthResponse, IdentityProvider, IdpOptions, CheckRefreshDecision } from '../common/types';
+import { AuthRequest, EndpointDefinition, AuthResponse, IdentityProvider, IdpOptions, CheckRefreshDecision, ErrorLink } from '../common/types';
 import { Callback, WickedApi } from 'wicked-sdk';
 const { debug, info, warn, error } = require('portal-env').Logger('portal-auth:idp');
 const Router = require('express').Router;
@@ -111,6 +111,9 @@ export class IdP implements IdentityProvider {
         });
     };
 
+    public getErrorLinks(): ErrorLink {
+        return null;
+    }
 
     /**
      * Sample custom end point, e.g. for responding to logins; see this.endpoints()

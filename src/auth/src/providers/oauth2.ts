@@ -1,7 +1,7 @@
 'use strict';
 
 import { GenericOAuth2Router } from '../common/generic-router';
-import { AuthRequest, EndpointDefinition, AuthResponse, IdentityProvider, IdpOptions, OAuth2IdpConfig, ExpressHandler, CheckRefreshDecision } from '../common/types';
+import { AuthRequest, EndpointDefinition, AuthResponse, IdentityProvider, IdpOptions, OAuth2IdpConfig, ExpressHandler, CheckRefreshDecision, ErrorLink } from '../common/types';
 import { OidcProfile, Callback, WickedApi } from 'wicked-sdk';
 const { debug, info, warn, error } = require('portal-env').Logger('portal-auth:oauth2');
 
@@ -78,15 +78,16 @@ export class OAuth2IdP implements IdentityProvider {
                     issuer: "IdP Issuer",
                     authorization_endpoint: authMethodConfig.endpoints.authorizeEndpoint,
                     token_endpoint: authMethodConfig.endpoints.tokenEndpoint,
-                    userinfo_endpoint: authMethodConfig.endpoints.profileEndpoint});
+                    userinfo_endpoint: authMethodConfig.endpoints.profileEndpoint
+                });
                 let client = new issuer.Client({
                     client_id: authMethodConfig.clientId,
                     client_secret: authMethodConfig.clientSecret,
                     redirect_uris: [callbackUrl],
                     response_types: ['code']
-                });                
+                });
                 client.userinfo(accessToken)
-                    .then(function(userInfo) {
+                    .then(function (userInfo) {
                         debug(`retrieveUserProfileCallback: Successfully retrieved profile from endpoint`);
                         done(null, userInfo);
                     })
@@ -136,8 +137,8 @@ export class OAuth2IdP implements IdentityProvider {
                 error(`verifyProfile(${this.authMethodId}): JWT decode/verification failed.`);
                 return done(null, false, { message: ex });
             }
-        } 
-        debug(`verifyProfile(${this.authMethodId}): Retrieved Profile:`);       
+        }
+        debug(`verifyProfile(${this.authMethodId}): Retrieved Profile:`);
         debug(profile);
 
         try {
@@ -179,7 +180,7 @@ export class OAuth2IdP implements IdentityProvider {
             params.state = options.state;
         }
         return params;
-    }    
+    }
 
     /**
      * In case the user isn't already authenticated, this method will
@@ -214,6 +215,16 @@ export class OAuth2IdP implements IdentityProvider {
         const settings = Object.assign({}, this.baseAuthenticateSettings, additionalSettings);
         passport.authenticate(this.authMethodId, settings)(req, res, next);
     };
+
+    public getErrorLinks(): ErrorLink {
+        if (this.authMethodConfig.errorLink && this.authMethodConfig.errorLinkDescription) {
+            return {
+                url: this.authMethodConfig.errorLink,
+                description: this.authMethodConfig.errorLinkDescription
+            };
+        }
+        return null;
+    }
 
     /**
      * In case you need additional end points to be registered, pass them
@@ -253,9 +264,9 @@ export class OAuth2IdP implements IdentityProvider {
             scope: this.authMethodConfig.endpoints.authorizeScope
         };
         const config = utils.getJson(this.authMethodConfig);
-        if (config.params){
+        if (config.params) {
             Object.keys(config.params).map((key) => {
-                postBody[key]=config.params[key];
+                postBody[key] = config.params[key];
             });
         }
         const uri = this.authMethodConfig.endpoints.tokenEndpoint;
@@ -265,7 +276,7 @@ export class OAuth2IdP implements IdentityProvider {
         }).join('&');
 
         request.post({
-            headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
             uri,
             body: postBodyParams
         }, function (err, res, responseBody) {
@@ -305,7 +316,7 @@ export class OAuth2IdP implements IdentityProvider {
         // Do we have errors from the upstream IdP here?
         if (req.query && req.query.error) {
             warn(`callbackHandler detected ${req.query.error} error`);
-            (async() => {
+            (async () => {
                 await instance.genericFlow.failAuthorizeFlow(req, res, next, req.query.error, req.query.error_description);
             })();
             return;

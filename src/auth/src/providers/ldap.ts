@@ -1,7 +1,7 @@
 'use strict';
 
 import { GenericOAuth2Router } from '../common/generic-router';
-import { AuthRequest, AuthResponse, IdentityProvider, EndpointDefinition, IdpOptions, CheckRefreshDecision, BooleanCallback, LdapIdpConfig, TokenInfo } from '../common/types';
+import { AuthRequest, AuthResponse, IdentityProvider, EndpointDefinition, IdpOptions, CheckRefreshDecision, LdapIdpConfig, TokenInfo, ErrorLink } from '../common/types';
 import { OidcProfile, WickedUserInfo, Callback } from 'wicked-sdk';
 const { debug, info, warn, error } = require('portal-env').Logger('portal-auth:ldap');
 import * as wicked from 'wicked-sdk';
@@ -117,6 +117,10 @@ export class LdapIdP implements IdentityProvider {
                 handler: this.loginHandler
             }
         ];
+    }
+
+    public getErrorLinks(): ErrorLink {
+        return null;
     }
 
     private loginHandler = async (req, res, next) => {

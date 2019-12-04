@@ -1,7 +1,7 @@
 'use strict';
 
 import { GenericOAuth2Router } from '../common/generic-router';
-import { IdentityProvider, IdpOptions, AuthRequest, EndpointDefinition, CheckRefreshDecision, AuthResponse, DummyIdpConfig } from '../common/types';
+import { IdentityProvider, IdpOptions, AuthRequest, EndpointDefinition, CheckRefreshDecision, AuthResponse, DummyIdpConfig, ErrorLink } from '../common/types';
 const { debug, info, warn, error } = require('portal-env').Logger('portal-auth:dummy');
 import * as wicked from 'wicked-sdk';
 import { Callback, WickedApi } from 'wicked-sdk';
@@ -84,6 +84,10 @@ export class DummyIdP implements IdentityProvider {
             allowRefresh: true
         });
     };
+
+    public getErrorLinks(): ErrorLink {
+        return null;
+    }
 
     private getDummyAuthResponse(): AuthResponse {
         return {

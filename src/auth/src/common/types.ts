@@ -102,6 +102,11 @@ export interface CheckRefreshDecision {
     allowRefresh: boolean
 };
 
+export interface ErrorLink {
+    url: string,
+    description: string
+};
+
 export interface IdentityProvider {
     getType: () => string,
     supportsPrompt: () => boolean,
@@ -110,7 +115,8 @@ export interface IdentityProvider {
     logoutHook?: (req, res, next, redirect_uri: string) => boolean,
     endpoints: () => EndpointDefinition[],
     authorizeByUserPass: (user: string, pass: string, callback: Callback<AuthResponse>) => void,
-    checkRefreshToken: (tokenInfo, apiInfo: WickedApi, callback: Callback<CheckRefreshDecision>) => void
+    checkRefreshToken: (tokenInfo, apiInfo: WickedApi, callback: Callback<CheckRefreshDecision>) => void,
+    getErrorLinks: () => ErrorLink
 };
 
 export interface IdpOptions {
@@ -179,6 +185,10 @@ export interface OAuth2IdpConfig extends OAuth2IdpConfigBase {
     retrieveProfile?: boolean,
     // Specify to forward a "state" parameter to the upstream IdP
     forwardState?: boolean,
+    // Link to main page of application; displayed on error pages
+    errorLink?: string,
+    // The text for the main link; displayed as content of the <a> tag
+    errorLinkDescription?: string,
 }
 
 export interface SamlSpOptions {

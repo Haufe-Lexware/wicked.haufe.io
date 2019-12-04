@@ -1,7 +1,7 @@
 'use strict';
 
 import { GenericOAuth2Router } from '../common/generic-router';
-import { IdpOptions, ExpressHandler, EmailMissingHandler, TwitterIdpConfig, IdentityProvider, AuthRequest, EndpointDefinition, CheckRefreshDecision, AuthResponse } from '../common/types';
+import { IdpOptions, ExpressHandler, EmailMissingHandler, TwitterIdpConfig, IdentityProvider, AuthRequest, EndpointDefinition, CheckRefreshDecision, AuthResponse, ErrorLink } from '../common/types';
 import { OidcProfile, Callback, WickedApi } from 'wicked-sdk';
 const { debug, info, warn, error } = require('portal-env').Logger('portal-auth:twitter');
 const Router = require('express').Router;
@@ -124,6 +124,10 @@ export class TwitterIdP implements IdentityProvider {
         return callback(null, {
             allowRefresh: true
         });
+    }
+    
+    public getErrorLinks(): ErrorLink {
+        return null;
     }
 
     // ========================

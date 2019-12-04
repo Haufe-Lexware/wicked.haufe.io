@@ -1,7 +1,7 @@
 'use strict';
 
 import { GenericOAuth2Router } from '../common/generic-router';
-import { AuthRequest, EndpointDefinition, AuthResponse, IdentityProvider, IdpOptions, SamlIdpConfig, CheckRefreshDecision, BooleanCallback, SamlAuthResponse } from '../common/types';
+import { AuthRequest, EndpointDefinition, AuthResponse, IdentityProvider, IdpOptions, SamlIdpConfig, CheckRefreshDecision, SamlAuthResponse, ErrorLink } from '../common/types';
 import { OidcProfile, Callback, WickedApi } from 'wicked-sdk';
 const { debug, info, warn, error } = require('portal-env').Logger('portal-auth:saml');
 const Router = require('express').Router;
@@ -173,6 +173,10 @@ export class SamlIdP implements IdentityProvider {
             // Silently just kill all sessions, or at least this one.
             return false;
         }
+    }
+
+    public getErrorLinks(): ErrorLink {
+        return null;
     }
 
     /**
