@@ -62,7 +62,7 @@ export class OAuth2IdP implements IdentityProvider {
             clientID: authMethodConfig.clientId,
             clientSecret: authMethodConfig.clientSecret,
             callbackURL: callbackUrl,
-            passReqToCallback: true
+            passReqToCallback: true,
         }, this.verifyProfile);
 
         // The authorization parameters can differ for each authorization
@@ -174,6 +174,9 @@ export class OAuth2IdP implements IdentityProvider {
         if (options.prompt) {
             params.prompt = options.prompt;
         }
+        if (options.state) {
+            params.state = options.state;
+        }
         return params;
     }    
 
@@ -202,6 +205,9 @@ export class OAuth2IdP implements IdentityProvider {
         }
         if (authRequest.prefill_username) {
             additionalSettings.prefill_username = authRequest.prefill_username;
+        }
+        if (this.authMethodConfig.forwardState && authRequest.state) {
+            additionalSettings.state = authRequest.state;
         }
         const settings = Object.assign({}, this.baseAuthenticateSettings, additionalSettings);
         passport.authenticate(this.authMethodId, settings)(req, res, next);

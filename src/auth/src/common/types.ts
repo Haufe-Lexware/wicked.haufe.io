@@ -176,7 +176,9 @@ export interface OAuth2IdpConfig extends OAuth2IdpConfigBase {
     // Specify "false" to not attempt authentication with "prompt=none" in case provided with /authorize call
     doesNotSupportPrompt?: boolean,
     // Specify to retrieve profile information from profileEndpoint 
-    retrieveProfile?: boolean
+    retrieveProfile?: boolean,
+    // Specify to forward a "state" parameter to the upstream IdP
+    forwardState?: boolean,
 }
 
 export interface SamlSpOptions {
