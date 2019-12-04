@@ -9,12 +9,12 @@ block content
 
   if (status !== 404)
     p.
-      If the problem persists, please contact the system administrator.
+      #{i18n.problem_persist}
 
   if (errorLink && errorLinkDescription)
     p
       a(href=errorLink) #{errorLinkDescription}
-    h5 You will be automatically redirected in 5 seconds.
+    h5 #{i18n.redirect}
     script(type="text/javascript").
       setTimeout(function() {
         window.location = "#{errorLink}"
