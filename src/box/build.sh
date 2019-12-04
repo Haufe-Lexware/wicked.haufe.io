@@ -23,47 +23,67 @@ printf "$build_date" > ./build_date
 git log -1 --decorate=short > ./git_last_commit
 git rev-parse --abbrev-ref HEAD > ./git_branch
 
-clone_repo() {
-    local repo
-    repo=$1
-    full_repo=wicked.${repo}
-    local branch
-    branch=$2
-    if [[ -d ${full_repo} ]]; then
-        pushd ${full_repo} > /dev/null
-        git checkout ${branch}
-        git pull
-        popd > /dev/null
-    else
-        git clone https://github.com/apim-haufe-io/${full_repo}
-        pushd ${full_repo} > /dev/null
-        git checkout ${branch}
-        popd > /dev/null
-    fi
+# clone_repo() {
+#     local repo
+#     repo=$1
+#     full_repo=wicked.${repo}
+#     local branch
+#     branch=$2
+#     if [[ -d ${full_repo} ]]; then
+#         pushd ${full_repo} > /dev/null
+#         git checkout ${branch}
+#         git pull
+#         popd > /dev/null
+#     else
+#         git clone https://github.com/apim-haufe-io/${full_repo}
+#         pushd ${full_repo} > /dev/null
+#         git checkout ${branch}
+#         popd > /dev/null
+#     fi
 
-    pushd ${full_repo} > /dev/null
-    isDirty=$(git status -s)
-    needsPush=$(git cherry -v)
-    if [ -n "${isDirty}" ]; then
-        echo "Repository ${full_repo} is dirty, will not continue."
-        exit 1
-    fi
-    if [ -n "${needsPush}" ]; then
-        echo "Repository ${full_repo} has unpushed commits, will not continue."
-        exit 1
-    fi
-    rm -f ./build_date ./git_last_commit ./git_branch
-    printf "${build_date}" > ./build_date
-    git log -1 --decorate=short > ./git_last_commit
-    git rev-parse --abbrev-ref HEAD > ./git_branch
-    popd > /dev/null
-}
+#     pushd ${full_repo} > /dev/null
+#     isDirty=$(git status -s)
+#     needsPush=$(git cherry -v)
+#     if [ -n "${isDirty}" ]; then
+#         echo "Repository ${full_repo} is dirty, will not continue."
+#         exit 1
+#     fi
+#     if [ -n "${needsPush}" ]; then
+#         echo "Repository ${full_repo} has unpushed commits, will not continue."
+#         exit 1
+#     fi
+#     rm -f ./build_date ./git_last_commit ./git_branch
+#     printf "${build_date}" > ./build_date
+#     git log -1 --decorate=short > ./git_last_commit
+#     git rev-parse --abbrev-ref HEAD > ./git_branch
+#     popd > /dev/null
+# }
 
 repos="kong node-sdk env api ui kong-adapter auth mailer chatbot"
 
+# for repo in ${repos}; do
+#     clone_repo ${repo} ${branch}
+# done
+
+if [[ -d wicked.haufe.io ]]; then
+    pushd wicked.haufe.io
+    git pull
+    popd
+else
+    git clone https://github.com/Haufe-Lexware/wicked.haufe.io
+fi
+
+pushd wicked.haufe.io
+git checkout ${branch}
 for repo in ${repos}; do
-    clone_repo ${repo} ${branch}
+    pushd src/${repo}
+    rm -f ./build_date ./git_last_commit ./git_branch
+    echo ${branch} > ./git_branch
+    echo ${build_date} > ./build_date
+    git log -1 --decorate=short > ./git_last_commit
+    popd
 done
+popd
 
 alpineImageName=${DOCKER_PREFIX}box:${DOCKER_TAG}
 docker build -t ${alpineImageName} .

@@ -7,14 +7,14 @@ module.exports = {
     {
       name      : 'api',
       script    : 'bin/api',
-      cwd       : '/usr/src/app/wicked.api',
+      cwd       : '/usr/src/app/api',
       env: {
       }
     },
     {
       name      : 'ui',
       script    : 'bin/www',
-      cwd       : '/usr/src/app/wicked.ui',
+      cwd       : '/usr/src/app/ui',
       env: {
         PORTAL_API_URL: 'http://localhost:3001'
       }
@@ -22,7 +22,7 @@ module.exports = {
     {
       name      : 'kong-adapter',
       script    : 'dist/bin/kong-adapter.js',
-      cwd       : '/usr/src/app/wicked.kong-adapter',
+      cwd       : '/usr/src/app/kong-adapter',
       env: {
         PORTAL_API_URL: 'http://localhost:3001'
       }
@@ -30,7 +30,7 @@ module.exports = {
     {
       name      : 'auth',
       script    : 'dist/authz.js',
-      cwd       : '/usr/src/app/wicked.auth',
+      cwd       : '/usr/src/app/auth',
       env: {
         PORTAL_API_URL: 'http://localhost:3001'
       }
@@ -38,7 +38,7 @@ module.exports = {
     {
       name      : 'mailer',
       script    : 'bin/mailer',
-      cwd       : '/usr/src/app/wicked.mailer',
+      cwd       : '/usr/src/app/mailer',
       env: {
         PORTAL_API_URL: 'http://localhost:3001'
       }
@@ -46,7 +46,7 @@ module.exports = {
     {
       name      : 'chatbot',
       script    : 'bin/chatbot',
-      cwd       : '/usr/src/app/wicked.chatbot',
+      cwd       : '/usr/src/app/chatbot',
       env: {
         PORTAL_API_URL: 'http://localhost:3001'
       }

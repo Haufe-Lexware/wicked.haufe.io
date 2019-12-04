@@ -3,28 +3,28 @@ FROM node:10-alpine AS env_builder
 RUN apk update && \
     apk add jq bash
 
-COPY wicked.node-sdk /usr/src/app/wicked.node-sdk
-RUN cd /usr/src/app/wicked.node-sdk && \
+COPY wicked.haufe.io/src/node-sdk /usr/src/app/node-sdk
+RUN cd /usr/src/app/node-sdk && \
     npm install -g typescript@$(jq .devDependencies.typescript package.json | tr -d '"') && \
     npm install --production && \
     tsc && \
     cp $(npm pack) ../wicked-sdk.tgz
 
-COPY wicked.env /usr/src/app/wicked.env
-WORKDIR /usr/src/app/wicked.env
+COPY wicked.haufe.io/src/env /usr/src/app/env
+WORKDIR /usr/src/app/env
 RUN npm pack && cp portal-env*.tgz ../portal-env.tgz
 RUN cp package.all.json package.json && \
     cp ../wicked-sdk.tgz . && \
     npm install --production
 
-COPY wicked.kong-adapter /usr/src/app/wicked.kong-adapter
-WORKDIR /usr/src/app/wicked.kong-adapter
-RUN ln -s /usr/src/app/wicked.env/node_modules ./node_modules
+COPY wicked.haufe.io/src/kong-adapter /usr/src/app/kong-adapter
+WORKDIR /usr/src/app/kong-adapter
+RUN ln -s /usr/src/app/env/node_modules ./node_modules
 RUN npm run build
 
-COPY wicked.auth /usr/src/app/wicked.auth
-WORKDIR /usr/src/app/wicked.auth
-RUN ln -s /usr/src/app/wicked.env/node_modules ./node_modules
+COPY wicked.haufe.io/src/auth /usr/src/app/auth
+WORKDIR /usr/src/app/auth
+RUN ln -s /usr/src/app/env/node_modules ./node_modules
 RUN npm run build
 
 # ======================================================
@@ -74,15 +74,18 @@ RUN npm install -g pm2
 # RUN wget -O /usr/local/bin/wtfc.sh https://raw.githubusercontent.com/typekpb/wtfc/1607d27280ba1ee8a74d74d97a1f9de6a6d38486/wtfc.sh \
 #     && chmod +x /usr/local/bin/wtfc.sh
 
-COPY . /usr/src/app
-COPY --from=env_builder /usr/src/app/wicked.env/node_modules /usr/src/app/wicked.env/node_modules
-COPY --from=env_builder /usr/src/app/wicked.kong-adapter/dist /usr/src/app/wicked.kong-adapter/dist
-COPY --from=env_builder /usr/src/app/wicked.auth/dist /usr/src/app/wicked.auth/dist
+COPY wicked.haufe.io/src /usr/src/app
+COPY resources /usr/src/app/resources
+COPY docker-startup.sh /usr/src/app
+COPY pm2.config.js /usr/src/app
+COPY --from=env_builder /usr/src/app/env/node_modules /usr/src/app/env/node_modules
+COPY --from=env_builder /usr/src/app/kong-adapter/dist /usr/src/app/kong-adapter/dist
+COPY --from=env_builder /usr/src/app/auth/dist /usr/src/app/auth/dist
 
 RUN for r in api ui auth kong-adapter mailer chatbot; do \
         echo "Linking node_modules for wicked.${r}" && \
-        cd /usr/src/app/wicked.${r} && \
-        ln -s /usr/src/app/wicked.env/node_modules ./node_modules; \
+        cd /usr/src/app/${r} && \
+        ln -s /usr/src/app/env/node_modules ./node_modules; \
     done
 
 EXPOSE 8000 8001 3000 3001 3002 3003 3004 3005 3010
