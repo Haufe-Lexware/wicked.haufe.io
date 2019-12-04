@@ -667,9 +667,16 @@ export class GenericOAuth2Router {
         // Extra TODO:
         // - Pass-through APIs do not create local users
         const instance = this;
-        const authRequest = utils.getAuthRequest(req, instance.authMethodId);
-        if (!authRequest)
-            return failMessage(500, 'Invalid state: authRequest is missing.', next);
+        let authRequest;
+        try {
+            authRequest = utils.getAuthRequest(req, instance.authMethodId);
+        } catch (err) {
+            warn('Invalid state: No authRequest in session');
+            warn(err.stack);
+        }
+        if (!authRequest) {
+            return failMessage(400, 'Unexpected callback; there is no current authorization request pending.', next);
+        }
         try {
             await this.checkUserFromAuthResponseAsync(authResponse, authRequest.api_id);
         }
