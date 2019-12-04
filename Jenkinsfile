@@ -129,6 +129,20 @@ pipeline {
                 }
             }
         }
+
+        // ===========================
+
+        stage('Wicked-in-a-box') {
+            steps {
+                script {
+                    withCredentials([
+                        usernamePassword(credentialsId: 'dockerhub_wicked', usernameVariable: 'DOCKER_REGISTRY_USER', passwordVariable: 'DOCKER_REGISTRY_PASSWORD')
+                    ]) {
+                        sh './src/box/build.sh ' + env.BRANCH_NAME + ' --push'
+                    }
+                }
+            }
+        }
     }
 }
 
