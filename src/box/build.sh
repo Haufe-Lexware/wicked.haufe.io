@@ -2,6 +2,10 @@
 
 set -e
 
+this_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )"
+
+pushd ${this_dir}
+
 if [ -z "$1" ]; then
     echo "Usage: $0 <branch>"
     exit 1
@@ -116,3 +120,5 @@ else
         echo "WARNING: Unknown parameter '$1'; did you mean --push?"
     fi
 fi
+
+popd

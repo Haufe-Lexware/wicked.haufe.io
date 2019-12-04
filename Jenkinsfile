@@ -36,99 +36,99 @@ pipeline {
         // }
 
 
-        stage('Build') {
-            steps {
-                sh './src/build.sh'
-            }
-        }
+        // stage('Build') {
+        //     steps {
+        //         sh './src/build.sh'
+        //     }
+        // }
 
-        stage('Push') {
-            steps {
-                script {
-                    withCredentials([
-                        usernamePassword(credentialsId: 'dockerhub_wicked', usernameVariable: 'DOCKER_REGISTRY_USER', passwordVariable: 'DOCKER_REGISTRY_PASSWORD')
-                    ]) {
-                        sh './src/push.sh'
-                    }
-                }
-            }
-        }
+        // stage('Push') {
+        //     steps {
+        //         script {
+        //             withCredentials([
+        //                 usernamePassword(credentialsId: 'dockerhub_wicked', usernameVariable: 'DOCKER_REGISTRY_USER', passwordVariable: 'DOCKER_REGISTRY_PASSWORD')
+        //             ]) {
+        //                 sh './src/push.sh'
+        //             }
+        //         }
+        //     }
+        // }
 
-        stage('API Tests (postgres)') {
-            environment {
-                BUILD_POSTGRES = 'true';
-                BUILD_ALPINE = '';
-            }
-            steps {
-                script {
-                    sh './src/test/run-api-tests.sh'
-                }
-            }
-        }
+        // stage('API Tests (postgres)') {
+        //     environment {
+        //         BUILD_POSTGRES = 'true';
+        //         BUILD_ALPINE = '';
+        //     }
+        //     steps {
+        //         script {
+        //             sh './src/test/run-api-tests.sh'
+        //         }
+        //     }
+        // }
 
-        stage('API Tests (postgres, alpine)') {
-            environment {
-                BUILD_POSTGRES = 'true';
-                BUILD_ALPINE = '-alpine';
-            }
-            steps {
-                script {
-                    sh './src/test/run-api-tests.sh'
-                }
-            }
-        }
+        // stage('API Tests (postgres, alpine)') {
+        //     environment {
+        //         BUILD_POSTGRES = 'true';
+        //         BUILD_ALPINE = '-alpine';
+        //     }
+        //     steps {
+        //         script {
+        //             sh './src/test/run-api-tests.sh'
+        //         }
+        //     }
+        // }
 
-        // ===========================
+        // // ===========================
 
-        stage('Kong Adapter Tests (postgres)') {
-            environment {
-                BUILD_ALPINE = ''
-                BUILD_POSTGRES = 'true'
-            }
-            steps {
-                script {
-                    sh './src/test/run-kong-adapter-tests.sh'
-                }
-            }
-        }
+        // stage('Kong Adapter Tests (postgres)') {
+        //     environment {
+        //         BUILD_ALPINE = ''
+        //         BUILD_POSTGRES = 'true'
+        //     }
+        //     steps {
+        //         script {
+        //             sh './src/test/run-kong-adapter-tests.sh'
+        //         }
+        //     }
+        // }
 
-        stage('Kong Adapter Tests (postgres, alpine)') {
-            environment {
-                BUILD_ALPINE = '-alpine'
-                BUILD_POSTGRES = 'true'
-            }
-            steps {
-                script {
-                    sh './src/test/run-kong-adapter-tests.sh'
-                }
-            }
-        }
+        // stage('Kong Adapter Tests (postgres, alpine)') {
+        //     environment {
+        //         BUILD_ALPINE = '-alpine'
+        //         BUILD_POSTGRES = 'true'
+        //     }
+        //     steps {
+        //         script {
+        //             sh './src/test/run-kong-adapter-tests.sh'
+        //         }
+        //     }
+        // }
 
-        // ===========================
+        // // ===========================
 
-        stage('Auth Server Tests (postgres)') {
-            environment {
-                BUILD_ALPINE = ''
-                BUILD_POSTGRES = 'true'
-            }
-            steps {
-                script {
-                    sh './src/test/run-auth-tests.sh'
-                }
-            }
-        }
+        // stage('Auth Server Tests (postgres)') {
+        //     environment {
+        //         BUILD_ALPINE = ''
+        //         BUILD_POSTGRES = 'true'
+        //     }
+        //     steps {
+        //         script {
+        //             sh './src/test/run-auth-tests.sh'
+        //         }
+        //     }
+        // }
 
-        stage('Auth Server Tests (postgres, alpine)') {
-            environment {
-                BUILD_ALPINE = '-alpine'
-                BUILD_POSTGRES = 'true'
-            }
-            steps {
-                script {
-                    sh './src/test/run-auth-tests.sh'
-                }
-            }
-        }
+        // stage('Auth Server Tests (postgres, alpine)') {
+        //     environment {
+        //         BUILD_ALPINE = '-alpine'
+        //         BUILD_POSTGRES = 'true'
+        //     }
+        //     steps {
+        //         script {
+        //             sh './src/test/run-auth-tests.sh'
+        //         }
+        //     }
+        // }
 
         // ===========================
 
