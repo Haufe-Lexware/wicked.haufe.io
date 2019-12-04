@@ -161,6 +161,7 @@ export class OAuth2IdP implements IdentityProvider {
     }
 
     private authorizationParams = (options) => {
+        debug(`authorizationParams(): ${JSON.stringify(options)}`);
         let params: any = {};
         if (this.authMethodConfig.resource || this.authMethodConfig.params) {
             if (this.authMethodConfig.params)
@@ -195,6 +196,7 @@ export class OAuth2IdP implements IdentityProvider {
      */
     public authorizeWithUi(req, res, next, authRequest: AuthRequest) {
         debug('authorizeWithUi()');
+        debug(`authRequest: ${JSON.stringify(authRequest)}`)
         // Do your thing...
         const additionalSettings: any = {};
         // Propagate additional parameters; the settings object is combined with these
