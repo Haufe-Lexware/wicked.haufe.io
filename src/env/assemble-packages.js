@@ -5,17 +5,17 @@ const path = require('path');
 const semver = require('semver');
 
 const dirs = [
-    'wicked.ui',
-    'wicked.api',
-    'wicked.chatbot',
-    'wicked.env',
-    'wicked.kong-adapter',
-    'wicked.mailer',
-    'wicked.kickstarter',
-    'wicked.auth',
-    'wicked.test/portal-api',
-    'wicked.test/portal-kong-adapter',
-    'wicked.test/portal-auth'
+    'ui',
+    'api',
+    'chatbot',
+    'env',
+    'kong-adapter',
+    'mailer',
+    'kickstarter',
+    'auth',
+    'test/portal-api',
+    'test/portal-kong-adapter',
+    'test/portal-auth'
 ];
 
 const baseDir = path.resolve(path.join(__dirname, '..'));
