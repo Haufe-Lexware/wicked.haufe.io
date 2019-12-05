@@ -23,6 +23,7 @@ COPY . /usr/src/portal-env
 COPY package.all.json /usr/src/app/package.json
 COPY --from=node-sdk /wicked-sdk.tgz /usr/src/app/wicked-sdk.tgz
 COPY forever.sh /usr/src/app/forever.sh
+COPY git_* /usr/src/app/
 
 WORKDIR /usr/src/app
 RUN cd ../portal-env \
