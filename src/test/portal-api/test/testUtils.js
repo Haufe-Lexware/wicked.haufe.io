@@ -184,6 +184,17 @@ utils.deleteApplication = function (appId, userId, callback) {
     });
 };
 
+utils.deleteAuditLog = function (deletBeforeDate, userId, callback) {
+    request.delete({
+        url: consts.BASE_URL + 'auditlog/' + deletBeforeDate,
+        headers: utils.makeHeaders(userId, 'write_auditlog')
+    }, function (err, res, body) {
+        assert.isNotOk(err);
+        assert.equal(200, res.statusCode, 'Delete auditlog should return 200');
+        callback();
+    });
+};
+
 utils.addOwner = function (appId, userId, email, role, callback) {
     request.post({
         url: consts.BASE_URL + 'applications/' + appId + '/owners',
