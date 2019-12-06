@@ -75,6 +75,10 @@
         "adminEmail": "adminemail@yourcompany.com",
         "adminName": "Admin Name"
     },
+    "auditlog": {
+        "useAuditlog": false,
+        "logdays": 365
+    },
     "chatbot": {
         "useChatbot": false,
         "username": "wicked.haufe.io",
