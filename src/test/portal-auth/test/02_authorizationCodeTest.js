@@ -58,6 +58,7 @@ describe('Authorization Code Grant', function () {
     });
 
     after(function (done) {
+        this.timeout(20000);
         utils.destroyAppsAndSubcriptions(done);
     });
 
