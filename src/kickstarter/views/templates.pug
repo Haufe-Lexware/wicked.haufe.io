@@ -14,7 +14,7 @@ block content
                 h4.panel-title Email templates
             .panel-body
                 each emailTmpl, i in emailTemplates
-                    a(href='/templates/email/#{emailTmpl.id}').btn.btn-success.btn-block #{emailTmpl.name} 
+                    a(href=`/templates/email/${emailTmpl.id}`).btn.btn-success.btn-block #{emailTmpl.name} 
     
         form(role='form' action='/templates' method='POST')
             .panel.panel-primary
@@ -41,8 +41,8 @@ block content
                     each tmpl, i in chatbotTemplates
                         .form-group
                             label #{tmpl.id}:
-                            input(type='hidden' name='chatbotTemplates[#{i}].id' value='#{tmpl.id}')
-                            input(type='string' name='chatbotTemplates[#{i}].message' value='#{tmpl.message}').form-control
+                            input(type='hidden' name=`chatbotTemplates[${i}].id` value=tmpl.id)
+                            input(type='string' name=`chatbotTemplates[${i}].message` value=tmpl.message).form-control
                         //+inputField2()
             
             +renderButtons('/templates', '/chatbot', '/design')

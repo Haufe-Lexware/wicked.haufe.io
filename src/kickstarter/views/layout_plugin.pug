@@ -1,6 +1,6 @@
 extends layout
 
-// This is just to unclutter the layout.jade a little.
+//- This is just to unclutter the layout.jade a little.
 
 mixin kilroy
     p Kilroy was here.
@@ -14,19 +14,19 @@ mixin pluginPanel(source, dummy, label)
     .panel.panel-info
       .panel-heading
           .checkbox
-            label(data-toggle="collapse" data-target='##{collapseId}')
+            label(data-toggle="collapse" data-target=`#${collapseId}`)
               if inputValue
-                input(name='#{inputId}' id='#{inputId}' checked='checked' type='checkbox')
+                input(name=inputId id=inputId checked='checked' type='checkbox')
                 | #{label}
               else
-                input(name='#{inputId}' id='#{inputId}' type='checkbox')
+                input(name=inputId id=inputId type='checkbox')
                 | #{label}
       if inputValue
-        div(id='#{collapseId}').panel-collapse.collapse.in
+        div(id=collapseId).panel-collapse.collapse.in
           .panel-body
             block
       else
-        div(id='#{collapseId}').panel-collapse.collapse
+        div(id=collapseId).panel-collapse.collapse
           .panel-body
             block
 
@@ -127,7 +127,7 @@ mixin otherPluginsPanel(prefix, data, apiId)
                 .panel-body
                     h5 Add <code>Forwarded</code> header
 
-                    a(href='javascript:addForwarded("#{friendlyId}")').btn.btn-success.btn-sm Add Forwarded Header
+                    a(href=`javascript:addForwarded("${friendlyId}")`).btn.btn-success.btn-sm Add Forwarded Header
 
                     hr
 
@@ -142,10 +142,10 @@ mixin otherPluginsPanel(prefix, data, apiId)
                                     label Password:
                                     input(id=friendlyId+'_PASSWORD' type='string').form-control
                     p
-                        a(href='javascript:addBasicAuth("#{friendlyId}")').btn.btn-sm.btn-success Add Authentication Header
+                        a(href=`javascript:addBasicAuth("${friendlyId}")`).btn.btn-sm.btn-success Add Authentication Header
         br
             
-        textarea(style='height:600px' id=friendlyId+'_json' name='#{prefix}plugins.others.config').form-control= eval(prefix + 'plugins.others.config')
+        textarea(style='height:600px' id=friendlyId+'_json' name=`${prefix}plugins.others.config`).form-control= eval(prefix + 'plugins.others.config')
 
 block moreScripts
     script(type='text/javascript').

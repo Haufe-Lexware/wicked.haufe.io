@@ -9,11 +9,11 @@ mixin renderContent(pathUri, title)
             td= title
         td= pathUri.type
         td
-            a(href='/content#{pathUri.path}').btn.btn-sm.btn-default Preview
+            a(href=`/content${pathUri.path}`).btn.btn-sm.btn-default Preview
         td
-            a(href='/editcontent#{pathUri.path}').btn.btn-sm.btn-success Edit
+            a(href=`/editcontent${pathUri.path}`).btn.btn-sm.btn-success Edit
         td
-            input(type='string' readonly value='#{pathUri.localPath}').form-control
+            input(type='string' readonly value=pathUri.localPath).form-control
 
 block content
     .jumbotron

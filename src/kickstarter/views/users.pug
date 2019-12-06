@@ -11,7 +11,7 @@ mixin renderUser(userInfo, index)
                             h4.panel-title #{userInfo.firstName} #{userInfo.lastName}
                         td(style='text-align:right')
                             if (userInfo.id != '1')
-                                button(type='submit' onclick='setAction("deleteUser", #{index});').btn.btn-danger Delete User
+                                button(type='submit' onclick=`setAction("deleteUser", ${index});`).btn.btn-danger Delete User
                             else
                                 i Not deletable
             .panel-body
@@ -28,9 +28,9 @@ mixin renderUser(userInfo, index)
                             .checkbox
                                 label
                                     if userInfo.groups.find(function(g) { return g == group.id; })
-                                        input(type='checkbox' name='#{userPrefix}groups.#{group.id}' checked='checked')
+                                        input(type='checkbox' name=`${userPrefix}groups.${group.id}` checked='checked')
                                     else
-                                        input(type='checkbox' name='#{userPrefix}groups.#{group.id}')
+                                        input(type='checkbox' name=`${userPrefix}groups.#{group.id}`)
                                     | #{group.id} - #{group.name}
 
 block scripts

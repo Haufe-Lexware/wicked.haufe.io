@@ -5,7 +5,7 @@ const path = require('path');
 const marked = require('marked');
 const express = require('express');
 const router = express.Router();
-const jade = require('jade');
+const pug = require('pug');
 const { debug, info, warn, error } = require('portal-env').Logger('kickstarter:content');
 
 const utils = require('./utils');
@@ -121,7 +121,7 @@ router.get('/*', function (req, res, next) {
     if (mdExists)
         content = marked(fs.readFileSync(mdPath, 'utf8'));
     else
-        content = jade.render(fs.readFileSync(jadePath, 'utf8'), _tempViewModel);
+        content = pug.render(fs.readFileSync(jadePath, 'utf8'), _tempViewModel);
 
     const groups = utils.loadGroups(req.app);
 

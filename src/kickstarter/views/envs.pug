@@ -46,12 +46,12 @@ block content
           for env in envs
             tr
               td
-                a(href="envs/#{env}")= env
+                a(href=`envs/${env}`)= env
               td
                 if env == 'default'
                   | --
                 else
-                  form(role='form' action='/envs/#{env}/delete' method='post' onsubmit='return confirmDelete();')
+                  form(role='form' action=`/envs/${env}/delete` method='post' onsubmit='return confirmDelete();')
                     button(type='submit').btn.btn-danger Delete
 
     .panel.panel-default

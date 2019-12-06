@@ -15,13 +15,13 @@ mixin section(target, kick, headline, content, altTarget)
       tr
         td
           h4
-            a(href='#{target}')= headline
+            a(href=target)= headline
         td(style='text-align:right')
           if kick
             if kick[kickTarget]
               +renderSign(kick[kickTarget])
     p= content
-    a(href='#{target}').btn.btn-default Configure &raquo;
+    a(href=target).btn.btn-default Configure &raquo;
 
 block content
   .jumbotron

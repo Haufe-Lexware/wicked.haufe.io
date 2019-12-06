@@ -176,7 +176,7 @@ router.get('/:apiId', function (req, res, next) {
         configPath: req.app.get('config_path'),
         safeApiId: safeApiId,
         api: thisApi,
-        plugins: plugins,
+        apiPlugins: plugins,
         config: config,
         desc: apiDesc,
         swagger: apiSwagger,

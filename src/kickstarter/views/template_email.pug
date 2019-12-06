@@ -27,8 +27,8 @@ block content
                 portalEmail: "apiadmin@your.portal.com"
             }
         
-        form(role='form' action='/templates/email/#{templateId}' method='POST')
-            input(type='hidden' name='redirect' id='redirect' value='#{thisPage}')
+        form(role='form' action=`/templates/email/${templateId}` method='POST')
+            input(type='hidden' name='redirect' id='redirect' value=thisPage)
 
             textarea(name='emailTemplate' style='height:400px;').form-control= emailTemplate
             
@@ -36,7 +36,7 @@ block content
             table(width='100%')
                 tr
                     td
-                        button(type='submit' onClick='setRedirect("/templates/email/#{templateId}");').btn.btn-primary Save
+                        button(type='submit' onClick=`setRedirect("/templates/email/${templateId}");`).btn.btn-primary Save
                         | &nbsp;
                         button(type='submit' onClick='setRedirect("/templates");').btn.btn-primary Save &amp; Return &raquo;
                     td(style='text-align:right')

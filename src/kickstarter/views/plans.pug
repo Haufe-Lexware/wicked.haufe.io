@@ -13,34 +13,34 @@ mixin planPanel(plan, index, groups)
                             tr
                                 td
                                     h4.panel-title
-                                        a(data-target='#collapse_#{plan.id}' data-toggle='collapse') #{plan.name} - #{plan.id} &raquo;
+                                        a(data-target=`#collapse_${plan.id}` data-toggle='collapse') #{plan.name} - #{plan.id} &raquo;
                                 td(style='text-align:right')
-                                    button(type='submit' onclick='setAction("deletePlan", #{index});').btn.btn-danger Delete Plan
+                                    button(type='submit' onclick=`setAction("deletePlan", ${index});`).btn.btn-danger Delete Plan
                     - var collapseIn = ''
                     if (plan.id == "newplan")
                         - collapseIn = ' in'
-                    div(id='collapse_#{plan.id}' class='collapse panel-collapse#{collapseIn}')
+                    div(id=`collapse_${plan.id}` class=`collapse panel-collapse${collapseIn}`)
                         .panel-body
                             .form-group
                                 label Plan ID:
-                                input(type='string' name='#{planId}.id' value='#{plan.id}').form-control
+                                input(type='string' name=`${planId}.id` value=plan.id).form-control
                             .form-group
                                 label Plan Name:
-                                input(type='string' name='#{planId}.name' value='#{plan.name}').form-control
+                                input(type='string' name=`${planId}.name` value=plan.name).form-control
                             .form-group
                                 label Plan Description:
-                                input(type='string' name='#{planId}.desc' value='#{plan.desc}').form-control
+                                input(type='string' name=`${planId}.desc` value=plan.desc).form-control
                                 p.wicked-note May contain Markdown.
                             .checkbox
                                 label
                                     if plan.needsApproval
-                                        input(type='checkbox' name='#{planId}.needsApproval' checked='checked')
+                                        input(type='checkbox' name=`${planId}.needsApproval` checked='checked')
                                     else
-                                        input(type='checkbox' name='#{planId}.needsApproval')
+                                        input(type='checkbox' name=`${planId}.needsApproval`)
                                     | <strong>Plan needs Approval</strong> (for non-admin users)
                             .form-group
                                 label Required User Group:
-                                select(name='#{planId}.requiredGroup').form-control
+                                select(name=`${planId}.requiredGroup`).form-control
                                     if !plan.requiredGroup
                                         option(selected) &lt;none&gt;
                                     else

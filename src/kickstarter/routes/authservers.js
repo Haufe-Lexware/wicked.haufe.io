@@ -85,7 +85,6 @@ router.get('/:serverId', function (req, res, next) {
     authServer.id = authId;
     authServer.config.api.name = authId;
 
-
     let origPlugins = [];
     if (authServer.config && authServer.config.plugins)
         origPlugins = authServer.config.plugins;
@@ -151,7 +150,7 @@ router.get('/:serverId', function (req, res, next) {
         serverId: serverId,
         safeServerId: safeServerId,
         authServer: authServer,
-        plugins: plugins,
+        apiPlugins: plugins,
         groups: groups,
         passwordStrategies: passwordStrategies,
         oauthApis: oauthApis
