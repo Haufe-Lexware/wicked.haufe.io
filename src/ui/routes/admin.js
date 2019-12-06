@@ -180,6 +180,31 @@ router.get('/users', mustBeAdminMiddleware, function (req, res, next) {
     });
 });
 
+router.get('/auditlog', mustBeAdminMiddleware, function (req, res, next) {
+    debug("get('/auditlog')");
+    const filterFields = ['activity', 'user', 'email','plan', 'api', 'role', 'application', 'startdate', 'enddate'];
+    const auditlogUri = utils.makePagingUri(req, '/auditlog?embed=1&', filterFields);
+    console.log("auditlog"+auditlogUri);
+    if (!utils.acceptJson(req)) {
+        res.render('admin_auditlog', {
+            authUser: req.user,
+            glob: req.app.portalGlobals,
+            title: 'Audit Log',
+        });
+        return;
+    }
+    utils.getFromAsync(req, res, auditlogUri, 200, function (err, auditlogResponse) {
+        if (err)
+            return next(err);
+        if (utils.acceptJson(req)) {
+            res.json({
+                title: 'Audit Log',
+                auditlog: auditlogResponse
+            });
+        }
+    });
+});
+
 router.get('/subscriptions', mustBeAdminOrApproverMiddleware, function (req, res, next) {
     debug("get('/subscriptions')");
     const filterFields = ['application', 'application_name', 'plan', 'api', 'owner', 'user'];
