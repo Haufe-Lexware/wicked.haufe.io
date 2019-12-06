@@ -35,6 +35,7 @@ securityDefinitions:
       read_subscriptions: Read subscriptions
       write_subscriptions: Write/edit/delete subscriptions
       read_approvals: Read pending approvals
+      read_auditlog: Read audit log
       read_verifications: Read email and password verifications
       write_verifications: Create or delete verifications
       read_registrations: Read user registrations
@@ -66,6 +67,7 @@ securityDefinitions:
       read_subscriptions: Read subscriptions
       write_subscriptions: Write/edit/delete subscriptions
       read_approvals: Read pending approvals
+      read_auditlog: Read audit log
       read_verifications: Read email and password verifications
       write_verifications: Create or delete verifications
       read_registrations: Read user registrations
@@ -94,6 +96,7 @@ securityDefinitions:
       read_subscriptions: Read subscriptions
       write_subscriptions: Write/edit/delete subscriptions
       read_approvals: Read pending approvals
+      read_auditlog: Read audit log
       read_verifications: Read email and password verifications
       write_verifications: Create or delete verifications
       read_namespaces: Read registration pool namespaces
@@ -124,6 +127,7 @@ securityDefinitions:
       read_subscriptions: Read subscriptions
       write_subscriptions: Write/edit/delete subscriptions
       read_approvals: Read pending approvals
+      read_auditlog: Read audit log
       read_verifications: Read email and password verifications
       write_verifications: Create or delete verifications
       read_namespaces: Read registration pool namespaces
@@ -964,6 +968,24 @@ paths:
           description: Not allowed
         '404':
           description: Not found
+          
+  '/auditlog':
+    get:
+      security:
+      - accessCode: ['read_auditlog']
+      - implicit: ['read_auditlog']
+      - password: ['read_auditlog']
+      tags:
+        - misc
+      description: Gets all audit logs (admin)
+      responses:
+        '200':
+          description: Successful request
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/auditlogType'    
+
   '/approvals':
     get:
       security:
@@ -2176,7 +2198,31 @@ definitions:
           id:
             type: string
           name:
-            type: string
+            type: string //  const filterFields = ['activity', 'user', 'email','plan', 'api', 'role', 'application'];
+  auditlogType:
+    type: object
+    properties:
+      activity:
+        description: Event 
+        type: string
+      user:
+        description: User who triggered this event
+        type: string
+      role:
+        description: Role of of the user who triggerd this event
+        type: string
+      email:
+        type: string
+        description: Email of the user who triggered this event
+      plan:
+        type: string
+        description: The subscription plan of the api present in this event
+      api:
+        type: string
+        description: The api present in this event
+      application:
+        type: string
+        description: The application present in this event
   verificationType:
     type: object
     properties:
