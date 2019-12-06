@@ -6,7 +6,13 @@ this_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )"
 
 pushd ${this_dir}
 
-branch=$(git rev-parse --abbrev-ref HEAD)
+if [[ ! -z ${BRANCH_NAME} ]]; then
+    branch=${BRANCH_NAME}
+    echo "INFO: Taking branch name from Jenkins: ${branch}"
+else
+    branch=$(git rev-parse --abbrev-ref HEAD)
+    echo "INFO: Using current git branch: ${branch}"
+fi
 git_last_commit=$(git log -1 --decorate=short)
 
 echo ${branch} > ./env/git_branch

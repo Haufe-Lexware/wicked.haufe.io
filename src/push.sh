@@ -9,7 +9,13 @@ fi
 
 docker login -u ${DOCKER_REGISTRY_USER} -p ${DOCKER_REGISTRY_PASSWORD}
 
-branch=$(git rev-parse --abbrev-ref HEAD)
+if [[ ! -z ${BRANCH_NAME} ]]; then
+    branch=${BRANCH_NAME}
+    echo "INFO: Taking branch name from Jenkins: ${branch}"
+else
+    branch=$(git rev-parse --abbrev-ref HEAD)
+    echo "INFO: Using current git branch: ${branch}"
+fi
 export TAG=${branch}
 if [ ! -z "${DOCKER_TAG}" ]; then
     echo "INFO: Using tag ${DOCKER_TAG} instead of branch ${branch}"
