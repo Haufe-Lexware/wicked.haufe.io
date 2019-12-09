@@ -1,6 +1,6 @@
 {
   "name": "wicked.k8s-init",
-  "version": "1.0.0-rc.10",
+  "version": "1.0.0-rc.11",
   "description": "Init container for running getting client credentials for k8s with wicked",
   "main": "index.js",
   "scripts": {
