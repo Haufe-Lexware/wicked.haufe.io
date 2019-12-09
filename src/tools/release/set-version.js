@@ -16,7 +16,10 @@ if (!process.env.WICKED_DIRS) {
 const subDirs = process.env.WICKED_DIRS.match(/\S+/g);
 
 for (let dirIndex in subDirs) {
-    const dir = subDirs[dirIndex];
+    const subDir = subDirs[dirIndex];
+    if (!subDir.startsWith('wicked.'))
+        throw new Error('Unexpected non-wicked. prefix for dir: ' + dir);
+    const dir = subDir.substring(7); // strip wicked.
     const pkgFileName = path.join(process.cwd(), dir, 'package.json');
     const pkg = JSON.parse(fs.readFileSync(pkgFileName, 'utf8'));
     if (pkg.version !== versionToSet) {
