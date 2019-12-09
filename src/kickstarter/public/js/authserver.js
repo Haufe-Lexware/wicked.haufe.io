@@ -148,6 +148,10 @@ Vue.component('auth-method', {
             <wicked-input v-model="value.config.endpoints.profileEndpoint" label="Profile endpoint of OAuth2 server:" hint="The profile endpoint of the upstream OAuth2 server" :env-var="envPrefix + 'PROFILE_URL'" />
             <wicked-input v-model="value.config.endpoints.authorizeScope" label="Authorization scope:" hint="Space separated scopes for authorization, e.g. <code>profile email</code>" :env-var="envPrefix + 'SCOPE'" />
             <wicked-checkbox v-model="value.config.retrieveProfile" label="Retrieve profile from profile endpoint (must be specified, assumed to be OIDC compliant); IF NOT: Token is assumed to be a JWT, please specify mapping below" />
+            <wicked-checkbox v-model="value.config.forwardState" label="Forward the provided state to the upstream OAuth2 Identity Provider" />
+            <hr>
+            <wicked-input v-model="value.config.errorLink" label="Error Link URL:" hint="In case of a hard upstream IdP authentication error, forward to this URL after 5 seconds" :env-var="envPrefix + 'ERRORLINK'" />
+            <wicked-input v-model="value.config.errorLinkDescription" label="Error Link Description:" hint="Displayed text for the error link (content of <code>a</code> tag)" :env-var="envPrefix + 'ERRORLINK_DESC'" />
             <hr>
             <wicked-input v-model="value.config.customIdField" label="JWT claim: Unique ID:" hint="REQUIRED: The JWT claim containing a unique ID from the remote IdP/OAuth2 server; usually <code>sub</code>" :env-var="envPrefix + 'FIELD_CUSTOMID'" />
             <wicked-input v-model="value.config.nameField" label="JWT Claim: Display name (full name):" hint="OPTIONAL: The JWT claim containing the full name/display name of the user (<code>name</code>)" :env-var="envPrefix + 'FIELD_NAME'" />
