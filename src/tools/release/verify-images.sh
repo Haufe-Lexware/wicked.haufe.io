@@ -58,13 +58,13 @@ for alpine in "-alpine" ""; do
         git remote add github https://github.com/Haufe-Lexware/wicked.haufe.io.git &> /dev/null
         branchHead=$(git ls-remote github refs/heads/${branch} | cut -f 1)
         echo "- ${branch} HEAD ref: ${branchHead}"
-        echo "- Pulling docker images..."
         imageName=haufelexware/${repo}:${branch}${alpine}
         isNotEnvBased=0
         if [[ "wicked.kong" == "$repo" ]] || [[ "wicked.k8s-init" == "$repo" ]] || [[ "wicked.k8s-tool" == "$repo" ]] || [[ "wicked.box" == "$repo" ]]; then
           imageName=haufelexware/${repo}:${branch}
           isNotEnvBased=1
         fi
+        echo "- Pulling image ${imageName}..."
         docker pull ${imageName} &> docker.log
         docker create --name tmp_image ${imageName} &> /dev/null
         docker cp tmp_image:/usr/src/app/git_last_commit .

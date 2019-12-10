@@ -46,6 +46,12 @@ fi
 
 pushd wicked.haufe.io
 git checkout ${branch}
+
+# Once for the global state
+echo ${branch} > ./src/git_branch
+echo ${build_date} > ./src/build_date
+git log -1 --decorate=short > ./src/git_last_commit
+
 for repo in ${repos}; do
     pushd src/${repo}
     rm -f ./build_date ./git_last_commit ./git_branch
