@@ -53,11 +53,11 @@ if ! ${onlyHelm}; then
   ./verify-images.sh master
 
   # imageBases from _repos.sh
-  for image in ${imageBases}; do
-    echo ""
-    echo "Creating Github release for wicked.${image}..."
-    node create-github-release.js apim-haufe-io/wicked.${image} v$1
-  done
+  # for image in ${imageBases}; do
+  #   echo ""
+  #   echo "Creating Github release for wicked.${image}..."
+  #   node create-github-release.js apim-haufe-io/wicked.${image} v$1
+  # done
 
   ./release.sh $1
 else
