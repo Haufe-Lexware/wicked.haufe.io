@@ -215,7 +215,7 @@ You can now, after you have finished working, safely shut down the Postgres cont
 
 ### Working with the wicked SDK and the wicked API
 
-If you want to integrate your own (node.js) application with some of the more advanced features of wicked, or for example write a webhook listener which listens to the wicked events, you can have a look at the [wicked Node SDK](https://github.com/apim-haufe-io/wicked.node-sdk). Wicked-in-a-box makes it quite easy develop against wicked using the wicked Node SDK.
+If you want to integrate your own (node.js) application with some of the more advanced features of wicked, or for example write a webhook listener which listens to the wicked events, you can have a look at the [wicked Node SDK](../src/node-sdk). Wicked-in-a-box makes it quite easy develop against wicked using the wicked Node SDK.
 
 In order to expose the wicked API to the local machine, use the `--api-port` switch of the `wicked box start` command, e.g.
 
