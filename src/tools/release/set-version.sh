@@ -36,6 +36,14 @@ export WICKED_DIRS="${versionDirs}"
 node tools/release/set-version $1
 
 echo "=============================================="
+echo "Running install.sh"
+echo "=============================================="
+
+pushd tools/development
+./install.sh
+popd
+
+echo "=============================================="
 echo "Done."
 echo "=============================================="
 
