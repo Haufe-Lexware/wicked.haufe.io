@@ -1,9 +1,8 @@
 'use strict';
 
 const { debug, info, warn, error } = require('portal-env').Logger('portal-api:versionizer');
-const fs = require('fs');
-const path = require('path');
 const folderHash = require('folder-hash');
+const semver = require('semver');
 
 const utils = require('./utils');
 const dao = require('../dao/dao');
@@ -21,7 +20,6 @@ versionizer.sendConfigHash = function (req, res, next) {
 versionizer.initConfigHash = function (callback) {
     if (null === versionizer._configHash) {
         const staticPath = utils.getStaticDir();
-        const configTagFileName = path.join(staticPath, 'confighash');
         // See https://github.com/Haufe-Lexware/wicked.haufe.io/issues/190
         const hashOptions = {
             folders: {
@@ -48,7 +46,11 @@ versionizer.writeConfigHashToMetadata = function (callback) {
             return callback(err);
         }
         const prevHash = previousHash && previousHash.hash;
-        dao.meta.setMetadata('config_hash', { hash: versionizer.getConfigHash(), previous_hash: prevHash }, (err) => {
+        dao.meta.setMetadata('config_hash', {
+            hash: versionizer.getConfigHash(),
+            previous_hash: prevHash,
+            version: utils.getVersion()
+        }, (err) => {
             dao.meta.getMetadata('config_hash', (err, persistedConfigHash) => {
                 if (err) {
                     return callback(err);
@@ -59,6 +61,29 @@ versionizer.writeConfigHashToMetadata = function (callback) {
                 return callback(null);
             });
         });
+    });
+};
+
+// This is used in the special situation that we have an older version of the
+// wicked API running which is overwriting the config hash, even though it
+// actually shouldn't - there is a newer version of wicked already running
+// against the current database, and we have to make sure *that* version of
+// the API does not get force-quitted (Bug #190).
+versionizer.overwriteConfigHashToMetadata = function (callback) {
+    debug('overwriteConfigHashToMetadata()');
+    dao.meta.setMetadata('config_hash', {
+        hash: versionizer.getConfigHash(),
+        previous_hash: versionizer.getPreviousConfigHash(),
+        version: utils.getVersion()
+    }, (err) => {
+        if (err) {
+            error('overwriteConfigHashToMetadata(): Failed to write config hash to database.');
+            error(err);
+            return callback(err);
+        }
+        warn('Force-overwrote the config hash to the metadata. This happens if there is another API instance with a lower version currently running against the same database.');
+        warn('If this happens continuously, please review your deployment mechanisms, or ask for assistance on Github: https://github.com/Haufe-Lexware/wicked.haufe.io/issues');
+        return callback(null);
     });
 };
 
@@ -99,8 +124,8 @@ function isConfigHashValid(app, configHash) {
         return true;
     }
     const prevHash = versionizer.getPreviousConfigHash();
-    // Only accept the previous content hash for a minute
-    if (prevHash && configHash === prevHash && (Date.now() - versionizer._startupTime < 60000)) {
+    // Only accept the previous content hash for three minutes
+    if (prevHash && configHash === prevHash && (Date.now() - versionizer._startupTime < 180000)) {
         warn('isConfigHashValid: Allowing access with previous config hash.');
         return true;
     }
@@ -120,7 +145,8 @@ function isUserAgentValid(userAgent) {
         return true;
     }
 
-    return (versionString === utils.getVersion());
+    // Allow older or equal versions access, but not newer clients to an older API.
+    return semver.lte(versionString, utils.getVersion());
 }
 
 module.exports = versionizer;
