@@ -1,0 +1,23 @@
+extends layout
+
+block content
+    .jumbotron
+        .container
+            h1 Audit Log configuration
+            
+            p Specify how many days worth of audit log data to be recorded by wicked when turned on
+    
+    .container
+        form(role='form' method='post' action='/auditlog')
+
+            +checkPanel('glob.auditlog.useAuditlog', !!glob.auditlog.useAuditlog, 'Turn ON Auditlog')
+              p 
+              b Keep logs for:
+                    select(name='glob.auditlog.logdays').form-control
+                        option(value='730' selected=(glob.auditlog.logdays == '730')) 730 days
+                        option(value='365' selected=(glob.auditlog.logdays == '365')) 365 days
+                        option(value='180' selected=(glob.auditlog.logdays == '180')) 180 days
+                        option(value='90' selected=(glob.auditlog.logdays == '90')) 90 days
+                        option(value='60' selected=(glob.auditlog.logdays == '60')) 60 days
+                        option(value='30' selected=(glob.auditlog.logdays == '30')) 30 days
+            +renderButtons('/auditlog', '/deploy', '/users')

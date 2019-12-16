@@ -20,5 +20,6 @@
     "box",
     "localhost"
   ],
-  "env": 2
+  "env": 2,
+  "auditlog": 3
 }

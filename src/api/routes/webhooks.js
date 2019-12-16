@@ -4,6 +4,7 @@ const fs = require('fs');
 const path = require('path');
 const request = require('request');
 const utils = require('./utils');
+const auditlog = require('./auditlog');
 const async = require('async');
 const { debug, info, warn, error } = require('portal-env').Logger('portal-api:webhooks');
 
@@ -113,6 +114,7 @@ webhooks.logEvent = function (app, eventData, callback) {
     // The arguments after the "0" will be passed as arguments to
     // webhooks.retryLog. You have to know this from the documentation
     // of setTimeout.
+    auditlog.logEvent(app,eventData, callback);
     setTimeout(retryLog, 0, app, 5, eventData, function (err) {
         debug('retryLog() called back');
         // We have no results, we just want to check for errors
