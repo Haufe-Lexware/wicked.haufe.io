@@ -15,7 +15,7 @@ const WRITE_SCOPE = 'write_registrations';
 const READ_NS_SCOPE = 'read_namespaces';
 const WRITE_NS_SCOPE = 'write_namespaces';
 
-describe('/registrations', () => {
+describe('/registrations', function () {
 
     let devUserId = '';
     let adminUserId = '';
@@ -241,10 +241,17 @@ describe('/registrations', () => {
             });
         }); // basic usage
 
-        describe('basic usage (2)', () => {
+        describe('basic usage (2)', function () {
 
-            before(addSomeRegistrations);
-            after(deleteSomeRegistrations);
+            before(function (done) {
+                // This sometimes is slow on Jenkins (more than 2 seconds)
+                this.timeout(10000);
+                addSomeRegistrations(done);
+            });
+            after(function (done) {
+                this.timeout(10000);
+                deleteSomeRegistrations(done);
+            });
 
             it('should return a list of registrations', (done) => {
                 request.get({

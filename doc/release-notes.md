@@ -14,6 +14,14 @@ Official Release of the API Portal.
 
 ## 1.0.0 (release candidates)
 
+### 1.0.0-rc.11 - Notable changed
+
+Motto: **Monorepo, monorepo, cha cha cha**
+
+This release does not have a lot of functional changes per se, but there is a really big change under the hood - the structure of the wicked source code had become really difficult to maintain, and so we decided to go monorepo for the source code instead of having the source code split out in several different repositories. This has only some drawbacks (builds are always triggering a build of all container images), but a lot of advantages, such as: Pull Requests can contain all needed changes, including changes to the `env` and `node-sdk` repositories, and of course also containing changes to the test suite. In total, this makes working with pull requests a lot easier, and it also makes it easier for contributors to keep up to date with the latest `next` branch of wicked, as you now only have to merge/update a single repository. The development setup has also improved (we hope!) substantially, making it a lot easier to get up to speed in the development of wicked. Please review the new and updated [development setup guide](../src/tools/development/README.md).
+
+* [OAuth2: Wicked should optionally forward state to external IdP](https://github.com/Haufe-Lexware/wicked.haufe.io/issues/232)
+
 ### 1.0.0-rc.10 - Notable changes
 
 Motto: **Some new features and enhancements**

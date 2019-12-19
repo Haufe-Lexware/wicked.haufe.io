@@ -13,6 +13,7 @@ Still, the following are the current known prerequisites:
 * `git`
 * A good internet connection
 * [PM2](http://pm2.keymetrics.io) installed globally: `npm install -g pm2`
+* A local installation of `envsubst` ([see here, for example](https://stackoverflow.com/questions/23620827/envsubst-command-not-found-on-mac-os-x-10-8))
 * **Important**: Your local machine needs an IPv4 address, such as a `10.x`, a `192.168.x` or similar; this means you cannot develop wicked without being connected to a network of some kind.
 
 ## Setting up the environment

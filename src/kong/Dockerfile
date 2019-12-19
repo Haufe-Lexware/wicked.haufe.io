@@ -25,6 +25,6 @@ RUN ln -sf /proc/1/fd/1 /tmp/stdout && \
 
 COPY templates/nginx_kong.lua /root/nginx_kong.lua
 COPY startup.sh /startup.sh
-# COPY git_* /usr/src/app/
+COPY git_* /usr/src/app/
 
 CMD ["/startup.sh"]

@@ -27,7 +27,7 @@ mkdir tmp
 pushd tmp &> /dev/null
   echo "INFO: Retrieving HEAD of portal-env..."
   git init &> /dev/null
-  git remote add github https://github.com/apim-haufe-io/wicked.env.git &> /dev/null
+  git remote add github https://github.com/Haufe-Lexware/wicked.haufe.io.git &> /dev/null
   envBranchHead=$(git ls-remote github refs/heads/${branch} | cut -f 1)
   echo "INFO: env ${branch} HEAD: ${envBranchHead}"
 popd
@@ -37,7 +37,7 @@ mkdir tmp
 pushd tmp &> /dev/null
   echo "INFO: Retrieving HEAD of wicked-sdk..."
   git init &> /dev/null
-  git remote add github https://github.com/apim-haufe-io/wicked.node-sdk.git &> /dev/null
+  git remote add github https://github.com/Haufe-Lexware/wicked.haufe.io.git &> /dev/null
   sdkBranchHead=$(git ls-remote github refs/heads/${branch} | cut -f 1)
   echo "INFO: SDK ${branch} HEAD: ${sdkBranchHead}"
 popd
@@ -55,16 +55,16 @@ for alpine in "-alpine" ""; do
       echo "Verifying ${repo}:${branch}${alpine}..."
       pushd tmp &> /dev/null
         git init &> /dev/null
-        git remote add github https://github.com/apim-haufe-io/${repo}.git &> /dev/null
+        git remote add github https://github.com/Haufe-Lexware/wicked.haufe.io.git &> /dev/null
         branchHead=$(git ls-remote github refs/heads/${branch} | cut -f 1)
         echo "- ${branch} HEAD ref: ${branchHead}"
-        echo "- Pulling docker images..."
         imageName=haufelexware/${repo}:${branch}${alpine}
         isNotEnvBased=0
         if [[ "wicked.kong" == "$repo" ]] || [[ "wicked.k8s-init" == "$repo" ]] || [[ "wicked.k8s-tool" == "$repo" ]] || [[ "wicked.box" == "$repo" ]]; then
           imageName=haufelexware/${repo}:${branch}
           isNotEnvBased=1
         fi
+        echo "- Pulling image ${imageName}..."
         docker pull ${imageName} &> docker.log
         docker create --name tmp_image ${imageName} &> /dev/null
         docker cp tmp_image:/usr/src/app/git_last_commit .
