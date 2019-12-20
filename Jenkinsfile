@@ -23,7 +23,7 @@ pipeline {
                         // requires SonarQube Scanner 2.8+
                         def scannerHome = tool 'wicked-sonar';
                         withSonarQubeEnv('haufe-sonar') {
-                            sh "pushd ./src/api && ${scannerHome}/bin/sonar-scanner && popd"
+                            sh "cd ./src/api && ${scannerHome}/bin/sonar-scanner && cd ../.."
                         }
                     } else {
                         echo 'Skipping SonarQube, not "next" branch.'
