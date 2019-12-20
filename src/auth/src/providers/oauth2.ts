@@ -315,11 +315,31 @@ export class OAuth2IdP implements IdentityProvider {
         const instance = this;
         // Do we have errors from the upstream IdP here?
         if (req.query && req.query.error) {
-            warn(`callbackHandler detected ${req.query.error} error`);
-            (async () => {
-                await instance.genericFlow.failAuthorizeFlow(req, res, next, req.query.error, req.query.error_description);
-            })();
-            return;
+            warn(`${instance.authMethodId}.callbackHandler detected ${req.query.error} error`);
+            // Super special case: We get an unsolicited callback *with an error*. In this case,
+            // we can only display an HTML error message. Otherwise (if we know which client initiated
+            // the authorization request) we will redirect back to the calling client with
+            // the error and error_description we received here.
+            let authRequest;
+            try {
+                authRequest = utils.getAuthRequest(req, instance.authMethodId);
+            } catch (err) {
+                warn(`${instance.authMethodId}.callbackHandler: Invalid state: No authRequest in session`);
+                warn(err.stack);
+            }
+
+            if (authRequest) {
+                // This is the normal case - we get an upstream IdP error which we will forward to
+                // the downstream client.
+                (async () => {
+                    await instance.genericFlow.failAuthorizeFlow(req, res, next, req.query.error, req.query.error_description);
+                })();
+                return;
+            } else {
+                // We have no idea where this callback actually came from, so we'll resort to displaying
+                // an error message instead (as HTML).
+                return failMessage(400, `Unexpected callback; identity provider returned error: ${req.query.error} (${req.query.error_description})`, next);
+            }
         }
 
         // We don't have any explicit and direct errors, so we will probably have

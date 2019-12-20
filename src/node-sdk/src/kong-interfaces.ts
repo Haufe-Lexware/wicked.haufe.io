@@ -16,10 +16,11 @@ export interface KongApi {
     retries?: number,
     strip_uri?: boolean,
     hide_credentials?: boolean,
-    upstream_connect_timeout?: number,
-    upstream_read_timeout?: number,
-    upstream_send_timeout?: number,
-    upstream_url: string
+    connect_timeout?: number,
+    read_timeout?: number,
+    write_timeout?: number,
+    upstream_url: string,
+    routes?: KongRoute[]
 }
 
 export enum ProtocolType {
@@ -40,6 +41,7 @@ export interface KongService {
     connect_timeout?: number,
     read_timeout?: number,
     write_timeout?: number,
+    tags?: string[]
 }
 
 export interface KongRoute {
@@ -51,6 +53,10 @@ export interface KongRoute {
     hosts?: string[],
     paths?: string[],
     regex_priority?: number,
+    snis?: string[],
+    sources?: string[],
+    destinations?: string[],
+    tags?: string[],    
     strip_path: boolean,
     preserve_host: boolean,
     service: {

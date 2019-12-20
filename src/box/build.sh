@@ -25,49 +25,16 @@ branch=$1
 build_date=$(date -u "+%Y-%m-%d %H:%M:%S")
 printf "$build_date" > ./build_date
 git log -1 --decorate=short > ./git_last_commit
-git rev-parse --abbrev-ref HEAD > ./git_branch
+if [[ ! -z ${BRANCH_NAME} ]]; then
+    echo "INFO: Taking branch name '${BRANCH_NAME}' from Jenkins."
+    echo ${BRANCH_NAME} > ./git_branch
+else
+    echo "INFO: Extracting branch name from git."
+    git rev-parse --abbrev-ref HEAD > ./git_branch
+fi
 
-# clone_repo() {
-#     local repo
-#     repo=$1
-#     full_repo=wicked.${repo}
-#     local branch
-#     branch=$2
-#     if [[ -d ${full_repo} ]]; then
-#         pushd ${full_repo} > /dev/null
-#         git checkout ${branch}
-#         git pull
-#         popd > /dev/null
-#     else
-#         git clone https://github.com/apim-haufe-io/${full_repo}
-#         pushd ${full_repo} > /dev/null
-#         git checkout ${branch}
-#         popd > /dev/null
-#     fi
-
-#     pushd ${full_repo} > /dev/null
-#     isDirty=$(git status -s)
-#     needsPush=$(git cherry -v)
-#     if [ -n "${isDirty}" ]; then
-#         echo "Repository ${full_repo} is dirty, will not continue."
-#         exit 1
-#     fi
-#     if [ -n "${needsPush}" ]; then
-#         echo "Repository ${full_repo} has unpushed commits, will not continue."
-#         exit 1
-#     fi
-#     rm -f ./build_date ./git_last_commit ./git_branch
-#     printf "${build_date}" > ./build_date
-#     git log -1 --decorate=short > ./git_last_commit
-#     git rev-parse --abbrev-ref HEAD > ./git_branch
-#     popd > /dev/null
-# }
 
 repos="kong node-sdk env api ui kong-adapter auth mailer chatbot"
-
-# for repo in ${repos}; do
-#     clone_repo ${repo} ${branch}
-# done
 
 if [[ -d wicked.haufe.io ]]; then
     pushd wicked.haufe.io
@@ -79,6 +46,12 @@ fi
 
 pushd wicked.haufe.io
 git checkout ${branch}
+
+# Once for the global state
+echo ${branch} > ./src/git_branch
+echo ${build_date} > ./src/build_date
+git log -1 --decorate=short > ./src/git_last_commit
+
 for repo in ${repos}; do
     pushd src/${repo}
     rm -f ./build_date ./git_last_commit ./git_branch

@@ -4,28 +4,28 @@ mixin renderButtons(thisPage, prevPage, nextPage, returnText, renderLinks)
     - returnLabel = returnText
   else if renderLinks
     - returnLabel = "&laquo; Previous"
-  input(type='hidden' name='redirect' id='redirect' value='#{thisPage}')
+  input(type='hidden' name='redirect' id='redirect' value=thisPage)
   table(width='100%')
     tr
       td
         if prevPage
           if !renderLinks
-            button(type="submit" onclick='setRedirect("#{prevPage}");').btn.btn-primary!= returnLabel
+            button(type="submit" onclick=`setRedirect("${prevPage}");`).btn.btn-primary!= returnLabel
           else
-            a(href="#{prevPage}").btn.btn-primary!= returnLabel
+            a(href=prevPage).btn.btn-primary!= returnLabel
         else
           | &nbsp;
       td(style='text-align: right')
         a(href='/').btn.btn-default Home
         | &nbsp; 
         if !renderLinks
-          button(type="submit" onclick='setRedirect("#{thisPage}");').btn.btn-primary Save
+          button(type="submit" onclick=`setRedirect("${thisPage}");`).btn.btn-primary Save
         if nextPage
           | &nbsp;
           if !renderLinks
-            button(type="submit" onclick='setRedirect("#{nextPage}");').btn.btn-primary Save &amp; Next &raquo;
+            button(type="submit" onclick=`setRedirect("${nextPage}");`).btn.btn-primary Save &amp; Next &raquo;
           else
-            a(href="#{nextPage}").btn.btn-primary Next &raquo;
+            a(href=nextPage).btn.btn-primary Next &raquo;
 
 
 mixin inputField(source, dummy, label, inType, desc, envVarName_)
@@ -45,8 +45,8 @@ mixin inputField(source, dummy, label, inType, desc, envVarName_)
   if inType
     - inputType = inType
   .form-group
-    label(for='#{inputId}')= label
-    input(name='#{inputId}' id='#{inputId}' type='#{inputType}' value='#{inputValue}').form-control
+    label(for=inputId)= label
+    input(name=inputId id=inputId type=inputType value=inputValue).form-control
     if desc
       p.wicked-note!= desc
       // p.wicked-note inputValueTest = #{inputValueTest}
@@ -58,20 +58,20 @@ mixin inputField(source, dummy, label, inType, desc, envVarName_)
               .checkbox
                 label
                   if fromEnv
-                    input(type='checkbox' name='#{inputId}_' id='#{jInputId}_' checked='checked' onchange='checkChange(event, "#{jInputId}_");')
+                    input(type='checkbox' name=`${inputId}_` id=`${jInputId}_` checked='checked' onchange=`checkChange(event, "${jInputId}_");`)
                   else
-                    input(type='checkbox' name='#{inputId}_' id='#{jInputId}_' onchange='checkChange(event, "#{jInputId}_");')
+                    input(type='checkbox' name=`${inputId}_` id=`${jInputId}_` onchange=`checkChange(event, "${jInputId}_");`)
                   | Use environment variable <code>#{envVarName}</code>
             td &nbsp;&nbsp;
             td
               .checkbox
                 label
                   if fromEncrypted
-                    input(type='checkbox' name='#{inputId}__' id='#{jInputId}__' checked='checked')
+                    input(type='checkbox' name=`${inputId}__` id=`${jInputId}__` checked='checked')
                   else if fromEnv
-                    input(type='checkbox' name='#{inputId}__' id='#{jInputId}__')
+                    input(type='checkbox' name=`${inputId}__` id=`${jInputId}__`)
                   else
-                    input(type='checkbox' name='#{inputId}__' id='#{jInputId}__' disabled)
+                    input(type='checkbox' name=`${inputId}__` id=`${jInputId}__` disabled)
                   | Encrypt
             
 mixin textareaField(source, dummy, label, heightPx)
@@ -83,15 +83,15 @@ mixin textareaField(source, dummy, label, heightPx)
   - var sourceWithoutGlob = source.startsWith('glob.') ? source.substring(5) : source
   - var envVarName = 'PORTAL_' + sourceWithoutGlob.replace(/[\.-]/g, '_').toUpperCase().replace(/[\[\]]/g, '');
   .form-group
-    label(for='#{inputId}')= label
-    textarea(name='#{inputId}' id='#{inputId}' style='height:#{heightPx}px').form-control= inputValue
+    label(for=inputId)= label
+    textarea(name=inputId id=inputId style=`height:${heightPx}px`).form-control= inputValue
     small
       .checkbox
         label
           if fromEnv
-            input(type='checkbox' name='#{inputId}_' checked='checked')
+            input(type='checkbox' name=`${inputId}_` checked='checked')
           else
-            input(type='checkbox' name='#{inputId}_')
+            input(type='checkbox' name=`${inputId}_`)
           | Use environment variable <code>#{envVarName}</code>
             
 mixin textareaField2(source, dummy, label, heightPx)
@@ -100,8 +100,8 @@ mixin textareaField2(source, dummy, label, heightPx)
   if (!inputValue)
     - inputValue = ''
   .form-group
-    label(for='#{inputId}')= label
-    textarea(name='#{inputId}' id='#{inputId}' style='height:#{heightPx}px').form-control= inputValue
+    label(for=inputId)= label
+    textarea(name=inputId id=inputId style=`height:${heightPx}px`).form-control= inputValue
 
 mixin inputField2(source, dfkjldksjflsdjflsdf, label, inType, desc, readonly)
   - var inputId = source
@@ -114,11 +114,11 @@ mixin inputField2(source, dfkjldksjflsdjflsdf, label, inType, desc, readonly)
   if inType
     - inputType = inType
   .form-group
-    label(for='#{inputId}')= label
+    label(for=inputId)= label
     if !readonly
-      input(name='#{inputId}' id='#{inputId}' type='#{inputType}' value='#{inputValue}').form-control
+      input(name=inputId id=inputId type=inputType value=inputValue).form-control
     else
-      input(name='#{inputId}' id='#{inputId}' type='#{inputType}' value='#{inputValue}' readonly).form-control
+      input(name=inputId id=inputId type=inputType value=inputValue readonly).form-control
     if desc
       p.wicked-note!= desc
 
@@ -128,10 +128,10 @@ mixin checkBox(source, thisIsNotUsedButApparentlyJadeNeedsItSomebodyCanExplainPl
   .checkbox
     label
       if inputValue && inputValue != 'false'
-        input(name='#{inputId}' id='#{inputId}' checked='checked' type='checkbox')
+        input(name=inputId id=inputId checked='checked' type='checkbox')
         | !{label}
       else
-        input(name='#{inputId}' id='#{inputId}' type='checkbox')
+        input(name=inputId id=inputId type='checkbox')
         | !{label}
 
 mixin checkPanel(source, thisIsNotUsedButApparentlyJadeNeedsItSomebodyCanExplainPlease, label)
@@ -142,19 +142,19 @@ mixin checkPanel(source, thisIsNotUsedButApparentlyJadeNeedsItSomebodyCanExplain
     .panel.panel-primary
       .panel-heading
           .checkbox
-            label(data-toggle="collapse" data-target='##{collapseId}')
+            label(data-toggle="collapse" data-target=`#${collapseId}`)
               if inputValue
-                input(name='#{inputId}' id='#{inputId}' checked='checked' type='checkbox')
+                input(name=inputId id=inputId checked='checked' type='checkbox')
                 | #{label}
               else
-                input(name='#{inputId}' id='#{inputId}' type='checkbox')
+                input(name=inputId id=inputId type='checkbox')
                 | #{label}
       if inputValue
-        div(id='#{collapseId}').panel-collapse.collapse.in
+        div(id=collapseId).panel-collapse.collapse.in
           .panel-body
             block
       else
-        div(id='#{collapseId}').panel-collapse.collapse
+        div(id=collapseId).panel-collapse.collapse
           .panel-body
             block
 

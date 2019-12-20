@@ -32,45 +32,107 @@ function applyGridFilter(filter, item) {
     return false;
 }
 
-function setMouseOverElementContent($elem, content) {
-  $elem.attr({
-    "data-toggle": "popover",
-    "data-placement": "right",
-    "data-content": content
-  }).popover({trigger: "manual", animation: false});
-  $elem.on("mouseenter", function () {
-      var _this = this;
-      $(this).popover("show");
-      $(".popover").on("mouseleave", function () {
-          $(_this).popover('hide');
-      });
-  }).on("mouseleave", function () {
-      var _this = this;
-      setTimeout(function () {
-          if (!$(".popover:hover").length) {
-              $(_this).popover("hide");
-          }
-      }, 300);
-  });
+function getStateFromHistory() {
+    return {
+        filter: JSON.parse(history.state.filter),
+        sorting: JSON.parse(history.state.sorting),
+        pageIndex: history.state.pageIndex
+    };
+}
+
+function getStateFromGrid(grid) {
+    return {
+        filter: JSON.stringify(grid.getFilter()),
+        sorting: JSON.stringify(grid._sortingParams()),
+        pageIndex: grid.pageIndex
+    };
+}
+
+function getFilterValueFromState(filter, fieldName) {
+    for (let prop in filter) {
+        let fieldNameNestedPops = fieldName.split(".");
+        if (prop === fieldNameNestedPops[0]) {
+            if (typeof filter[prop] === "object" && fieldNameNestedPops.length > 1) //look for nested
+                return getFilterValueFromState(filter[prop], fieldNameNestedPops.slice(-1)[0]);
+            if (prop === fieldName)
+                return filter[prop];
+        }
+    }
+    return "";
+}
+
+function initializeGridFromState(grid) {
+    let gridSettings = getStateFromHistory();
+    grid.isGridRefreshAvailable = false;
+    return new Promise((resolve, reject) => {
+        //set filter values into grid inputs
+        for (let prop in grid.fields) {
+            let filterValue = getFilterValueFromState(gridSettings.filter, (grid.fields)[prop].name);
+            $((grid.fields)[prop].filterControl).val(filterValue)
+        }
+        if (gridSettings && !isEmptyGridFilter(gridSettings.filter))
+            grid.filtering = true;
+        grid.search(gridSettings.filter).done(function () {
+            grid.sort({
+                field: gridSettings.sorting.sortField,
+                order: gridSettings.sorting.sortOrder
+            }).done(function () {
+                grid.option("pageIndex", gridSettings.pageIndex);
+                resolve();
+            });
+        });
+    });
 }
 
 function dateFormat (date, fstr, utc) {
     utc = utc ? 'getUTC' : 'get';
     return fstr.replace (/%[YmdHMS]/g, function (m) {
-      switch (m) {
-      case '%Y': return date[utc + 'FullYear'] ();
-      case '%m': m = 1 + date[utc + 'Month'] (); break;
-      case '%d': m = date[utc + 'Date'] (); break;
-      case '%H': m = date[utc + 'Hours'] (); break;
-      case '%M': m = date[utc + 'Minutes'] (); break;
-      case '%S': m = date[utc + 'Seconds'] (); break;
-      default: return m.slice (1);
-      }
-      return ('0' + m).slice (-2);
+        switch (m) {
+            case '%Y': return date[utc + 'FullYear'] ();
+            case '%m': m = 1 + date[utc + 'Month'] (); break;
+            case '%d': m = date[utc + 'Date'] (); break;
+            case '%H': m = date[utc + 'Hours'] (); break;
+            case '%M': m = date[utc + 'Minutes'] (); break;
+            case '%S': m = date[utc + 'Seconds'] (); break;
+            default: return m.slice (1);
+        }
+        return ('0' + m).slice (-2);
+    });
+}
+
+function setMouseOverElementContent($elem, content) {
+    $elem.attr({
+        "data-toggle": "popover",
+        "data-placement": "right",
+        "data-content": content
+    }).popover({trigger: "manual", animation: false});
+    $elem.on("mouseenter", function () {
+        var _this = this;
+        $(this).popover("show");
+        $(".popover").on("mouseleave", function () {
+            $(_this).popover('hide');
+        });
+    }).on("mouseleave", function () {
+        var _this = this;
+        setTimeout(function () {
+            if (!$(".popover:hover").length) {
+                $(_this).popover("hide");
+            }
+        }, 300);
     });
 }
 
 $(document).ready(function () {
+    jsGrid.Grid.prototype.onRefreshed = function (args) {
+        if (Array.isArray(args.grid.data) && (args.grid.data).length > 0) {
+            var params = getStateFromGrid(args.grid);
+            if (window.history && window.history.pushState) {
+                if (JSON.stringify(history.state) !== JSON.stringify(params) && (args.grid.isGridRefreshAvailable && args.grid.isGridRefreshAvailable === true)) {
+                    history.pushState(params, `title ${args.grid.pageIndex}`, `?page=${args.grid.pageIndex}`);
+                }
+            }
+        }
+    }
     jsGrid.loadStrategies.DirectLoadingStrategy.prototype.finishDelete = function (deletedItem, deletedItemIndex) {
         var grid = this._grid;
         grid.option("data").splice(deletedItemIndex, 1);

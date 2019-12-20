@@ -45,7 +45,7 @@ block content
                                                 option(value=item selected=glob.chatbot.targets[i].type === item) #{item}
                                     +inputField(thisTarget + '.hookUrl', glob, 'Hook URL', 'See documentation of you messaging tool on how to get one of these.')
                                     p
-                                        button(type='submit' onclick='setAction("deleteTarget", #{i});').btn.btn-sm.btn-danger Delete this target
+                                        button(type='submit' onclick=`setAction("deleteTarget", ${i});`).btn.btn-sm.btn-danger Delete this target
 
                                     br
                                     // The possible events

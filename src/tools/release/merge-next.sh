@@ -1,5 +1,9 @@
 #!/bin/bash
 
+echo "ERROR: This is not needed anymore. Just merge this repository from next to master."
+echo "       Keeping this file for reference for another little while."
+exit 1
+
 if [[ "$1" == "--help" ]]; then
 	echo "Usage: $0 (--docs|--check|--merge)"
 	echo "  --docs: Merge wicked.haufe.io docs from next to master"

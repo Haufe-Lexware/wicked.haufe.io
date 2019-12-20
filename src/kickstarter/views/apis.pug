@@ -11,15 +11,15 @@ mixin renderApi(api, i)
                         tr
                             td
                                 h4.panel-title 
-                                    a(data-target='#collapse_#{i}' data-toggle='collapse') #{api.name} &raquo;
+                                    a(data-target=`#collapse_${i}` data-toggle='collapse') #{api.name} &raquo;
                             td(style='text-align:right')
                                 if (api.deprecated)
-                                    button(type='submit' onclick="setAction('deleteApi', #{i});").btn.btn-danger Delete API
+                                    button(type='submit' onclick=`setAction('deleteApi', ${i});`).btn.btn-danger Delete API
                                 else
                                     i Cannot delete API (not deprecated)
-                div(id='collapse_#{i}').collapse.panel-collapse
+                div(id=`collapse_${i}`).collapse.panel-collapse
                     .panel-body
-                        a(href="/apis/#{api.id}" role="button").btn.btn-primary Configure API
+                        a(href=`/apis/${api.id}` role="button").btn.btn-primary Configure API
         .col-md-2
             | &nbsp;
 

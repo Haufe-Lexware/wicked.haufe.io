@@ -16,16 +16,16 @@ RUN apk add --update ca-certificates \
  && mkdir -p /usr/src/app
 
 ADD k8s-tool.sh /usr/local/bin/k8s-tool.sh
-# ADD git_branch /usr/src/app/git_branch
-# ADD git_last_commit /usr/src/app/git_last_commit
+ADD git_branch /usr/src/app/git_branch
+ADD git_last_commit /usr/src/app/git_last_commit
 
 ARG VCS_REF
 ARG BUILD_DATE
 
 # Metadata
 LABEL org.label-schema.vcs-ref=$VCS_REF \
-      org.label-schema.vcs-url="https://github.com/apim-haufe-io/wicked.k8s-tool" \
+      org.label-schema.vcs-url="https://github.com/Haufe-Lexware/wicked.haufe.io" \
       org.label-schema.build-date=$BUILD_DATE \
-      org.label-schema.docker.dockerfile="/src/Dockerfile"
+      org.label-schema.docker.dockerfile="/src/k8s-tool/src/Dockerfile"
 
 ENTRYPOINT ["k8s-tool.sh"]

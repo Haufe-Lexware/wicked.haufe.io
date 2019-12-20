@@ -26,7 +26,7 @@ block content
             by inserting the following JSON into this file: <code>{"href":"http://your.backend/api-docs"}</code>. The <code>href</code>
             may contain environment variables; add here, save, and then edit in the <a href="/envs">Environments section</a>.
         
-        form(role='form' action='/swagger/#{apiId}' method='post')
+        form(role='form' action=`/swagger/${apiId}` method='post')
             +renderButtons('/swagger/' + apiId, '/apis', null, '&laquo; Save &amp; Return')
             br
             textarea(name='swagger' style='height:500px;').form-control= swagger

@@ -6,7 +6,7 @@ block content
     br
     br
     .container
-        form(role='form' action='/content#{pathUri}' method='post')
+        form(role='form' action=`/content${pathUri}` method='post')
             .row
                 .col-md-6
                     .panel-group
@@ -21,7 +21,7 @@ block content
                                                     if requiredGroup != '<none>'
                                                         span.label.label-success= requiredGroup 
                                         td(style='text-align:right')
-                                            a(href='/editcontent#{pathUri}').btn.btn-default Edit Content &raquo;
+                                            a(href=`/editcontent${pathUri}`).btn.btn-default Edit Content &raquo;
                             div(id='collapse').collapse.panel-collapse
                                 .panel-body
                                     +checkBox('showTitle', showTitle, 'Show Title Panel (Jumbotron)')

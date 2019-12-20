@@ -1,5 +1,5 @@
 {
-  "version": "1.0.0-rc.10",
+  "version": "1.0.0-rc.11",
   "license": "Apache-2.0",
   "author": "Martin Danielsson",
   "description": "Base package for the portal; contains all package dependencies to speed up Docker build.",
@@ -22,7 +22,6 @@
     "folder-hash": "2.1.2",
     "fs-extra": "7.0.1",
     "highlight.js": "9.3.0",
-    "jade": "1.11.0",
     "jquery": "3.4.1",
     "js-yaml": "3.13.1",
     "jsgrid": "1.5.3",
@@ -51,6 +50,7 @@
     "redis": "2.8.0",
     "request": "2.88.0",
     "rimraf": "2.6.2",
+    "semver": "6.3.0",
     "serve-favicon": "2.5.0",
     "server-destroy": "1.0.1",
     "session-file-store": "1.0.0",

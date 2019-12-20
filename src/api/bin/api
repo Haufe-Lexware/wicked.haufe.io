@@ -13,6 +13,7 @@ const path = require('path');
 const fs = require('fs');
 const os = require('os');
 const envReader = require('portal-env'); // local npm module
+const versionizer = require('../routes/versionizer');
 
 if (os.platform() === 'darwin') {
     if (!process.env.NODE_ENV) {
@@ -83,70 +84,80 @@ if (!aesKey) {
 app.set('aes_key', aesKey);
 debug('AES encryption key for file encryption set.');
 
-// Check if we need to update the static DB?
-try {
-    envReader.updateConfig(staticRepo, path.join(utils.getInitialConfigDir(), 'static'), configKey);
-} catch (dbErr) {
-    error(dbErr);
-    error(dbErr.stack);
-    throw Error("The Configuration update steps failed. Check log files for details.");
-}
-
-// Populate all the environment variables again; some may have been added
-// via the update steps.
-envReader.checkEnvironment(staticConfigPath, configKey, environment);
-
-// Sanity check environment variables
-if (!envReader.sanityCheckDir(staticRepo)) {
-    throw Error('Environment variables are missing. Check log files for details.');
-}
-
 let server = null;
-// How does our dynamic config look?
-dao.init(app);
-initializer.checkDynamicConfig(function (err, results) {
+
+// Initialize the config has prior to changing/updating the static configuration (via the
+// update scripts in the env package).
+versionizer.initConfigHash(function (err, configHash) {
     if (err) {
-        error('initializer.checkDynamicConfig() failed!');
-        error(err);
-        error(err.stack);
-        process.exit(1);
+        error('Could not calculate config hash correctly.');
+        throw err;
     }
-    if (results) {
-        error('initializer.checkDynamicConfig() returned messages!');
-        error(JSON.stringify(results, null, 2));
-        process.exit(1);
+    info(`Calculated config hash for this instance: ${configHash}`);
+
+    // Check if we need to update the static DB?
+    try {
+        envReader.updateConfig(staticRepo, path.join(utils.getInitialConfigDir(), 'static'), configKey);
+    } catch (dbErr) {
+        error(dbErr);
+        error(dbErr.stack);
+        throw Error("The Configuration update steps failed. Check log files for details.");
     }
 
-    // Create table of contents for contents
-    app.content.setup(app);
+    // Populate all the environment variables again; some may have been added
+    // via the update steps.
+    envReader.checkEnvironment(staticConfigPath, configKey, environment);
 
-    // Turn on the regular hooks
-    app.setupHooks();
+    // Sanity check environment variables
+    if (!envReader.sanityCheckDir(staticRepo)) {
+        throw Error('Environment variables are missing. Check log files for details.');
+    }
 
-    // Write swagger.json files for internal APIs
-    initializer.writeSwaggerJsonFiles();
+    // How does our dynamic config look?
+    dao.init(app);
+    initializer.checkDynamicConfig(function (err, results) {
+        if (err) {
+            error('initializer.checkDynamicConfig() failed!');
+            error(err);
+            error(err.stack);
+            process.exit(1);
+        }
+        if (results) {
+            error('initializer.checkDynamicConfig() returned messages!');
+            error(JSON.stringify(results, null, 2));
+            process.exit(1);
+        }
 
-    // Create HTTP server.
-    server = http.createServer(app);
+        // Create table of contents for contents
+        app.content.setup(app);
 
-    // Listen on provided port, on all network interfaces.
-    server.listen(port);
-    server.on('error', onError);
-    server.on('listening', onListening);
+        // Turn on the regular hooks
+        app.setupHooks();
 
-    // Graceful shutdown
-    const shutdown = function (signal) {
-        app.shuttingDown = true;
-        info("Received " + signal + ". Gracefully shutting down.");
-        setTimeout(process.exit, 1000);
-    };
-    process.on('SIGINT', () => shutdown("SIGINT"));
-    process.on('SIGTERM', () => shutdown("SIGTERM"));
+        // Write swagger.json files for internal APIs
+        initializer.writeSwaggerJsonFiles();
 
-    // Also start the simple echo server
-    echoApp.start();
+        // Create HTTP server.
+        server = http.createServer(app);
+
+        // Listen on provided port, on all network interfaces.
+        server.listen(port);
+        server.on('error', onError);
+        server.on('listening', onListening);
+
+        // Graceful shutdown
+        const shutdown = function (signal) {
+            app.shuttingDown = true;
+            info("Received " + signal + ". Gracefully shutting down.");
+            setTimeout(process.exit, 1000);
+        };
+        process.on('SIGINT', () => shutdown("SIGINT"));
+        process.on('SIGTERM', () => shutdown("SIGTERM"));
+
+        // Also start the simple echo server
+        echoApp.start();
+    });
 });
-
 
 /**
  * Normalize a port into a number, string, or false.

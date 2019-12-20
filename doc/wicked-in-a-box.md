@@ -33,7 +33,7 @@ Follow these steps to get a wicked environment up and running, using a fresh wic
 * `cd` into the new directory
 * Run `wicked tags list`
 
-From the offered tags, pick the newest version, e.g. `1.0.0-rc.10` (or use `latest` for the latest released build), and run
+From the offered tags, pick the newest version, e.g. `1.0.0-rc.11` (or use `latest` for the latest released build), and run
 
 * `wicked tags set <tag>`: This stores the selected version into `~/.wicked/wicked.json`
 * Run `wicked kickstart . --new`
@@ -140,7 +140,7 @@ $ wicked box start --help
 Usage: wicked-box-start [options] <configdir>
 
 Options:
-  -t, --tag <tag>                    wicked Docker tag to use (default: "1.0.0-rc.10")
+  -t, --tag <tag>                    wicked Docker tag to use (default: "1.0.0-rc.11")
   -u, --ui-port <ui-port>            port to expose the portal UI on (default: 3000)
   -g, --gateway-port <gateway-port>  port to expose Kong on (API Gateway) (default: 8000)
   -a, --admin-port <admin-port>      port to expose Kong's Admin port on (defaults to off)
@@ -215,7 +215,7 @@ You can now, after you have finished working, safely shut down the Postgres cont
 
 ### Working with the wicked SDK and the wicked API
 
-If you want to integrate your own (node.js) application with some of the more advanced features of wicked, or for example write a webhook listener which listens to the wicked events, you can have a look at the [wicked Node SDK](https://github.com/apim-haufe-io/wicked.node-sdk). Wicked-in-a-box makes it quite easy develop against wicked using the wicked Node SDK.
+If you want to integrate your own (node.js) application with some of the more advanced features of wicked, or for example write a webhook listener which listens to the wicked events, you can have a look at the [wicked Node SDK](../src/node-sdk). Wicked-in-a-box makes it quite easy develop against wicked using the wicked Node SDK.
 
 In order to expose the wicked API to the local machine, use the `--api-port` switch of the `wicked box start` command, e.g.
 

@@ -31,11 +31,13 @@
       ],
       "settings": {
         "token_expiration": 3600,
-        "enable_client_credentials": true
+        "enable_client_credentials": true,
+        "scopes": {}
       },
       "authMethods": [
         "default:local"
-      ]
+      ],
+      "registrationPool": ""
     },
     {
       "id": "no-auth",

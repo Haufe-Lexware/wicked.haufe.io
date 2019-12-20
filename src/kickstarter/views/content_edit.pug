@@ -10,20 +10,20 @@ block content
             
             p Path: <code>/content#{pathUri}</code>
     .container
-        form(role='form' action='/editcontent#{pathUri}' method='post')
+        form(role='form' action=`/editcontent${pathUri}` method='post')
         
-            input(type='hidden' name='redirect' id='redirect' value='#{thisPage}')
-            input(type='hidden' name='contentType' value='#{contentType}')
+            input(type='hidden' name='redirect' id='redirect' value=thisPage)
+            input(type='hidden' name='contentType' value=contentType)
         
             table(width='100%')
                 tr
                     td
                         a(href='/content').btn.btn-default &laquo; Content Index
                         | &nbsp;
-                        button(type='submit' onclick='setRedirect("/editcontent#{pathUri}");').btn.btn-primary Save
+                        button(type='submit' onclick=`setRedirect("/editcontent${pathUri}");`).btn.btn-primary Save
                         | &nbsp;
-                        button(type='submit' onclick='setRedirect("/content#{pathUri}");').btn.btn-primary Save &amp; Preview &raquo;
+                        button(type='submit' onclick=`setRedirect("/content${pathUri}");`).btn.btn-primary Save &amp; Preview &raquo;
                     td(style='text-align:right')
-                        a(href='/content#{pathUri}').btn.btn-default Preview &raquo;
+                        a(href=`/content${pathUri}`).btn.btn-default Preview &raquo;
             br            
             textarea(name='content' style='height: 600px').form-control= content

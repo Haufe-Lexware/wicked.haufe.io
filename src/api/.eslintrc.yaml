@@ -33,6 +33,8 @@ rules:
   curly:
     - error
     - all
+  no-prototype-builtins:
+    - off
 globals:
   process: true
   Buffer: true

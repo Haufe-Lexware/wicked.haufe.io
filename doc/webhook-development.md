@@ -4,7 +4,7 @@ To be written.
 
 For starters, have a look at either `wicked.portal-mailer` or `wicked.portal-chatbot` to get a notion how this works.
 
-If you are using node.js, the [Wicked SDK](https://github.com/apim-haufe-io/wicked.node-sdk) (`wicked-sdk`) will be of great help to you.
+If you are using node.js, the [Wicked SDK](../src/node-sdk) (`wicked-sdk`) will be of great help to you.
 
 Please also refer to [wicked-in-a-box](wicked-in-a-box.md) to see how to easily set up an environment which can be used for simple webhook development.
 

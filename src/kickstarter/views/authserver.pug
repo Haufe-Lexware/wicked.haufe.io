@@ -19,9 +19,9 @@ block content
             -var envPrefixPlugins = envPrefix + '_PLUGINS_'
             password-validation(v-model="glob" v-bind:strategies="passwordStrategies")
 
-            auth-server(v-model="authServer" env-prefix="#{envPrefix}" server-id="#{safeServerId}" v-bind:groups="groups")
+            auth-server(v-model="authServer" env-prefix=envPrefix server-id=safeServerId v-bind:groups="groups")
             
-            wicked-plugins(v-model="plugins" env-prefix="#{envPrefixPlugins}" disable-aws-lambda=true hint="This section is for configuring plugins for the Authorization Server. The Authorization Server is registered as an API with the API Gateway, and thus you may use the usual plugins for it.")
+            wicked-plugins(v-model="plugins" env-prefix=envPrefixPlugins disable-aws-lambda=true hint="This section is for configuring plugins for the Authorization Server. The Authorization Server is registered as an API with the API Gateway, and thus you may use the usual plugins for it.")
             br
             nav-buttons(return-link="/authservers")
 
@@ -31,7 +31,7 @@ block afterScripts
             serverId: "#{serverId}",
             safeServerId: "#{safeServerId}",
             authServer: !{JSON.stringify(authServer)},
-            plugins: !{JSON.stringify(plugins)},
+            plugins: !{JSON.stringify(apiPlugins)},
             groups: !{JSON.stringify(groups)},
             glob: !{JSON.stringify(glob)},
             passwordStrategies: !{JSON.stringify(passwordStrategies)},

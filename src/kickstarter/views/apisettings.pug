@@ -17,13 +17,13 @@ block content
 
         div(id='vueBase')
             -var envPrefix = 'PORTAL_APIS_' + safeApiId.toUpperCase() + '_'
-            wicked-api(v-model="api" v-bind:auth-methods="authMethods" v-bind:groups="groups" v-bind:plans="plans" v-bind:pools="pools" env-prefix="#{envPrefix}")
-            wicked-api-kong(v-model="config" env-prefix="#{envPrefix}")
-            wicked-plugins(v-model="plugins" env-prefix="#{envPrefix}PLUGINS_")
-            wicked-api-desc(v-model="desc" env-prefix="#{envPrefix}")
+            wicked-api(v-model="api" v-bind:auth-methods="authMethods" v-bind:groups="groups" v-bind:plans="plans" v-bind:pools="pools" env-prefix=envPrefix)
+            wicked-api-kong(v-model="config" env-prefix=envPrefix)
+            wicked-plugins(v-model="plugins" env-prefix=`${envPrefix}PLUGINS_`)
+            wicked-api-desc(v-model="desc" env-prefix=envPrefix)
             //- wicked-input(v-model="desc" textarea=true env-var="WOOHA")
             //- wicked-markdown(v-model="desc")
-            wicked-api-swagger(v-model="swagger" env-prefix="#{envPrefix}")
+            wicked-api-swagger(v-model="swagger" env-prefix=envPrefix)
 
             nav-buttons(return-link="/apis")
 
@@ -32,7 +32,7 @@ block afterScripts
         const injectedData = {
             api: !{JSON.stringify(api)},
             config: !{JSON.stringify(config)},
-            plugins: !{JSON.stringify(plugins)},
+            plugins: !{JSON.stringify(apiPlugins)},
             desc: !{JSON.stringify(desc)},
             swagger: !{JSON.stringify(swagger)},
             authMethods: !{JSON.stringify(authMethods)},

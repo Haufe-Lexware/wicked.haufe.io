@@ -144,7 +144,8 @@ function lookupAuthMethod(app, apiId, authMethodRef) {
 
     const apiUrl = utils.ensureNoSlash(wicked.getExternalApiUrl());
     // The loading of the authServers in 'www' ensures this is specified
-    const authServerUrl = apiUrl + authServer.config.api.uris[0];
+    const hasPath = Array.isArray(authServer.config.api.routes) && Array.isArray(authServer.config.api.routes[0].paths);
+    const authServerUrl = apiUrl + (hasPath ? authServer.config.api.routes[0].paths[0] : '/auth');
 
     for (let i = 0; i < endpoints.length; ++i) {
         const endpoint = endpoints[i];
@@ -652,6 +653,22 @@ utils.parseBool = (str) => {
 
     return false;
 };
+
+utils.dateFormat = (date, fstr, utc) => {
+    utc = utc ? 'getUTC' : 'get';
+    return fstr.replace(/%[YmdHMS]/g, function (m) {
+        switch (m) {
+            case '%Y': return date[utc + 'FullYear']();
+            case '%m': m = 1 + date[utc + 'Month'](); break;
+            case '%d': m = date[utc + 'Date'](); break;
+            case '%H': m = date[utc + 'Hours'](); break;
+            case '%M': m = date[utc + 'Minutes'](); break;
+            case '%S': m = date[utc + 'Seconds'](); break;
+            default: return m.slice(1);
+        }
+        return ('0' + m).slice(-2);
+    });
+}
 
 utils.markedOptions = { sanitize: true };
 

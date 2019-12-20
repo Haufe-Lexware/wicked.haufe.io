@@ -17,11 +17,15 @@
         "api": {
             "name": "default-auth",
             "upstream_url": "$PORTAL_AUTHSERVER_URL",
-            "preserve_host": false,
-            "uris": [
-                "/auth"
-            ],
-            "strip_uri": false
+            "routes": [
+              {
+                "paths": [
+                  "/auth"
+                ],
+                "strip_path": false,
+                "preserve_host": false
+              }
+            ]
         },
         "plugins": [
             {

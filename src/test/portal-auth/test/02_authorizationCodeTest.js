@@ -1,7 +1,5 @@
 'use strict';
 
-/* global it, describe, before, beforeEach, after, afterEach, slow, URL */
-
 const assert = require('chai').assert;
 const request = require('request');
 const wicked = require('wicked-sdk');
@@ -58,6 +56,7 @@ describe('Authorization Code Grant', function () {
     });
 
     after(function (done) {
+        this.timeout(20000);
         utils.destroyAppsAndSubcriptions(done);
     });
 

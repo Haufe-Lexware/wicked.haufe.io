@@ -46,8 +46,8 @@
             }
         },
         {
-            "enabled": false,
-            "name": "your-oauth2-change-this",
+            "enabled": true,
+            "name": "standard-oauth2",
             "type": "oauth2",
             "friendlyShort": "Standard OAuth2",
             "friendlyLong": "Log in using a standard OAuth2 Identity Provider.",

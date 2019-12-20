@@ -12,7 +12,7 @@ block content
     
     .container
     
-        form(role='form' action='/apidesc/#{apiId}' method='post')
+        form(role='form' action=`/apidesc/${apiId}` method='post')
             +renderButtons('/apidesc/' + apiId, '/apis', null, '&laquo; Save &amp; Return')
             br
             .row

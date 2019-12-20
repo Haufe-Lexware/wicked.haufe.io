@@ -148,9 +148,10 @@ export {
 } from './kong-interfaces';
 export {
     kongServiceRouteToApi,
-    kongApiToServiceRoute
+    kongApiToServiceRoute,
+    kongApiToServiceAndRoutes,
+    kongServiceAndRoutesToApi
 } from './kong';
-
 
 /** @hidden */
 import * as implementation from './implementation';

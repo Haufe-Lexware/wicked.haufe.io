@@ -54,13 +54,13 @@ const wickedOptions = {
  * with the Portal API. This will give us client credentials which lets the Portal
  * authenticate and authorize with Kong to get access to the Portal API anonymously
  * or as an end user.
- * 
- * To do that, we use the wicked SDK; this is later not the case, as we're using the 
+ *
+ * To do that, we use the wicked SDK; this is later not the case, as we're using the
  * API as a regular client after that, i.e. need to go via Kong. The wicked SDK goes
  * directly to the backend end point inside the deployment, which is a no no later,
  * for security reasons.
- * 
- * @param callback 
+ *
+ * @param callback
  */
 function registerApplicationAndSubscribe(callback) {
     debug('registerApplicationAndSubscribe()');
@@ -116,14 +116,14 @@ function registerApplicationAndSubscribe(callback) {
 
             const clientId = subsInfo.clientId;
             const clientSecret = subsInfo.clientSecret;
-    
+
             if (!clientId || !clientSecret) {
                 return callback(new Error('subscriptionInfo did not contain either clientId or clientSecret!'));
             }
-    
+
             // Now we know our application and set the id and secret for later use.
             utils.setOAuth2Credentials(clientId, clientSecret, callbackUrl);
-    
+
             return callback(null, {
                 clientId: clientId,
                 clientSecret: clientSecret
@@ -176,14 +176,16 @@ function configureAuthServer(callback) {
         if (err)
             return callback(err);
 
-        // Retrieve the URI on Kong the Auth Server resides on
-        if (!defaultAuthServer.config)
-            return callback(new Error('default auth server does not have a config property.'));
-        if (!defaultAuthServer.config.api)
-            return callback(new Error('default auth server does not have a config.api property.'));
-        if (!defaultAuthServer.config.api.uris)
-            return callback(new Error('default auth server does not have a config.api.uris property.'));
-        const authServerUri = defaultAuthServer.config.api.uris[0];
+        if (!defaultAuthServer.config ||
+            !defaultAuthServer.config.api ||
+            !Array.isArray(defaultAuthServer.config.api.routes) ||
+            !defaultAuthServer.config.api.routes.length ||
+            !Array.isArray(defaultAuthServer.config.api.routes[0].paths) ||
+            (defaultAuthServer.config.api.routes[0].paths.length <= 0)) {
+            return callback(new Error('The auth server configuration does not contain proper config.api'));
+        }
+
+        const authServerUri = defaultAuthServer.config.api.routes[0].paths[0];
         let apiUrl = wicked.getExternalApiUrl();
         if (apiUrl.endsWith('/'))
             apiUrl = apiUrl.substring(0, apiUrl.length - 1);
@@ -269,20 +271,20 @@ function readAuthServers(callback) {
             return callback(new Error('Could not read list of auth servers.'));
         const authServerMap = {};
         async.each(authServerNames, (authServerName, callback) => {
-            wicked.apiGet(`/auth-servers/${authServerName}`, (err, authServerInfo) => {
+            wicked.apiGet(`/auth-servers/${authServerName}`, (err, authServerConfig) => {
                 if (err)
                     return callback(err);
-                if (!authServerInfo.config)
-                    return callback(new Error(`Auth server ${authServerName} does not have a config property.`));
-                if (!authServerInfo.config.api)
-                    return callback(new Error(`Auth server ${authServerName} does not have a config.api property.`));
-                if (!authServerInfo.config.api.uris)
-                    return callback(new Error(`Auth server ${authServerName} does not have a config.api.uris property.`));
-                if (!Array.isArray(authServerInfo.config.api.uris))
-                    return callback(new Error(`Auth server ${authServerName} config.api.uris property in not an array.`));
-                if (authServerInfo.config.api.uris.length <= 0)
-                    return callback(new Error(`Auth server ${authServerName} config.api.uris property does not have any entries.`));
-                authServerMap[authServerName] = authServerInfo;
+
+                if (!authServerConfig.config ||
+                    !authServerConfig.config.api ||
+                    !Array.isArray(authServerConfig.config.api.routes) ||
+                    !authServerConfig.config.api.routes.length ||
+                    !Array.isArray(authServerConfig.config.api.routes[0].paths) ||
+                    (authServerConfig.config.api.routes[0].paths.length <= 0)) {
+                    return callback(new Error('The auth server configuration does not contain proper config.api'));
+                }
+
+                authServerMap[authServerName] = authServerConfig;
                 return callback(null);
             });
         }, (err) => {

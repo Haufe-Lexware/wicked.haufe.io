@@ -8,7 +8,7 @@ block content
             p Configure the API Gateway for this API. The most important setting is the backend URL.
             
     .container
-        form(role='form' action='/apis/#{apiId}' method='post')
+        form(role='form' action=`/apis/${apiId}` method='post')
             .row
                 .col-md-2
                     | &nbsp;
@@ -19,7 +19,7 @@ block content
                         .panel-body
                             .form-group
                                 label Name:
-                                input(type='string' name='apis.#{safeApiId}.api.name' readonly value='#{apiId}').form-control
+                                input(type='string' name=`apis.${safeApiId}.api.name` readonly value=apiId).form-control
                             +inputField('apis.' + safeApiId + '.api.upstream_url', apis, 'Upstream (backend) URL:')
                             +inputField2('apis.' + safeApiId + '.api.uris', apis, 'Request Uris:', 'array', 'This is the list of prefix you will use for this API on the API Gateway, e.g. `/petstore/v1`.')
                             +checkBox('apis.' + safeApiId + '.api.strip_uri', apis, '<b>Strip Uri</b>. Check this box if you don\'t want to pass the uri to the backend URL as well. Normally you wouldn\'t want that.')

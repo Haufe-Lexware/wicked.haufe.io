@@ -574,9 +574,15 @@ utils.prepareNewApi = function (app, apiId) {
         api: {
             upstream_url: "http://your.new.api/",
             name: apiId,
-            uris: ["/" + apiId],
-            strip_uri: true,
-            preserve_host: false
+            routes: [
+                {
+                    paths: [
+                        "/" + apiId
+                    ],
+                    strip_path: true,
+                    preserve_host: false
+                }
+            ]
         },
         plugins: []
     };
@@ -1093,9 +1099,15 @@ utils.createAuthServer = function (app, serverName) {
             api: {
                 name: serverName,
                 upstream_url: 'http://auth-server:3005',
-                uris: ['/auth-server'],
-                preserve_host: false,
-                strip_uri: false,
+                routes: [
+                    {
+                        paths: [
+                            '/auth-server'
+                        ],
+                        preserve_host: false,
+                        strip_path: false,
+                    }
+                ]
             },
             plugins: [
                 {
