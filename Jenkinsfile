@@ -22,7 +22,7 @@ pipeline {
                     if (dockerTag == 'next') {
                         // requires SonarQube Scanner 2.8+
                         def scannerHome = tool 'wicked-sonar';
-                        withSonarQubeEnv('sonar') {
+                        withSonarQubeEnv('haufe-sonar') {
                             sh "pushd ./src/api && ${scannerHome}/bin/sonar-scanner && popd"
                         }
                     } else {
