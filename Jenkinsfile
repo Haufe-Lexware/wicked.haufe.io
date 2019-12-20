@@ -23,15 +23,15 @@ pipeline {
                         // requires SonarQube Scanner 2.8+
                         def scannerHome = tool 'wicked-sonar';
                         withSonarQubeEnv('wicked-sonar') {
-                            sh "cd ./src/api && ${scannerHome}/bin/sonar-scanner && cd ../.."
-                            sh "cd ./src/auth && ${scannerHome}/bin/sonar-scanner && cd ../.."
-                            sh "cd ./src/chatbot && ${scannerHome}/bin/sonar-scanner && cd ../.."
-                            sh "cd ./src/env && ${scannerHome}/bin/sonar-scanner && cd ../.."
-                            sh "cd ./src/kickstarter && ${scannerHome}/bin/sonar-scanner && cd ../.."
-                            sh "cd ./src/kong-adapter && ${scannerHome}/bin/sonar-scanner && cd ../.."
-                            sh "cd ./src/mailer && ${scannerHome}/bin/sonar-scanner && cd ../.."
-                            sh "cd ./src/node-sdk && ${scannerHome}/bin/sonar-scanner && cd ../.."
-                            sh "cd ./src/ui && ${scannerHome}/bin/sonar-scanner && cd ../.."
+                            sh "cd ./src/api && ${scannerHome}/bin/sonar-scanner; cd ../.."
+                            sh "cd ./src/auth && ${scannerHome}/bin/sonar-scanner; cd ../.."
+                            sh "cd ./src/chatbot && ${scannerHome}/bin/sonar-scanner; cd ../.."
+                            sh "cd ./src/env && ${scannerHome}/bin/sonar-scanner; cd ../.."
+                            sh "cd ./src/kickstarter && ${scannerHome}/bin/sonar-scanner; cd ../.."
+                            sh "cd ./src/kong-adapter && ${scannerHome}/bin/sonar-scanner; cd ../.."
+                            sh "cd ./src/mailer && ${scannerHome}/bin/sonar-scanner; cd ../.."
+                            sh "cd ./src/node-sdk && ${scannerHome}/bin/sonar-scanner; cd ../.."
+                            sh "cd ./src/ui && ${scannerHome}/bin/sonar-scanner; cd ../.."
                         }
                     } else {
                         echo 'Skipping SonarQube, not "next" branch.'
