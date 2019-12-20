@@ -14,23 +14,23 @@ pipeline {
     }
 
     stages {
-        // stage('SonarQube analysis') {
-        //     steps {
-        //         script {
-        //             sh 'id'
-        //             def dockerTag = env.BRANCH_NAME.replaceAll('/', '-')
-        //             if (dockerTag == 'next') {
-        //                 // requires SonarQube Scanner 2.8+
-        //                 def scannerHome = tool 'wicked-sonar';
-        //                 withSonarQubeEnv('sonar') {
-        //                     sh "${scannerHome}/bin/sonar-scanner"
-        //                 }
-        //             } else {
-        //                 echo 'Skipping SonarQube, not "next" branch.'
-        //             }
-        //         }
-        //     }
-        // }
+        stage('SonarQube analysis') {
+            steps {
+                script {
+                    sh 'id'
+                    def dockerTag = env.BRANCH_NAME.replaceAll('/', '-')
+                    if (dockerTag == 'next') {
+                        // requires SonarQube Scanner 2.8+
+                        def scannerHome = tool 'wicked-sonar';
+                        withSonarQubeEnv('sonar') {
+                            sh "pushd ./src/api && ${scannerHome}/bin/sonar-scanner && popd"
+                        }
+                    } else {
+                        echo 'Skipping SonarQube, not "next" branch.'
+                    }
+                }
+            }
+        }
 
         stage('Build') {
             steps {
