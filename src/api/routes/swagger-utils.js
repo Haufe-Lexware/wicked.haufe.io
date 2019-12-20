@@ -304,7 +304,7 @@ function lookupAuthMethod(globalSettings, apiId, authMethodRef) {
 
     const apiUrl = globalSettings.network.schema + "://" + globalSettings.network.apiHost;
     // The loading of the authServers in 'www' ensures this is specified
-    const authServerUrl = apiUrl + authServer.config.api.uris[0];
+    const authServerUrl = apiUrl + authServer.config.api.routes[0].paths[0];
 
     for (let i = 0; i < endpoints.length; ++i) {
         const endpoint = endpoints[i];

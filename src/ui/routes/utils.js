@@ -144,7 +144,8 @@ function lookupAuthMethod(app, apiId, authMethodRef) {
 
     const apiUrl = utils.ensureNoSlash(wicked.getExternalApiUrl());
     // The loading of the authServers in 'www' ensures this is specified
-    const authServerUrl = apiUrl + authServer.config.api.uris[0];
+    const hasPath = Array.isArray(authServer.config.api.routes) && Array.isArray(authServer.config.api.routes[0].paths);
+    const authServerUrl = apiUrl + (hasPath ? authServer.config.api.routes[0].paths[0] : '/auth');
 
     for (let i = 0; i < endpoints.length; ++i) {
         const endpoint = endpoints[i];

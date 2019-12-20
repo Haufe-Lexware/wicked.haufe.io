@@ -161,9 +161,15 @@ router.get('/:api', function (req, res, next) {
         // console.log(JSON.stringify(apiConfig));
         const apiUris = [];
         const host = deduceHostAndSchema(req, apiConfig);
-        for (let u = 0; u < apiConfig.api.uris.length; ++u) {
-            const apiRequestUri = apiConfig.api.uris[u];
-            apiUris.push(`${host}${apiRequestUri}`);
+        if (apiConfig.api.routes) {
+          for (let r = 0; r < apiConfig.api.routes.length; ++r) {
+              const route =  apiConfig.api.routes[r];
+
+              for(let u = 0; u < route.paths.length; ++u) {
+                const apiRequestUri = route.paths[u];
+                apiUris.push(`${host}${apiRequestUri}`);
+              }
+          }
         }
 
         const plans = results.getPlans;
