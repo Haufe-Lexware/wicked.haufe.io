@@ -43,7 +43,7 @@ block content
                         This API has been deprecated by the API Portal maintainers. This means it can no longer be subscribed to.
                         Existing subscriptions are still valid.
 
-        if authUser || !apiInfo.requiredGroup                  
+        if authUser || !apiInfo.requiredGroup                
             .panel.panel-default
                 .panel-heading
                     +panelTitle('API Settings', '/help/api')
@@ -146,7 +146,7 @@ block content
                     p                    
                         a(href=`/login?redirect=/apis/${apiInfo.id}`).btn.btn-default Log in &raquo;
 
-        else if apiInfo.auth != "none"
+        else if apiInfo.auth != "none" && !partnerOnly
             .panel.panel-default
                 .panel-heading
                     +panelTitle('Applications', '/help/api')

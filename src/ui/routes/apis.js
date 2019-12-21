@@ -228,6 +228,12 @@ router.get('/:api', function (req, res, next) {
             if (loggedInUserId)
                 genericSwaggerUrl += `?forUser=${loggedInUserId}`;
 
+            let partnerOnly = false;
+            // disable details for logged in partner
+            if (apiInfo.requiredGroup && apiInfo.partner) {
+                partnerOnly = !(userInfo.groups.length > 0 && userInfo.groups.find((e) => {return e == apiInfo.requiredGroup;}));
+            }    
+
             const apps = [];
             let hasSwaggerApplication = false;
             for (let i = 0; i < userInfo.applications.length; ++i) {
@@ -248,6 +254,7 @@ router.get('/:api', function (req, res, next) {
                     thisApp.maySubscribe = false;
                     thisApp.subscribeError = 'API deprecated';
                 }
+
                 // Swagger UI App must be detected even if it doesn't have a subscription to this API
                 const thisRedirectUri = appsResults[i].redirectUri;
                 if ((thisRedirectUri && thisRedirectUri.indexOf("swagger-ui/oauth2-redirect.html")) > 0)
@@ -304,7 +311,8 @@ router.get('/:api', function (req, res, next) {
                     apiPlans: plans,
                     apiUris: apiUris,
                     apiSubscriptions: apiSubscriptions,
-                    genericSwaggerUrl: genericSwaggerUrl
+                    genericSwaggerUrl: genericSwaggerUrl,
+                    partnerOnly: partnerOnly
                 });
             } else {
                 delete apiInfo.authMethods;
@@ -314,7 +322,8 @@ router.get('/:api', function (req, res, next) {
                     apiPlans: plans,
                     applications: apps,
                     apiUris: apiUris,
-                    apiSubscriptions: apiSubscriptions
+                    apiSubscriptions: apiSubscriptions,
+                    partnerOnly: partnerOnly
                 });
             }
         });
