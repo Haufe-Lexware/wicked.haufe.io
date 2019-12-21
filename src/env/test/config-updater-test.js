@@ -49,4 +49,5 @@ describe('config-updater', function () {
         //assert.isArray(apiConfig.api.routes[0].plugins);
       });
   });
+  
 });
