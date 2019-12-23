@@ -56,12 +56,14 @@ async.series({
     // Initialize the externally visible URL as an app parameter
     if (!authServerConfig.config ||
         !authServerConfig.config.api ||
-        !authServerConfig.config.api.uris ||
-        !Array.isArray(authServerConfig.config.api.uris) ||
-        (authServerConfig.config.api.uris.length <= 0)) {
+        !Array.isArray(authServerConfig.config.api.routes) ||
+        !authServerConfig.config.api.routes.length ||
+        !Array.isArray(authServerConfig.config.api.routes[0].paths) ||
+        (authServerConfig.config.api.routes[0].paths.length <= 0)) {
         throw new Error('The auth server configuration does not contain a property config.api.uris[0]');
     }
-    const apiPath = authServerConfig.config.api.uris[0];
+    const apiPath = authServerConfig.config.api.routes[0].paths[0];
+        
     let externalApiUrl = wicked.getExternalApiUrl();
     if (externalApiUrl.endsWith('/'))
         externalApiUrl = externalApiUrl.substring(0, externalApiUrl.length - 1);

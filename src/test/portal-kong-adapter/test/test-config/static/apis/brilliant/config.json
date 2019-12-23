@@ -1,18 +1,23 @@
 {
-    "api": {
-        "upstream_url": "http://mockbin.com/",
-        "name": "brilliant",
-        "request_path": "/brilliant"
-    },
-    "plugins": [
-        {
-            "name": "rate-limiting",
-            "enabled": true,
-            "config": {
-                "async": false,
-                "day": 100,
-                "continue_on_error": true
-            }
-        }
+  "api": {
+    "upstream_url": "http://mockbin.com/",
+    "name": "brilliant",
+    "routes": [
+      {
+        "paths": [
+          "/brilliant"
+        ]
+      }
     ]
+  },
+  "plugins": [
+    {
+      "name": "rate-limiting",
+      "enabled": true,
+      "config": {
+        "day": 100,
+        "fault_tolerant": true
+      }
+    }
+  ]
 }
