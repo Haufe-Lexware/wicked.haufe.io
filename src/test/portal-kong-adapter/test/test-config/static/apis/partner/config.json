@@ -1,8 +1,14 @@
 {
     "api": {
-        "upstream_url": "http://mockbin.com/",
-        "name": "partner",
-        "request_path": "/partner"
+      "upstream_url": "http://mockbin.com/",
+      "name": "partner",
+      "routes": [
+        {
+          "paths": [
+            "/partner"
+          ]
+        }
+      ]
     },
     "plugins": []
-}
+  }

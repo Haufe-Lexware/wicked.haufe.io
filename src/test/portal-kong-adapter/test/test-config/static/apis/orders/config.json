@@ -1,17 +1,23 @@
 {
     "api": {
-        "upstream_url": "http://mockbin.com/",
-        "name": "orders",
-        "request_path": "/orders"
+      "upstream_url": "http://mockbin.com/",
+      "name": "orders",
+      "routes": [
+        {
+          "paths": [
+            "/orders"
+          ]
+        }
+      ]
     },
     "plugins": [
-        {
-            "name": "correlation-id",
-            "config": {
-                "header_name": "Correlation-Id",
-                "generator": "uuid",
-                "echo_downstream": false
-            }
+      {
+        "name": "correlation-id",
+        "config": {
+          "header_name": "Correlation-Id",
+          "generator": "uuid",
+          "echo_downstream": false
         }
+      }
     ]
-}
+  }

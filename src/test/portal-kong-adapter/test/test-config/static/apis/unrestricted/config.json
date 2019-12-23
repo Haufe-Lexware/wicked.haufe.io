@@ -2,7 +2,13 @@
     "api": {
         "upstream_url": "http://mockbin.com/",
         "name": "unrestricted",
-        "request_path": "/unrestricted"
+        "routes": [
+          {
+            "paths": [
+              "/unrestricted"
+            ]
+          }
+        ]
     },
     "plugins": [
         {

@@ -1,8 +1,14 @@
 {
     "api": {
-        "upstream_url": "http://mockbin.com/",
-        "name": "superduper",
-        "request_path": "/superduper"
+      "upstream_url": "http://mockbin.com/",
+      "name": "superduper",
+      "routes": [
+        {
+          "paths": [
+            "/superduper"
+          ]
+        }
+      ]
     },
     "plugins": []
-}
+  }
