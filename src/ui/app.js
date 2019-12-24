@@ -1,6 +1,7 @@
 'use strict';
 
 /* global app, __dirname */
+const proxy = require("express-http-proxy");
 
 const express = require('express');
 const { debug, info, warn, error } = require('portal-env').Logger('portal:app');
