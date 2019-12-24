@@ -168,6 +168,13 @@ app.initialize = function (done) {
     app.use('/apis', apis);
     app.use('/applications', applications);
 
+    // -- CLARIVATE HOOK
+    app.use('/clarivate', proxy(app.portalGlobals.network.clarivateUrl,{
+        proxyReqPathResolver: (req) => {
+            return '/clarivate'+req.url;
+        }
+    }));
+
     app.get('/contact', function (req, res, next) { res.redirect('/content/contact'); });
     app.use('/content', content);
     app.use('/users', users);
