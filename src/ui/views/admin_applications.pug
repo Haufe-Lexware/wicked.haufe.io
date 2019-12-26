@@ -3,6 +3,9 @@ block bodyScripts
   script(type='text/javascript').
     $(document).ready(function(){
        $('#applicationsGrid').jsGrid({
+         window.onpopstate = function (event) {
+          initializeGridFromStateServerSide(grid).then(() => { grid.isGridRefreshAvailable = true }).catch(err => console.log('Error', err));
+         }
          width: "100%", pageSize: 10, sorting: true, paging: true, filtering: true, pageLoading:true, autoload: true,
          controller: {
           loadData: function (filter) {
@@ -39,7 +42,8 @@ block bodyScripts
              }
          ]
        });
-       $("#applicationsGrid").jsGrid("option", "filtering", false);
+       var grid = $("#applicationsGrid").data("JSGrid");
+       grid.isGridRefreshAvailable = true;
     });
 block content
     .jumbotron.wicked-admin-title

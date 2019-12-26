@@ -1,0 +1,542 @@
+From e3f7064eeef1f27962c3cf94c880ae63162cef9e Mon Sep 17 00:00:00 2001
+From: MibenCoop <vitalii.belmach@clarivate.com>
+Date: Tue, 24 Dec 2019 18:25:30 +0300
+Subject: [PATCH 1/3] refactoring
+
+---
+ src/ui/public/assets/js/utils.js     | 81 +++++++++++++++++++---------
+ src/ui/views/admin_applications.pug  | 46 ++--------------
+ src/ui/views/admin_subscriptions.pug |  5 ++
+ 3 files changed, 66 insertions(+), 66 deletions(-)
+
+diff --git a/src/ui/public/assets/js/utils.js b/src/ui/public/assets/js/utils.js
+index 413c756..2ef5a86 100644
+--- a/src/ui/public/assets/js/utils.js
++++ b/src/ui/public/assets/js/utils.js
+@@ -32,16 +32,6 @@ function applyGridFilter(filter, item) {
+     return false;
+ }
+ 
+-function findSortingField(grid, state) {
+-    return grid.fields.filter((elem) => {
+-        if (elem.name === state.sortField) {
+-            //TODO Delete arrow
+-            return true;
+-        }
+-        return false;
+-    })[0];
+-}
+-
+ // function repaintSortingArrow() {
+ //     $(".jsgrid-header-sort").removeClass(".jsgrid-header-sort");
+ // }
+@@ -50,6 +40,12 @@ function findSortingField(grid, state) {
+ //     console.log('repaintSortingArrow', sortOrder)
+ //     $(".jsgrid-header-sort").removeClass(`jsgrid-header-sort-${oppositeSortOrder}`).addClass(`jsgrid-header-sort-${sortOrder}`)
+ // }
++
++// function clearSortingArrow() {
++//     $(".jsgrid-header-sort-asc").removeClass(`jsgrid-header-sort-asc`).removeClass(`jsgrid-header-sort`);
++//     $(".jsgrid-header-sort-desc").removeClass(`jsgrid-header-sort-desc`).removeClass(`jsgrid-header-sort`);
++// }
++
+ function getStateFromHistory() {
+     return {
+         filter: JSON.parse(history.state.filter),
+@@ -79,17 +75,20 @@ function getFilterValueFromState(filter, fieldName) {
+     return "";
+ }
+ 
++function setFilter(grid, filter) {
++    for (let prop in grid.fields) {
++        let filterValue = getFilterValueFromState(filter, (grid.fields)[prop].name);
++        $((grid.fields)[prop].filterControl).val(filterValue)
++    }
++    if (!isEmptyGridFilter(filter))
++        grid.filtering = true;
++}
++
+ function initializeGridFromState(grid) {
+     let gridSettings = getStateFromHistory();
+     grid.isGridRefreshAvailable = false;
+     return new Promise((resolve, reject) => {
+-        //set filter values into grid inputs
+-        for (let prop in grid.fields) {
+-            let filterValue = getFilterValueFromState(gridSettings.filter, (grid.fields)[prop].name);
+-            $((grid.fields)[prop].filterControl).val(filterValue)
+-        }
+-        if (gridSettings && !isEmptyGridFilter(gridSettings.filter))
+-            grid.filtering = true;
++        // setFilter(grid, gridSettings.filter);
+         grid.search(gridSettings.filter).done(function () {
+             grid.sort({
+                 field: gridSettings.sorting.sortField,
+@@ -102,6 +101,21 @@ function initializeGridFromState(grid) {
+     });
+ }
+ 
++function initializeGridFromState1(grid) {
++    let gridSettings = getStateFromHistory();
++    grid.isGridRefreshAvailable = false;
++    return new Promise((resolve, reject) => {
++        setFilter(grid, gridSettings.filter);
++        grid.sort({
++            field: gridSettings.sorting.sortField,
++            order: gridSettings.sorting.sortOrder
++        }).done(function () {
++            grid.option("pageIndex", gridSettings.pageIndex);
++            resolve();
++        });
++    });
++}
++
+ function setMouseOverElementContent($elem, content) {
+     $elem.attr({
+         "data-toggle": "popover",
+@@ -140,16 +154,35 @@ function dateFormat(date, fstr, utc) {
+     });
+ }
+ 
++function setHistorytoState(grid) {
++    if (Array.isArray(grid.data) && (grid.data).length > 0) {
++        var params = getStateFromGrid(grid);
++        if (window.history && window.history.pushState) {
++            if (JSON.stringify(history.state) !== JSON.stringify(params) && grid.isGridRefreshAvailable === true) {
++                history.pushState(params, `title ${grid.pageIndex}`, `?page=${grid.pageIndex}`);
++            }
++        }
++    }
++}
++
+ $(document).ready(function () {
+     jsGrid.Grid.prototype.onRefreshed = function (args) {
+-        if (Array.isArray(args.grid.data) && (args.grid.data).length > 0 && args.grid.pageLoading === false) {
+-            var params = getStateFromGrid(args.grid);
+-            if (window.history && window.history.pushState) {
+-                if (JSON.stringify(history.state) !== JSON.stringify(params) && (args.grid.isGridRefreshAvailable && args.grid.isGridRefreshAvailable === true)) {
+-                    history.pushState(params, `title ${args.grid.pageIndex}`, `?page=${args.grid.pageIndex}`);
+-                }
+-            }
++        setHistorytoState(args.grid);
++    }
++    jsGrid.Grid.prototype.onOptionChanged = function (args) {
++        setHistorytoState(args.grid);
++    }
++    jsGrid.Grid.prototype.onDataLoading = function (args) {
++        if (history.state !== null && !args.grid.isInitialLoaded && args.grid.pageLoading === true) {
++            var state = getStateFromHistory();
++            //Changed grid options for UI
++            args.grid.pageIndex = state.pageIndex;
++            setFilter(args.grid, state.filter);
++            //Changed filter to recieve a filtered data from server
++            $.extend(args.filter, state.filter, state.sorting, { pageIndex: state.pageIndex });
+         }
++        args.grid.isInitialLoaded = true;
++
+     }
+     jsGrid.loadStrategies.DirectLoadingStrategy.prototype.finishDelete = function (deletedItem, deletedItemIndex) {
+         var grid = this._grid;
+diff --git a/src/ui/views/admin_applications.pug b/src/ui/views/admin_applications.pug
+index 75334a7..4239d58 100644
+--- a/src/ui/views/admin_applications.pug
++++ b/src/ui/views/admin_applications.pug
+@@ -2,49 +2,11 @@ extends layout
+ block bodyScripts
+   script(type='text/javascript').
+     $(document).ready(function(){
+-       window.onpopstate = function (event) {
+-          console.log('onPopstate', grid);
+-          var state = getStateFromHistory();
+-          grid.pageIndex = state.pageIndex;
+-          console.log(state)
+-          grid._sortField = (state.sorting !== {}) ? findSortingField(grid, state.sorting) : "";
+-          grid._sortOrder = (state.sorting !== {}) ? state.sorting.sortOrder : "";
+-          $("#applicationsGrid").jsGrid("loadData").done(function() {
+-              console.log("data loaded");
+-          });
++        window.onpopstate = function (event) {
++          initializeGridFromState1(grid).then(() => { grid.isGridRefreshAvailable = true }).catch(err => console.log('Error', err));
+        }
+        $('#applicationsGrid').jsGrid({
+-         width: "100%", pageSize: 5, sorting: true, paging: true, filtering: true, pageLoading:true, autoload: true,
+-         onOptionChanged: function(args) {
+-            console.log('onOptionChanged');
+-            if (Array.isArray(args.grid.data) && (args.grid.data).length > 0) {
+-              var params = getStateFromGrid(args.grid);
+-              if (window.history && window.history.pushState) {
+-                  if (JSON.stringify(history.state) !== JSON.stringify(params)) {
+-                    console.log('pushState');
+-                      history.pushState(params, `title ${args.grid.pageIndex}`, `?page=${args.grid.pageIndex}`);
+-                  }
+-              }
+-            }
+-         },
+-         onDataLoading: function(args) {
+-           if ( history.state !== null) { 
+-             var state = getStateFromHistory();
+-             args.filter = state.filter;
+-           }
+-         }, 
+-         onInit: function(args) {
+-           if ( history.state !== null) {
+-              var state = getStateFromHistory();
+-              args.grid.pageIndex = state.pageIndex;
+-              args.grid._sortField = (state.sorting !== {}) ? findSortingField(args.grid, state.sorting) : "";
+-              args.grid._sortOrder = (state.sorting !== {}) ? state.sorting.sortOrder : "";
+-              //- for (let prop in args.grid.fields) {
+-              //-     let filterValue = getFilterValueFromState(state.filter, (args.grid.fields)[prop].name);
+-              //-     $((args.grid.fields)[prop].filterControl).val(filterValue)
+-              //- }
+-           }
+-         },        
++         width: "100%", pageSize: 10, sorting: true, paging: true, filtering: true, pageLoading:true, autoload: true,
+          controller: {
+           loadData: function (filter) {
+             var d = $.Deferred();
+@@ -85,7 +47,7 @@ block bodyScripts
+        });
+        $("#applicationsGrid").jsGrid("option", "filtering", false);
+        var grid = $("#applicationsGrid").data("JSGrid");
+-       grid.isGridRefreshAvailable = true;
++        grid.isGridRefreshAvailable = true;
+     });
+ block content
+     .jumbotron.wicked-admin-title
+diff --git a/src/ui/views/admin_subscriptions.pug b/src/ui/views/admin_subscriptions.pug
+index 55448ed..ad17418 100644
+--- a/src/ui/views/admin_subscriptions.pug
++++ b/src/ui/views/admin_subscriptions.pug
+@@ -2,6 +2,9 @@ extends layout
+ block bodyScripts
+   script(type='text/javascript').
+     $(document).ready(function(){
++        window.onpopstate = function (event) {
++            initializeGridFromState1(grid).then(() => { grid.isGridRefreshAvailable = true }).catch(err => console.log('Error', err));
++       }
+        $('#subscriptionsGrid').jsGrid({
+          width: "100%", pageSize: 10, sorting: true, paging: true, filtering: true, pageLoading:true, autoload: true,
+          controller: {
+@@ -65,6 +68,8 @@ block bodyScripts
+         ]
+        });
+        $("#subscriptionsGrid").jsGrid("option", "filtering", false);
++        var grid = $("#subscriptionsGrid").data("JSGrid");
++        grid.isGridRefreshAvailable = true;
+     });
+ block content
+     .jumbotron.wicked-admin-title
+-- 
+2.18.0
+
+
+From f86d662b9ec11370a9de9ecb1f1158bce2764b00 Mon Sep 17 00:00:00 2001
+From: MibenCoop <vitalii.belmach@clarivate.com>
+Date: Thu, 26 Dec 2019 17:07:26 +0300
+Subject: [PATCH 2/3] Improved code
+
+---
+ src/ui/public/assets/js/utils.js    | 82 ++++++++++++-----------------
+ src/ui/views/admin_applications.pug |  4 +-
+ 2 files changed, 35 insertions(+), 51 deletions(-)
+
+diff --git a/src/ui/public/assets/js/utils.js b/src/ui/public/assets/js/utils.js
+index 2ef5a86..fdadcc4 100644
+--- a/src/ui/public/assets/js/utils.js
++++ b/src/ui/public/assets/js/utils.js
+@@ -32,20 +32,6 @@ function applyGridFilter(filter, item) {
+     return false;
+ }
+ 
+-// function repaintSortingArrow() {
+-//     $(".jsgrid-header-sort").removeClass(".jsgrid-header-sort");
+-// }
+-// function repaintSortingArrow(sortOrder) {
+-//     oppositeSortOrder = (sortOrder === 'desc') ? 'asc' : 'desc';
+-//     console.log('repaintSortingArrow', sortOrder)
+-//     $(".jsgrid-header-sort").removeClass(`jsgrid-header-sort-${oppositeSortOrder}`).addClass(`jsgrid-header-sort-${sortOrder}`)
+-// }
+-
+-// function clearSortingArrow() {
+-//     $(".jsgrid-header-sort-asc").removeClass(`jsgrid-header-sort-asc`).removeClass(`jsgrid-header-sort`);
+-//     $(".jsgrid-header-sort-desc").removeClass(`jsgrid-header-sort-desc`).removeClass(`jsgrid-header-sort`);
+-// }
+-
+ function getStateFromHistory() {
+     return {
+         filter: JSON.parse(history.state.filter),
+@@ -63,8 +49,8 @@ function getStateFromGrid(grid) {
+ }
+ 
+ function getFilterValueFromState(filter, fieldName) {
++    let fieldNameNestedPops = fieldName.split(".");
+     for (let prop in filter) {
+-        let fieldNameNestedPops = fieldName.split(".");
+         if (prop === fieldNameNestedPops[0]) {
+             if (typeof filter[prop] === "object" && fieldNameNestedPops.length > 1) //look for nested
+                 return getFilterValueFromState(filter[prop], fieldNameNestedPops.slice(-1)[0]);
+@@ -84,16 +70,31 @@ function setFilter(grid, filter) {
+         grid.filtering = true;
+ }
+ 
++function setSorting(grid, sortingParams) {
++    grid._clearSortingCss();
++    grid._sortField = ($.isEmptyObject(sortingParams)) ? "" : setSortingField(grid, sortingParams);
++    grid._sortOrder = ($.isEmptyObject(sortingParams)) ? "" : sortingParams.sortOrder;
++    grid._setSortingCss();
++}
++
++function setSortingField(grid, state) {
++    return grid.fields.filter((elem) => (elem.name === state.sortField) ? true : false)[0];
++}
++
++function setHistoryToState(grid) {
++    var params = getStateFromGrid(grid);
++    if (JSON.stringify(history.state) !== JSON.stringify(params) && grid.isGridRefreshAvailable) {
++        history.pushState(params, `title ${grid.pageIndex}`, `?page=${grid.pageIndex}`);
++    }
++}
++
+ function initializeGridFromState(grid) {
+     let gridSettings = getStateFromHistory();
+     grid.isGridRefreshAvailable = false;
+     return new Promise((resolve, reject) => {
+-        // setFilter(grid, gridSettings.filter);
++        setFilter(grid, gridSettings.filter);
+         grid.search(gridSettings.filter).done(function () {
+-            grid.sort({
+-                field: gridSettings.sorting.sortField,
+-                order: gridSettings.sorting.sortOrder
+-            }).done(function () {
++            grid.sort({ field: gridSettings.sorting.sortField, order: gridSettings.sorting.sortOrder }).done(function () {
+                 grid.option("pageIndex", gridSettings.pageIndex);
+                 resolve();
+             });
+@@ -101,21 +102,16 @@ function initializeGridFromState(grid) {
+     });
+ }
+ 
+-function initializeGridFromState1(grid) {
++function initializeGridFromStateServerSide(grid) {
+     let gridSettings = getStateFromHistory();
+     grid.isGridRefreshAvailable = false;
+     return new Promise((resolve, reject) => {
+         setFilter(grid, gridSettings.filter);
+-        grid.sort({
+-            field: gridSettings.sorting.sortField,
+-            order: gridSettings.sorting.sortOrder
+-        }).done(function () {
+-            grid.option("pageIndex", gridSettings.pageIndex);
+-            resolve();
+-        });
++        setSorting(grid, gridSettings.sorting);
++        grid.openPage(gridSettings.pageIndex)
++        resolve();
+     });
+ }
+-
+ function setMouseOverElementContent($elem, content) {
+     $elem.attr({
+         "data-toggle": "popover",
+@@ -154,32 +150,20 @@ function dateFormat(date, fstr, utc) {
+     });
+ }
+ 
+-function setHistorytoState(grid) {
+-    if (Array.isArray(grid.data) && (grid.data).length > 0) {
+-        var params = getStateFromGrid(grid);
+-        if (window.history && window.history.pushState) {
+-            if (JSON.stringify(history.state) !== JSON.stringify(params) && grid.isGridRefreshAvailable === true) {
+-                history.pushState(params, `title ${grid.pageIndex}`, `?page=${grid.pageIndex}`);
+-            }
+-        }
+-    }
+-}
+-
+ $(document).ready(function () {
+     jsGrid.Grid.prototype.onRefreshed = function (args) {
+-        setHistorytoState(args.grid);
++        setHistoryToState(args.grid);
+     }
+     jsGrid.Grid.prototype.onOptionChanged = function (args) {
+-        setHistorytoState(args.grid);
++        setHistoryToState(args.grid);
+     }
+     jsGrid.Grid.prototype.onDataLoading = function (args) {
+-        if (history.state !== null && !args.grid.isInitialLoaded && args.grid.pageLoading === true) {
+-            var state = getStateFromHistory();
+-            //Changed grid options for UI
+-            args.grid.pageIndex = state.pageIndex;
+-            setFilter(args.grid, state.filter);
+-            //Changed filter to recieve a filtered data from server
+-            $.extend(args.filter, state.filter, state.sorting, { pageIndex: state.pageIndex });
++        if (!!history.state && !args.grid.isInitialLoaded && args.grid.pageLoading) {
++            var gridSettings = getStateFromHistory();
++            args.grid.pageIndex = gridSettings.pageIndex;
++            setFilter(args.grid, gridSettings.filter);
++            setSorting(args.grid, gridSettings.sorting);
++            $.extend(args.filter, gridSettings.filter, gridSettings.sorting, { pageIndex: gridSettings.pageIndex });
+         }
+         args.grid.isInitialLoaded = true;
+ 
+diff --git a/src/ui/views/admin_applications.pug b/src/ui/views/admin_applications.pug
+index 4239d58..f695876 100644
+--- a/src/ui/views/admin_applications.pug
++++ b/src/ui/views/admin_applications.pug
+@@ -3,7 +3,7 @@ block bodyScripts
+   script(type='text/javascript').
+     $(document).ready(function(){
+         window.onpopstate = function (event) {
+-          initializeGridFromState1(grid).then(() => { grid.isGridRefreshAvailable = true }).catch(err => console.log('Error', err));
++          initializeGridFromStateServerSide(grid).then(() => { grid.isGridRefreshAvailable = true }).catch(err => console.log('Error', err));
+        }
+        $('#applicationsGrid').jsGrid({
+          width: "100%", pageSize: 10, sorting: true, paging: true, filtering: true, pageLoading:true, autoload: true,
+@@ -45,7 +45,7 @@ block bodyScripts
+              }
+          ]
+        });
+-       $("#applicationsGrid").jsGrid("option", "filtering", false);
++       $("#subscriptionsGrid").jsGrid("option", "filtering", false);
+        var grid = $("#applicationsGrid").data("JSGrid");
+         grid.isGridRefreshAvailable = true;
+     });
+-- 
+2.18.0
+
+
+From 715670d9f874b072b5c30a2adfa910341aadf176 Mon Sep 17 00:00:00 2001
+From: MibenCoop <vitalii.belmach@clarivate.com>
+Date: Thu, 26 Dec 2019 20:49:32 +0300
+Subject: [PATCH 3/3] Finished task
+
+---
+ src/ui/public/assets/js/utils.js     | 25 +++++++++++++++----------
+ src/ui/views/admin_applications.pug  |  5 +----
+ src/ui/views/admin_subscriptions.pug |  4 ++--
+ src/ui/views/admin_users.pug         |  3 +++
+ 4 files changed, 21 insertions(+), 16 deletions(-)
+
+diff --git a/src/ui/public/assets/js/utils.js b/src/ui/public/assets/js/utils.js
+index fdadcc4..cf73082 100644
+--- a/src/ui/public/assets/js/utils.js
++++ b/src/ui/public/assets/js/utils.js
+@@ -81,13 +81,6 @@ function setSortingField(grid, state) {
+     return grid.fields.filter((elem) => (elem.name === state.sortField) ? true : false)[0];
+ }
+ 
+-function setHistoryToState(grid) {
+-    var params = getStateFromGrid(grid);
+-    if (JSON.stringify(history.state) !== JSON.stringify(params) && grid.isGridRefreshAvailable) {
+-        history.pushState(params, `title ${grid.pageIndex}`, `?page=${grid.pageIndex}`);
+-    }
+-}
+-
+ function initializeGridFromState(grid) {
+     let gridSettings = getStateFromHistory();
+     grid.isGridRefreshAvailable = false;
+@@ -108,7 +101,8 @@ function initializeGridFromStateServerSide(grid) {
+     return new Promise((resolve, reject) => {
+         setFilter(grid, gridSettings.filter);
+         setSorting(grid, gridSettings.sorting);
+-        grid.openPage(gridSettings.pageIndex)
++        grid.pageIndex = gridSettings.pageIndex;
++        grid.loadData();
+         resolve();
+     });
+ }
+@@ -150,12 +144,21 @@ function dateFormat(date, fstr, utc) {
+     });
+ }
+ 
++function setHistoryToState(grid) {
++    var params = getStateFromGrid(grid);
++    if (JSON.stringify(history.state) !== JSON.stringify(params) && grid.isGridRefreshAvailable) {
++        history.pushState(params, `title ${grid.pageIndex}`, `?page=${grid.pageIndex}`);
++    }
++}
++
+ $(document).ready(function () {
+     jsGrid.Grid.prototype.onRefreshed = function (args) {
+-        setHistoryToState(args.grid);
++        if (!args.grid.pageLoading)
++            setHistoryToState(args.grid);
+     }
+     jsGrid.Grid.prototype.onOptionChanged = function (args) {
+-        setHistoryToState(args.grid);
++        if (args.grid.pageLoading)
++            setHistoryToState(args.grid);
+     }
+     jsGrid.Grid.prototype.onDataLoading = function (args) {
+         if (!!history.state && !args.grid.isInitialLoaded && args.grid.pageLoading) {
+@@ -165,6 +168,8 @@ $(document).ready(function () {
+             setSorting(args.grid, gridSettings.sorting);
+             $.extend(args.filter, gridSettings.filter, gridSettings.sorting, { pageIndex: gridSettings.pageIndex });
+         }
++        if (isEmptyGridFilter(args.grid.getFilter()))
++            args.grid.filtering = false;
+         args.grid.isInitialLoaded = true;
+ 
+     }
+diff --git a/src/ui/views/admin_applications.pug b/src/ui/views/admin_applications.pug
+index f695876..bea56ac 100644
+--- a/src/ui/views/admin_applications.pug
++++ b/src/ui/views/admin_applications.pug
+@@ -10,8 +10,6 @@ block bodyScripts
+          controller: {
+           loadData: function (filter) {
+             var d = $.Deferred();
+-            //- console.log($("#applicationsGrid").data("JSGrid"));
+-            var tempGrid = $("#applicationsGrid").data("JSGrid");
+         		$.ajax({
+                 url: "/admin/applications",
+                 data: filter,
+@@ -45,9 +43,8 @@ block bodyScripts
+              }
+          ]
+        });
+-       $("#subscriptionsGrid").jsGrid("option", "filtering", false);
+        var grid = $("#applicationsGrid").data("JSGrid");
+-        grid.isGridRefreshAvailable = true;
++       grid.isGridRefreshAvailable = true;
+     });
+ block content
+     .jumbotron.wicked-admin-title
+diff --git a/src/ui/views/admin_subscriptions.pug b/src/ui/views/admin_subscriptions.pug
+index ad17418..923995b 100644
+--- a/src/ui/views/admin_subscriptions.pug
++++ b/src/ui/views/admin_subscriptions.pug
+@@ -3,7 +3,7 @@ block bodyScripts
+   script(type='text/javascript').
+     $(document).ready(function(){
+         window.onpopstate = function (event) {
+-            initializeGridFromState1(grid).then(() => { grid.isGridRefreshAvailable = true }).catch(err => console.log('Error', err));
++          initializeGridFromStateServerSide(grid).then(() => { grid.isGridRefreshAvailable = true }).catch(err => console.log('Error', err));
+        }
+        $('#subscriptionsGrid').jsGrid({
+          width: "100%", pageSize: 10, sorting: true, paging: true, filtering: true, pageLoading:true, autoload: true,
+@@ -67,7 +67,7 @@ block bodyScripts
+           }
+         ]
+        });
+-       $("#subscriptionsGrid").jsGrid("option", "filtering", false);
++       
+         var grid = $("#subscriptionsGrid").data("JSGrid");
+         grid.isGridRefreshAvailable = true;
+     });
+diff --git a/src/ui/views/admin_users.pug b/src/ui/views/admin_users.pug
+index 5ccc404..d6bd064 100644
+--- a/src/ui/views/admin_users.pug
++++ b/src/ui/views/admin_users.pug
+@@ -2,6 +2,9 @@ extends layout
+ block bodyScripts
+     script(type='text/javascript').
+         $(document).ready(function(){
++           window.onpopstate = function (event) {
++              initializeGridFromStateServerSide(grid).then(() => { grid.isGridRefreshAvailable = true }).catch(err => console.log('Error', err));
++           }
+            $('#usersGrid').jsGrid({
+            width: "100%", pageSize: 10, sorting: true, paging: true, filtering: true, pageLoading:true, autoload: true,
+            controller: {
+-- 
+2.18.0
+
