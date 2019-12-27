@@ -739,8 +739,7 @@ class PgUtils {
         if (!fieldNameOrName || !fieldValue){
             return callback(utils.makeError(500, 'deleteBefore: Unconditional DELETE detected, not allowing'));
         }
-
-        const instance = this;
+        
         this.sortOutClientAndCallback(clientOrCallback, callback, (client, callback) => {
             let sql = `DELETE FROM wicked.${entity} `;
             sql += ` WHERE ${fieldNameOrName} < '${fieldValue}'`;
