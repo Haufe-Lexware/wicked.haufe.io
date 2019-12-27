@@ -19,22 +19,31 @@ pipeline {
                 script {
                     sh 'id'
                     def dockerTag = env.BRANCH_NAME.replaceAll('/', '-')
-                    if (dockerTag == 'next') {
-                        // requires SonarQube Scanner 2.8+
-                        def scannerHome = tool 'wicked-sonar';
-                        withSonarQubeEnv('wicked-sonar') {
-                            sh "cd ./src/api && ${scannerHome}/bin/sonar-scanner; cd ../.."
-                            sh "cd ./src/auth && ${scannerHome}/bin/sonar-scanner; cd ../.."
-                            sh "cd ./src/chatbot && ${scannerHome}/bin/sonar-scanner; cd ../.."
-                            sh "cd ./src/env && ${scannerHome}/bin/sonar-scanner; cd ../.."
-                            sh "cd ./src/kickstarter && ${scannerHome}/bin/sonar-scanner; cd ../.."
-                            sh "cd ./src/kong-adapter && ${scannerHome}/bin/sonar-scanner; cd ../.."
-                            sh "cd ./src/mailer && ${scannerHome}/bin/sonar-scanner; cd ../.."
-                            sh "cd ./src/node-sdk && ${scannerHome}/bin/sonar-scanner; cd ../.."
-                            sh "cd ./src/ui && ${scannerHome}/bin/sonar-scanner; cd ../.."
-                        }
+                    def branchSource = dockerTag
+                    def branchSourceParam = ''
+                    def branchTargetParam = ''
+                    if (branchSource == 'master') {
+                        // Nothing to do
+                    } else if (branchSource == 'next') {
+                        branchSourceParam = '-Dsonar.branch.name=next'
+                        branchTargetParam = '-Dsonar.branch.target=master'
                     } else {
-                        echo 'Skipping SonarQube, not "next" branch.'
+                        branchSourceParam = '-Dsonar.branch.name=' + branchSource
+                        branchTargetParam = '-Dsonar.branch.target=next'
+                    }
+                    // requires SonarQube Scanner 2.8+
+                    def scannerHome = tool 'wicked-sonar';
+                    def runSonar = "${scannerHome}/bin/sonar-scanner ${branchSourceParam} ${branchTargetParam}"
+                    withSonarQubeEnv('wicked-sonar') {
+                        sh "cd ./src/api && ${runSonar}; cd ../.."
+                        sh "cd ./src/auth && ${runSonar}; cd ../.."
+                        sh "cd ./src/chatbot && ${runSonar}; cd ../.."
+                        sh "cd ./src/env && ${runSonar}; cd ../.."
+                        sh "cd ./src/kickstarter && ${runSonar}; cd ../.."
+                        sh "cd ./src/kong-adapter && ${runSonar}; cd ../.."
+                        sh "cd ./src/mailer && ${runSonar}; cd ../.."
+                        sh "cd ./src/node-sdk && ${runSonar}; cd ../.."
+                        sh "cd ./src/ui && ${runSonar}; cd ../.."
                     }
                 }
             }
