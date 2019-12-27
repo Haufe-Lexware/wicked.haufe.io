@@ -50,6 +50,7 @@
     "redis": "2.8.0",
     "request": "2.88.0",
     "rimraf": "2.6.2",
+    "semver": "6.3.0",
     "serve-favicon": "2.5.0",
     "server-destroy": "1.0.1",
     "session-file-store": "1.0.0",

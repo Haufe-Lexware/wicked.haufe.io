@@ -1,5 +1,6 @@
 'use strict';
 
+const semver = require('semver');
 const { debug, info, warn, error } = require('portal-env').Logger('portal-api:principal');
 
 const dao = require('../dao/dao');
@@ -68,7 +69,11 @@ function electPrincipal() {
         } else {
             let immediateTimeout = 500;
             if (!principalInfo) {
-                principalInfo = { id: null, aliveDate: 0 };
+                principalInfo = {
+                    id: null, 
+                    aliveDate: 0,
+                    version: utils.getVersion()
+                };
                 immediateTimeout = 0;
             }
             debug(`This instance ${_instanceId} is currently not the principal instance (${principalInfo.id})`);
@@ -78,6 +83,7 @@ function electPrincipal() {
                 debug(`Trying to elect current instance to principal instance (previous instance is stale, ${livenessAgeSeconds}s)`);
                 principalInfo.id = _instanceId;
                 principalInfo.aliveDate = nowUtc;
+                principalInfo.version = utils.getVersion();
                 dao.meta.setMetadata('principal', principalInfo, (err) => {
                     if (err) {
                         error('electPrincipal: Could not set principal info metadata.');
@@ -99,9 +105,26 @@ function checkConfigHash(callback) {
             error('COULD NOT RETRIEVE CONFIG HASH METADATA, EXITING.');
             return forceQuitApi();
         }
+        debug(`our config hash: ${ourConfigHash}, persisted hash: ${persistedConfigHash.hash}`);
         if (ourConfigHash !== persistedConfigHash.hash) {
-            warn(`Detected an updated config hash in the database, exiting: ${ourConfigHash} !== ${persistedConfigHash.hash}`);
-            return forceQuitApi();
+            warn(`Detected an updated config hash in the database: ${ourConfigHash} !== ${persistedConfigHash.hash} (version: ${persistedConfigHash.version})`);
+            let forceQuit = false;
+            // Let's see what type of situation we have now; is it the same version of wicked, or even a newer version?
+            if (!persistedConfigHash.version) {
+                // No version in the config hash; this is a version prior to 1.0.0-rc.11; don't force quit.                
+            } else if (semver.gte(persistedConfigHash.version, utils.getVersion())) {
+                // The instance which wrote the config hash is the same version as this instance, or even a newer
+                // one. We will cave in and force quite now to see what happens next.
+                forceQuit = true;
+            }
+
+            if (forceQuit) {
+                warn('Force quitting due to the updated config hash...');
+                return forceQuitApi();
+            } else {
+                warn('checkConfigHash(): This instance of the API has a newer version than the one writing the config hash. We will override the config hash with our values. NOT force quitting.');
+                return versionizer.overwriteConfigHashToMetadata(callback);
+            }
         }
         debug('Persisted config hash matches our config hash. Nothing to do.');
         return callback(null);

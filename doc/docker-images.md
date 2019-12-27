@@ -21,8 +21,8 @@ The following images are taken as defaults for API Portal deployments, among whi
 * `haufelexware/wicked.kong-adapter:<version>`: The Kong Adapter
 * `haufelexware/wicked.mailer:<version>`: The API Portal's Mailer component
 * `haufelexware/wicked.chatbot:<version>`: The API Portal's "Chatbot" component
-* `haufelexware/wicked.k8s-init:<version>`: [Kubernetes init container](https://github.com/apim-haufe-io/wicked.k8s-init)
-* `haufelexware/wicked.k8s-tool:<version>`: [Kubernetes tooling container](https://github.com/apim-haufe-io/wicked.k8s-tool)
+* `haufelexware/wicked.k8s-init:<version>`: [Kubernetes init container](../src/k8s-init)
+* `haufelexware/wicked.k8s-tool:<version>`: [Kubernetes tooling container](../src/k8s-tool)
 
 All node.js based images are based on the official [`node:10`](https://hub.docker.com/_/node/) or `node:10-alpine` images (all images starting with `wicked.portal`).
 

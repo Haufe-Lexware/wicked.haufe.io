@@ -100,24 +100,24 @@ If you are looking for a super flexible and extensible API Management suite whic
 
 # Related repositories
 
-The following repositories contain the actual source code (this repo contains mostly documentation):
+The following folders contain the actual source code (this repo contains mostly documentation):
 
-* [wicked.ui](https://github.com/apim-haufe-io/wicked.ui): The API Portal UI
-* [wicked.api](https://github.com/apim-haufe-io/wicked.api): The API Portal backend API
-* [wicked.auth](https://github.com/apim-haufe-io/wicked.auth): The wicked Authorization Server implementation, using different social logins or SAML to authorize API usage and Portal login
-* [wicked.kong-adapter](https://github.com/apim-haufe-io/wicked.kong-adapter): The API Portal's Kong Adapter service
-* [wicked.mailer](https://github.com/apim-haufe-io/wicked.mailer): The API Portal's Mailer service
-* [wicked.chatbot](https://github.com/apim-haufe-io/wicked.chatbot): The API Portal' Chatbot service
-* [wicked.kickstarter](https://github.com/apim-haufe-io/wicked.kickstarter): The API Portal's Configuration Editor and Kickstarter
-* [wicked.tools](https://github.com/apim-haufe-io/wicked.tools): Developer Tooling and sample integration code
-* [wicked.test](https://github.com/apim-haufe-io/wicked.test): The Integration Test Suite
-* [wicked.kong](https://github.com/apim-haufe-io/wicked.kong): The Kong Docker image used by the API Portal, based on the official Kong docker images, `kong`
-* [wicked.k8s-init](https://github.com/apim-haufe-io/wicked.k8s-init): A dedicated wicked init container for Kubernetes to automatically provision client credentials to applications
-* [wicked.k8s-tool](https://github.com/apim-haufe-io/wicked.k8s-tool): A tool container for special purposes when deploying the Kubernetes
+* [wicked.ui](src/ui): The API Portal UI
+* [wicked.api](src/api): The API Portal backend API
+* [wicked.auth](src/auth): The wicked Authorization Server implementation, using different social logins or SAML to authorize API usage and Portal login
+* [wicked.kong-adapter](src/kong-adapter): The API Portal's Kong Adapter service
+* [wicked.mailer](src/mailer): The API Portal's Mailer service
+* [wicked.chatbot](src/chatbot): The API Portal' Chatbot service
+* [wicked.kickstarter](src/kickstarter): The API Portal's Configuration Editor and Kickstarter
+* [wicked.tools](src/tools): Developer Tooling and sample integration code
+* [wicked.test](src/test): The Integration Test Suite
+* [wicked.kong](src/kong): The Kong Docker image used by the API Portal, based on the official Kong docker images, `kong`
+* [wicked.k8s-init](src/k8s-init): A dedicated wicked init container for Kubernetes to automatically provision client credentials to applications
+* [wicked.k8s-tool](src/k8s-tool): A tool container for special purposes when deploying the Kubernetes
 
 Most wicked components (at least the ones written in node.js) also rely on the wicked SDK for node.js:
 
-* [wicked.node-sdk](https://github.com/apim-haufe-io/wicked.node-sdk)
+* [wicked.node-sdk](src/node-sdk)
 
 ## More documentation
 

@@ -64,7 +64,7 @@ describe('/confighash', function () {
         });
     });
 
-    it('should be possible to retrieve globals with an valid version', function (done) {
+    it('should be possible to retrieve globals with the current version', function (done) {
         request.get({
             url: baseUrl + 'globals',
             headers: {
@@ -78,12 +78,26 @@ describe('/confighash', function () {
         });
     });
 
-    it('should not be possible to retrieve globals with an invalid version', function (done) {
+    it('should be possible to retrieve globals with an older version', function (done) {
         request.get({
             url: baseUrl + 'globals',
             headers: {
                 'X-Config-Hash': configHash,
-                'User-Agent': 'wicked.test/0.1.0'
+                'User-Agent': 'wicked.test/0.12.5'
+            }
+        }, function (err, res, body) {
+            assert.isNotOk(err);
+            assert.equal(res.statusCode, 200);
+            done();
+        });
+    });
+
+    it('should not be possible to retrieve globals with a newer version', function (done) {
+        request.get({
+            url: baseUrl + 'globals',
+            headers: {
+                'X-Config-Hash': configHash,
+                'User-Agent': 'wicked.test/99.99.99'
             }
         }, function (err, res, body) {
             assert.isNotOk(err);

@@ -1,5 +1,5 @@
 {
-  "version": "1.0.0-rc.11",
+  "version": "1.0.0-rc.12",
   "private": true,
   "main": "bin/api",
   "dependencies": {
@@ -16,7 +16,8 @@
     "node-uuid": "1.4.8",
     "pg": "7.12.1",
     "request": "2.88.0",
-    "rimraf": "2.6.2"
+    "rimraf": "2.6.2",
+    "semver": "6.3.0"
   },
   "scripts": {
     "start": "node ./bin/api",

@@ -30,7 +30,6 @@ initializer.checkDynamicConfig = (callback) => {
     const daoChecks = dao.meta.getInitChecks();
 
     const checks = [];
-    checks.push(checkConfigHash);
     for (let i = 0; i < daoChecks.length; ++i) {
         checks.push(daoChecks[i]);
     }
@@ -95,17 +94,6 @@ initializer.writeSwaggerJsonFiles = function () {
         }
     }
 };
-
-function checkConfigHash(glob, callback) {
-    debug('checkConfigHash()');
-    versionizer.initConfigHash((err, configHash) => {
-        if (err) {
-            return callback(err);
-        }
-        info(`Calculated config hash for this instance: ${configHash}`);
-        return callback(null);
-    });
-}
 
 function addInitialUsers(glob, callback) {
     debug('addInitialUsers()');
