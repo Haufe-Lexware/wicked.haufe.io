@@ -55,6 +55,9 @@
                     "read_subscriptions": {
                         "description": "Read subscriptions"
                     },
+                    "read_auditlog": {
+                        "description": "Read auditlog"
+                    }, 
                     "write_subscriptions": {
                         "description": "Write/edit/delete subscriptions"
                     },

@@ -122,7 +122,11 @@ const model = {
             namespace: {},
             description: {}
         }
-    }
+    },
+
+    audit_log: {
+        properties: {}
+    },
 };
 
 module.exports = model;

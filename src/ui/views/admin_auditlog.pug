@@ -1,0 +1,98 @@
+extends layout
+block bodyScripts
+  script(type='text/javascript').
+   function generateReport(){
+      $('#auditlogGrid').jsGrid('loadData');
+    }
+
+    function dateFormat (date, fstr, utc) {
+      utc = utc ? 'getUTC' : 'get';
+      return fstr.replace (/%[YmdHMS]/g, function (m) {
+        switch (m) {
+        case '%Y': return date[utc + 'FullYear'] (); // no leading zeros required
+        case '%m': m = 1 + date[utc + 'Month'] (); break;
+        case '%d': m = date[utc + 'Date'] (); break;
+        case '%H': m = date[utc + 'Hours'] (); break;
+        case '%M': m = date[utc + 'Minutes'] (); break;
+        case '%S': m = date[utc + 'Seconds'] (); break;
+        default: return m.slice (1); // unknown code, remove %
+        }
+        // add leading zero if required
+        return ('0' + m).slice (-2);
+      });
+    }
+
+    $(document).ready(function(){
+      var now = new Date();
+      var start = new Date()
+      start.setDate(now.getDate()-30)
+      $('#startdate').datepicker().datepicker('setDate', start);
+      $('#enddate').datepicker().datepicker('setDate', now);
+      $('#auditlogGrid').jsGrid({
+        width: "100%", pageSize: 10, sorting: true, paging: true, filtering: true, pageLoading:true, autoload: true,
+        controller: {
+          loadData: function (filter) {
+            var d = $.Deferred();
+            const enddate = $("#enddate").datepicker('getDate');
+            enddate.setDate(enddate.getDate() + 1); //set to next day
+            filter['startdate'] = $.datepicker.formatDate("yy-mm-dd", $("#startdate").datepicker("getDate"));
+            filter['enddate'] = $.datepicker.formatDate("yy-mm-dd", enddate);
+         		$.ajax({
+                url: "/admin/auditlog",
+                data: filter,
+                dataType: "json"
+              }).done(function(result) {
+                d.resolve({
+                    data: result.auditlog.items,
+                    itemsCount: result.auditlog.count
+                });
+              });
+              return d.promise();
+          }
+        },
+        fields: [
+          { name: "api", type: "text", title: "API"},
+          { name: "application", type: "text", title: "Application"},
+          { name: "plan", type: "text", title: "Plan"},
+          { name: "created_at", type: "text", title: "Date (UTC)", filtering: false, 
+                 itemTemplate: function(value, item) {
+                  return dateFormat(new Date(Date.parse(value)), "%Y-%m-%d %H:%M:%S", true);
+                }
+          },   
+          { name: "activity", type: "text", title: "Activity"},
+          { name: "user", type: "text", title: "User"},
+          { name: "email", type: "text", title: "Email"},
+          { name: "role", type: "text", title: "Role", width:"40"},
+          { type: "control", width: "30", editButton: false, deleteButton: false,
+              _createFilterSwitchButton: function() {
+                return this._createOnOffSwitchButton("filtering", this.searchModeButtonClass, false);
+              }
+          }
+        ]
+       });
+       $("#auditlogGrid").jsGrid("option", "filtering", false);
+    });
+
+block content
+  .jumbotron.wicked-admin-title
+    .container.wicked-title-container
+      h1 Audit Log
+
+      p Index of audit log in the API Portal.
+
+  .container.wicked-container
+    .panel.panel-default
+      .panel-heading
+        +panelTitle('Reporting Period', null)
+        .panel-body
+          b Start Date: 
+          input(type='text', name='startdate', id='startdate') 
+          | &nbsp;&nbsp;&nbsp;
+          b End Date:  
+          input(type='text', name='enddate', id='enddate')
+          | &nbsp;&nbsp;&nbsp;
+          button(type='submit' onclick='generateReport()').btn.btn-primary Generate Report       
+    ditonv#auditlogGrid
+    br
+    p
+      a(href='/admin/auditlog_csv').btn.btn-success Download as CSV

@@ -18,6 +18,7 @@ const apis = require('./routes/apis');
 const content = require('./routes/content');
 const approvals = require('./routes/approvals');
 const webhooks = require('./routes/webhooks');
+const auditlog = require('./routes/auditlog');
 const verifications = require('./routes/verifications');
 const registrations = require('./routes/registrations');
 const grants = require('./routes/grants');
@@ -144,6 +145,8 @@ app.use('/approvals', approvals);
 webhooks.setup(users);
 app.use('/webhooks', webhooks);
 
+auditlog.setup(users);
+app.use('/auditlog', auditlog);
 // ----- VERIFICATIONS -----
 
 // Inject users module to verifications; it's needed there.

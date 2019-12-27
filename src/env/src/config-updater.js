@@ -27,7 +27,8 @@ var updateSteps = {
     18: updateStep18_v1_0_0i,
     19: updateStep19_v1_0_0j,
     20: updateStep20_v1_0_0k,
-    21: updateStep21_v1_0_0i
+    21: updateStep21_v1_0_0i,
+    22: updateStep22_v1_0_0m
 };
 
 updater.updateConfig = function (staticConfigPath, initialStaticConfigPath, configKey) {
@@ -207,6 +208,22 @@ function loadKickstarter(config) {
 function saveKickstarter(config, kickData) {
     debug('saveKickstarter()');
     fs.writeFileSync(path.join(config.basePath, 'kickstarter.json'), JSON.stringify(kickData, null, 2));
+}
+
+function updateStep22_v1_0_0m(targetConfig, sourceConfig, configKey) {
+    debug('Performing updateStep22_v1_0_0m()');
+
+    var targetGlobals = loadGlobals(targetConfig);
+    targetGlobals.version = 22;
+
+    if (!targetGlobals.auditlog) {
+        debug('Adding a default auditlog property.');
+        targetGlobals.auditlog = {
+            useAuditlog: false,
+            logdays: 365
+        };
+    }
+    saveGlobals(targetConfig, targetGlobals);
 }
 
 function updateStep21_v1_0_0i(targetConfig, sourceConfig, configKey) {
