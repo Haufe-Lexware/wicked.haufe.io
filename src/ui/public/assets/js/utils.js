@@ -33,40 +33,40 @@ function applyGridFilter(filter, item) {
 }
 
 function setMouseOverElementContent($elem, content) {
-  $elem.attr({
-    "data-toggle": "popover",
-    "data-placement": "right",
-    "data-content": content
-  }).popover({trigger: "manual", animation: false});
-  $elem.on("mouseenter", function () {
-      var _this = this;
-      $(this).popover("show");
-      $(".popover").on("mouseleave", function () {
-          $(_this).popover('hide');
-      });
-  }).on("mouseleave", function () {
-      var _this = this;
-      setTimeout(function () {
-          if (!$(".popover:hover").length) {
-              $(_this).popover("hide");
-          }
-      }, 300);
-  });
+    $elem.attr({
+        "data-toggle": "popover",
+        "data-placement": "right",
+        "data-content": content
+    }).popover({trigger: "manual", animation: false});
+    $elem.on("mouseenter", function () {
+        var _this = this;
+        $(this).popover("show");
+        $(".popover").on("mouseleave", function () {
+            $(_this).popover('hide');
+        });
+    }).on("mouseleave", function () {
+        var _this = this;
+        setTimeout(function () {
+            if (!$(".popover:hover").length) {
+                $(_this).popover("hide");
+            }
+        }, 300);
+    });
 }
 
 function dateFormat (date, fstr, utc) {
     utc = utc ? 'getUTC' : 'get';
     return fstr.replace (/%[YmdHMS]/g, function (m) {
-      switch (m) {
-      case '%Y': return date[utc + 'FullYear'] ();
-      case '%m': m = 1 + date[utc + 'Month'] (); break;
-      case '%d': m = date[utc + 'Date'] (); break;
-      case '%H': m = date[utc + 'Hours'] (); break;
-      case '%M': m = date[utc + 'Minutes'] (); break;
-      case '%S': m = date[utc + 'Seconds'] (); break;
-      default: return m.slice (1);
-      }
-      return ('0' + m).slice (-2);
+        switch (m) {
+            case '%Y': return date[utc + 'FullYear'] ();
+            case '%m': m = 1 + date[utc + 'Month'] (); break;
+            case '%d': m = date[utc + 'Date'] (); break;
+            case '%H': m = date[utc + 'Hours'] (); break;
+            case '%M': m = date[utc + 'Minutes'] (); break;
+            case '%S': m = date[utc + 'Seconds'] (); break;
+            default: return m.slice (1);
+        }
+        return ('0' + m).slice (-2);
     });
 }
 

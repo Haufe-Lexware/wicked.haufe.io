@@ -14,6 +14,7 @@ const users = require('./users');
 const applications = require('./applications');
 const subscriptions = require('./subscriptions');
 const principal = require('./principal');
+const auditlog = require('./auditlog');
 const versionizer = require('./versionizer');
 
 const dao = require('../dao/dao');
@@ -339,6 +340,7 @@ function initializationFinished(glob, callback) {
     versionizer.writeConfigHashToMetadata(() => {
         // Principal/follower election triggering
         principal.initialElection();
+        auditlog.initialize();
         callback(null);
     });
 }
