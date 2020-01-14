@@ -110,12 +110,12 @@ function matchObjectsInternal(apiObject, kongObject) {
         }
 
         //missing property
-        if( apiObject[prop] && (typeof kongObject[prop] === 'undefined' || kongObject[prop] === null) ){
+        if( apiObject[prop] && (typeof kongObject[prop] === 'undefined' || kongObject[prop] === null) ) {
             return false;
         }
 
         //for array, fail fast
-        if (Array.isArray(apiObject[prop]) && kongObject[prop].length !== apiObject[prop].length) {
+        if (Array.isArray(apiObject[prop]) && Array.isArray(kongObject[prop]) && kongObject[prop].length !== apiObject[prop].length) {
             return false;
         }
 
