@@ -105,8 +105,14 @@ function matchObjectsInternal(apiObject, kongObject) {
             return false;
         }
 
-        if ((typeof apiObject[prop]) != (typeof kongObject[prop]))
+        if ((typeof apiObject[prop]) != (typeof kongObject[prop])) {
             return false;
+        }
+
+        //missing property
+        if (apiObject[prop] != null && kongObject[prop] == null) {
+            return false;
+        }
 
         //for array, fail fast
         if (Array.isArray(apiObject[prop]) && kongObject[prop].length !== apiObject[prop].length) {

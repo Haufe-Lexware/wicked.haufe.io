@@ -258,6 +258,19 @@ function validateData(callback) {
         if ( route.protocols ) {
             route.protocols = route.protocols.map( e => e.toLowerCase() );
         }
+
+        //remove empty arrays, per kong spec, no value should be provided
+        if (route.methods && route.methods.length === 0) {
+            delete route.methods;
+        }
+
+        if (route.paths && route.paths.length === 0) {
+            delete route.paths;
+        }
+
+        if (route.hosts && route.hosts.length === 0) {
+            delete route.hosts;
+        }
     }
 
     //validate Route(s)
