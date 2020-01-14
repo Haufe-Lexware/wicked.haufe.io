@@ -110,7 +110,7 @@ function matchObjectsInternal(apiObject, kongObject) {
         }
 
         //missing property
-        if (apiObject[prop] != null && kongObject[prop] == null) {
+        if( apiObject[prop] && (typeof kongObject[prop] === 'undefined' || kongObject[prop] === null) ){
             return false;
         }
 
