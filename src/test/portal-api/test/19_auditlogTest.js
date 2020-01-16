@@ -197,7 +197,7 @@ describe('/auditlog', function () {
             }
         });
 
-        it('must be possible to retrieve auditlog as an admin and filter by role and not find any row by \'Admin\' role', function (done) {
+        it('must be possible to retrieve auditlog as an admin and filter by role and find row by \'Admin\' role', function (done) {
             if (utils.isPostgres()) {
                 request({
                     uri: baseUrl + 'auditlog?embed=1&no_cache=1&filter=%7B%0A%20%20%22role%22%3A%20%22Admin%22%0A%7D',
@@ -207,7 +207,7 @@ describe('/auditlog', function () {
                     assert.isOk(body);
                     assert.equal(200, res.statusCode);
                     const jsonBody = utils.getJson(body);
-                    assert.equal(jsonBody.count, 0);
+                    assert.isAbove(jsonBody.count, 0);
                     done();
                 });
             } else {
