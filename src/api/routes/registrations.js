@@ -236,8 +236,16 @@ registrations.upsert = (app, res, loggedInUserId, poolId, userId, reg) => {
                 if (err) {
                     return utils.fail(res, 500, 'Registrations: Failed to upsert.', err);
                 }
-
                 res.status(204).json({ code: 204, message: 'Upserted registration.' });
+                webhooks.logEvent(app, {
+                    action: webhooks.ACTION_ADD,
+                    entity: webhooks.ENTITY_REGISTRATION,
+                    data: {
+                        userId: validatedData.userId,
+                        email: validatedData.email,
+                        customId: validatedData.customId
+                    }
+                });
             });
         });
     });

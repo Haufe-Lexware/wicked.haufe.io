@@ -116,6 +116,17 @@ dao.approvals = {
     deleteByAppAndApi: (appId, apiId, callback) => { dao._impl.approvals.deleteByAppAndApi(appId, apiId, callback); }
 };
 
+dao.auditlog = {
+    getById: (auditLogId, callback) => { dao._impl.auditlog.getById(auditLogId, callback); },
+    getAll: (filter, orderBy, offset, limit, noCountCache, callback) => { dao._impl.auditlog.getAll(filter, orderBy, offset, limit, noCountCache, callback); },
+    getIndex: (offset, limit, callback) => { dao._impl.auditlog.getIndex(offset, limit, callback); },
+    getCount: (callback) => { dao._impl.auditlog.getCount(callback); },
+ 
+    create: (auditLogInfo, callback) => { dao._impl.auditlog.create(auditLogInfo, callback); },
+    delete: (deleteBeforeDate, deletingUserId, callback) => { dao._impl.auditlog.delete(deleteBeforeDate, deletingUserId, callback); },
+    deleteById: (auditLogId, deletingUserId, callback) => { dao._impl.auditlog.deleteById(auditLogId, deletingUserId, callback); },
+};
+
 dao.verifications = {
     getAll: (callback) => { dao._impl.verifications.getAll(callback); },
     getById: (verificationId, callback) => { dao._impl.verifications.getById(verificationId, callback); },

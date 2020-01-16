@@ -450,6 +450,24 @@ class PgUtils {
             });
         });
     }
+    
+    addDateTimeFilterOptions(fieldName, filter, fields, values, operators) {
+        debug(`addDateFilterOptions()`);
+        if(filter['startdate']) {
+            fields.push(fieldName);
+            values.push(`'${filter['startdate']}'`);
+            operators.push('>=');
+            delete filter['startdate'];
+        }
+
+        if(filter['enddate']) {
+            fields.push(fieldName);
+            values.push(`'${filter['enddate']}'`);
+            operators.push('<');
+            delete filter['enddate'];
+        }
+    }
+
 
     addFilterOptions(filter, fields, values, operators) {
         debug(`addFilterOptions()`);
@@ -714,6 +732,32 @@ class PgUtils {
     deleteById(entity, id, clientOrCallback, callback) {
         debug(`deleteById(${entity}, ${id}) `);
         return this.deleteBy(entity, ['id'], [id], clientOrCallback, callback);
+    }
+
+    deleteBefore(entity, fieldNameOrName, fieldValue, clientOrCallback, callback) {
+        debug(`deleteBefore(${entity}, ${fieldNameOrName}, ${fieldValue}) `);
+        if (!fieldNameOrName || !fieldValue){
+            return callback(utils.makeError(500, 'deleteBefore: Unconditional DELETE detected, not allowing'));
+        }
+        
+        this.sortOutClientAndCallback(clientOrCallback, callback, (client, callback) => {
+            let sql = `DELETE FROM wicked.${entity} `;
+            sql += ` WHERE ${fieldNameOrName} < '${fieldValue}'`;
+            debug(`deleteBefore sql: ${sql}`);
+            const labels = {
+                command: 'DELETE',
+                entity: entity
+            };
+            const end = prom._pgQueryHistogram.startTimer(labels);
+            client.query(sql, (err, result) => {
+                if (err) {
+                    prom._pgQueryErrors.inc(labels);
+                    return callback(err);
+                }
+                end();
+                return callback(null,result.rowCount);
+            });
+        });
     }
 
     deleteBy(entity, fieldNameOrNames, fieldValueOrValues, clientOrCallback, callback) {

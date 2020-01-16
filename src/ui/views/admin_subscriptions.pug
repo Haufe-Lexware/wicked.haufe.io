@@ -1,6 +1,10 @@
 extends layout
 block bodyScripts
   script(type='text/javascript').
+    function donwloadCSVFile() {
+      var filter = $("#subscriptionsGrid").jsGrid("getFilter");
+      window.location = `/admin/subscriptions_csv?${$.param(filter)}`;
+    };
     $(document).ready(function(){
        window.onpopstate = function (event) {
           initializeGridFromStateServerSide(grid).then(() => { grid.isGridRefreshAvailable = true }).catch(err => console.log('Error', err));
@@ -82,4 +86,4 @@ block content
         div#subscriptionsGrid
         br
         p
-          a(href='/admin/subscriptions_csv').btn.btn-success Download as CSV
+          button(class="btn btn-success" onclick="donwloadCSVFile()") Download as CSV

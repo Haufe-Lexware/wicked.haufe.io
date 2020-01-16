@@ -669,6 +669,40 @@ utils.dateFormat = (date, fstr, utc) => {
     });
 }
 
+utils.isEmptyGridFilter = (filter) => {
+    var isEmpty = true;
+    for (let key in filter) {
+        if (filter.hasOwnProperty(key)) {
+            for ( let prop in filter[key]) {
+                if (filter[key][prop] != "") {
+                    isEmpty = false;
+                    return false;
+                }
+            }
+        }
+     }
+    return isEmpty;
+}
+
+
+utils.applyGridFilter = (filter, item) => {
+    if (!filter || !item)
+        return false;
+    for (var prop in filter) {
+        if (typeof filter[prop] === "object") { //look for nested
+            if (utils.applyGridFilter(filter[prop], item[prop]))
+                return true;
+            continue;
+        }
+        var regexp = new RegExp(filter[prop], 'gi');
+        if (filter[prop] && filter[prop].length > 0) {
+            if (item[prop] && item[prop].match(regexp))
+                return true;
+        }
+    }
+    return false;
+}
+
 utils.markedOptions = { sanitize: true };
 
 module.exports = utils;

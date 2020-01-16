@@ -3,6 +3,10 @@ extends layout
 block bodyScripts
     script(type='text/javascript').
         var approvals;
+        function donwloadCSVFile() {
+          var filter = $("#approvalsGrid").jsGrid("getFilter");
+          window.location = `/admin/approvals_csv?${$.param(filter)}`;
+        };
         function approveSubscription(action, item) {
           $.ajax({
             url: `/admin/approvals/${action}`,
@@ -124,4 +128,4 @@ block content
 
             br
             p
-              a(href='/admin/approvals_csv').btn.btn-success Download as CSV
+              button(class="btn btn-success" onclick="donwloadCSVFile()") Download as CSV
