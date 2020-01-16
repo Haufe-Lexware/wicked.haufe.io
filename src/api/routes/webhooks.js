@@ -62,6 +62,8 @@ webhooks.ACTION_DONE = 'done';
 
 webhooks.ENTITY_APPLICATION = 'application';
 webhooks.ENTITY_USER = 'user';
+webhooks.ENTITY_REGISTRATION = 'registration';
+
 webhooks.ENTITY_SUBSCRIPTION = 'subscription';
 webhooks.ENTITY_APPROVAL = 'approval';
 webhooks.ENTITY_OWNER = 'owner';

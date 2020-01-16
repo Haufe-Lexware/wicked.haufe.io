@@ -11,10 +11,55 @@ const READ_AUDITLOG = 'read_auditlog';
 const verifyAuditLogReadScope = utils.verifyScope(READ_AUDITLOG);
 const WRITE_AUDITLOG = 'write_auditlog';
 const verifyAuditLogWriteScope = utils.verifyScope(WRITE_AUDITLOG);
+const AUDITLOG_CLEANUP_INTERVAL = 3600; //seconds (1 hour)
 
 auditlog.setup = function (users) {
     auditlog._usersModule = users;
 };
+
+auditlog.initialize = () => {
+    debug('initialize()');
+    if (!dao.isReady()) {
+        debug('auditlog Dao not ready yet: initialize()');
+        setTimeout(auditlog.initialize, 500);
+    }
+    cleanAuditLog();
+    setInterval(cleanAuditLog, AUDITLOG_CLEANUP_INTERVAL * 1000);
+};
+
+function cleanAuditLog() {
+    debug('Check if auditlog cleanup required cleanAuditLog()');
+    const glob = utils.loadGlobals();
+    if (glob.auditlog && glob.auditlog.useAuditlog) {
+        const logdays = glob.auditlog.logdays;
+        let deleteBeforeDate = new Date();
+        deleteBeforeDate.setDate(deleteBeforeDate.getDate() - logdays);
+        deleteBeforeDate= dateFormat(new Date(Date.parse(deleteBeforeDate)), "%Y-%m-%d %H:%M:%S", true);
+        dao.auditlog.delete( deleteBeforeDate, null, (err, result) => {
+            if (err) {
+                debug('cleanAuditLog: DAO auditlog deletion failed');
+                debug(err);
+            }
+            debug('Auditlog cleanup sucessfull');
+        });
+    }
+}
+//This could be moved to utils for sharing
+function dateFormat (date, fstr, utc) {
+    utc = utc ? 'getUTC' : 'get';
+    return fstr.replace (/%[YmdHMS]/g, function (m) {
+        switch (m) {
+            case '%Y': return date[utc + 'FullYear'] ();
+            case '%m': m = 1 + date[utc + 'Month'] (); break;
+            case '%d': m = date[utc + 'Date'] (); break;
+            case '%H': m = date[utc + 'Hours'] (); break;
+            case '%M': m = date[utc + 'Minutes'] (); break;
+            case '%S': m = date[utc + 'Seconds'] (); break;
+            default: return m.slice (1);
+        }
+        return ('0' + m).slice (-2);
+    });
+}
 
 // ===== ENDPOINTS =====
 auditlog.get('/', verifyAuditLogReadScope, function (req, res, next) {
