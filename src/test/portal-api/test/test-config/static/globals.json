@@ -8,6 +8,10 @@
         "pgUser": "kong",
         "pgPassword": "kong"
     },
+    "auditlog": {
+        "useAuditlog": true,
+        "logdays": "365"
+    },
     "network": {
         "schema": "http",
         "portalHost": "localhost:3000",

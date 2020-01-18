@@ -11,6 +11,7 @@ const JsonGrants = require('./entities/json-grants');
 const JsonNamespaces = require('./entities/json-namespaces');
 const JsonMeta = require('./json-meta');
 const JsonUtils = require('./entities/json-utils');
+const JsonAuditlog = require('./entities/json-auditlog');
 
 // ================================================
 
@@ -27,6 +28,7 @@ class JsonDao {
         this.jsonRegistrations = new JsonRegistrations(this.jsonUtils);
         this.jsonWebhooks = new JsonWebhooks(this.jsonUtils);
         this.jsonNamespaces = new JsonNamespaces(this.jsonUtils);
+        this.jsonAuditlog = new JsonAuditlog(this.jsonAuditlog);
     }
 
     init(app) {
@@ -42,6 +44,7 @@ class JsonDao {
     get grants() { return this.jsonGrants; }
     get namespaces() { return this.jsonNamespaces; }
     get webhooks() { return this.jsonWebhooks; }
+    get auditlog() { return this.jsonAuditlog; }
 }
 
 module.exports = JsonDao;
