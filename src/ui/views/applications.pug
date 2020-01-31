@@ -57,6 +57,9 @@ block bodyScripts
         }
 
          $(document).ready(function(){
+            window.onpopstate = function (event) {
+              initializeGridFromState(grid).then(() => { grid.isGridRefreshAvailable = true }).catch(err => console.log('Error', err));
+            }
             var showSwagger = '#{showSwagger}';
             if (showSwagger) {
                 $('#appid').val('swagger-ui-' + Math.random().toString(36).substr(2, 9));
@@ -108,6 +111,9 @@ block bodyScripts
                 ]
             });
             $("#applicationsGrid").jsGrid("option", "filtering", false);
+            var grid = $("#applicationsGrid").data("JSGrid");
+            grid.isGridRefreshAvailable = true;
+            initializeGridFromState(grid).then(() => { grid.isGridRefreshAvailable = true }).catch(err => console.log('Error', err));
         });
 
 block content

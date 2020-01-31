@@ -2,6 +2,9 @@ extends layout
 block bodyScripts
   script(type='text/javascript').
     $(document).ready(function(){
+       window.onpopstate = function (event) {
+          initializeGridFromStateServerSide(grid).then(() => { grid.isGridRefreshAvailable = true }).catch(err => console.log('Error', err));
+       }
        $('#applicationsGrid').jsGrid({
          width: "100%", pageSize: 10, sorting: true, paging: true, filtering: true, pageLoading:true, autoload: true,
          controller: {
@@ -39,7 +42,8 @@ block bodyScripts
              }
          ]
        });
-       $("#applicationsGrid").jsGrid("option", "filtering", false);
+       var grid = $("#applicationsGrid").data("JSGrid");
+       grid.isGridRefreshAvailable = true;
     });
 block content
     .jumbotron.wicked-admin-title

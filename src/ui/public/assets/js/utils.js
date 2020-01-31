@@ -49,8 +49,8 @@ function getStateFromGrid(grid) {
 }
 
 function getFilterValueFromState(filter, fieldName) {
+    let fieldNameNestedPops = fieldName.split(".");
     for (let prop in filter) {
-        let fieldNameNestedPops = fieldName.split(".");
         if (prop === fieldNameNestedPops[0]) {
             if (typeof filter[prop] === "object" && fieldNameNestedPops.length > 1) //look for nested
                 return getFilterValueFromState(filter[prop], fieldNameNestedPops.slice(-1)[0]);
@@ -61,42 +61,35 @@ function getFilterValueFromState(filter, fieldName) {
     return "";
 }
 
-function initializeGridFromState(grid) {
+function setFilter(grid, filter) {
+    for (let prop in grid.fields) {
+        let filterValue = getFilterValueFromState(filter, (grid.fields)[prop].name);
+        $((grid.fields)[prop].filterControl).val(filterValue);
+    }
+    if (!isEmptyGridFilter(filter))
+        grid.filtering = true;
+}
+
+function setSorting(grid, sortingParams) {
+    grid._clearSortingCss();
+    grid._sortField = ($.isEmptyObject(sortingParams)) ? "" : setSortingField(grid, sortingParams);
+    grid._sortOrder = ($.isEmptyObject(sortingParams)) ? "" : sortingParams.sortOrder;
+    grid._setSortingCss();
+}
+
+function setSortingField(grid, state) {
+    return grid.fields.filter((elem) => (elem.name === state.sortField) ? true : false)[0];
+}
+
+function initializeGridFromStateServerSide(grid) {
     let gridSettings = getStateFromHistory();
     grid.isGridRefreshAvailable = false;
     return new Promise((resolve, reject) => {
-        //set filter values into grid inputs
-        for (let prop in grid.fields) {
-            let filterValue = getFilterValueFromState(gridSettings.filter, (grid.fields)[prop].name);
-            $((grid.fields)[prop].filterControl).val(filterValue)
-        }
-        if (gridSettings && !isEmptyGridFilter(gridSettings.filter))
-            grid.filtering = true;
-        grid.search(gridSettings.filter).done(function () {
-            grid.sort({
-                field: gridSettings.sorting.sortField,
-                order: gridSettings.sorting.sortOrder
-            }).done(function () {
-                grid.option("pageIndex", gridSettings.pageIndex);
-                resolve();
-            });
-        });
-    });
-}
-
-function dateFormat (date, fstr, utc) {
-    utc = utc ? 'getUTC' : 'get';
-    return fstr.replace (/%[YmdHMS]/g, function (m) {
-        switch (m) {
-            case '%Y': return date[utc + 'FullYear'] ();
-            case '%m': m = 1 + date[utc + 'Month'] (); break;
-            case '%d': m = date[utc + 'Date'] (); break;
-            case '%H': m = date[utc + 'Hours'] (); break;
-            case '%M': m = date[utc + 'Minutes'] (); break;
-            case '%S': m = date[utc + 'Seconds'] (); break;
-            default: return m.slice (1);
-        }
-        return ('0' + m).slice (-2);
+        setFilter(grid, gridSettings.filter);
+        setSorting(grid, gridSettings.sorting);
+        grid.pageIndex = gridSettings.pageIndex;
+        grid.loadData();
+        resolve();
     });
 }
 
@@ -122,17 +115,51 @@ function setMouseOverElementContent($elem, content) {
     });
 }
 
+function dateFormat(date, fstr, utc) {
+    utc = utc ? 'getUTC' : 'get';
+    return fstr.replace (/%[YmdHMS]/g, function (m) {
+        switch (m) {
+            case '%Y': return date[utc + 'FullYear'] ();
+            case '%m': m = 1 + date[utc + 'Month'] (); break;
+            case '%d': m = date[utc + 'Date'] (); break;
+            case '%H': m = date[utc + 'Hours'] (); break;
+            case '%M': m = date[utc + 'Minutes'] (); break;
+            case '%S': m = date[utc + 'Seconds'] (); break;
+            default: return m.slice (1);
+        }
+        return ('0' + m).slice (-2);
+    });
+}
+
+function setHistoryToState(grid) {
+    var params = getStateFromGrid(grid);
+    if (JSON.stringify(history.state) !== JSON.stringify(params) && grid.isGridRefreshAvailable) {
+        history.pushState(params, `title ${grid.pageIndex}`, `?page=${grid.pageIndex}`);
+    }
+}
+
 $(document).ready(function () {
     jsGrid.Grid.prototype.onRefreshed = function (args) {
-        if (Array.isArray(args.grid.data) && (args.grid.data).length > 0) {
-            var params = getStateFromGrid(args.grid);
-            if (window.history && window.history.pushState) {
-                if (JSON.stringify(history.state) !== JSON.stringify(params) && (args.grid.isGridRefreshAvailable && args.grid.isGridRefreshAvailable === true)) {
-                    history.pushState(params, `title ${args.grid.pageIndex}`, `?page=${args.grid.pageIndex}`);
-                }
-            }
+        if (!args.grid.pageLoading)
+            setHistoryToState(args.grid);
+    };
+    jsGrid.Grid.prototype.onOptionChanged = function (args) {
+        if (args.grid.pageLoading)
+            setHistoryToState(args.grid);
+    };
+    jsGrid.Grid.prototype.onDataLoading = function (args) {
+        if (!!history.state && !args.grid.isInitialLoaded && args.grid.pageLoading) {
+            var gridSettings = getStateFromHistory();
+            args.grid.pageIndex = gridSettings.pageIndex;
+            setFilter(args.grid, gridSettings.filter);
+            setSorting(args.grid, gridSettings.sorting);
+            $.extend(args.filter, gridSettings.filter, gridSettings.sorting, { pageIndex: gridSettings.pageIndex });
         }
-    }
+        if (isEmptyGridFilter(args.grid.getFilter()))
+            args.grid.filtering = false;
+        args.grid.isInitialLoaded = true;
+
+    };
     jsGrid.loadStrategies.DirectLoadingStrategy.prototype.finishDelete = function (deletedItem, deletedItemIndex) {
         var grid = this._grid;
         grid.option("data").splice(deletedItemIndex, 1);
