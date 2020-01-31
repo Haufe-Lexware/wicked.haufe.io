@@ -2,6 +2,9 @@ extends layout
 block bodyScripts
     script(type='text/javascript').
         $(document).ready(function(){
+           window.onpopstate = function (event) {
+              initializeGridFromStateServerSide(grid).then(() => { grid.isGridRefreshAvailable = true }).catch(err => console.log('Error', err));
+           }
            $('#usersGrid').jsGrid({
            width: "100%", pageSize: 10, sorting: true, paging: true, filtering: true, pageLoading:true, autoload: true,
            controller: {
@@ -40,7 +43,8 @@ block bodyScripts
                  }
              ]
            });
-           $("#usersGrid").jsGrid("option", "filtering", false);
+           var grid = $("#usersGrid").data("JSGrid");
+           grid.isGridRefreshAvailable = true;
         });
 
 block content
