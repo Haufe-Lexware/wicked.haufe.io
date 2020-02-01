@@ -450,17 +450,17 @@ class PgUtils {
             });
         });
     }
-    
+
     addDateTimeFilterOptions(fieldName, filter, fields, values, operators) {
         debug(`addDateFilterOptions()`);
-        if(filter['startdate']) {
+        if (filter['startdate']) {
             fields.push(fieldName);
             values.push(`'${filter['startdate']}'`);
             operators.push('>=');
             delete filter['startdate'];
         }
 
-        if(filter['enddate']) {
+        if (filter['enddate']) {
             fields.push(fieldName);
             values.push(`'${filter['enddate']}'`);
             operators.push('<');
@@ -736,10 +736,10 @@ class PgUtils {
 
     deleteBefore(entity, fieldNameOrName, fieldValue, clientOrCallback, callback) {
         debug(`deleteBefore(${entity}, ${fieldNameOrName}, ${fieldValue}) `);
-        if (!fieldNameOrName || !fieldValue){
+        if (!fieldNameOrName || !fieldValue) {
             return callback(utils.makeError(500, 'deleteBefore: Unconditional DELETE detected, not allowing'));
         }
-        
+
         this.sortOutClientAndCallback(clientOrCallback, callback, (client, callback) => {
             let sql = `DELETE FROM wicked.${entity} `;
             sql += ` WHERE ${fieldNameOrName} < '${fieldValue}'`;
@@ -755,7 +755,7 @@ class PgUtils {
                     return callback(err);
                 }
                 end();
-                return callback(null,result.rowCount);
+                return callback(null, result.rowCount);
             });
         });
     }
@@ -996,6 +996,10 @@ class PgUtils {
                         error('Reached maximum tries to connect to Postgres. Failing.');
                         return callback(err);
                     }
+                } else if (err.message === 'timeout expired') { // This is weird
+                    // Don't do anything. Just ignore.
+                    warn('getPoolOrClient: Timeout expired callback from PG Pool. Ignoring.');
+                    return;
                 } else {
                     debug(err);
                     debug('getPoolOrClient: pool.connect returned an unknown/unexpected error; error code: ' + errorCode);

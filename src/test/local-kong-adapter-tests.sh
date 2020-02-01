@@ -71,10 +71,12 @@ function killthings() {
     fi
     if [ ! -z "$kongContainer" ]; then
         echo "===> Killing Kong container"
+        docker logs ${kongContainer} > ${thisDir}/logs/kong-adapter-test-local-kong.log
         docker rm -f ${kongContainer}
     fi
     if [ ! -z "$pgContainer" ]; then
         echo "===> Killing Postgres container"
+        docker logs ${pgContainer} > ${thisDir}/logs/kong-adapter-test-local-postgres.log
         docker rm -f ${pgContainer}
     fi
     if [ ! -z "$redisContainer" ]; then
@@ -187,7 +189,7 @@ echo "INFO: Starting Kong..."
 kongContainer=${tmpDir}_kong
 docker run -d --name ${kongContainer} -p ${kongProxyPort}:8000 -p ${kongAdminPort}:8001 \
     -e KONG_PG_USER=kong -e KONG_PG_PASSWORD=kong -e KONG_PG_HOST=pg \
-    --link ${pgContainer}:pg wicked.kong:local &> /dev/null
+    --link ${pgContainer}:pg wicked.kong:local &> /dev/null # ${thisDir}/logs/kong-adapter-test-local-kong.log
 
 echo "INFO: Starting redis..."
 redisContainer=${tmpDir}_redis

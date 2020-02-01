@@ -130,7 +130,6 @@ else
     # portal-api will wait for itself until Postgres is available,
     # no need to do that from bash. We'll just give it a couple of seconds
     # to gather itself.
-    sleep 10
     export WICKED_STORAGE=postgres
 fi
 
