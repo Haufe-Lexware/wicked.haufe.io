@@ -29,8 +29,8 @@ var updateSteps = {
     19: updateStep19_v1_0_0j,
     20: updateStep20_v1_0_0k,
     21: updateStep21_v1_0_0i,
-    22: updateStep21_MultiRoutes,
-    23: updateStep23_v1_0_0m
+    22: updateStep22_v1_0_0m,
+    23: updateStep23_MultiRoutes
 };
 
 updater.updateConfig = function (staticConfigPath, initialStaticConfigPath, configKey) {
@@ -213,11 +213,11 @@ function saveKickstarter(config, kickData) {
     fs.writeFileSync(path.join(config.basePath, 'kickstarter.json'), JSON.stringify(kickData, null, 2));
 }
 
-function updateStep23_v1_0_0m(targetConfig, sourceConfig, configKey) {
-    debug('Performing updateStep23_v1_0_0m()');
+function updateStep22_v1_0_0m(targetConfig, sourceConfig, configKey) {
+    debug('Performing updateStep22_v1_0_0m()');
 
     var targetGlobals = loadGlobals(targetConfig);
-    targetGlobals.version = 23;
+    targetGlobals.version = 22;
 
     if (!targetGlobals.auditlog) {
         debug('Adding a default auditlog property.');
@@ -262,11 +262,11 @@ function updateStep21_v1_0_0i(targetConfig, sourceConfig, configKey) {
     saveGlobals(targetConfig, targetGlobals);
 }
 
-function updateStep21_MultiRoutes(targetConfig, sourceConfig, configKey) {
-    debug('Performing updateStep21_MultiRoutes');
+function updateStep23_MultiRoutes(targetConfig, sourceConfig, configKey) {
+    debug('Performing updateStep23_MultiRoutes');
 
     const targetGlobals = loadGlobals(targetConfig);
-    targetGlobals.version = 22;
+    targetGlobals.version = 23;
 
     const apis = loadApis(targetConfig);
     for (let i = 0; i < apis.apis.length; ++i) {
