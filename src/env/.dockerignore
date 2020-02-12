@@ -6,3 +6,4 @@ Dockerfile-alpine
 build.sh
 sdk-tmp
 build/*
+.scannerwork

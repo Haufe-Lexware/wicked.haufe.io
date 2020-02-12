@@ -7,3 +7,4 @@ sessions
 *.tgz
 dist
 .git
+.scannerwork

@@ -6,3 +6,4 @@ build.sh
 git_*
 *.tmp
 .git
+.scannerwork
