@@ -5,6 +5,7 @@ RUN apk update && \
 
 COPY wicked.haufe.io/src/node-sdk /usr/src/app/node-sdk
 RUN cd /usr/src/app/node-sdk && \
+    npm config set unsafe-perm true && \
     npm install -g typescript@$(jq .devDependencies.typescript package.json | tr -d '"') && \
     npm install --production && \
     tsc && \
@@ -67,6 +68,7 @@ RUN apk add --no-cache --virtual .build-deps wget tar ca-certificates \
 	&& rm -rf /tmp/etc \
 	&& apk del .build-deps
 
+RUN npm config set unsafe-perm true 
 RUN npm install -g pm2
 
 # This does not work on Jenkins, and I do not know why. It was downloaded manually and
