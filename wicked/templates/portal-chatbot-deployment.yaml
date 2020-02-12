@@ -1,5 +1,5 @@
 {{- if .Values.deployChatbot -}}
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ template "fullname" . }}-chatbot
@@ -13,6 +13,10 @@ spec:
       maxSurge: 1
       maxUnavailable: 0
     type: RollingUpdate
+  selector:
+    matchLabels:
+      service: {{ template "fullname" . }}-chatbot
+      wicked: "true"
   template:
     metadata:
       labels:
