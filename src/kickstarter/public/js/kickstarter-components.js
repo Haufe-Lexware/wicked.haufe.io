@@ -45,7 +45,7 @@ function showEnvVar(envVarNameIncludingDollar) {
             <ul class="nav nav-tabs">
                 ${tabs}
             </ul>
-      
+
             <div class="tab-content">
                 ${content}
             </div>
@@ -74,6 +74,83 @@ function makeEnvVar(envVarName, value, encrypt, callback) {
 function showEnvExplanation() {
     alert('This input value can, or should not, be provided as an environment variable.');
 }
+
+Vue.component('wicked-toggle-button', {
+    props: ['width', 'name', 'toggled'],
+    data: function () {
+        return {
+            isToggled: this.toggled ? true : false,
+            internalId: randomId()
+        }
+    },
+    computed: {
+        buttonWidth: function() {
+            return this.width && this.width.match(/^([0-9]+)?(px|em)?$/g) || '5em';
+        }
+    },
+    methods: {
+        reportToggle: function(event) {
+            this.$emit('toggle', event.currentTarget);
+        }
+    },
+    template: `
+      <label :id="name" class="btn btn-default" :class="{active: isToggled}" :style="'width:' + buttonWidth">
+          <input v-on:click="reportToggle" type="checkbox" style="display: none;" :id="internalId" :value="name" v-model="isToggled"><span v-html="name"></span></input>
+      </label>
+  `
+});
+
+Vue.component('wicked-toggle-array', {
+    props: ['value', 'label', 'options', 'width', 'hint'],
+    data: function() {
+        let selection = {};
+        for(let i = 0; this.value && i < this.value.length; i += 1) {
+            selection[this.value[i]] = true;
+        }
+        return {
+            checkedNames: selection,
+            internalId: randomId()
+        };
+    },
+    computed: {
+        displayData: function() {
+            return this.options && this.options.split(/\s*,\s*/);
+        }
+    },
+    methods: {
+        toggle: function(event) {
+            if(event && event.tagName === 'INPUT') {
+                this.checkedNames[event.value] = !this.checkedNames[event.value];
+
+                let result = [];
+                Object.keys(this.checkedNames).forEach( k => {
+                    if ( this.checkedNames[k] ) {
+                        result.push(k);
+                    }
+                });
+
+                this.$emit('input', result);
+            }
+        },
+        isToggled: function(key) {
+            return key && this.checkedNames[key];
+        }
+    },
+    template: `
+        <div>
+            <label>{{label}}</label>
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <wicked-toggle-button v-for="(s, index) in displayData" v-bind:key="s" :toggled="isToggled(s)" v-on:toggle="toggle" :id="internalId + '.' + index" :name="s" :width="width"/>
+                    <div v-if="hint !== null">
+                        <span class="wicked-note" v-html="hint"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `
+});
+
 
 Vue.component('wicked-panel', {
     props: {
@@ -150,7 +227,7 @@ Vue.component('wicked-input', {
             isTextarea: isTextarea,
             textareaHeight: textareaHeight,
             isJson: isJson,
-            isValidJson: true,
+            isValidInput: true,
             envVarName: envVarName
         };
     },
@@ -205,9 +282,17 @@ Vue.component('wicked-input', {
             if (this.isJson) {
                 try {
                     JSON.parse(value);
-                    this.isValidJson = true;
+                    this.isValidInput = true;
                 } catch (err) {
-                    this.isValidJson = false;
+                    this.isValidInput = false;
+                }
+            }
+            else if(this.isNumber) {
+                this.isValidInput = !isNaN(value);
+
+                //submit number type
+                if(this.isValidInput) {
+                    value = Number(value);
                 }
             }
             this.$emit('input', value);
@@ -221,7 +306,8 @@ Vue.component('wicked-input', {
                     type="text"
                     :readonly=readonly
                     v-bind:value="value"
-                    v-on:input="$emit('input', $event.target.value)">
+                    v-on:input="verifyValue($event.target.value)">
+                <p v-if="isNumber && !isValidInput"><span style="color:red; font-weight:bold;">ERROR:</span> Content is not valid Number.</p>
                 <span class="input-group-btn">
                     <div v-if="showEnvVar" class="dropdown">
                         <button class="btn btn-warning dropdown-toggle" type="button" :id="internalId + '_dd'" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
@@ -240,14 +326,14 @@ Vue.component('wicked-input', {
                 </span>
             </div>
             <div v-if="isTextarea" class="form-group">
-                <textarea :id="internalId" 
+                <textarea :id="internalId"
                           class="form-control"
                           :readonly=readonly
                           :value="value"
                           :style="'height:' + textareaHeight"
                           v-on:input="verifyValue($event.target.value)"
                 >{{ value }}</textarea>
-                <p v-if="isJson && !isValidJson"><span style="color:red; font-weight:bold;">ERROR:</span> Content is not valid JSON.</p>
+                <p v-if="isJson && !isValidInput"><span style="color:red; font-weight:bold;">ERROR:</span> Content is not valid JSON.</p>
                 <div v-if="!isJson">
                     <p></p>
                     <button v-if="showEnvVar" class="btn btn-warning" v-on:click="makeVar">Make ENV var</button>
@@ -273,10 +359,10 @@ Vue.component('wicked-checkbox', {
 });
 
 Vue.component('wicked-string-array', {
-    props: ['value', 'label', 'allow-empty'],
+    props: ['value', 'label', 'allow-empty', 'hint'],
     data: function () {
         // Create a copy of the thing
-        const values = JSON.parse(JSON.stringify(this.value));
+        const values = this.value ? JSON.parse(JSON.stringify(this.value)) : [];
         let allowEmptyArray = false;
         if (this.allowEmpty) {
             if (typeof this.allowEmpty !== 'boolean') {
@@ -319,10 +405,68 @@ Vue.component('wicked-string-array', {
                             <button v-on:click="deleteString(index)" :id="internalId + '.' + index" class="btn btn-danger" type="button"><span class="glyphicon glyphicon-remove"></span></button>
                         </span>
                     </div>
+                    <div v-if="hint !== null">
+                        <span class="wicked-note" v-html="hint"></span>
+                    </div>
                     <button v-on:click="addString" class="btn btn-success" type="button"><span class="glyphicon glyphicon-plus"></span></button>
                 </div>
             </div>
         </div>
+    `
+});
+
+Vue.component('wicked-routes', {
+    props: ['value', 'width'],
+    data: function () {
+        return {
+            internalId: randomId(),
+            values: this.value
+        };
+    },
+    methods: {
+        addRoute: function (event) {
+            this.values.push({
+                strip_path: true,
+                preserve_host: false,
+                // TODO: removing for now, need to rethink the whole concept
+                // plugins: [],
+                protocols: [],
+                methods: []
+            });
+
+            this.$emit('input', this.values);
+        },
+        deleteRoute: function (index) {
+            if (this.values.length <= 1) {
+                alert('You cannot delete the last route. There must be at least one value.');
+                return;
+            }
+            this.values.splice(index, 1);
+            this.$emit('input', this.values);
+        }
+    },
+    template: `
+        <wicked-panel title="API Routes" type="default" :collapsible=false :open=true>
+            <div v-for="(route, index) in values">
+                <div class="panel panel-default">
+                    <button v-if="index > 0" v-on:click="deleteRoute(index)" :id="internalId + '.' + index" class="btn btn-danger pull-right" type="button"><span class="glyphicon glyphicon-remove"></span></button>
+
+                    <div class="panel-body">
+                        <wicked-string-array v-model="route.paths" :allow-empty=false label="Paths:" hint="A list of paths that match this Route. For example: <code>/my-path</code>. At least one of <code>hosts</code>, <code>paths</code> or <code>methods</code> must be set." />
+                        <wicked-checkbox v-model="route.strip_path" label="<b>Strip Uri</b>. Check this box if you don't want to pass the uri to the backend URL as well. Normally you wouldn't want that." />
+                        <wicked-checkbox v-model="route.preserve_host" label="<b>Preserve Host</b>. Preserves the original <code>Host</code> header sent by the client, instead of replacing it with the hostname of the <code>upstream_url</code>." />
+                        <wicked-panel title="Advanced Settings" type="default" :collapsible=true :open=false>
+                          <wicked-string-array v-model="route.hosts" :allow-empty=true label="Hosts:" hint="A list of domain names that match this Route. For example: <code>example.com</code>. By default it will use <code>APIHOST</code>. At least one of <code>hosts</code>, <code>paths</code> or <code>methods</code> must be set." />
+                          <wicked-toggle-array v-model="route.protocols" options="HTTP,HTTPS" width="6em" label="Protocols:" hint="A list of the protocols this Route should allow. By default it is <code>HTTP, HTTPS</code> which means that the Route accepts both."/>
+                          <wicked-toggle-array v-model="route.methods" options="GET,HEAD,POST,PUT,PATCH,DELETE" width="6em" label="Methods:" hint="A list of HTTP methods that match this Route. By default it is all. At least one of <code>hosts</code>, <code>paths</code> or <code>methods</code> must be set."/>
+                          <!-- <wicked-input v-model="route.plugins" :textarea=true :json=true label="Plugin configuration for this Route:" height="30em" hint="Plugin configuration that will be applied for this Route"/> -->
+                        </wicked-panel>
+                    </div>
+                </div>
+            </div>
+        <button v-on:click="addRoute" class="btn btn-success" type="button"><span class="glyphicon glyphicon-plus"></span></button>
+        </wicked-panel>
+
     `
 });
 
@@ -463,7 +607,7 @@ Vue.component('wicked-plugins', {
             <wicked-panel title="Other plugins" :type="getPanelType(value.others.useOthers)">
                 <p>This wicked Kickstarter application only has direct support for a few of Kong's plugins.
                 You can, by editing the following JSON snippet, configure all other plugins according to
-                the <a href='https://getkong.org/plugins/' target='_blank'>plugin documentation at Mashape</a>. 
+                the <a href='https://getkong.org/plugins/' target='_blank'>plugin documentation at Mashape</a>.
                 Kickstarter will unfortunately not really help you with it. The input area will expect a
                 JSON array of plugin configuration, as described at Kong's documentation pages.</p>
                 <p><strong>Important Note</strong>: You must not try to use any of the following plugins, as they
@@ -496,7 +640,7 @@ Vue.component('wicked-plugins', {
                 </wicked-panel>
                 <wicked-checkbox v-model="value.others.useOthers" label="<strong>Use other plugins</strong>" />
                 <wicked-input v-model="value.others.config" :textarea=true :json=true label="Plugin configuration (plugin array):" height="400px" />
-    
+
             </wicked-panel>
         </wicked-panel>
     `
@@ -591,7 +735,7 @@ Vue.component('wicked-markdown', {
         <div>
             <div class="row">
                 <div class="col-md-6">
-                    <textarea :id="internalId" 
+                    <textarea :id="internalId"
                             class="form-control"
                             :value="value"
                             style="height:500px"

@@ -64,7 +64,7 @@ function getFilterValueFromState(filter, fieldName) {
 function setFilter(grid, filter) {
     for (let prop in grid.fields) {
         let filterValue = getFilterValueFromState(filter, (grid.fields)[prop].name);
-        $((grid.fields)[prop].filterControl).val(filterValue)
+        $((grid.fields)[prop].filterControl).val(filterValue);
     }
     if (!isEmptyGridFilter(filter))
         grid.filtering = true;
@@ -81,20 +81,6 @@ function setSortingField(grid, state) {
     return grid.fields.filter((elem) => (elem.name === state.sortField) ? true : false)[0];
 }
 
-function initializeGridFromState(grid) {
-    let gridSettings = getStateFromHistory();
-    grid.isGridRefreshAvailable = false;
-    return new Promise((resolve, reject) => {
-        setFilter(grid, gridSettings.filter);
-        grid.search(gridSettings.filter).done(function () {
-            grid.sort({ field: gridSettings.sorting.sortField, order: gridSettings.sorting.sortOrder }).done(function () {
-                grid.option("pageIndex", gridSettings.pageIndex);
-                resolve();
-            });
-        });
-    });
-}
-
 function initializeGridFromStateServerSide(grid) {
     let gridSettings = getStateFromHistory();
     grid.isGridRefreshAvailable = false;
@@ -106,6 +92,7 @@ function initializeGridFromStateServerSide(grid) {
         resolve();
     });
 }
+
 function setMouseOverElementContent($elem, content) {
     $elem.attr({
         "data-toggle": "popover",
@@ -155,11 +142,11 @@ $(document).ready(function () {
     jsGrid.Grid.prototype.onRefreshed = function (args) {
         if (!args.grid.pageLoading)
             setHistoryToState(args.grid);
-    }
+    };
     jsGrid.Grid.prototype.onOptionChanged = function (args) {
         if (args.grid.pageLoading)
             setHistoryToState(args.grid);
-    }
+    };
     jsGrid.Grid.prototype.onDataLoading = function (args) {
         if (!!history.state && !args.grid.isInitialLoaded && args.grid.pageLoading) {
             var gridSettings = getStateFromHistory();
@@ -172,7 +159,7 @@ $(document).ready(function () {
             args.grid.filtering = false;
         args.grid.isInitialLoaded = true;
 
-    }
+    };
     jsGrid.loadStrategies.DirectLoadingStrategy.prototype.finishDelete = function (deletedItem, deletedItemIndex) {
         var grid = this._grid;
         grid.option("data").splice(deletedItemIndex, 1);

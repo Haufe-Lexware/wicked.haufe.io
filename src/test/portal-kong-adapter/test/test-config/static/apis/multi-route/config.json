@@ -1,0 +1,44 @@
+{
+    "api": {
+      "upstream_url": "http://your.new.api/",
+      "name": "multi-route",
+      "routes": [
+        {
+          "paths": [
+            "/route-1"
+          ],
+          "strip_path": true,
+          "preserve_host": true,
+          "protocols": [
+            "https"
+          ],
+          "methods": [
+            "GET",
+            "POST"
+          ]
+        },
+        {
+          "strip_path": true,
+          "preserve_host": false,
+          "protocols": [
+            "https"
+          ],
+          "methods": [
+            "PUT"
+          ],
+          "paths": [
+            "/route-2"
+          ],
+          "hosts": [
+            "example.com"
+          ]
+        }
+      ],
+      "retries": 10,
+      "connect_timeout": 3000,
+      "write_timeout": 20000,
+      "read_timeout": 20000
+    },
+    "plugins": []
+  } 
+  

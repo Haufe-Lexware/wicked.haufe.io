@@ -58,7 +58,7 @@ Vue.component('wicked-api', {
 
         <div v-if="value.auth != 'none'" class="form-group">
             <hr>
-        
+
             <label>Associated Plans:</label>
             <p>Each API has to be associated with at least one plan in order to enable subscriptions to the API. Select
                which plans shall be associated with this API.</p>
@@ -67,7 +67,7 @@ Vue.component('wicked-api', {
                 <label :for="'plan_' + plan.id">{{ plan.name }} ({{ plan.id }})</label>
             </div>
         </div>
-        
+
         <wicked-panel v-if="value.auth == 'oauth2'" :open=true type="info" title="OAuth 2.0 Settings">
             <div class="form-group">
                 <label><a href="/pools" target="_blank">Registration Pool</a>:</label>
@@ -89,18 +89,18 @@ Vue.component('wicked-api', {
                 <wicked-checkbox v-model="value.settings.mandatory_scope" label="<b>Mandatory Scope:</b> If specified, it is not possible to create access tokens without explicitly specifying a scope. Otherwise an access token with an empty scope may be created." />
                 <p>You can either specify a static list of scopes, or you can look the scopes up using a service (which you need to implement).
                    In case the scope lookup URL (below) is specified, the static list is <b>not</b> used. <b>Note:</b> This URL will be called with the API ID
-                   appended to it, e.g. <code>http://my-service:3000/scopes/&lt;api_id&gt;</code>. See 
+                   appended to it, e.g. <code>http://my-service:3000/scopes/&lt;api_id&gt;</code>. See
                    <a href="https://apim-haufe-io.github.io/wicked.node-sdk/interfaces/_interfaces_.scopelookupresponse.html" target="_blank">ScopeLookupResponse</a>.</p>
                 <wicked-input v-model="value.scopeLookupUrl" label="Scope lookup URL:" :env-var="envPrefix + 'SCOPE_LOOKUP_URL'" hint='URL as reachable from the portal API deployment, which by a GET can retrieve a list of scopes. TODO' />
 
                 <p>It is possible to delegate the scope decision from the end user to a third party instance; specify
                    the URL, as reachable from the Authorization Server instance inside your deployment, to the endpoint
-                   which accepts a POST with the desired scope and profile of the user.  See 
+                   which accepts a POST with the desired scope and profile of the user.  See
                    <a href="https://apim-haufe-io.github.io/wicked.node-sdk/interfaces/_interfaces_.passthroughscoperequest.html" target="_blank">PassthroughScopeRequest</a>
                    and <a href="https://apim-haufe-io.github.io/wicked.node-sdk/interfaces/_interfaces_.passthroughscoperesponse.html" target="_blank">PassthroughScopeResponse</a>
                    for a description of request and response formats.</p>
                 <wicked-input v-model="value.passthroughScopeUrl" label="Passthrough Scope URL:" :env-var="envPrefix + 'SCOPE_URL'" hint="URL as reachable from the wicked/auth server deployment."/>
- 
+
                 <table style="border-spacing: 5px; width: 100%">
                     <tr>
                         <th class="scopecell">Scope ID</th>
@@ -154,9 +154,15 @@ Vue.component('wicked-api-kong', {
     <wicked-panel :open=true title="Kong (Gateway) Configuration" type="primary">
         <wicked-input v-model="value.api.host" label="API Host:" hint="API Host, it could be alternate DNS for the service" :env-var="envPrefix + 'HOST'" />
         <wicked-input v-model="value.api.upstream_url" label="Upstream (backend) URL:" hint="The URL under which the service can be found, <strong>as seen from the Kong container</strong>" :env-var="envPrefix + 'UPSTREAM_URL'" />
-        <wicked-string-array v-model="value.api.uris" :allow-empty=false label="Request URIs:" hint="This is the list of prefix you will use for this API on the API Gateway, e.g. <code>/petstore/v1</code>." />
-        <wicked-checkbox v-model="value.api.strip_uri" label="<b>Strip Uri</b>. Check this box if you don't want to pass the uri to the backend URL as well. Normally you wouldn't want that." />
-        <wicked-checkbox v-model="value.api.preserve_host" label="<b>Preserve Host</b>. Preserves the original <code>Host</code> header sent by the client, instead of replacing it with the hostname of the <code>upstream_url</code>." />
+
+        <wicked-panel title="Timeout Settings" type="default" :collapsible=true :open=false>
+          <wicked-input v-model="value.api.retries" number="true" label="Retries:" hint="The number of retries to execute upon failure to proxy. Defaults to <code>5</code>." />
+          <wicked-input v-model="value.api.connect_timeout" number="true" label="Connect timeout:" hint="The timeout in milliseconds for establishing a connection to the upstream server. Defaults to <code>60000</code>" />
+          <wicked-input v-model="value.api.write_timeout" number="true" label="Write timeout:" hint="The timeout in milliseconds between two successive write operations for transmitting a request to the upstream server. Defaults to <code>60000</code>" />
+          <wicked-input v-model="value.api.read_timeout" number="true" label="Read timeout:" hint="The timeout in milliseconds between two successive read operations for transmitting a request to the upstream server. Defaults to <code>60000</code>" />
+        </wicked-panel>
+
+        <wicked-routes v-model="value.api.routes"/>
     </wicked-panel>
 `
 });
@@ -196,18 +202,117 @@ const vm = new Vue({
     data: injectedData
 });
 
+function isValidURL(uri) {
+    var res = uri.match(/^((((http|https|ws|wss):(?:\/\/)?)(?:[\-;:&=\+\$,\w]+@)?[A-Za-z0-9\.\-]+|(?:www\.|[\-;:&=\+\$,\w]+@)[A-Za-z0-9\.\-]+)((?:\/[\+~%\/\.\w\-_]*)?\??(?:[\-\+=&;%@\.\w_]*)#?(?:[\.\!\/\\\w]*))?)/g);
+    if (res == null)
+        return false;
+    else
+        return true;
+};
+
+function isNumeric(value) {
+    return /^\d+$/.test(value);
+}
+
+function validateData(callback) {
+    let data = vm.$data;
+    let error = '';
+
+    //validate URI, most common errors we see
+    let token = data.config.api.upstream_url;
+    if (!isValidURL(token)) {
+        error = error + '\nInvalid Upstream (backend) URL: ' + token;
+    }
+
+    //validate Service
+    token = data.config.api.retries;
+    if( token && !isNumeric(token) ) {
+        error = error + '\nInvalid Retries: ' + token + ', must empty for default or Integer';
+    }
+
+    token = data.config.api.connect_timeout;
+    if( token && !isNumeric(token) ) {
+        error = error + '\nInvalid Connect timeout: ' + token + ', must empty for default or Integer';
+    }
+
+    token = data.config.api.write_timeout;
+    if( token && !isNumeric(token) ) {
+        error = error + '\nInvalid Write timeout: ' + token + ', must empty for default or Integer';
+    }
+
+    token = data.config.api.read_timeout;
+    if( token && !isNumeric(token) ) {
+        error = error + '\nInvalid Read timeout: ' + token + ', must empty for default or Integer';
+    }
+
+    //normalize Route(s) tokens
+    for(let i = 0; i < data.config.api.routes.length; i += 1) {
+        const route = data.config.api.routes[i];
+
+        //method aka Verb is UPPERCASED
+        if ( route.methods ) {
+            route.methods = route.methods.map( e => e.toUpperCase() );
+        }
+
+        //protocol aka Schema is lowercased
+        if ( route.protocols ) {
+            route.protocols = route.protocols.map( e => e.toLowerCase() );
+        }
+
+        //remove empty arrays, per kong spec, no value should be provided
+        if (route.methods && route.methods.length === 0) {
+            delete route.methods;
+        }
+
+        if (route.paths && route.paths.length === 0) {
+            delete route.paths;
+        }
+
+        if (route.hosts && route.hosts.length === 0) {
+            delete route.hosts;
+        }
+    }
+
+    //validate Route(s)
+    for(let i = 0; i < data.config.api.routes.length; i += 1) {
+        const route = data.config.api.routes[i];
+        const methods = route.methods ? route.methods.filter( e => !!e ) : [];
+        const paths = route.paths ? route.paths.filter( e => !!e ) : [];
+        const hosts = route.hosts ? route.hosts.filter( e => !!e ) : [];
+
+        if ( !methods.length && !paths.length && !hosts.length ) {
+            error = error + '\nInvalid Route #' + (i + 1) + '. At least one of hosts, paths or methods must be set.';
+        }
+    }
+
+    if ( error ) {
+        return callback(null, error);
+    }
+    else {
+        return callback(JSON.stringify(data), null);
+    }
+};
+
 function storeData() {
     const apiId = vm.api.id;
-    $.post({
-        url: `/apis/${apiId}/api`,
-        data: JSON.stringify(vm.$data),
-        contentType: 'application/json'
-    }).fail(function () {
-        alert('Could not store data, an error occurred.');
-    }).done(function (data) {
-        if (data.message == 'OK')
-            alert('Successfully stored data.');
-        else
-            alert('The data was stored, but the backend returned the following message:\n\n' + data.message);
+
+    validateData( function(data, error) {
+        if( error ) {
+            alert('Error validating data:\n' + error);
+        }
+        else if( !error && data ) {
+            $.post({
+                url: `/apis/${apiId}/api`,
+                data: data,
+                contentType: 'application/json'
+            }).fail(function () {
+                alert('Could not store data, an error occurred.');
+            }).done(function (data) {
+                if (data.message == 'OK')
+                    alert('Successfully stored data.');
+                else
+                    alert('The data was stored, but the backend returned the following message:\n\n' + data.message);
+            });
+        }
     });
-}
+};

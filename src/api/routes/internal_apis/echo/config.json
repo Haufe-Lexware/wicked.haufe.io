@@ -2,10 +2,15 @@
   "api": {
     "name": "echo",
     "upstream_url": "${PORTAL_ECHO_URL}",
-    "uris": [
-      "/wicked-echo/v1"
-    ],
-    "strip_uri": true
+    "routes": [
+      {
+        "paths": [
+          "/wicked-echo/v1"
+        ],
+        "strip_path": true,
+        "preserve_host": false
+      }
+    ]
   },
   "plugins": [
     {

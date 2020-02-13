@@ -64,13 +64,13 @@ authServers.getAuthServer = function (app, res, loggedInUserId, serverId) {
         if (!isAdmin) {
             debug(`getAuthServer(${serverId}), logged in User is not ADMIN`);
             // Restrict what we return in case it's a non-admin user (or no user),
-            // only return the request path (uris), not the backend URL or any other
+            // only return the request path (routes), not the backend URL or any other
             // type of information (like used plugins).
             const tempConfig = authServer.data.config;
-            if (tempConfig && tempConfig.api && tempConfig.api.uris) {
+            if (tempConfig && tempConfig.api && tempConfig.api.routes) {
                 authServer.data.config = {
                     api: {
-                        uris: tempConfig.api.uris
+                        routes: tempConfig.api.routes
                     }
                 };
             } else {

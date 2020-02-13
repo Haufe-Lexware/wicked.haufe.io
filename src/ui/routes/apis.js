@@ -161,9 +161,15 @@ router.get('/:api', function (req, res, next) {
         // console.log(JSON.stringify(apiConfig));
         const apiUris = [];
         const host = deduceHostAndSchema(req, apiConfig);
-        for (let u = 0; u < apiConfig.api.uris.length; ++u) {
-            const apiRequestUri = apiConfig.api.uris[u];
-            apiUris.push(`${host}${apiRequestUri}`);
+        if (apiConfig.api.routes) {
+          for (let r = 0; r < apiConfig.api.routes.length; ++r) {
+              const route =  apiConfig.api.routes[r];
+
+              for(let u = 0; u < route.paths.length; ++u) {
+                const apiRequestUri = route.paths[u];
+                apiUris.push(`${host}${apiRequestUri}`);
+              }
+          }
         }
 
         const plans = results.getPlans;
@@ -228,6 +234,12 @@ router.get('/:api', function (req, res, next) {
             if (loggedInUserId)
                 genericSwaggerUrl += `?forUser=${loggedInUserId}`;
 
+            let partnerOnly = false;
+            // disable details for logged in partner
+            if (apiInfo.requiredGroup && apiInfo.partner) {
+                partnerOnly = !(userInfo.groups.length > 0 && userInfo.groups.find((e) => {return e == apiInfo.requiredGroup;}));
+            }    
+
             const apps = [];
             let hasSwaggerApplication = false;
             for (let i = 0; i < userInfo.applications.length; ++i) {
@@ -248,6 +260,7 @@ router.get('/:api', function (req, res, next) {
                     thisApp.maySubscribe = false;
                     thisApp.subscribeError = 'API deprecated';
                 }
+
                 // Swagger UI App must be detected even if it doesn't have a subscription to this API
                 const thisRedirectUri = appsResults[i].redirectUri;
                 if ((thisRedirectUri && thisRedirectUri.indexOf("swagger-ui/oauth2-redirect.html")) > 0)
@@ -304,7 +317,8 @@ router.get('/:api', function (req, res, next) {
                     apiPlans: plans,
                     apiUris: apiUris,
                     apiSubscriptions: apiSubscriptions,
-                    genericSwaggerUrl: genericSwaggerUrl
+                    genericSwaggerUrl: genericSwaggerUrl,
+                    partnerOnly: partnerOnly
                 });
             } else {
                 delete apiInfo.authMethods;
@@ -314,7 +328,8 @@ router.get('/:api', function (req, res, next) {
                     apiPlans: plans,
                     applications: apps,
                     apiUris: apiUris,
-                    apiSubscriptions: apiSubscriptions
+                    apiSubscriptions: apiSubscriptions,
+                    partnerOnly: partnerOnly
                 });
             }
         });

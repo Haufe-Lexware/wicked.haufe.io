@@ -5,9 +5,15 @@
   "config": {
     "api": {
       "upstream_url": "(filled dynamically)/ping",
-      "uris": ["/ping-portal"],
-      "preserve_host": false,
-      "strip_uri": true,
+      "routes": [
+        {
+          "paths": [
+            "/ping-portal"
+          ],
+          "strip_path": true,
+          "preserve_host": false
+        }
+      ],
       "name": "ping-portal"
     },
     "plugins": [

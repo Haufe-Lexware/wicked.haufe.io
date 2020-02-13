@@ -374,7 +374,7 @@ apis.getConfig = function (app, res, loggedInUserId, apiId) {
             if (!isAdmin) {
                 configReturn = {
                     api: {
-                        uris: configJson.api.uris,
+                        routes: configJson.api.routes,
                         host: configJson.api.host,
                         protocol: url.parse(configJson.api.upstream_url).protocol
                     }
@@ -514,10 +514,21 @@ apis.getSwagger = function (app, res, loggedInUserId, apiId) {
         const globalSettings = utils.loadGlobals(app);
         const configJson = loadApiConfig(app, apiId);
 
-        if (!configJson || !configJson.api || !configJson.api.uris || !configJson.api.uris.length) {
+        const requestPaths = [];
+
+        if (configJson && configJson.api && configJson.api.routes) {
+            for (let r = 0; r < configJson.api.routes.length; ++r) {
+                const route =  configJson.api.routes[r];
+
+                for(let u = 0; u < route.paths.length; ++u) {
+                    requestPaths.push(route.paths[u]);
+                }
+            }
+        }
+
+        if (!requestPaths.length) {            
             return res.status(500).jsonp({ message: 'Invalid API configuration; does not contain uris array.' });
         }
-        const requestPaths = configJson.api.uris;
 
         const apiList = utils.loadApis(app);
         const apiInfo = apiList.apis.find(function (anApi) { return anApi.id == apiId; });

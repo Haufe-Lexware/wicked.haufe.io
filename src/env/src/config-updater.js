@@ -4,8 +4,9 @@ var fs = require('fs');
 var path = require('path');
 var { debug, info, warn, error } = require('./logger')('portal-env:config-updater');
 var cryptTools = require('./crypt-tools');
+var updateRouteServices = require('./steps/routes-services-update');
 
-var updater = function () { };
+var updater = function () {};
 
 var updateSteps = {
     1: updateStep1_June2016,
@@ -28,7 +29,8 @@ var updateSteps = {
     19: updateStep19_v1_0_0j,
     20: updateStep20_v1_0_0k,
     21: updateStep21_v1_0_0i,
-    22: updateStep22_v1_0_0m
+    22: updateStep22_v1_0_0m,
+    23: updateStep23_MultiRoutes
 };
 
 updater.updateConfig = function (staticConfigPath, initialStaticConfigPath, configKey) {
@@ -44,8 +46,9 @@ updater.updateConfig = function (staticConfigPath, initialStaticConfigPath, conf
     info('Starting at config version: ' + currentVersion);
 
     for (var step in updateSteps) {
-        if (currentVersion < step)
+        if (currentVersion < step) {
             updateSteps[step](targetConfig, sourceConfig, configKey);
+        }
     }
 
     verifyConfigKey(staticConfigPath, configKey);
@@ -256,6 +259,39 @@ function updateStep21_v1_0_0i(targetConfig, sourceConfig, configKey) {
             delete targetGlobals.chatbot.hookUrls;
         }
     }
+    saveGlobals(targetConfig, targetGlobals);
+}
+
+function updateStep23_MultiRoutes(targetConfig, sourceConfig, configKey) {
+    debug('Performing updateStep23_MultiRoutes');
+
+    const targetGlobals = loadGlobals(targetConfig);
+    targetGlobals.version = 23;
+
+    const apis = loadApis(targetConfig);
+    for (let i = 0; i < apis.apis.length; ++i) {
+        const thisApi = apis.apis[i];
+        const apiConfig = updateRouteServices( loadApiConfig(targetConfig, thisApi.id) );
+
+        info(`Converting API ${thisApi.id} config.`);
+        saveApiConfig(targetConfig, thisApi.id, apiConfig);
+    }
+
+    const authServerNames = loadAuthServerList(targetConfig);
+    for (let i = 0; i < authServerNames.length; ++i) {
+        const asName = authServerNames[i];
+        const as = loadAuthServer(targetConfig, asName);
+        if (as.config && as.config.api) {
+            const apiConfig = updateRouteServices( as.config );
+
+            info(`AuthServer ${asName} config`);
+
+            as.config = apiConfig;
+
+            saveAuthServer(targetConfig, asName, as);
+        }
+    }
+
     saveGlobals(targetConfig, targetGlobals);
 }
 
@@ -562,11 +598,11 @@ function updateStep11_v1_0_0b(targetConfig, sourceConfig, configKey) {
 /**
  * Adapt the scopes configuration inside API definitions to include
  * descriptions (default to the name of the scope for now).
- * 
+ *
  * Add new network settings for added components
  * - Kong OAuth2 Adapter
  * - Auth Server
- * 
+ *
  * Add default Auth Server configuration
  */
 function updateStep10_v1_0_0a(targetConfig, sourceConfig, configKey) {

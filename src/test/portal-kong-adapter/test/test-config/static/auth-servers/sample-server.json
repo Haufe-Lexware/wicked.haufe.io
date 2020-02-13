@@ -1,36 +1,43 @@
 {
-    "id": "sample-server",
-    "name": "sample-server",
-    "desc": "A Sample Authorization Server",
-    "authMethods": [
-        {
-            "name": "local",
-            "type": "local",
-            "friendlyShort": "Username and Password",
-            "friendlyLong": "Log in using a local username and password.",
-            "config": {
-                "authorizeEndpoint": "/{{name}}/api/{{api}}/authorize",
-                "tokenEndpoint": "/{{name}}/api/{{api}}/token",
-                "profileEndpoint": "/profile"
-            }
-        }
-    ],
-    "config": {
-        "api": {
-            "name":"sample-server",
-            "request_path":"/auth-server",
-            "strip_request_path":false,
-            "upstream_url":"http://auth-server:3005"
-        },
-        "plugins": [
-            {
-                "name": "rate-limiting",
-                "enabled": true,
-                "config": {
-                    "day": 100,
-                    "fault_tolerant": true
-                }
-            }
-        ]
+  "id": "sample-server",
+  "name": "sample-server",
+  "desc": "A Sample Authorization Server",
+  "authMethods": [
+    {
+      "name": "local",
+      "type": "local",
+      "friendlyShort": "Username and Password",
+      "friendlyLong": "Log in using a local username and password.",
+      "config": {
+        "authorizeEndpoint": "/{{name}}/api/{{api}}/authorize",
+        "tokenEndpoint": "/{{name}}/api/{{api}}/token",
+        "profileEndpoint": "/profile"
+      }
     }
+  ],
+  "config": {
+    "api": {
+      "name": "sample-server",
+      "upstream_url": "http://auth-server:3005",
+      "routes": [
+        {
+          "paths": [
+            "/auth-server"
+          ],
+          "strip_path": false,
+          "preserve_host": false
+        }
+      ]
+    },
+    "plugins": [
+      {
+        "name": "rate-limiting",
+        "enabled": true,
+        "config": {
+          "day": 100,
+          "fault_tolerant": true
+        }
+      }
+    ]
+  }
 }

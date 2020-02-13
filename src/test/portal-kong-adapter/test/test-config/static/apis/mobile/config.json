@@ -1,18 +1,24 @@
 {
-    "api": {
-        "upstream_url": "http://kong-adapter-test-data:3003/",
-        "name": "mobile",
-        "request_path": "/mobile",
-        "strip_request_path": true
-    },
-    "plugins": [
-        {
-            "name": "correlation-id",
-            "config": {
-                "header_name": "Correlation-Id",
-                "generator": "uuid",
-                "echo_downstream": false
-            }
-        }
+  "api": {
+    "upstream_url": "http://kong-adapter-test-data:3003/",
+    "name": "mobile",
+    "routes": [
+      {
+        "paths": [
+          "/mobile"
+        ],
+        "strip_path": true
+      }
     ]
+  },
+  "plugins": [
+    {
+      "name": "correlation-id",
+      "config": {
+        "header_name": "Correlation-Id",
+        "generator": "uuid",
+        "echo_downstream": false
+      }
+    }
+  ]
 }

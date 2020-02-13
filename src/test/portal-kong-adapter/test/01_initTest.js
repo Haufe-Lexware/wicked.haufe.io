@@ -254,6 +254,36 @@ describe('After initialization,', function () {
             });
         });
 
+        it('should have two routes for the Multi Route API', function (done) {
+            request.get({
+                url: kongUrl + 'services/multi-route/routes'
+            }, function (err, res, body) {
+                assert.isNotOk(err);
+                assert.equal(200, res.statusCode);
+                const routes = utils.getJson(body);
+                assert.isArray(routes.data);
+                assert.equal(2, routes.data.length);
+                done();
+            });
+        });
+
+        it('should have custom timeouts/retries for the Multi Route API', function (done) {
+            request.get({
+                url: kongUrl + 'services/multi-route'
+            }, function (err, res, body) {
+                assert.isNotOk(err);
+                assert.equal(200, res.statusCode);
+                const service = utils.getJson(body);
+
+                assert.equal(10, service.retries);
+                assert.equal(20000, service.read_timeout);
+                assert.equal(20000, service.write_timeout);
+                assert.equal(3000, service.connect_timeout);
+
+                done();
+            });
+        });
+
         // These tests are obsolete - There are no consumers specifically
         // for the portal-api anymore, and the portal API is no longer exposed
         // via the "old" client credentials flow anymore, only over the generic
