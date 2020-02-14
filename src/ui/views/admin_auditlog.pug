@@ -1,10 +1,27 @@
 extends layout
 block bodyScripts
   script(type='text/javascript').
-   function generateReport(){
+    let count;
+    function generateReport(){
       $('#auditlogGrid').jsGrid('loadData');
     }
-   
+
+    function downloadIt(){
+      const filter = $("#auditlogGrid").jsGrid("getFilter");
+      const sorting = $("#auditlogGrid").jsGrid("getSorting"); 
+      const enddate = $("#enddate").datepicker('getDate');
+      enddate.setDate(enddate.getDate() + 1); //set to next day
+      filter['startdate'] = $.datepicker.formatDate("yy-mm-dd", $("#startdate").datepicker("getDate"));
+      filter['enddate'] = $.datepicker.formatDate("yy-mm-dd", enddate);
+      let url = `/admin/auditlog_csv?pageIndex=1&pageSize=${count}`;
+      url = sorting.field ? `${url}&sortField=${sorting.field}` : url;
+      url = sorting.order ? `${url}&sortOrder=${sorting.order}` : url;
+      $.each(filter, function (prop, value) {
+          url+= (value!="") ? `&${prop}=${value}`: ``;
+      });
+      window.location.href=url;
+    }
+
     $(document).ready(function(){
       var now = new Date();
       var start = new Date()
@@ -25,12 +42,13 @@ block bodyScripts
                 data: filter,
                 dataType: "json"
               }).done(function(result) {
+                count =  result.auditlog.count;
                 d.resolve({
                     data: result.auditlog.items,
                     itemsCount: result.auditlog.count
                 });
-              });
-              return d.promise();
+            });
+            return d.promise();
           }
         },
         fields: [
@@ -78,4 +96,5 @@ block content
     ditonv#auditlogGrid
     br
     p
-    //a(href='/admin/auditlog_csv').btn.btn-success Download as CSV
+      a(onclick='downloadIt()').btn.btn-success Download as CSV
+          
