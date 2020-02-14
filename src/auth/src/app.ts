@@ -184,6 +184,7 @@ app.initApp = function (authServerConfig: WickedAuthServer, callback: SimpleCall
             externalUrlBase: app.get('external_url'),
             basePath: app.get('base_path')
         };
+        debug(`options: ${JSON.stringify(options)}`)
         info(`Activating auth method ${authMethod.name} with type ${authMethod.type}, at ${authUri}.`);
         let idp = null;
         switch (authMethod.type) {
