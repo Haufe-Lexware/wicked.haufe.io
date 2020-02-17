@@ -214,6 +214,44 @@ router.get('/auditlog', mustBeAdminMiddleware, function (req, res, next) {
     });
 });
 
+router.get('/auditlog_csv', mustBeAdminOrApproverMiddleware, function (req, res, next) {
+    debug("get('/auditlog_csv')");
+    const filterFields = ['activity', 'user', 'email','plan', 'api', 'role', 'application', 'startdate', 'enddate'];
+    const auditlogUri = utils.makePagingUri(req, '/auditlog?embed=1&', filterFields);
+    
+    utils.getFromAsync(req, res, auditlogUri, 200, function (err, auditResponse) {
+        if (err)
+            return next(err);
+        tmp.file(function (err, path, fd, cleanup) {
+            if (err)
+                return next(err);
+            const outStream = fs.createWriteStream(path);
+            outStream.write('Api;Application;Plan;Date (UTC);Activity;User;Email;Role\n');
+            for (let i = 0; i < auditResponse.items.length; ++i) {
+                const item = auditResponse.items[i];
+                const api = item.api ? item.api : ``;
+                const application = item.application ?  item.application : ``;
+                const plan = item.plan ? item.plan : ``;
+                const created_at = utils.dateFormat(new Date(item.created_at), "%Y-%m-%d %H:%M:%S", true);
+                const auditLine = `${api}; ${application}; ${plan}; ${created_at}; ${item.activity}; ${item.user};  ${item.email}; ${item.role}\n`;
+                outStream.write(auditLine);
+            }
+            outStream.end(function (err) {
+                if (err) {
+                    cleanup();
+                    return next(err);
+                }
+                res.download(path, 'auditlog.csv', function (err) {
+                    cleanup();
+                    if (err) {
+                        return next(err);
+                    }
+                });
+            });
+        });
+    });
+});
+
 router.get('/subscriptions', mustBeAdminOrApproverMiddleware, function (req, res, next) {
     debug("get('/subscriptions')");
     const filterFields = ['application', 'application_name', 'plan', 'api', 'owner', 'user'];
