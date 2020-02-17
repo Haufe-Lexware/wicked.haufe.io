@@ -110,13 +110,35 @@ function matchObjectsInternal(apiObject, kongObject) {
         }
 
         //missing property
-        if( apiObject[prop] && (typeof kongObject[prop] === 'undefined' || kongObject[prop] === null) ) {
+        if (apiObject[prop] && (typeof kongObject[prop] === 'undefined' || kongObject[prop] === null)) {
             return false;
         }
 
         //for array, fail fast
         if (Array.isArray(apiObject[prop]) && Array.isArray(kongObject[prop]) && kongObject[prop].length !== apiObject[prop].length) {
             return false;
+        }
+
+        // Special case for routes array; these are not always ordered the same...
+        if (Array.isArray(apiObject[prop]) && prop === 'routes') {
+            const apiArr = apiObject[prop];
+            const kongArr = kongObject[prop];
+
+            for (let i = 0; i < apiArr.length; ++i) {
+                const apiRoute = apiArr[i];
+                // Let's find it in the Kong array
+                const kongRoute = kongArr.find(kr => matchObjectsInternal(apiRoute, kr));
+                if (!kongRoute)
+                    return false;
+            }
+            // And the other way around as well...
+            for (let i = 0; i < kongArr.length; ++i) {
+                const kongRoute = kongArr[i];
+                const apiRoute = apiArr.find(ar => matchObjectsInternal(ar, kongRoute));
+                if (!apiRoute)
+                    return false;
+            }
+            return true;
         }
 
         if (typeof apiObject[prop] == "object") { // Recurse please
@@ -249,7 +271,7 @@ function kongAction(method, url, body, expectedStatusCode, callback: Callback<an
                     _kongAvailable = true;
                     return callback(err);
                 }
-                warn(`kongAction: Failed to send a request to Kong; retrying in ${KONG_RETRY_DELAY} ms (#${attempt+1}). Preventing other calls in the mean time.`);
+                warn(`kongAction: Failed to send a request to Kong; retrying in ${KONG_RETRY_DELAY} ms (#${attempt + 1}). Preventing other calls in the mean time.`);
                 _kongAvailable = false;
 
                 setTimeout(tryRequest, KONG_RETRY_DELAY, attempt + 1);
@@ -505,8 +527,8 @@ export function kongGetAllApis(callback: Callback<KongCollection<KongApi>>): voi
             const s = services.data[i];
 
             serviceIdMap.set(s.id, {
-              service: s,
-              routes: []
+                service: s,
+                routes: []
             });
         }
 
@@ -569,7 +591,7 @@ export function kongPostApi(apiConfig: KongApi, callback: Callback<KongApi>): vo
         flow.push(
             function (index: number, routes: KongRoute[], callback) {
                 kongPostRoute(routes[index], function (err, data: KongRoute) {
-                    persistedRoute.push( data );
+                    persistedRoute.push(data);
 
                     if (index + 1 >= routes.length) {
                         return callback(null);
@@ -622,7 +644,7 @@ export function kongPatchApi(apiId: string, apiConfig: KongApi, callback: Callba
                 // update service id
                 // there is no way to correctly identify route(s) unless we allocate route id in static config ( not there yet )
                 // so we completly replace content of the route(s) and delete whatever else left
-                for( let i = 0; i < routes.length; i += 1 ) {
+                for (let i = 0; i < routes.length; i += 1) {
                     routes[i].service = { id: service.id };
                     routes[i].id = existingRoutes && existingRoutes.length > i ? existingRoutes[i].id : null;
                 }
@@ -632,69 +654,69 @@ export function kongPatchApi(apiId: string, apiConfig: KongApi, callback: Callba
         );
 
         // update/replace routes
-        for( let i = 0; i < routes.length; i += 1 ) {
+        for (let i = 0; i < routes.length; i += 1) {
             flow.push(
                 function (index: number, callRoutes: KongRoute[], callback) {
                     if (callRoutes[index].id) {
-                      debug(`update route: ${index} : ${callRoutes[index].id}`);
+                        debug(`update route: ${index} : ${callRoutes[index].id}`);
 
-                      kongPutRoute(callRoutes[index].id, callRoutes[index], function( err, data: KongRoute ) {
-                          if (err) {
-                              return callback(err);
-                          }
+                        kongPutRoute(callRoutes[index].id, callRoutes[index], function (err, data: KongRoute) {
+                            if (err) {
+                                return callback(err);
+                            }
 
-                          persistedRoute.push( data );
+                            persistedRoute.push(data);
 
-                          if ( index + 1 >= callRoutes.length ) {
-                              return callback(null, routes.length, existingRoutes);
-                          }
-                          else {
-                              callback(null, index + 1, callRoutes);
-                          }
-                      });
+                            if (index + 1 >= callRoutes.length) {
+                                return callback(null, routes.length, existingRoutes);
+                            }
+                            else {
+                                callback(null, index + 1, callRoutes);
+                            }
+                        });
                     }
                     else {
-                      debug(`create route: ${index} : ${callRoutes[index].id}`);
+                        debug(`create route: ${index} : ${callRoutes[index].id}`);
 
-                      kongPostRoute(callRoutes[index], function( err, data: KongRoute ) {
-                          if (err) {
-                              return callback(err);
-                          }
+                        kongPostRoute(callRoutes[index], function (err, data: KongRoute) {
+                            if (err) {
+                                return callback(err);
+                            }
 
-                          persistedRoute.push( data );
+                            persistedRoute.push(data);
 
-                          if ( index + 1 >= callRoutes.length ) {
-                              return callback(null, routes.length, existingRoutes);
-                          }
-                          else {
-                              callback(null, index + 1, callRoutes);
-                          }
-                      });
+                            if (index + 1 >= callRoutes.length) {
+                                return callback(null, routes.length, existingRoutes);
+                            }
+                            else {
+                                callback(null, index + 1, callRoutes);
+                            }
+                        });
                     }
                 }
             );
         };
 
         // delete whatever left
-        for( let i = routes.length; existingRoutes && i < existingRoutes.length; i += 1 ) {
-          flow.push(
-              function (index: number, callRoutes: KongRoute[], callback) {
-                  debug(`delete route: ${index} : ${callRoutes[index].id}`);
+        for (let i = routes.length; existingRoutes && i < existingRoutes.length; i += 1) {
+            flow.push(
+                function (index: number, callRoutes: KongRoute[], callback) {
+                    debug(`delete route: ${index} : ${callRoutes[index].id}`);
 
-                  kongDeleteRoute(callRoutes[index].id, function( err ) {
-                      if (err) {
-                          return callback(err);
-                      }
+                    kongDeleteRoute(callRoutes[index].id, function (err) {
+                        if (err) {
+                            return callback(err);
+                        }
 
-                      if ( index + 1 >= callRoutes.length ) {
-                          return callback(null);
-                      }
-                      else {
-                          callback(null, index + 1, callRoutes);
-                      }
-                  });
-              }
-          );
+                        if (index + 1 >= callRoutes.length) {
+                            return callback(null);
+                        }
+                        else {
+                            callback(null, index + 1, callRoutes);
+                        }
+                    });
+                }
+            );
         }
 
         async.waterfall(flow, (err) => {
