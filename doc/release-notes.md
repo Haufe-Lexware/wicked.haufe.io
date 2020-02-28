@@ -14,7 +14,42 @@ Official Release of the API Portal.
 
 ## 1.0.0 (release candidates)
 
-### 1.0.0-rc.11 - Notable changed
+### 1.0.0-rc.12 - Notable changes
+
+Motto: **Multiple Routes support and Bugfixes**
+
+In this release, a long prepared feature has made its way into the code: Support for multiple routes per API definition. This enables you to create multiple routes (paths) into your API, and defining e.g. which http verbs are allowed to pass in to which routes. Another very nice feature (courtesy of our contributors at Clarivate Analytics) is the addition of an "Audit Log" - it contains information on actions on subscriptions and applications, so that actions which were performed during the last 365 can be both viewed and retrieved as a CSV file.
+
+**IMPORTANT**: As this change requires a different wiring of the APIs, service definitions and route definitions within the Kong gateway, please read the following notes carefully before updating your installation of wicked/Kong:
+
+* **Do not** attempt to create a new deployment (e.g. in a new cluster) which shares the same database as the previous installation; this will lead to the previous installation rendered non-functional, as the Kong configuration is different, and e.g. the Kong Adapter instances will try to overwrite each other, creating a possible downtime
+* **Do** run an in-situ update of your installation; this means that for a Kubernetes deployment, you may simply update the Helm chart. When the update has finished, the old versions of the containers are stopped
+* **Do** back up both the wicked and Kong databases prior to running your update
+* **Do** run a test update on a non-production environment prior to running the update on the production environment, so that you know that your update runs through without problems
+
+In case you experience issues, please restart the Kong Adapter container after upgrading; it will re-initialize Kong again, making sure that the Kong configuration is up to date. This is not expected to be necessary, but in case you experience issues - try this first.
+
+Another main topic for this release was improving the upgrading experience and making it more stable. Cross-version upgrades (in-situ upgrades) should now be more stable, and over all work better; see below for more details on the problems that have (hopefully) been resolved.
+
+In detail, the following issues were addressed: 
+
+* [SAML2 silent refresh (OAuth2 with &prompt=none) fails](https://github.com/Haufe-Lexware/wicked.haufe.io/issues/259)
+* [API crashes if it could not connect immediately to Postgres](https://github.com/Haufe-Lexware/wicked.haufe.io/issues/251)
+* [Support for k8s 1.16.x](https://github.com/Haufe-Lexware/wicked.haufe.io/issues/250) (Helm Charts)
+* [Audit log for changes via the API](https://github.com/Haufe-Lexware/wicked.haufe.io/issues/248)
+* [Provoking HTTP-500-errors when operating 1.0.0-rc.9 parallel with 1.0.0-rc.11](https://github.com/Haufe-Lexware/wicked.haufe.io/issues/242)
+* ["Download as CSV" reflective of applied filters](https://github.com/Haufe-Lexware/wicked.haufe.io/issues/239)
+* [Wrong Postgres host picked up by Kong](https://github.com/Haufe-Lexware/wicked.haufe.io/issues/238)
+* [Two instances of wicked using same database are killing each other](https://github.com/Haufe-Lexware/wicked.haufe.io/issues/190)
+* [Support multiple routes per API/service definition](https://github.com/Haufe-Lexware/wicked.haufe.io/issues/168)
+
+A big shoutout to
+
+* mlkiharev
+* santokhsingh
+* MibenCoop
+
+### 1.0.0-rc.11 - Notable changes
 
 Motto: **Monorepo, monorepo, cha cha cha**
 
