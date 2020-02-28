@@ -1,5 +1,5 @@
 {{- if .Values.postgres.deployPostgres }}
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ template "fullname" . }}-kong-database
@@ -10,6 +10,10 @@ spec:
   replicas: 1
   strategy:
     type: Recreate
+  selector:
+    matchLabels:
+      service: {{ template "fullname" . }}-kong-database
+      wicked: "true"
   template:
     metadata:
       labels:

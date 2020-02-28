@@ -13,3 +13,4 @@ Dockerfile*
 publish.sh
 Jenkinsfile
 .eslint*
+.scannerwork

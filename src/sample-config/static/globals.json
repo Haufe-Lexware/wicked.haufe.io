@@ -1,5 +1,5 @@
 {
-  "version": 21,
+  "version": 23,
   "title": "wicked.haufe.io API Portal",
   "footer": "&copy; 2016-2017 Your Company Ltd.",
   "api": {
@@ -172,5 +172,9 @@
     "pgPassword": "$PORTAL_STORAGE_PGPASSWORD",
     "pgDatabase": "$PORTAL_STORAGE_PGDATABASE"
   },
-  "passwordStrategy": "PW_6_24"
+  "passwordStrategy": "PW_6_24",
+  "auditlog": {
+    "useAuditlog": true,
+    "logdays": "365"
+  }
 }

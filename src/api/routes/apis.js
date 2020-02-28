@@ -516,7 +516,7 @@ apis.getSwagger = function (app, res, loggedInUserId, apiId) {
 
         const requestPaths = [];
 
-        if ( configJson && configJson.api && configJson.api.routes ) {
+        if (configJson && configJson.api && configJson.api.routes) {
             for (let r = 0; r < configJson.api.routes.length; ++r) {
                 const route =  configJson.api.routes[r];
 

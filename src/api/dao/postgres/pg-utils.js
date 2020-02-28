@@ -451,6 +451,24 @@ class PgUtils {
         });
     }
 
+    addDateTimeFilterOptions(fieldName, filter, fields, values, operators) {
+        debug(`addDateFilterOptions()`);
+        if (filter['startdate']) {
+            fields.push(fieldName);
+            values.push(`'${filter['startdate']}'`);
+            operators.push('>=');
+            delete filter['startdate'];
+        }
+
+        if (filter['enddate']) {
+            fields.push(fieldName);
+            values.push(`'${filter['enddate']}'`);
+            operators.push('<');
+            delete filter['enddate'];
+        }
+    }
+
+
     addFilterOptions(filter, fields, values, operators) {
         debug(`addFilterOptions()`);
         for (let fieldName in filter) {
@@ -716,6 +734,32 @@ class PgUtils {
         return this.deleteBy(entity, ['id'], [id], clientOrCallback, callback);
     }
 
+    deleteBefore(entity, fieldNameOrName, fieldValue, clientOrCallback, callback) {
+        debug(`deleteBefore(${entity}, ${fieldNameOrName}, ${fieldValue}) `);
+        if (!fieldNameOrName || !fieldValue) {
+            return callback(utils.makeError(500, 'deleteBefore: Unconditional DELETE detected, not allowing'));
+        }
+
+        this.sortOutClientAndCallback(clientOrCallback, callback, (client, callback) => {
+            let sql = `DELETE FROM wicked.${entity} `;
+            sql += ` WHERE ${fieldNameOrName} < '${fieldValue}'`;
+            debug(`deleteBefore sql: ${sql}`);
+            const labels = {
+                command: 'DELETE',
+                entity: entity
+            };
+            const end = prom._pgQueryHistogram.startTimer(labels);
+            client.query(sql, (err, result) => {
+                if (err) {
+                    prom._pgQueryErrors.inc(labels);
+                    return callback(err);
+                }
+                end();
+                return callback(null, result.rowCount);
+            });
+        });
+    }
+
     deleteBy(entity, fieldNameOrNames, fieldValueOrValues, clientOrCallback, callback) {
         debug(`deleteById(${entity}, ${fieldNameOrNames}, ${fieldValueOrValues}) `);
         if (!fieldNameOrNames) {
@@ -952,6 +996,10 @@ class PgUtils {
                         error('Reached maximum tries to connect to Postgres. Failing.');
                         return callback(err);
                     }
+                } else if (err.message === 'timeout expired') { // This is weird
+                    // Don't do anything. Just ignore.
+                    warn('getPoolOrClient: Timeout expired callback from PG Pool. Ignoring.');
+                    return;
                 } else {
                     debug(err);
                     debug('getPoolOrClient: pool.connect returned an unknown/unexpected error; error code: ' + errorCode);

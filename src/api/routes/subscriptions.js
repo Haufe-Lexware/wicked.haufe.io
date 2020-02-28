@@ -715,22 +715,38 @@ subscriptions.patchSubscription = function (app, res, applications, loggedInUser
                     if (err) {
                         return utils.fail(res, 500, 'patchSubscription: DAO patch subscription failed', err);
                     }
-                    dao.approvals.deleteByAppAndApi(appId, apiId, (err) => {
-                        if (err) {
-                            return utils.fail(res, 500, 'patchSubscription: DAO delete approvals failed', err);
-                        }
+                    if (patchBody.approved) {
+                        dao.approvals.deleteByAppAndApi(appId, apiId, (err) => {
+                            if (err) {
+                                return utils.fail(res, 500, 'patchSubscription: DAO delete approvals failed', err);
+                            }
 
-                        if (tempClientId) {
-                            // Replace the ID and Secret for returning, otherwise we'd return the encrypted
-                            // strings. We don't want that.
-                            updatedSubsInfo.clientId = tempClientId;
-                            updatedSubsInfo.clientSecret = tempClientSecret;
-                        }
-                        // For returning the subscription data, include the unencrypted key.
-                        if (tempApiKey) {
-                            updatedSubsInfo.apikey = tempApiKey;
-                        }
+                            if (tempClientId) {
+                                // Replace the ID and Secret for returning, otherwise we'd return the encrypted
+                                // strings. We don't want that.
+                                updatedSubsInfo.clientId = tempClientId;
+                                updatedSubsInfo.clientSecret = tempClientSecret;
+                            }
+                            // For returning the subscription data, include the unencrypted key.
+                            if (tempApiKey) {
+                                updatedSubsInfo.apikey = tempApiKey;
+                            }
 
+
+                            res.json(updatedSubsInfo);
+
+                            webhooks.logEvent(app, {
+                                action: webhooks.ACTION_UPDATE,
+                                entity: webhooks.ENTITY_SUBSCRIPTION,
+                                data: {
+                                    subscriptionId: thisSubs.id,
+                                    applicationId: appId,
+                                    apiId: apiId,
+                                    userId: loggedInUserId
+                                }
+                            });
+                        });
+                    } else {
 
                         res.json(updatedSubsInfo);
 
@@ -744,7 +760,7 @@ subscriptions.patchSubscription = function (app, res, applications, loggedInUser
                                 userId: loggedInUserId
                             }
                         });
-                    });
+                    }
                 });
             } else {
                 // No-op

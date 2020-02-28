@@ -33,6 +33,7 @@ export class SamlIdP implements IdentityProvider {
         this.basePath = basePath;
         this.authMethodId = authMethodId;
         this.authMethodConfig = authMethodConfig;
+        this.options = options;
 
         if (!authMethodConfig.spOptions)
             throw new Error(`SAML Auth Method ${authMethodId}: config does not contain an "spOptions" property.`);
@@ -95,7 +96,7 @@ export class SamlIdP implements IdentityProvider {
             options.force_authn = true;
         } else if (authRequest.prompt === 'none') {
             debug('Forcing non-interactive login (SAML)');
-            if (!this.basePath.startsWith('https')) {
+            if (!instance.options.externalUrlBase.startsWith('https')) {
                 // Non-interactive login is not supported if we're not using https,
                 // as the browsers ask the user whether it's okay to post a non-secure
                 // form. This cannot be answered in non-interactive mode.

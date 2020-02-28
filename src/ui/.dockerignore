@@ -6,3 +6,4 @@ sessions
 git_*
 *.tgz
 .git
+.scannerwork

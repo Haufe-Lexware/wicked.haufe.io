@@ -60,6 +60,7 @@ app.use(logger('{"date":":date[clf]","method":":method","url":":url","remote-add
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/assets/bootstrap', express.static(path.join(__dirname, 'node_modules/bootstrap/dist')));
 app.use('/assets/jquery', express.static(path.join(__dirname, 'node_modules/jquery/dist')));
+app.use('/assets/jquery-ui', express.static(path.join(__dirname, 'node_modules/jquery-ui-dist')));
 app.use('/assets/jsgrid', express.static(path.join(__dirname, 'node_modules/jsgrid/dist')));
 app.use('/assets/highlight', express.static(path.join(__dirname, 'node_modules/highlight.js/lib')));
 app.use('/assets/highlight/css', express.static(path.join(__dirname, 'node_modules/highlight.js/styles')));

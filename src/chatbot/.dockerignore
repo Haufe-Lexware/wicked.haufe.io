@@ -5,3 +5,4 @@ Dockerfile
 git_*
 *.tgz
 .git
+.scannerwork

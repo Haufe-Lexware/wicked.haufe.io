@@ -2,12 +2,16 @@
   "api": {
     "upstream_url": "https://postman-echo.com",
     "name": "no-auth",
-    "uris": [
-      "/no-auth"
-    ],
-    "strip_uri": true,
-    "preserve_host": false,
-    "host": "$PORTAL_NETWORK_APIHOST"
+    "host": "$PORTAL_NETWORK_APIHOST",
+    "routes": [
+      {
+        "paths": [
+          "/no-auth"
+        ],
+        "strip_path": true,
+        "preserve_host": false
+      }
+    ]
   },
   "plugins": []
 }

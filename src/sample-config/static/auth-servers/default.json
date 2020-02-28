@@ -1,37 +1,41 @@
 {
-    "id": "default-auth",
-    "desc": "Default Authorization Server",
-    "authMethods": [
-        {
-            "enabled": true,
-            "name": "local",
-            "type": "local",
-            "friendlyShort": "Username and Password",
-            "friendlyLong": "Log in using a local username and password.",
-            "config": {
-                "trustUsers": true
-            }
-        }
-    ],
-    "config": {
-        "api": {
-            "name": "default-auth",
-            "upstream_url": "$PORTAL_AUTHSERVER_URL",
-            "preserve_host": false,
-            "uris": [
-                "/auth"
-            ],
-            "strip_uri": false
-        },
-        "plugins": [
-            {
-                "name": "correlation-id",
-                "config": {
-                    "header_name": "Correlation-Id",
-                    "generator": "uuid",
-                    "echo_downstream": false
-                }
-            }
-        ]
+  "id": "default-auth",
+  "desc": "Default Authorization Server",
+  "authMethods": [
+    {
+      "enabled": true,
+      "name": "local",
+      "type": "local",
+      "friendlyShort": "Username and Password",
+      "friendlyLong": "Log in using a local username and password.",
+      "config": {
+        "trustUsers": true
+      }
     }
+  ],
+  "config": {
+    "api": {
+      "name": "default-auth",
+      "upstream_url": "$PORTAL_AUTHSERVER_URL",
+      "routes": [
+        {
+          "paths": [
+            "/auth"
+          ],
+          "strip_path": false,
+          "preserve_host": false
+        }
+      ]
+    },
+    "plugins": [
+      {
+        "name": "correlation-id",
+        "config": {
+          "header_name": "Correlation-Id",
+          "generator": "uuid",
+          "echo_downstream": false
+        }
+      }
+    ]
+  }
 }

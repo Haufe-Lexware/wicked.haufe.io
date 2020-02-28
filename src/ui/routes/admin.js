@@ -103,6 +103,14 @@ router.get('/approvals_csv', mustBeAdminOrApproverMiddleware, function (req, res
     utils.getFromAsync(req, res, '/approvals', 200, function (err, apiResponse) {
         if (err)
             return next(err);
+        if (!utils.isEmptyGridFilter(req.query)) {
+            apiResponse = apiResponse.filter( function (item) {
+                if (utils.applyGridFilter(req.query, item)) {
+                    return true;
+                }
+                return false;
+            });
+        }
         tmp.file(function (err, path, fd, cleanup) {
             if (err)
                 return next(err);
@@ -181,6 +189,69 @@ router.get('/users', mustBeAdminMiddleware, function (req, res, next) {
     });
 });
 
+router.get('/auditlog', mustBeAdminMiddleware, function (req, res, next) {
+    debug("get('/auditlog')");
+    const filterFields = ['activity', 'user', 'email','plan', 'api', 'role', 'application', 'startdate', 'enddate'];
+    const auditlogUri = utils.makePagingUri(req, '/auditlog?embed=1&', filterFields);
+    console.log("auditlog"+auditlogUri);
+    if (!utils.acceptJson(req)) {
+        res.render('admin_auditlog', {
+            authUser: req.user,
+            glob: req.app.portalGlobals,
+            title: 'Audit Log',
+        });
+        return;
+    }
+    utils.getFromAsync(req, res, auditlogUri, 200, function (err, auditlogResponse) {
+        if (err)
+            return next(err);
+        if (utils.acceptJson(req)) {
+            res.json({
+                title: 'Audit Log',
+                auditlog: auditlogResponse
+            });
+        }
+    });
+});
+
+router.get('/auditlog_csv', mustBeAdminOrApproverMiddleware, function (req, res, next) {
+    debug("get('/auditlog_csv')");
+    const filterFields = ['activity', 'user', 'email','plan', 'api', 'role', 'application', 'startdate', 'enddate'];
+    const auditlogUri = utils.makePagingUri(req, '/auditlog?embed=1&', filterFields);
+    
+    utils.getFromAsync(req, res, auditlogUri, 200, function (err, auditResponse) {
+        if (err)
+            return next(err);
+        tmp.file(function (err, path, fd, cleanup) {
+            if (err)
+                return next(err);
+            const outStream = fs.createWriteStream(path);
+            outStream.write('Api;Application;Plan;Date (UTC);Activity;User;Email;Role\n');
+            for (let i = 0; i < auditResponse.items.length; ++i) {
+                const item = auditResponse.items[i];
+                const api = item.api ? item.api : ``;
+                const application = item.application ?  item.application : ``;
+                const plan = item.plan ? item.plan : ``;
+                const created_at = utils.dateFormat(new Date(item.created_at), "%Y-%m-%d %H:%M:%S", true);
+                const auditLine = `${api}; ${application}; ${plan}; ${created_at}; ${item.activity}; ${item.user};  ${item.email}; ${item.role}\n`;
+                outStream.write(auditLine);
+            }
+            outStream.end(function (err) {
+                if (err) {
+                    cleanup();
+                    return next(err);
+                }
+                res.download(path, 'auditlog.csv', function (err) {
+                    cleanup();
+                    if (err) {
+                        return next(err);
+                    }
+                });
+            });
+        });
+    });
+});
+
 router.get('/subscriptions', mustBeAdminOrApproverMiddleware, function (req, res, next) {
     debug("get('/subscriptions')");
     const filterFields = ['application', 'application_name', 'plan', 'api', 'owner', 'user'];
@@ -207,7 +278,9 @@ router.get('/subscriptions', mustBeAdminOrApproverMiddleware, function (req, res
 
 router.get('/subscriptions_csv', mustBeAdminOrApproverMiddleware, function (req, res, next) {
     debug("get('/subscriptions')");
-    utils.getFromAsync(req, res, '/subscriptions?embed=1', 200, function (err, subsResponse) {
+    const filterFields = ['application', 'application_name', 'plan', 'api', 'owner', 'user'];
+    const subsUri = utils.makePagingUri(req, '/subscriptions?embed=1&', filterFields);
+    utils.getFromAsync(req, res, subsUri, 200, function (err, subsResponse) {
         if (err)
             return next(err);
         tmp.file(function (err, path, fd, cleanup) {

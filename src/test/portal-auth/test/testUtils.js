@@ -1,7 +1,5 @@
 'use strict';
 
-/* global it, describe, before, beforeEach, after, afterEach, slow, URL */
-
 const assert = require('chai').assert;
 const crypto = require('crypto');
 const request = require('request');
@@ -315,7 +313,7 @@ utils.getAuthServerUrl = function (callback) {
         if (err)
             return callback(err);
         const apiUrl = utils.ensureNoSlash(wicked.getExternalApiUrl());
-        const authPath = as.config.api.uris[0];
+        const authPath = as.config.api.routes[0].paths[0];
         _authServerUrl = utils.ensureSlash(apiUrl + authPath);
         console.log('Using Auth Server URL: ' + _authServerUrl);
         return callback(null, _authServerUrl);
@@ -521,8 +519,11 @@ function getApiUrl(apiId, callback) {
     wicked.getApiConfig(apiId, function (err, apiConfig) {
         assert.isNotOk(err);
         assert.isOk(apiConfig.api);
-        assert.isOk(apiConfig.api.uris);
-        const path = apiConfig.api.uris[0];
+        assert.isOk(apiConfig.api.routes);
+        assert.isArray(apiConfig.api.routes);
+        assert.equal(apiConfig.api.routes.length, 1);
+        assert.isArray(apiConfig.api.routes[0].paths);
+        const path = apiConfig.api.routes[0].paths[0];
         const url = utils.ensureSlash(utils.ensureNoSlash(wicked.getExternalApiUrl()) + path);
         _apiUrlMap[apiId] = url;
         return callback(null, url);

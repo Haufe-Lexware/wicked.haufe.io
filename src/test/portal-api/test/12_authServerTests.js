@@ -73,7 +73,7 @@ describe('/auth-server', function () {
                 assert.isOk(jsonBody.authMethods, 'Missing property authMethods');
                 assert.isOk(jsonBody.config, 'Missing config property');
                 assert.isOk(jsonBody.config.api, 'Missing config.api property');
-                assert.isOk(jsonBody.config.api.uris, 'Missing config.api.uris property');
+                assert.isOk(jsonBody.config.api.routes, 'Missing config.api.routes property');
                 assert.isNotOk(jsonBody.config.api.upstream_url, 'Property upstream_url is returned, must not be');
                 assert.isNotOk(jsonBody.config.plugins, 'Property plugins is returned, must not be');
                 done();
@@ -92,7 +92,7 @@ describe('/auth-server', function () {
                 assert.isOk(jsonBody.authMethods, 'Missing property authMethods');
                 assert.isOk(jsonBody.config, 'Missing config property');
                 assert.isOk(jsonBody.config.api, 'Missing config.api property');
-                assert.isOk(jsonBody.config.api.uris, 'Missing config.api.uris property');
+                assert.isOk(jsonBody.config.api.routes, 'Missing config.api.routes property');
                 assert.isOk(jsonBody.config.plugins, 'Property plugins is not returned');
                 assert.isOk(jsonBody.config.api.upstream_url, 'Property upstream_url is not returned');
                 done();
