@@ -97,10 +97,22 @@ export const kongUtils = {
     },
 
     kongGetApiOAuth2Plugins: function (apiId, callback: Callback<KongCollection<KongPlugin>>) {
-        kongUtils.kongGet('services/' + apiId + '/plugins?name=oauth2', callback);
+        kongUtils.kongGet('services/' + apiId + '/plugins', function (err, result) {
+            if (err)
+                return callback(err);
+            if (!result.data)
+                return callback(new Error(`kongGetApiOAuth2Plugins did not retrieve plugins for API ${apiId}`));
+            const oauth2Plugins = result.data.filter(p => p.name === 'oauth2');
+            if (oauth2Plugins.length <= 0)
+                return callback(new Error(`kongGetApiOAuth2Plugins did not find oauth2 plugin for API ${apiId}`));
+            return callback(null, {
+                data: oauth2Plugins,
+                next: null
+            });
+        });
     },
 
-    lookupApiAndApplicationFromKongCredentialAsync: async function (kongCredentialId: string): Promise<{ apiId: string, applicationId: string}> {
+    lookupApiAndApplicationFromKongCredentialAsync: async function (kongCredentialId: string): Promise<{ apiId: string, applicationId: string }> {
         return new Promise<{ apiId: string, applicationId: string }>(function (resolve, reject) {
             kongUtils.lookupApiAndApplicationFromKongCredential(kongCredentialId, function (err, data) {
                 err ? reject(err) : resolve(data);
@@ -116,7 +128,7 @@ export const kongUtils = {
             if (kongCredentials.data.length !== 1)
                 return callback(makeError('Could not retrieve credential object for credential ID from Kong.', 500));
             const kongCredential = kongCredentials.data[0];
-            const consumerId = kongCredential.consumer_id;
+            const consumerId = kongCredential.consumer && kongCredential.consumer.id;
             if (!consumerId)
                 return callback(makeError('Could not retrieve consumer by credential from Kong.', 500));
             kongUtils.kongGet(`consumers/${consumerId}`, function (err, kongConsumer: KongConsumer) {

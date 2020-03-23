@@ -9,7 +9,7 @@ export interface SyncStatistics {
 }
 
 export interface ConsumerPlugin {
-    consumer_id?: string,
+    consumer?: { id: string },
     created_at?: number,
     id?: string,
 }
@@ -22,7 +22,7 @@ export interface ConsumerOAuth2Config extends ConsumerPlugin {
     name: string,
     client_id: string,
     client_secret: string,
-    redirect_uri: string[]
+    redirect_uris: string[]
 }
 
 export interface ConsumerKeyAuthConfig extends ConsumerPlugin {

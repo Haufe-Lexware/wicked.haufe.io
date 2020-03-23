@@ -186,7 +186,7 @@ export const sync = {
         utils.kongGetPluginsByName('prometheus', function (err, plugins) {
             if (err)
                 return callback(err);
-            const globalPlugins = plugins.data.filter(p => !p.api_id && !p.route_id && !p.service_id);
+            const globalPlugins = plugins.data.filter(p => !p.consumer && !p.route && !p.service);
             if (globalPlugins.length === 0) {
                 info('Adding prometheus global plugin.');
                 return utils.kongPostGlobalPlugin({ name: 'prometheus', enabled: true }, callback);
@@ -196,18 +196,6 @@ export const sync = {
             }
             error(JSON.stringify(globalPlugins, null, 2));
             return callback(new Error('Detected multiple global prometheus plugins.'));
-        });
-    },
-
-    deleteLegacyApis: function (callback) {
-        debug('deleteLegacyApis()');
-        utils.kongGetLegacyApis(function (err, legacyApis) {
-            if (err)
-                return callback(err);
-            async.eachSeries(legacyApis.data, (legacyApi, callback) => {
-                info(`Deleting Legacy Kong API ${legacyApi.name}.`);
-                utils.kongDeleteLegacyApi(legacyApi.name, callback);
-            }, callback);
         });
     }
 };

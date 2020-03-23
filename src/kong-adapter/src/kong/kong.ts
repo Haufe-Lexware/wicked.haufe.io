@@ -199,7 +199,7 @@ export const kong = {
         // - kongPlugin: Kong's Plugin representation (for ids)
         async.eachSeries(deleteList, function (deleteItem: DeletePluginItem, callback) {
             info(`Detected unused plugin "${deleteItem.kongPlugin.name}" for API ${deleteItem.kongApi.api.name} (${deleteItem.kongApi.api.id}), patching`);
-            utils.kongDeleteApiPlugin(deleteItem.kongApi.api.id, deleteItem.kongPlugin.id, callback);
+            utils.kongDeletePlugin(deleteItem.kongPlugin.id, callback);
         }, function (err) {
             if (err)
                 return done(err);
@@ -568,7 +568,7 @@ function enrichConsumerApiPlugins(consumerInfo: ConsumerInfo, /* optional */apiI
 
 function addKongConsumerApiPlugin(portalConsumer: ConsumerInfo, consumerId: string, portalApiPlugin: KongPlugin, callback): void {
     debug('addKongConsumerApiPlugin()');
-    portalApiPlugin.consumer_id = consumerId;
+    portalApiPlugin.consumer = { id: consumerId };
     // Uargh
     const apiName = extractApiName(portalConsumer.consumer.username);
     utils.kongPostApiPlugin(apiName, portalApiPlugin, callback);
@@ -577,7 +577,7 @@ function addKongConsumerApiPlugin(portalConsumer: ConsumerInfo, consumerId: stri
 function deleteKongConsumerApiPlugin(kongConsumer: ConsumerInfo, kongApiPlugin: KongPlugin, callback): void {
     debug('deleteKongConsumerApiPlugin()');
     // This comes from Kong (the api_id)
-    utils.kongDeleteApiPlugin(kongApiPlugin.api_id, kongApiPlugin.id, callback);
+    utils.kongDeletePlugin(kongApiPlugin.id, callback);
 }
 
 function patchKongConsumerApiPlugin(portalConsumer: ConsumerInfo, kongConsumer: ConsumerInfo, portalApiPlugin: KongPlugin, kongApiPlugin: KongPlugin, callback: ErrorCallback): void {

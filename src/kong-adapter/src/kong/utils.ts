@@ -232,7 +232,10 @@ function kongActionStat(method, url, body): void {
     }
 }
 
-function kongAction(method, url, body, expectedStatusCode, callback: Callback<any>): void {
+function kongAction(method, inputUrl, body, expectedStatusCode, callback: Callback<any>): void {
+    let url = inputUrl;
+    if (url.startsWith('/'))
+        url = inputUrl.substring(1);
     debug(`kongAction(): ${method} "${url}"`);
     kongActionStat(method, url, body);
 
@@ -297,6 +300,44 @@ function kongAction(method, url, body, expectedStatusCode, callback: Callback<an
 function kongGet(url: string, callback: Callback<any>) {
     kongAction('GET', url, null, 200, callback);
 };
+
+function kongPagingGet(url: string, callback: Callback<any>) {
+    let pagingUrl;
+    const size = 1000;
+    if (url.indexOf('?') > 0)
+        pagingUrl = `${url}&size=${size}`;
+    else
+        pagingUrl = `${url}?size=${size}`;
+    console.log(pagingUrl);
+    const dataArray = [];
+    let finished = false;
+    async.until(function () {
+        return finished;
+    }, function (callback) {
+        kongGet(pagingUrl, function (err, result) {
+            if (err)
+                return callback(err);
+            if (!result.data)
+                return callback(new Error(`kongGet(${pagingUrl}) did not receive "data" property`));
+            for (let d of result.data)
+                dataArray.push(d);
+            // console.log(result.data);
+            if (result.next) {
+                pagingUrl = `${result.next}&size=${size}`;
+            } else {
+                finished = true;
+            }
+            return callback(null);
+        })
+    }, function (err) {
+        if (err)
+            return callback(err);
+        return callback(null, {
+            data: dataArray,
+            next: null
+        });
+    });
+}
 
 function kongPost(url, body, callback) {
     kongAction('POST', url, body, 201, callback);
@@ -461,7 +502,7 @@ export function kongGetRaw(url: string, callback: Callback<object>): void {
 
 // Service functions
 function kongGetAllServices(callback: Callback<KongCollection<KongService>>): void {
-    kongGet('services?size=100000', callback);
+    kongPagingGet('services', callback);
 }
 
 function kongPostService(service: KongService, callback: Callback<KongService>): void {
@@ -478,7 +519,7 @@ function kongDeleteService(serviceId: string, callback: ErrorCallback): void {
 
 // Route functions
 function kongGetAllRoutes(callback: Callback<KongCollection<KongRoute>>): void {
-    kongGet('routes?size=100000', callback);
+    kongPagingGet('routes', callback);
 }
 
 function kongPostRoute(route: KongRoute, callback: Callback<KongRoute>): void {
@@ -560,8 +601,7 @@ export function kongGetAllApis(callback: Callback<KongCollection<KongApi>>): voi
 
 export function kongGetApiPlugins(apiId: string, callback: Callback<KongCollection<KongPlugin>>): void {
     debug(`kongGetApiPlugins(${apiId})`);
-    // kongGet(`apis/${apiId}/plugins?size=1000000`, callback);
-    kongGet(`services/${apiId}/plugins?size=1000000`, callback);
+    kongPagingGet(`services/${apiId}/plugins`, callback);
 }
 
 export function kongPostApi(apiConfig: KongApi, callback: Callback<KongApi>): void {
@@ -788,23 +828,14 @@ export function kongPostApiPlugin(apiId: string, plugin: KongPlugin, callback: C
 
 export function kongPatchApiPlugin(apiId: string, pluginId: string, plugin: KongPlugin, callback: Callback<KongPlugin>): void {
     debug(`kongPatchApiPlugin(${apiId}, ${plugin.name})`);
-    // //kongPatch(`apis/${apiId}/plugins/${pluginId}`, plugin, callback);
-    // if (plugin.service_id !== apiId)
-    //     throw new Error('PATCH API/Service Plugin: apiId does not match serviceId in plugin');
-    plugin.service_id = apiId;
+    plugin.service = { id: apiId };
     plugin.id = pluginId;
     kongPatch(`plugins/${pluginId}`, plugin, callback);
 }
 
-export function kongDeleteApiPlugin(apiId: string, pluginId: string, callback: ErrorCallback): void {
-    debug(`kongDeleteApiPlugin(${apiId}, ${pluginId})`);
-    //kongDelete(`apis/${apiId}/plugins/${pluginId}`, callback);
-    kongDeletePlugin(pluginId, callback);
-}
-
 // Consumer functions
 export function kongGetAllConsumers(callback: Callback<KongCollection<KongConsumer>>): void {
-    kongGet('consumers?size=100000', callback);
+    kongPagingGet('consumers', callback);
 }
 
 export function kongGetConsumersByCustomId(customId: string, callback: Callback<KongCollection<KongConsumer>>): void {
@@ -819,8 +850,35 @@ export function kongGetConsumerPluginData(consumerId: string, pluginName: string
     kongGet(`consumers/${consumerId}/${pluginName}`, callback);
 }
 
+const _serviceIdCache = {};
+export function kongGetServiceId(serviceId: string, callback: Callback<string>): void {
+    if (_serviceIdCache[serviceId])
+        return callback(null, _serviceIdCache[serviceId]);
+    kongGet(`services/${serviceId}`, function (err, serviceInfo: KongService) {
+        if (err)
+            return callback(err);
+        _serviceIdCache[serviceId] = serviceInfo.id;
+        return callback(null, serviceInfo.id);
+    });
+}
+
 export function kongGetApiPluginsByConsumer(apiId: string, consumerId: string, callback: Callback<KongCollection<KongPlugin>>): void {
-    kongGet(`services/${apiId}/plugins?consumer_id=${qs.escape(consumerId)}`, callback);
+    debug(`kongGetApiPluginsByConsumer(${apiId}, ${consumerId})`);
+    // The apiId here is NOT an actual ID, but an alias name; the filtering for this as the
+    // service.id will NOT work, as that contains the Kong internal ID. Meh.
+    kongGetServiceId(apiId, function (err, serviceId) {
+        if (err)
+            return callback(err);
+        kongGet(`consumers/${qs.escape(consumerId)}/plugins`, function (err, plugins: KongCollection<KongPlugin>) {
+            if (err)
+                return callback(err);
+            if (!plugins.data)
+                return callback(new Error(`Retrieving plugins for consumer ${consumerId} and service ${apiId} did not return data.`));
+            console.log(plugins.data);
+            const filteredPlugins = plugins.data.filter(p => p.service && p.service.id === serviceId);
+            return callback(null, { data: filteredPlugins, next: null });
+        });
+    });
 }
 
 export function kongPostConsumer(consumer: KongConsumer, callback: Callback<KongConsumer>): void {
@@ -856,7 +914,15 @@ export function kongGetStatus(callback: Callback<KongStatus>): void {
 // Global Plugin functions
 
 export function kongGetPluginsByName(pluginName: string, callback: Callback<KongCollection<KongPlugin>>): void {
-    kongGet(`plugins?name=${qs.escape(pluginName)}&size=1000000`, callback);
+    kongPagingGet(`plugins`, function (err, plugins) {
+        if (err)
+            return callback(err);
+        const filteredPlugins = plugins.data.filter(p => p.name === pluginName);
+        return callback(null, {
+            data: filteredPlugins,
+            next: null
+        });
+    });
 }
 
 export function kongPostGlobalPlugin(plugin: KongPlugin, callback: Callback<KongPlugin>): void {
@@ -865,14 +931,4 @@ export function kongPostGlobalPlugin(plugin: KongPlugin, callback: Callback<Kong
 
 export function kongDeletePlugin(pluginId: string, callback: ErrorCallback): void {
     kongDelete(`plugins/${pluginId}`, callback);
-}
-
-// Legacy API functions
-
-export function kongGetLegacyApis(callback: Callback<KongCollection<KongApi>>): void {
-    kongGet('apis', callback);
-}
-
-export function kongDeleteLegacyApi(apiName: string, callback: ErrorCallback): void {
-    kongDelete(`apis/${apiName}`, callback);
 }

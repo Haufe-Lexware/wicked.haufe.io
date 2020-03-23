@@ -68,10 +68,16 @@ export interface KongPlugin {
     id?: string,
     name: string,
     enabled: boolean,
-    api_id?: string,
-    service_id?: string,
-    route_id?: string,
-    consumer_id?: string,
+    // api_id?: string,
+    service?: {
+        id: string
+    },
+    route?: {
+        id: string
+    },
+    consumer?: {
+        id: string
+    },
     config?: any
 }
 

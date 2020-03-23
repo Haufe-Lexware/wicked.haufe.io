@@ -454,7 +454,7 @@ function enrichApplications(applicationList: WickedApplication[], apiPlans: Wick
                         name: appSubs.application,
                         client_id: appSubs.clientId,
                         client_secret: appSubs.clientSecret,
-                        redirect_uri: redirectUris
+                        redirect_uris: redirectUris
                     }];
                 } else if (!appSubs.auth || "key-auth" == appSubs.auth) {
                     consumerInfo.plugins["key-auth"] = [{

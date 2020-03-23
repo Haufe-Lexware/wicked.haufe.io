@@ -47,9 +47,6 @@ export const kongMain = {
             addPrometheusPlugin: function (callback) {
                 sync.addPrometheusPlugin(callback);
             },
-            deleteLegacyApis: function (callback) {
-                sync.deleteLegacyApis(callback);
-            },
             processPendingEvents: function (callback) {
                 if (options.syncConsumers) {
                     processPendingWebhooks(callback);
