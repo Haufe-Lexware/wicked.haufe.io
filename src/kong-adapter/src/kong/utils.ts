@@ -596,12 +596,20 @@ export function kongGetAllApis(callback: Callback<KongCollection<KongApi>>): voi
             data: kongApis
         });
     });
-    // kongGet('apis?size=1000000', callback);
 }
 
 export function kongGetApiPlugins(apiId: string, callback: Callback<KongCollection<KongPlugin>>): void {
     debug(`kongGetApiPlugins(${apiId})`);
-    kongPagingGet(`services/${apiId}/plugins`, callback);
+    kongPagingGet(`services/${apiId}/plugins`, function (err, apiPlugins) {
+        if (err)
+            return callback(err);
+        // Filter out plugins which are pointing to a consumer; these are not for consideration
+        // here, they are handled with the consumer API plugins instead. This is a little unfortunate,
+        // but that's how it is currently.
+        return callback(null, {
+            data: apiPlugins.data.filter(plugin => !plugin.consumer)
+        })
+    });
 }
 
 export function kongPostApi(apiConfig: KongApi, callback: Callback<KongApi>): void {
@@ -822,7 +830,6 @@ export function kongDeleteApi(apiId: string, callback: ErrorCallback): void {
 
 export function kongPostApiPlugin(apiId: string, plugin: KongPlugin, callback: Callback<KongPlugin>): void {
     debug(`kongPostApiPlugin(${apiId}, ${plugin.name})`);
-    //kongPost(`apis/${apiId}/plugins`, plugin, callback);
     kongPost(`services/${apiId}/plugins`, plugin, callback);
 }
 
