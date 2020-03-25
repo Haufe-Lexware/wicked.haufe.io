@@ -1,7 +1,5 @@
 'use strict';
 
-/* global it, describe, before, beforeEach, after, afterEach, slow */
-
 const assert = require('chai').assert;
 const request = require('request');
 const async = require('async');
@@ -68,26 +66,25 @@ function addApiObjects(done) {
     ], done);
 }
 
-describe('With legacy /api objects,', function () {
-
-    before(addApiObjects);
-
-    it('should clean up old /api objects at initialization', function (done) {
-        request.post({
-            url: adapterUrl + 'resync'
-        }, function (err, res, body) {
-            assert.isNotOk(err);
-            assert.equal(200, res.statusCode, 'Resync status code not 200');
-            request.get({
-                uri: consts.KONG_ADMIN_URL + 'apis'
-            }, function (err, res, body) {
-                assert.isNotOk(err);
-                const jsonBody = utils.getJson(body);
-                assert.equal(jsonBody.total, 0);
-                assert.isArray(jsonBody.data);
-                assert.equal(jsonBody.data.length, 0);
-                done();
-            });
-        });
-    });
-});
+// This is not valid anymore as of Kong 1.x
+// describe('With legacy /api objects,', function () {
+//     before(addApiObjects);
+//     it('should clean up old /api objects at initialization', function (done) {
+//         request.post({
+//             url: adapterUrl + 'resync'
+//         }, function (err, res, body) {
+//             assert.isNotOk(err);
+//             assert.equal(200, res.statusCode, 'Resync status code not 200');
+//             request.get({
+//                 uri: consts.KONG_ADMIN_URL + 'apis'
+//             }, function (err, res, body) {
+//                 assert.isNotOk(err);
+//                 const jsonBody = utils.getJson(body);
+//                 assert.equal(jsonBody.total, 0);
+//                 assert.isArray(jsonBody.data);
+//                 assert.equal(jsonBody.data.length, 0);
+//                 done();
+//             });
+//         });
+//     });
+// });

@@ -2,18 +2,18 @@
 
 cmdname="${0##*/}"
 
-VERSION=0.0.2
+VERSION=0.0.3
 
-echoto() { 
+echoto() {
     # print to stderr or to stdout
     out=$1
     shift 1
-    
+
     if ([ "${out}" -eq 2 ]); then
         printf "$@" >&2
     else
         # stdout can be silenced only
-        if [ "${QUIET}" -eq 0 ]; then 
+        if [ "${QUIET}" -eq 0 ]; then
             printf "$@"
         fi
     fi
@@ -69,7 +69,7 @@ wait_for(){
     else
         echoto 1 "$cmdname: waiting without a timeout for $CMD\n"
     fi
-    
+
     while :
     do
         eval $CMD >/dev/null 2>&1
@@ -79,7 +79,7 @@ wait_for(){
             break
         fi
         sleep $INTERVAL
-        
+
         progress
     done
     return $result
@@ -96,18 +96,18 @@ wait_for_wrapper() {
     fi
     PID=$!
     trap "kill -INT -$PID" INT
-    
+
     while [ $(($(date +%s)-TIME_START)) -lt "${TIMEOUT}" ]; do
 
         eval $CMD >/dev/null 2>&1
         result=$?
-        
+
         if ([ "${result}" -eq "${STATUS}" ]); then
             break
         fi
 
         sleep $INTERVAL
-        
+
         progress
     done
     wait $PID
@@ -206,14 +206,20 @@ TIMEOUT_TEST_STATUS="$?"
 if [ "${TIMEOUT_TEST_STATUS}" -eq 127 ]; then
     TIMEOUT_TEST="$(gtimeout ${TIMEOUT_FLAG} 1 sleep 0 2>&1)"
     TIMEOUT_TEST_STATUS="$?"
-    
-    if [ "${TIMEOUT_TEST_STATUS}" -eq 127 ]; then
-        echoto 2 "timeout|gtimeout is required by the script, but not found!\n"
-        exit 1
-    fi
 
-    TIMEOUT_CMD="gtimeout"
-else 
+    if [ "${TIMEOUT_TEST_STATUS}" -eq 127 ]; then
+        TIMEOUT_TEST="$(gnu-timeout ${TIMEOUT_FLAG} 1 sleep 0 2>&1)"
+        TIMEOUT_TEST_STATUS="$?"
+
+        if [ "${TIMEOUT_TEST_STATUS}" -eq 127 ]; then
+            echoto 2 "timeout|gtimeout|gnu-timeout is required by the script, but not found!\n"
+            exit 1
+        fi
+        TIMEOUT_CMD="gnu-timeout"
+    else
+        TIMEOUT_CMD="gtimeout"
+    fi
+else
     TIMEOUT_CMD="timeout"
 fi
 
@@ -238,7 +244,7 @@ if [ "${RESULT}" -ne "${STATUS}" ]; then
     if [ "${RESULT}" -eq 0 ]; then
         # exit with 1, inspite the fact original ended with 0 (as we expected non-0)
         exit 1
-    else 
+    else
         exit $RESULT
     fi
 else

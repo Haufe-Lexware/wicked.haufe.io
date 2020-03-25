@@ -27,4 +27,9 @@ if ! kong migrations list; then
 else
   kong migrations up -y
 fi
-kong start
+
+if [[ "$1" != "prepare" ]]; then
+  kong start
+else
+  echo "Migrations/prepare has run. Quitting container."
+fi

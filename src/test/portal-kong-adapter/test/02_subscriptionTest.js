@@ -1,7 +1,5 @@
 'use strict';
 
-/* global it, describe, before, beforeEach, after, afterEach, slow */
-
 const assert = require('chai').assert;
 const request = require('request');
 const async = require('async');
@@ -36,144 +34,103 @@ describe('With subscriptions,', function () {
         const appId = 'some-app';
         const appName = 'Some Application';
 
-        beforeEach(function (done) {
-            utils.createApplication(appId, appName, devUserId, done);
+        beforeEach(async function () {
+            await utils.createApplicationAsync(appId, appName, devUserId);
         });
 
-        afterEach(function (done) {
-            async.series([
-                callback => utils.deleteApplication(appId, devUserId, callback),
-                callback => utils.awaitEmptyQueue(adapterQueue, adminUserId, callback)
-            ], done);
+        afterEach(async function () {
+            await utils.deleteApplicationAsync(appId, devUserId);
+            await utils.awaitEmptyQueueAsync(adapterQueue, adminUserId);
         });
 
-        it('should write API keys correctly', function (done) {
+        it('should write API keys correctly', async function () {
             const consumer = kongConsumer(appId, keyAuthApi);
-            utils.addSubscription(appId, devUserId, keyAuthApi, 'basic', null, function (err, subsInfo) {
-                assert.isNotOk(err);
-                utils.awaitEmptyQueue(adapterQueue, adminUserId, function (err) {
-                    assert.isNotOk(err, 'Waiting for empty queue failed: ' + err);
-                    async.series({
-                        getConsumer: callback => utils.kongGet('consumers/' + consumer, callback),
-                        getAcls: callback => utils.kongGet('consumers/' + consumer + '/acls', callback),
-                        getKeyAuth: callback => utils.kongGet('consumers/' + consumer + '/key-auth', callback)
-                    }, function (err, results) {
-                        assert.isNotOk(err);
-                        const kongConsumer = results.getConsumer.body;
-                        assert.isOk(kongConsumer);
-                        const kongAcls = results.getAcls.body;
-                        assert.isOk(kongAcls.total >= 1, 'consumer must have an ACL group');
-                        assert.equal(kongAcls.data[0].group, keyAuthApi, 'consumer ACL must match API name');
-                        const kongKeyAuth = results.getKeyAuth.body;
-                        assert.isOk(kongKeyAuth.total >= 1, 'consumer must have key-auth setting');
-                        assert.equal(kongKeyAuth.data[0].key, subsInfo.apikey, 'API keys must match');
-                        done();
-                    });
-                });
-            });
+            const subsInfo = await utils.addSubscriptionAsync(appId, devUserId, keyAuthApi, 'basic', null);
+            await utils.awaitEmptyQueueAsync(adapterQueue, adminUserId);
+            const kongConsumerInfo = (await utils.kongGetAsync('consumers/' + consumer)).body;
+            assert.isOk(kongConsumerInfo);
+            const kongAcls = (await utils.kongGetAsync('consumers/' + consumer + '/acls')).body;
+            assert.isArray(kongAcls.data);
+            assert.isOk(kongAcls.data.length >= 1, 'consumer must have an ACL group');
+            assert.equal(kongAcls.data[0].group, keyAuthApi, 'consumer ACL must match API name');
+            const kongKeyAuth = (await utils.kongGetAsync('consumers/' + consumer + '/key-auth')).body;
+            assert.isArray(kongKeyAuth.data);
+            assert.isOk(kongKeyAuth.data.length >= 1, 'consumer must have key-auth setting');
+            assert.equal(kongKeyAuth.data[0].key, subsInfo.apikey, 'API keys must match');
         });
 
-        it('resync with subscription should not change anything', function (done) {
+        it('resync with subscription should not change anything', async function () {
             const consumer = kongConsumer(appId, keyAuthApi);
-            utils.addSubscription(appId, devUserId, keyAuthApi, 'basic', null, function (err, subsInfo) {
-                assert.isNotOk(err);
-                utils.awaitEmptyQueue(adapterQueue, adminUserId, function (err) {
-                    assert.isNotOk(err, 'Waiting for empty queue failed: ' + err);
-                    request.post({
-                        url: adapterUrl + 'resync'
-                    }, function (err, res, body) {
-                        assert.isNotOk(err);
-                        assert.equal(200, res.statusCode, 'Resync status code not 200');
-                        const jsonBody = utils.getJson(body);
-                        assert.isOk(jsonBody.actions, 'Strange - resync response has no actions property');
-                        if (0 !== jsonBody.actions.length) {
-                            console.log(JSON.stringify(jsonBody, 0, 2));
-                        }
-                        assert.equal(0, jsonBody.actions.length, 'There were API actions done at resync, must be empty');
-                        done();
-                    });
-                });
-            });
+            await utils.addSubscriptionAsync(appId, devUserId, keyAuthApi, 'basic', null);
+            await utils.awaitEmptyQueueAsync(adapterQueue, adminUserId);
+            // console.log('================== GET /consumers');
+            // console.log(JSON.stringify((await utils.kongGetAsync(`consumers`, 200)).body, null, 2));
+            // console.log(`================== GET /services/${keyAuthApi}/plugins`);
+            // console.log(JSON.stringify((await utils.kongGetAsync(`services/${keyAuthApi}/plugins`, 200)).body, null, 2));
+            const jsonBody = await utils.resyncAsync();
+            assert.isOk(jsonBody.actions, 'Strange - resync response has no actions property');
+            if (0 !== jsonBody.actions.length) {
+                console.log(JSON.stringify(jsonBody, 0, 2));
+            }
+            assert.equal(0, jsonBody.actions.length, 'There were API actions done at resync, must be empty');
         });
-
 
         // After each, the application is deleted and re-added; should remove subscriptions
-        it('should clean up keys after deleting an application', function (done) {
+        it('should clean up keys after deleting an application', async function () {
             const consumer = kongConsumer(appId, keyAuthApi);
-            utils.awaitEmptyQueue(adapterQueue, adminUserId, function (err) {
-                assert.isNotOk(err, 'Waiting for empty queue failed: ' + err);
-                utils.kongGet('consumers/' + consumer, 404, function (err, apiRes) {
-                    assert.isNotOk(err);
-                    assert.equal(apiRes.res.statusCode, 404);
-                    done();
-                });
-            });
+            await utils.awaitEmptyQueueAsync(adapterQueue, adminUserId);
+            const apiRes = await utils.kongGetAsync('consumers/' + consumer, 404);
+            assert.equal(apiRes.res.statusCode, 404);
         });
 
-        it('should clean up keys after deleting a subscription', function (done) {
+        it('should clean up keys after deleting a subscription', async function () {
             const consumer = kongConsumer(appId, keyAuthApi);
-            async.series({
-                subsInfo: callback => utils.addSubscription(appId, devUserId, keyAuthApi, 'basic', null, callback),
-                queue1: callback => utils.awaitEmptyQueue(adapterQueue, adminUserId, callback),
-                kongConsumer: callback => utils.kongGet('consumers/' + consumer, callback),
-                deleteSubs: callback => utils.deleteSubscription(appId, devUserId, keyAuthApi, callback),
-                queue2: callback => utils.awaitEmptyQueue(adapterQueue, adminUserId, callback),
-                noConsumer: callback => utils.kongGet('consumers/' + consumer, 404, callback)
-            }, function (err, results) {
-                assert.isNotOk(err, 'one of the steps failed.' + err);
-                assert.isOk(results.kongConsumer, 'a Kong consumer was created for the subscription');
-                assert.isOk(results.noConsumer, 'a valid response was returned after deleting subscrption');
-                assert.equal(404, results.noConsumer.res.statusCode);
-                done();
-            });
+            await utils.addSubscriptionAsync(appId, devUserId, keyAuthApi, 'basic', null);
+            await utils.awaitEmptyQueueAsync(adapterQueue, adminUserId);
+            const kongConsumerInfo = await utils.kongGetAsync('consumers/' + consumer);
+            await utils.deleteSubscriptionAsync(appId, devUserId, keyAuthApi);
+            await utils.awaitEmptyQueueAsync(adapterQueue, adminUserId);
+            const noConsumer = await utils.kongGetAsync('consumers/' + consumer, 404);
+            assert.isOk(kongConsumerInfo, 'a Kong consumer was created for the subscription');
+            assert.isOk(noConsumer, 'a valid response was returned after deleting subscription');
+            assert.equal(404, noConsumer.res.statusCode);
         });
 
-        it('should write client ID and secret correctly', function (done) {
+        it('should write client ID and secret correctly', async function () {
             const consumer = kongConsumer(appId, oauth2Api);
-            async.series({
-                addSubs: callback => utils.addSubscription(appId, devUserId, oauth2Api, 'basic', null, callback),
-                queue1: callback => utils.awaitEmptyQueue(adapterQueue, adminUserId, callback),
-                getConsumer: callback => utils.kongGet('consumers/' + consumer, callback),
-                getAcls: callback => utils.kongGet('consumers/' + consumer + '/acls', callback),
-                getOAuth2: callback => utils.kongGet('consumers/' + consumer + '/oauth2', callback)
-            }, function (err, results) {
-                assert.isNotOk(err);
-                const subsInfo = results.addSubs;
-                assert.isOk(subsInfo);
-                const kongConsumer = results.getConsumer.body;
-                assert.isOk(kongConsumer);
-                const kongAcls = results.getAcls.body;
-                assert.isOk(kongAcls.total >= 1, 'consumer must have an ACL group');
-                assert.equal(kongAcls.data[0].group, oauth2Api, 'consumer ACL must match API name');
-                const kongOAuth2 = results.getOAuth2.body;
-                assert.isOk(kongOAuth2.total >= 1, 'consumer must have oauth2 setting');
-                assert.equal(kongOAuth2.data[0].client_id, subsInfo.clientId, 'client_id must match');
-                assert.equal(kongOAuth2.data[0].client_secret, subsInfo.clientSecret, 'client_secret must match');
-                done();
-            });
+            const subsInfo = await utils.addSubscriptionAsync(appId, devUserId, oauth2Api, 'basic', null);
+            await utils.awaitEmptyQueueAsync(adapterQueue, adminUserId);
+            assert.isOk(subsInfo);
+            const kongConsumerInfo = (await utils.kongGetAsync('consumers/' + consumer)).body;
+            assert.isOk(kongConsumerInfo);
+            const kongAcls = (await utils.kongGetAsync('consumers/' + consumer + '/acls')).body;
+            assert.isArray(kongAcls.data);
+            assert.isNull(kongAcls.next);
+            assert.isOk(kongAcls.data.length >= 1, 'consumer must have an ACL group');
+            assert.equal(kongAcls.data[0].group, oauth2Api, 'consumer ACL must match API name');
+            const kongOAuth2 = (await utils.kongGetAsync('consumers/' + consumer + '/oauth2')).body;
+            assert.isArray(kongOAuth2.data);
+            assert.isOk(kongOAuth2.data.length >= 1, 'consumer must have oauth2 setting');
+            assert.equal(kongOAuth2.data[0].client_id, subsInfo.clientId, 'client_id must match');
+            assert.equal(kongOAuth2.data[0].client_secret, subsInfo.clientSecret, 'client_secret must match');
         });
 
-        it('should not trigger changes at resync for client id and secret either', function (done) {
+        it('should not trigger changes at resync for client id and secret either (async version)', async function () {
             const consumer = kongConsumer(appId, oauth2Api);
-            async.series({
-                addSubs: callback => utils.addSubscription(appId, devUserId, oauth2Api, 'basic', null, callback),
-                queue1: callback => utils.awaitEmptyQueue(adapterQueue, adminUserId, callback)
-            }, function (err, results) {
-                assert.isNotOk(err, 'Waiting for empty queue failed: ' + err);
-                request.post({
-                    url: adapterUrl + 'resync'
-                }, function (err, res, body) {
-                    assert.isNotOk(err);
-                    assert.equal(200, res.statusCode, 'Resync status code not 200');
-                    const jsonBody = utils.getJson(body);
-                    assert.isOk(jsonBody.actions, 'Strange - resync response has no actions property');
-                    if (0 !== jsonBody.actions.length) {
-                        console.log(JSON.stringify(jsonBody, 0, 2));
-                    }
-                    assert.equal(0, jsonBody.actions.length, 'There were API actions done at resync, must be empty');
-                    done();
-                });
-            });
+            await utils.addSubscriptionAsync(appId, devUserId, oauth2Api, 'basic', null);
+            await utils.awaitEmptyQueueAsync(adapterQueue, adminUserId);
+            // console.log(`======== GET consumers/${consumer}`);
+            // console.log(JSON.stringify((await utils.kongGetAsync(`consumers/${consumer}`, 200)).body, null, 2));
+            // console.log(`======== GET consumers/${consumer} DONE`);
+            // console.log(`======== GET services/${oauth2Api}/plugins`);
+            // console.log(JSON.stringify((await utils.kongGetAsync(`services/${oauth2Api}/plugins`, 200)).body, null, 2));
+            // console.log(`======== GET services/${oauth2Api}/plugins DONE`);
+            const jsonBody = await utils.resyncAsync();
+            assert.isOk(jsonBody.actions, 'Strange - resync response has no actions property');
+            if (0 !== jsonBody.actions.length) {
+                console.log(JSON.stringify(jsonBody, 0, 2));
+            }
+            assert.equal(0, jsonBody.actions.length, 'There were API actions done at resync, must be empty');
         });
     });
 });

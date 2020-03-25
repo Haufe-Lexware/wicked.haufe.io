@@ -58,6 +58,12 @@ A set of environment variables specific to the test cases are referenced via the
 
 ## Running the tests non-dockerized
 
+### Prerequisites
+
+Mac OS X: `brew install coreutils` (to get the `gtimeout` command needed by `wtfc.sh`).
+
+### How to
+
 The test suites can also be run locally, using the local node.js installation (this has currently only been tested on macOS). For this purpose there are the following bash scripts:
 
 * `local-api-tests.sh`

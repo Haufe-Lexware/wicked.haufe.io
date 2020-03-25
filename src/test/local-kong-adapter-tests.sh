@@ -185,10 +185,20 @@ echo "INFO: Starting postgres..."
 pgContainer=${tmpDir}_pg
 docker run -d --name ${pgContainer} -p ${pgPort}:5432 -e POSTGRES_USER=kong -e POSTGRES_PASSWORD=kong postgres:11-alpine &> /dev/null
 
+echo "INFO: Waiting for postgres to start up..."
+sleep 5
+../kong/resources/wtfc.sh -T 30 "nc -z localhost ${pgPort}"
+echo "INFO: Running kong migrations..."
+docker run --rm \
+    -e KONG_PG_USER=kong -e KONG_PG_PASSWORD=kong -e KONG_PG_HOST=pg \
+    -e KONG_PG_MAX_CONCURRENT_QUERIES=10 \
+    --link ${pgContainer}:pg wicked.kong:local /startup.sh prepare
+
 echo "INFO: Starting Kong..."
 kongContainer=${tmpDir}_kong
 docker run -d --name ${kongContainer} -p ${kongProxyPort}:8000 -p ${kongAdminPort}:8001 \
     -e KONG_PG_USER=kong -e KONG_PG_PASSWORD=kong -e KONG_PG_HOST=pg \
+    -e KONG_PG_MAX_CONCURRENT_QUERIES=10 \
     --link ${pgContainer}:pg wicked.kong:local &> /dev/null # ${thisDir}/logs/kong-adapter-test-local-kong.log
 
 echo "INFO: Starting redis..."

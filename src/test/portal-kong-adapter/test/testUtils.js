@@ -31,7 +31,7 @@ utils.createUser = function (lastName, group, validated, callback) {
         json: true,
         headers: utils.makeHeaders('1', 'write_users'),
         body: {
-            firstName: 'Dummy',
+            firstName: 'Dummy', 
             lastName: lastName,
             validated: validated,
             email: lastName.toLowerCase() + '@random.org',
@@ -43,6 +43,12 @@ utils.createUser = function (lastName, group, validated, callback) {
         const jsonBody = utils.getJson(body);
         // console.log(jsonBody);
         callback(jsonBody.id);
+    });
+};
+
+utils.createUserAsync = async function (lastName, group, validated) {
+    return new Promise((resolve) => {
+        utils.createUser(lastName, group, validated, resolve);
     });
 };
 
@@ -71,6 +77,12 @@ utils.getUser = function (userId, callback) {
     });
 };
 
+utils.getUserAsync = async function (userId) {
+    return new Promise((resolve) => {
+        utils.getUser(userId, resolve);
+    });
+};
+
 utils.deleteUser = function (userId, callback) {
     request.delete({
         url: consts.BASE_URL + 'users/' + userId,
@@ -79,6 +91,12 @@ utils.deleteUser = function (userId, callback) {
         if (204 != res.statusCode)
             throw Error("Deleting user " + userId + " did not succeed: " + utils.getText(body));
         callback();
+    });
+};
+
+utils.deleteUserAsync = async function (userId) {
+    return new Promise((resolve) => {
+        utils.deleteUser(userId, resolve);
     });
 };
 
@@ -124,6 +142,10 @@ utils.createApplication = function (appId, appInfo, userId, callback) {
     });
 };
 
+utils.createApplicationAsync = async function (appId, appInfo, userId) {
+    return new Promise(resolve => utils.createApplication(appId, appInfo, userId, resolve));
+};
+
 utils.deleteApplication = function (appId, userId, callback) {
     request.delete({
         url: consts.BASE_URL + 'applications/' + appId,
@@ -133,6 +155,10 @@ utils.deleteApplication = function (appId, userId, callback) {
             throw Error("Deleting application failed: " + utils.getText(body));
         callback();
     });
+};
+
+utils.deleteApplicationAsync = async function (appId, userId) {
+    return new Promise(resolve => utils.deleteApplication(appId, userId, resolve));
 };
 
 utils.addOwner = function (appId, userId, email, role, callback) {
@@ -151,6 +177,10 @@ utils.addOwner = function (appId, userId, email, role, callback) {
     });
 };
 
+utils.addOwnerAsync = async function (appId, userId, email, role) {
+    return new Promise(resolve => utils.addOwner(appId, userId, email, role, resolve));
+};
+
 utils.deleteOwner = function (appId, userId, email, callback) {
     request.delete(
         {
@@ -162,6 +192,10 @@ utils.deleteOwner = function (appId, userId, email, callback) {
                 throw Error("Deleting owner '" + email + "' from application '" + appId + "' failed: " + utils.getText(body));
             callback();
         });
+};
+
+utils.deleteOwnerAsync = async function (appId, userId, email) {
+    return new Promise(resolve => utils.deleteOwner(appId, userId, email, resolve));
 };
 
 utils.addSubscription = function (appId, userId, apiId, plan, apikey, callback) {
@@ -182,6 +216,12 @@ utils.addSubscription = function (appId, userId, apiId, plan, apikey, callback) 
     });
 };
 
+utils.addSubscriptionAsync = async function (appId, userId, apiId, plan, apikey) {
+    return new Promise((resolve, reject) => utils.addSubscription(appId, userId, apiId, plan, apikey, function (err, body) {
+        err ? reject(err) : resolve(body);
+    }));
+};
+
 utils.deleteSubscription = function (appId, userId, apiId, callback) {
     request.delete({
         url: consts.BASE_URL + 'applications/' + appId + '/subscriptions/' + apiId,
@@ -191,6 +231,10 @@ utils.deleteSubscription = function (appId, userId, apiId, callback) {
             throw Error("Could not delete subscription: " + utils.getText(body));
         callback();
     });
+};
+
+utils.deleteSubscriptionAsync = async function (appId, userId, apiId) {
+    return new Promise(resolve => utils.deleteSubscription(appId, userId, apiId, resolve));
 };
 
 utils.approveSubscription = function (appId, apiId, adminUserId, callback) {
@@ -204,6 +248,10 @@ utils.approveSubscription = function (appId, apiId, adminUserId, callback) {
             throw new Error("Could not approve subscription for app " + appId + " to API " + apiId);
         callback();
     });
+};
+
+utils.approveSubscriptionAsync = async function (appId, apiId, adminUserId) {
+    return new Promise(resolve => utils.approveSubscription(appId, apiId, adminUserId, resolve));
 };
 
 utils.createListener = function (listenerId, listenerUrl, callback) {
@@ -273,6 +321,10 @@ utils.awaitEmptyQueue = function (queueName, userId, callback) {
     setTimeout(_awaitEmptyQueue, 500, 1);
 };
 
+utils.awaitEmptyQueueAsync = async function (queueName, userId) {
+    return new Promise(resolve => utils.awaitEmptyQueue(queueName, userId, resolve));
+};
+
 utils.kongGet = function (url, expectedStatusCode, callback) {
     let thisCallback = callback;
     let thisStatusCode = expectedStatusCode;
@@ -291,6 +343,29 @@ utils.kongGet = function (url, expectedStatusCode, callback) {
         thisCallback(null, {
             res: res,
             body: utils.getJson(body)
+        });
+    });
+};
+
+utils.kongGetAsync = async function (url, expectedStatusCode) {
+    if (!expectedStatusCode)
+        expectedStatusCode = 200;
+    return new Promise((resolve, reject) => utils.kongGet(url, expectedStatusCode, function (err, result) {
+        err ? reject(err) : resolve(result);
+    }));
+};
+
+utils.resyncAsync = async function () {
+    return new Promise((resolve, reject) => {
+        request.post({
+            url: consts.KONG_ADAPTER_URL + 'resync'
+        }, function (err, res, body) {
+            if (err)
+                reject(err);
+            if (res.statusCode !== 200)
+                reject(new Error('Resync status code not 200'));
+            const jsonBody = utils.getJson(body);
+            resolve(jsonBody);
         });
     });
 };
