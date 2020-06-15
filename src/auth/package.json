@@ -1,6 +1,6 @@
 {
   "name": "wicked.portal-auth",
-  "version": "1.0.0-rc.12",
+  "version": "1.0.0-rc.13",
   "description": "wicked.haufe.io Authorization Server",
   "main": "dist/authz.js",
   "scripts": {
