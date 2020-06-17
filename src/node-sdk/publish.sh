@@ -2,6 +2,8 @@
 
 set -e
 
+. .env
+
 if [[ -z "${NPM_USER}" ]]; then
     echo "*** Env var NPM_USER is not set."
     exit 1
