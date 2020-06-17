@@ -45,7 +45,7 @@
     "cors": "2.7.1",
     "express": "4.16.3",
     "express-session": "1.15.6",
-    "jquery": "3.4.1",
+    "jquery": "3.5.0",
     "json-stringify-safe": "5.0.1",
     "jsonwebtoken": "5.7.0",
     "ldapts": "1.9.0",
