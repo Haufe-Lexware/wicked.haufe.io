@@ -71,6 +71,8 @@ spec:
         - name: KONG_PG_SSL
           value: "on"
 {{- end }}
+        - name: KONG_HEADERS
+          value: {{ .Values.kong.headers | quote }}
         readinessProbe:
           exec:
             command:

@@ -196,6 +196,10 @@ kong:
     requests:
       memory: 256Mi
       cpu: 100m
+  # Specify which headers are passed to the upstream;
+  # See https://docs.konghq.com/0.14.x/configuration/#headers
+  # Specify "off" to not return any tokens.
+  headers: "server_tokens, latency_tokens"
 
 # Postgres configuration
 postgres:
