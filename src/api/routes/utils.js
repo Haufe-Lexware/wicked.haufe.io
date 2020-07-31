@@ -843,5 +843,4 @@ utils.normalizeRedirectUris = (appInfo) => {
     return;
 };
 
-
 module.exports = utils;

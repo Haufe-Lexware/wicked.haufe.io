@@ -1,6 +1,10 @@
 extends layout
 block bodyScripts
   script(type='text/javascript').
+    function sanitizeHTML(text) {
+        return $('<div>').text(text).html();
+    }
+
     $(document).ready(function(){
        window.onpopstate = function (event) {
           initializeGridFromStateServerSide(grid).then(() => { grid.isGridRefreshAvailable = true }).catch(err => console.log('Error', err));
@@ -29,7 +33,11 @@ block bodyScripts
                  return $("<a>").attr("href", "/applications/"+item.id).text(value);
                 }
              },
-             { name: "name", type: "text", title: "Name" },
+             { name: "name", type: "text", title: "Name",
+              itemTemplate: function(value, item) {
+                return sanitizeHTML(value);
+              } 
+            },
              { name: "ownerEmail", type: "text", title: "Owner",
                itemTemplate: function(value, item) {
                   return $("<a>").attr("href", "/users/"+item.ownerUserId).text(value);
