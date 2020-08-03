@@ -38,6 +38,7 @@ repos="kong node-sdk env api ui kong-adapter auth mailer chatbot"
 
 if [[ -d wicked.haufe.io ]]; then
     pushd wicked.haufe.io
+    git reset --hard
     git pull
     popd
 else
