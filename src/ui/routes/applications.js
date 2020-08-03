@@ -156,6 +156,7 @@ router.get('/', function (req, res, next) {
             if (!utils.acceptJson(req)) {
                 for (let appInfo of appInfos) {
                     appInfo.name = utils.sanitizeHtml(appInfo.name);
+                    appInfo.description = utils.sanitizeHtml(appInfo.description);
                 }
                 const appInfosString = JSON.stringify(appInfos);
                 debug(appInfosString);
