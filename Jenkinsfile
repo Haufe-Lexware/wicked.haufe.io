@@ -33,7 +33,7 @@ pipeline {
                     }
                     // requires SonarQube Scanner 2.8+
                     def scannerHome = tool 'wicked-sonar';
-                    def runSonar = "${scannerHome}/bin/sonar-scanner ${branchSourceParam} ${branchTargetParam}"
+                    def runSonar = "${scannerHome}/bin/sonar-scanner -X ${branchSourceParam} ${branchTargetParam}"
                     withSonarQubeEnv('wicked-sonar') {
                         sh "cd ./src/api && ${runSonar}; cd ../.."
                         sh "cd ./src/auth && ${runSonar}; cd ../.."
