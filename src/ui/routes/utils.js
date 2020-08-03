@@ -702,6 +702,8 @@ utils.applyGridFilter = (filter, item) => {
 };
 
 utils.sanitizeHtml = (s) => {
+    if (!s)
+        return '';
     return s.replace(/\&/g, '&amp;').replace(/\</g, '&lt;').replace(/\>/g, '&gt;');
 };
 
