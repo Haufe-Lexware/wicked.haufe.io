@@ -1,6 +1,9 @@
 extends layout
 block bodyScripts
   script(type='text/javascript').
+    function sanitizeHTML(text) {
+        return $('<div>').text(text).html();
+    }
     function donwloadCSVFile() {
       var filter = $("#subscriptionsGrid").jsGrid("getFilter");
       window.location = `/admin/subscriptions_csv?${$.param(filter)}`;
@@ -53,7 +56,7 @@ block bodyScripts
              itemTemplate: function(value, item) {
                  let resp = [];
                  item.owner_data.forEach(function(owner){
-                   resp.push(owner.name);
+                   resp.push(sanitizeHTML(owner.name));
                  });
                  return resp.join(', ');
             }
