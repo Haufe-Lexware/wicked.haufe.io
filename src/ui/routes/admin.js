@@ -218,6 +218,11 @@ router.get('/auditlog', mustBeAdminMiddleware, function (req, res, next) {
         if (err)
             return next(err);
         if (utils.acceptJson(req)) {
+            console.log(JSON.stringify(auditlogResponse, null, 2));
+            for (let auditLog of auditlogResponse.items) {
+                if (auditLog.user)
+                    auditLog.user = utils.sanitizeHtml(auditLog.user);
+            }
             res.json({
                 title: 'Audit Log',
                 auditlog: auditlogResponse
