@@ -2,10 +2,10 @@
 
 ### Latest Release
 
-Latest release is `1.0.0-rc.13` (June 17th 2020)
+Latest release is `1.0.0-rc.14` (August 4th 2020)
 
 ### Next Release
 
-Next release will be `1.0.0-rc.14`.
+Next release will be `1.0.0-rc.15`.
 
 We recommend using the release candidate.

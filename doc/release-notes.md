@@ -14,6 +14,14 @@ Official Release of the API Portal.
 
 ## 1.0.0 (release candidates)
 
+### 1.0.0-rc.14 - Notable changes
+
+**Maintenance release**
+
+Some fixes. Enabling deployments via Helm chart to Rancher k3s.
+
+* [Deployment on k3s not working (containerd runtime)](https://github.com/Haufe-Lexware/wicked.haufe.io/issues/272)
+
 ### 1.0.0-rc.13 - Notable changes
 
 Motto: **Minor fixes**
