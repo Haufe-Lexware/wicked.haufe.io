@@ -1,5 +1,5 @@
 {
-  "version": "1.0.0-rc.12",
+  "version": "1.0.0-rc.14",
   "license": "Apache-2.0",
   "author": "Martin Danielsson",
   "description": "Base package for the portal; contains all package dependencies to speed up Docker build.",

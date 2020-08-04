@@ -1,6 +1,6 @@
 {
   "name": "wicked.portal-auth",
-  "version": "1.0.0-rc.12",
+  "version": "1.0.0-rc.14",
   "description": "wicked.haufe.io Authorization Server",
   "main": "dist/authz.js",
   "scripts": {
@@ -45,7 +45,7 @@
     "cors": "2.7.1",
     "express": "4.16.3",
     "express-session": "1.15.6",
-    "jquery": "3.4.1",
+    "jquery": "^3.5.1",
     "json-stringify-safe": "5.0.1",
     "jsonwebtoken": "5.7.0",
     "ldapts": "1.9.0",

@@ -23,7 +23,7 @@ block content
         .form-group
             label(for='application') Application:
             select(name='application' id='application').form-control
-                for app in apps
+                for app in apps.items
                     option(value=app.id) #{app.id}
         
         .form-group

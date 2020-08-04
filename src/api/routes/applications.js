@@ -578,13 +578,14 @@ applications.addOwner = function (app, res, loggedInUserId, appId, ownerCreateIn
                 if (err) {
                     return utils.fail(res, 500, 'addOwner: loadUserByEmail failed.', err);
                 }
+                const generic400Error = `Bad request. Invalid role or user with given email address not found (${email}).`;
                 if (!userToAdd) {
-                    return utils.fail(res, 400, 'Bad request. User with email "' + email + '" not found.');
+                    return utils.fail(res, 400, generic400Error);
                 }
                 if (!(ownerRoles.OWNER == role ||
                     ownerRoles.COLLABORATOR == role ||
                     ownerRoles.READER == role)) {
-                    return utils.fail(res, 400, 'Bad request. Unknown role "' + role + '".');
+                    return utils.fail(res, 400, generic400Error);
                 }
 
                 // Does this user already know this application?

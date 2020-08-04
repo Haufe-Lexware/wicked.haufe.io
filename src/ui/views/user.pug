@@ -94,7 +94,7 @@ block content
                 label(for='email') Email:
                 input(id='email' name='email' value=userInfo.email readonly).form-control
                 if (!userInfo.validated)
-                    small Email address has not yet been validated. <a href=verifyEmailLink target="_blank">Validate email address.</a>
+                    small Email address has not yet been validated. <a href='#{verifyEmailLink}' target="_blank">Validate email address.</a>
                 else
                     small Email address is valid.
             if userInfo.customId

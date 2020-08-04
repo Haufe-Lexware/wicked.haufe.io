@@ -33,7 +33,7 @@ Follow these steps to get a wicked environment up and running, using a fresh wic
 * `cd` into the new directory
 * Run `wicked tags list`
 
-From the offered tags, pick the newest version, e.g. `1.0.0-rc.12` (or use `latest` for the latest released build), and run
+From the offered tags, pick the newest version, e.g. `1.0.0-rc.14` (or use `latest` for the latest released build), and run
 
 * `wicked tags set <tag>`: This stores the selected version into `~/.wicked/wicked.json`
 * Run `wicked kickstart . --new`
@@ -140,7 +140,7 @@ $ wicked box start --help
 Usage: wicked-box-start [options] <configdir>
 
 Options:
-  -t, --tag <tag>                    wicked Docker tag to use (default: "1.0.0-rc.12")
+  -t, --tag <tag>                    wicked Docker tag to use (default: "1.0.0-rc.14")
   -u, --ui-port <ui-port>            port to expose the portal UI on (default: 3000)
   -g, --gateway-port <gateway-port>  port to expose Kong on (API Gateway) (default: 8000)
   -a, --admin-port <admin-port>      port to expose Kong's Admin port on (defaults to off)

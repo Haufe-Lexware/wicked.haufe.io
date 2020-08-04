@@ -1,7 +1,5 @@
 'use strict';
 
-/* global __dirname */
-
 const request = require('request');
 const qs = require('querystring');
 const async = require('async');
@@ -668,41 +666,46 @@ utils.dateFormat = (date, fstr, utc) => {
         }
         return ('0' + m).slice(-2);
     });
-}
+};
 
 utils.isEmptyGridFilter = (filter) => {
-    var isEmpty = true;
+    let isEmpty = true;
     for (let key in filter) {
-        if (filter.hasOwnProperty(key)) {
-            for ( let prop in filter[key]) {
-                if (filter[key][prop] != "") {
+        if (filter[key] !== undefined) {
+            for (let prop in filter[key]) {
+                if (filter[key][prop] != '') {
                     isEmpty = false;
                     return false;
                 }
             }
         }
-     }
+    }
     return isEmpty;
-}
-
+};
 
 utils.applyGridFilter = (filter, item) => {
     if (!filter || !item)
         return false;
-    for (var prop in filter) {
+    for (let prop in filter) {
         if (typeof filter[prop] === "object") { //look for nested
             if (utils.applyGridFilter(filter[prop], item[prop]))
                 return true;
             continue;
         }
-        var regexp = new RegExp(filter[prop], 'gi');
+        const regexp = new RegExp(filter[prop], 'gi');
         if (filter[prop] && filter[prop].length > 0) {
             if (item[prop] && item[prop].match(regexp))
                 return true;
         }
     }
     return false;
-}
+};
+
+utils.sanitizeHtml = (s) => {
+    if (!s)
+        return '';
+    return s.replace(/\&/g, '&amp;').replace(/\</g, '&lt;').replace(/\>/g, '&gt;').replace(/\"/g, '&quot;').replace(/\'/g, '&#x27;').replace(/\//g, '&#x2F;');
+};
 
 utils.markedOptions = { sanitize: true };
 

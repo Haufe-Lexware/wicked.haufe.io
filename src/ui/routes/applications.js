@@ -154,12 +154,18 @@ router.get('/', function (req, res, next) {
             let showSwagger = (req.query.swagger) ? 'in' : '';
 
             if (!utils.acceptJson(req)) {
+                for (let appInfo of appInfos) {
+                    appInfo.name = utils.sanitizeHtml(appInfo.name);
+                    appInfo.description = utils.sanitizeHtml(appInfo.description);
+                }
+                const appInfosString = JSON.stringify(appInfos);
+                debug(appInfosString);
                 res.render('applications', {
                     authUser: req.user,
                     glob: req.app.portalGlobals,
                     route: '/applications',
                     count: appInfos.length,
-                    applications: JSON.stringify(appInfos),
+                    applications: appInfosString,
                     showRegister: showRegister,
                     showSwagger: showSwagger
                 });

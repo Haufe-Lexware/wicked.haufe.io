@@ -15,6 +15,18 @@ router.get('/approvals', function (req, res, next) {
     utils.getFromAsync(req, res, '/approvals', 200, function (err, apiResponse) {
         if (err)
             return next(err);
+        console.log(JSON.stringify(apiResponse));
+        for (let approval of apiResponse) {
+            if (approval.application) {
+                const app = approval.application;
+                if (app.name) {
+                    app.name = utils.sanitizeHtml(app.name);
+                }
+                if (app.description) {
+                    app.description = utils.sanitizeHtml(app.description);
+                }
+            }
+        }
         if (!utils.acceptJson(req)) {
             res.render('admin_approvals', {
                 authUser: req.user,
@@ -104,7 +116,7 @@ router.get('/approvals_csv', mustBeAdminOrApproverMiddleware, function (req, res
         if (err)
             return next(err);
         if (!utils.isEmptyGridFilter(req.query)) {
-            apiResponse = apiResponse.filter( function (item) {
+            apiResponse = apiResponse.filter(function (item) {
                 if (utils.applyGridFilter(req.query, item)) {
                     return true;
                 }
@@ -191,9 +203,9 @@ router.get('/users', mustBeAdminMiddleware, function (req, res, next) {
 
 router.get('/auditlog', mustBeAdminMiddleware, function (req, res, next) {
     debug("get('/auditlog')");
-    const filterFields = ['activity', 'user', 'email','plan', 'api', 'role', 'application', 'startdate', 'enddate'];
+    const filterFields = ['activity', 'user', 'email', 'plan', 'api', 'role', 'application', 'startdate', 'enddate'];
     const auditlogUri = utils.makePagingUri(req, '/auditlog?embed=1&', filterFields);
-    console.log("auditlog"+auditlogUri);
+    console.log("auditlog" + auditlogUri);
     if (!utils.acceptJson(req)) {
         res.render('admin_auditlog', {
             authUser: req.user,
@@ -206,6 +218,11 @@ router.get('/auditlog', mustBeAdminMiddleware, function (req, res, next) {
         if (err)
             return next(err);
         if (utils.acceptJson(req)) {
+            console.log(JSON.stringify(auditlogResponse, null, 2));
+            for (let auditLog of auditlogResponse.items) {
+                if (auditLog.user)
+                    auditLog.user = utils.sanitizeHtml(auditLog.user);
+            }
             res.json({
                 title: 'Audit Log',
                 auditlog: auditlogResponse
@@ -216,9 +233,9 @@ router.get('/auditlog', mustBeAdminMiddleware, function (req, res, next) {
 
 router.get('/auditlog_csv', mustBeAdminOrApproverMiddleware, function (req, res, next) {
     debug("get('/auditlog_csv')");
-    const filterFields = ['activity', 'user', 'email','plan', 'api', 'role', 'application', 'startdate', 'enddate'];
+    const filterFields = ['activity', 'user', 'email', 'plan', 'api', 'role', 'application', 'startdate', 'enddate'];
     const auditlogUri = utils.makePagingUri(req, '/auditlog?embed=1&', filterFields);
-    
+
     utils.getFromAsync(req, res, auditlogUri, 200, function (err, auditResponse) {
         if (err)
             return next(err);
@@ -230,7 +247,7 @@ router.get('/auditlog_csv', mustBeAdminOrApproverMiddleware, function (req, res,
             for (let i = 0; i < auditResponse.items.length; ++i) {
                 const item = auditResponse.items[i];
                 const api = item.api ? item.api : ``;
-                const application = item.application ?  item.application : ``;
+                const application = item.application ? item.application : ``;
                 const plan = item.plan ? item.plan : ``;
                 const created_at = utils.dateFormat(new Date(item.created_at), "%Y-%m-%d %H:%M:%S", true);
                 const auditLine = `${api}; ${application}; ${plan}; ${created_at}; ${item.activity}; ${item.user};  ${item.email}; ${item.role}\n`;

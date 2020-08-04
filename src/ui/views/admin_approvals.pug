@@ -57,7 +57,7 @@ block bodyScripts
               { name: "application.name", type: "text", title: "Application",
                 itemTemplate: function(value, item) {
                   const content = item.application.description ? item.application.description : 'No Content';
-                  let $elem = $("<a>").attr({"href": "/applications/" + item.application.id,}).addClass("target").text(value);
+                  let $elem = $("<a>").attr({"href": "/applications/" + item.application.id,}).addClass("target").html(value);
                   setMouseOverElementContent($elem, content);
                   return $elem;
                 }

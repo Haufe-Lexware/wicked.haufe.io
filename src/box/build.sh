@@ -37,12 +37,9 @@ fi
 repos="kong node-sdk env api ui kong-adapter auth mailer chatbot"
 
 if [[ -d wicked.haufe.io ]]; then
-    pushd wicked.haufe.io
-    git pull
-    popd
-else
-    git clone https://github.com/Haufe-Lexware/wicked.haufe.io
+    rm -rf wicked.haufe.io
 fi
+git clone https://github.com/Haufe-Lexware/wicked.haufe.io
 
 pushd wicked.haufe.io
 git checkout ${branch}

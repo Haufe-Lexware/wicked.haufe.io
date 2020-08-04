@@ -3,7 +3,6 @@ extends layout
 block bodyScripts
     script(src='/assets/marked/marked.min.js')
     script(type='text/javascript').
-      
         function validateNewApplication() {
             var appid = $('#appid').val();
             var appname = $('#appname').val();
@@ -99,7 +98,7 @@ block bodyScripts
                     { name: "id", type: "text", title: "ID" },
                     { name: "name", type: "text", title: "Name", 
                         itemTemplate: function(value, item) {
-                            return $("<a>").attr("href", "/applications/"+item.id).text(value);
+                            return $("<a>").attr("href", "/applications/" + item.id).html(value);
                         }
                     },
                     { name: "userRole", type: "text", title: "Role" },

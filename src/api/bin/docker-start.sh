@@ -9,9 +9,9 @@ runtimeEnv=$(uname)
 
 echo "Running as $(whoami)."
 
-if [ "$runtimeEnv" != "Linux" ] || [ ! -f /.dockerenv ]; then
+if [ "$runtimeEnv" != "Linux" ]; then
     echo "Do not use this script in non-dockerized environments."
-    echo "Detected non-Linux runtime $runtimeEnv, or /.dockerenv is not present."
+    echo "Detected non-Linux runtime $runtimeEnv."
     echo "Use 'node bin/api' or 'npm start'.'"
     exit 1
 fi

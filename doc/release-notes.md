@@ -14,6 +14,23 @@ Official Release of the API Portal.
 
 ## 1.0.0 (release candidates)
 
+### 1.0.0-rc.14 - Notable changes
+
+**Maintenance release**
+
+Some fixes. Enabling deployments via Helm chart to Rancher k3s.
+
+* [Deployment on k3s not working (containerd runtime)](https://github.com/Haufe-Lexware/wicked.haufe.io/issues/272)
+
+### 1.0.0-rc.13 - Notable changes
+
+Motto: **Minor fixes**
+
+This release fixes an issue with the email verification mails in case the email verification was not done immediately with the registration in the portal. The link in the profile page pointed to a faulty URL. In addition, a small enhancement was done to the Helm chart in order to make it easier to suppress the Kong outbound headers (such as `Via` or other Kong related headers).
+
+* [Kong headers](https://github.com/Haufe-Lexware/wicked.haufe.io/issues/266)
+* [E-Mail validation link wrong in user profile (portal)](https://github.com/Haufe-Lexware/wicked.haufe.io/issues/268)
+
 ### 1.0.0-rc.12 - Notable changes
 
 Motto: **Multiple Routes support and Bugfixes**
