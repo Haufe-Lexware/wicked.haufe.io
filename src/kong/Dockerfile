@@ -11,6 +11,7 @@ ENV KONG_ADMIN_ERROR_LOG "/tmp/stderr"
 ENV KONG_PROXY_ACCESS_LOG "/tmp/stdout"
 ENV KONG_PROXY_ERROR_LOG "/tmp/stderr"
 
+USER root
 RUN apk update && apk add dumb-init bash
 
 # Hack output of KONG to the output of PID 1, which is what docker
@@ -23,4 +24,5 @@ COPY resources/wtfc.sh /usr/local/bin/wtfc.sh
 COPY startup.sh /startup.sh
 COPY git_* /usr/src/app/
 
+USER kong
 CMD ["/startup.sh"]
