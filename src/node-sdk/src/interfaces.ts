@@ -620,6 +620,20 @@ export enum WickedEventEntityType {
     Import = 'import'
 }
 
+export interface WickedAccessToken {
+    api_id: string,
+    plan_id: string,
+    application_id: string,
+    subscription_id: string,
+    access_token: string,
+    expires: number,
+    refresh_token?: string,
+    expires_refresh?: string,
+    authenticated_userid?: string,
+    scope?: string,
+    users_id?: string
+}
+
 // OPTION TYPES
 
 /**

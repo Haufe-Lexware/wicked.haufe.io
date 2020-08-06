@@ -63,6 +63,7 @@ import {
     ScopeLookupResponse,
     WickedSubscriptionScopeModeType,
     WickedClientType,
+    WickedAccessToken,
 } from "./interfaces";
 export {
     WickedInitOptions,
@@ -120,6 +121,7 @@ export {
     ScopeLookupResponse,
     WickedSubscriptionScopeModeType,
     WickedClientType,
+    WickedAccessToken,
 } from "./interfaces";
 export { WickedError } from './wicked-error';
 export {
@@ -155,6 +157,7 @@ export {
 
 /** @hidden */
 import * as implementation from './implementation';
+import { encode } from "punycode";
 
 // ======= INITIALIZATION =======
 
@@ -384,7 +387,7 @@ export function apiGet(urlPath: string, userIdOrCallback, callback) {
  * 
  * @param urlPath relative URL path
  * @param postBody Body to post
- * @param userIdOrCallback user ID to perform the `GET` operation as, or `callback`
+ * @param userIdOrCallback user ID to perform the `POST` operation as, or `callback`
  * @param callback Callback containing an `err` (or `null` if success) and the `GET` returned content.
  */
 export function apiPost(urlPath: string, postBody: object, userIdOrCallback, callback) {
@@ -1674,6 +1677,101 @@ export function deleteUserGrantAs(userId: string, applicationId: string, apiId: 
 export function deleteUserGrantAs(userId: string, applicationId: string, apiId: string, asUserId: string, callback: ErrorCallback);
 export function deleteUserGrantAs(userId: string, applicationId: string, apiId: string, asUserId: string, callback?: ErrorCallback) {
     return apiDelete(`grants/${userId}/applications/${applicationId}/apis/${apiId}`, asUserId, callback);
+}
+
+// ======= ACCESS TOKEN MANAGEMENT =======
+
+/*
+ * Please note that this is not intended for public use; it's used by the Authorization
+ * server to keep track of Kong's access and refresh tokens, and to be able to support
+ * retrieving information on them, for e.g. subsequent deletion or similar. This may
+ * change in the future, but for now, it's how it works.
+ */
+
+/**
+ * Registers access token data with wicked's API for future reference.
+ * 
+ * @param tokenData Token to register with wicked's API
+ */
+export function registerAccessToken(tokenData: WickedAccessToken): Promise<any>;
+export function registerAccessToken(tokenData: WickedAccessToken, callback: ErrorCallback);
+export function registerAccessToken(tokenData: WickedAccessToken, callback?: ErrorCallback) {
+    return apiPost('accesstokens', tokenData, callback, null);
+}
+
+/**
+ * Retrieves information on a given access token. Is expected to return a collection with one single item,
+ * or an empty collection, if the access token is not found.
+ * 
+ * @param accessToken Access token to retrieve information on
+ */
+export function getAccessToken(accessToken: string): Promise<WickedCollection<WickedAccessToken>>;
+export function getAccessToken(accessToken: string, callback: Callback<WickedCollection<WickedAccessToken>>);
+export function getAccessToken(accessToken: string, callback?: Callback<WickedCollection<WickedAccessToken>>) {
+    return apiGet(`accesstokens?access_token=${encodeURIComponent(accessToken)}`, callback, null);
+}
+
+/**
+ * Retrieves information on the access token associated with the given refresh token. Is expected
+ * to return a collection with one single item (or none, if not found).
+ * 
+ * @param refreshToken Refresh token to retrieve information on
+ */
+export function getAccessTokenByRefreshToken(refreshToken: string): Promise<WickedCollection<WickedAccessToken>>;
+export function getAccessTokenByRefreshToken(refreshToken: string, callback: Callback<WickedCollection<WickedAccessToken>>);
+export function getAccessTokenByRefreshToken(refreshToken: string, callback?: Callback<WickedCollection<WickedAccessToken>>) {
+    return apiGet(`accesstokens?refresh_token=${encodeURIComponent(refreshToken)}`, callback, null);
+}
+
+/**
+ * Retrieves all access tokens associated with the given authenticated_userid string. This can result in
+ * multiple items being returned, or none, if the user does not have any associated access tokens currently.
+ * 
+ * @param authenticatedUserId authenticated_userid string to retrieve access tokens for
+ */
+export function getAccessTokensByAuthenticatedUserId(authenticatedUserId: string): Promise<WickedCollection<WickedAccessToken>>;
+export function getAccessTokensByAuthenticatedUserId(authenticatedUserId: string, callback: Callback<WickedCollection<WickedAccessToken>>);
+export function getAccessTokensByAuthenticatedUserId(authenticatedUserId: string, callback?: Callback<WickedCollection<WickedAccessToken>>) {
+    return apiGet(`accesstokens?authenticated_userid=${encodeURIComponent(authenticatedUserId)}`, callback, null);
+}
+
+/**
+ * Deletes the given access token information from wicked's database. If the access token is not present
+ * in the database, an error is NOT thrown. NOTE: This does not delete the access token from Kong, and is thus
+ * not intended for public use (only from the Authorization Server).
+ * 
+ * @param accessToken Access token to delete
+ */
+export function deleteAccessToken(accessToken: string): Promise<any>;
+export function deleteAccessToken(accessToken: string, callback: ErrorCallback);
+export function deleteAccessToken(accessToken: string, callback?: ErrorCallback) {
+    return apiDelete(`accesstokens?access_token=${encodeURIComponent(accessToken)}`, callback, null);
+}
+
+/**
+ * Deletes the access token associated with the given refresh token. If there are no such records in the database,
+ * and error is NOT thrown. NOTE: This does not delete the access token from Kong, and is thus
+ * not intended for public use (only from the Authorization Server).
+ * 
+ * @param refreshToken Refresh token of the access token record to be deleted
+ */
+export function deleteAccessTokenByRefreshToken(refreshToken: string): Promise<any>;
+export function deleteAccessTokenByRefreshToken(refreshToken: string, callback: ErrorCallback);
+export function deleteAccessTokenByRefreshToken(refreshToken: string, callback?: ErrorCallback) {
+    return apiDelete(`accesstokens?refresh_token=${encodeURIComponent(refreshToken)}`, callback, null);
+}
+
+/**
+ * Deletes all access token records associated with the given authenticated_userid. If there are no such records
+ * in the database, an error is NOT thrown. NOTE: This does not delete the access token from Kong, and is thus
+ * not intended for public use (only from the Authorization Server).
+ * 
+ * @param authenticatedUserId The authenticated_userid for the access token records to be deleted
+ */
+export function deleteAccessTokenByAuthenticatedUserId(authenticatedUserId: string): Promise<any>;
+export function deleteAccessTokenByAuthenticatedUserId(authenticatedUserId: string, callback: ErrorCallback);
+export function deleteAccessTokenByAuthenticatedUserId(authenticatedUserId: string, callback?: ErrorCallback) {
+    return apiDelete(`accesstokens?authenticated_userid=${encodeURIComponent(authenticatedUserId)}`, callback, null);
 }
 
 // ======= CORRELATION ID HANDLER =======
