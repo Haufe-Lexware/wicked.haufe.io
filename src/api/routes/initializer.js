@@ -5,16 +5,13 @@
 const fs = require('fs');
 const path = require('path');
 const { debug, info, warn, error } = require('portal-env').Logger('portal-api:initializer');
-const bcrypt = require('bcrypt-nodejs');
 const async = require('async');
 const yaml = require('js-yaml');
 
 const utils = require('./utils');
-const users = require('./users');
-const applications = require('./applications');
-const subscriptions = require('./subscriptions');
 const principal = require('./principal');
 const auditlog = require('./auditlog');
+const accessTokens = require('./accessTokens');
 const versionizer = require('./versionizer');
 
 const dao = require('../dao/dao');
@@ -329,6 +326,7 @@ function initializationFinished(glob, callback) {
         // Principal/follower election triggering
         principal.initialElection();
         auditlog.initialize();
+        accessTokens.initialize();
         callback(null);
     });
 }

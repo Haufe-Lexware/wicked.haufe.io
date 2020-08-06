@@ -735,7 +735,7 @@ class PgUtils {
     }
 
     deleteBefore(entity, fieldNameOrName, fieldValue, clientOrCallback, callback) {
-        debug(`deleteBefore(${entity}, ${fieldNameOrName}, ${fieldValue}) `);
+        debug(`deleteBefore(${entity}, ${fieldNameOrName}, ${fieldValue})`);
         if (!fieldNameOrName || !fieldValue) {
             return callback(utils.makeError(500, 'deleteBefore: Unconditional DELETE detected, not allowing'));
         }
@@ -744,6 +744,35 @@ class PgUtils {
             let sql = `DELETE FROM wicked.${entity} `;
             sql += ` WHERE ${fieldNameOrName} < '${fieldValue}'`;
             debug(`deleteBefore sql: ${sql}`);
+            const labels = {
+                command: 'DELETE',
+                entity: entity
+            };
+            const end = prom._pgQueryHistogram.startTimer(labels);
+            client.query(sql, (err, result) => {
+                if (err) {
+                    prom._pgQueryErrors.inc(labels);
+                    return callback(err);
+                }
+                end();
+                return callback(null, result.rowCount);
+            });
+        });
+    }
+
+    deleteExpired(entity, fieldNameOrName, fieldValue, additionalCondition, clientOrCallback, callback) {
+        debug(`deleteExpired(${entity}, ${fieldNameOrName}, ${fieldValue}, ${additionalCondition})`);
+        if (!fieldNameOrName || !fieldValue) {
+            return callback(utils.makeError(500, 'deleteExpired: Unconditional DELETE detected, not allowing'));
+        }
+        if (!additionalCondition) {
+            return callback(utils.makeError(500, 'deleteExpired: additionalCondition is empty; use deleteBefore instead if on purpose'));
+        }
+        this.sortOutClientAndCallback(clientOrCallback, callback, (client, callback) => {
+            let sql = `DELETE FROM wicked.${entity} `;
+            sql += ` WHERE ${fieldNameOrName} < '${fieldValue}' AND `;
+            sql += additionalCondition;
+            debug(`deleteExpired sql: ${sql}`);
             const labels = {
                 command: 'DELETE',
                 entity: entity

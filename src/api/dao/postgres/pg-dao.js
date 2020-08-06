@@ -11,6 +11,7 @@ const PgGrants = require('./entities/pg-grants');
 const PgWebhooks = require('./entities/pg-webhooks');
 const PgAuditlog = require('./entities/pg-auditlog');
 const PgNamespaces = require('./entities/pg-namespaces');
+const PgAccessTokens = require('./entities/pg-accesstokens');
 const PgUtils = require('./pg-utils');
 
 // ================================================
@@ -31,6 +32,7 @@ class PgDao {
         this.pgWebhooks = new PgWebhooks(this.pgUtils);
         this.pgNamespaces = new PgNamespaces(this.pgUtils);
         this.pgAuditlog = new PgAuditlog(this.pgUtils);
+        this.pgAccessTokens = new PgAccessTokens(this.pgUtils);
     }
 
     get meta() { return this.pgMeta; }
@@ -44,6 +46,7 @@ class PgDao {
     get namespaces() { return this.pgNamespaces; }
     get webhooks() { return this.pgWebhooks; }
     get auditlog() { return this.pgAuditlog; }
+    get accessTokens() { return this.pgAccessTokens; }
 }
 
 module.exports = PgDao;

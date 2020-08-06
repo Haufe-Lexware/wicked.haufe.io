@@ -28,6 +28,7 @@ const templates = require('./routes/templates');
 const kill = require('./routes/kill');
 const authServers = require('./routes/authServers');
 const versionizer = require('./routes/versionizer');
+const accessTokens = require('./routes/accessTokens');
 const pgUtils = require('./dao/postgres/pg-utils');
 
 const app = express();
@@ -168,6 +169,11 @@ app.use('/pools', pools);
 // ----- AUTH-SERVERS -----
 
 app.use('/auth-servers', authServers);
+
+// ----- ACCESS TOKENS ------
+
+accessTokens.setup(users);
+app.use('/accesstokens', accessTokens);
 
 app.get('/randomId', function (req, res, next) {
     res.setHeader('Content-Type', 'text/plain');
