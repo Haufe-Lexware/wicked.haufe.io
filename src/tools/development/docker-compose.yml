@@ -6,9 +6,12 @@ services:
     environment:
     - "POSTGRES_USER=kong"
     - "POSTGRES_PASSWORD=kong"
+    - "PGDATA=/var/lib/postgresql/data/pgsql"
     restart: unless-stopped
     ports:
     - "5432:5432"
+    volumes:
+    - ./pg_data:/var/lib/postgresql/data
 
   kong:
     image: wicked.kong:local
