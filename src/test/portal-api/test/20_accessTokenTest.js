@@ -5,10 +5,8 @@ const async = require('async');
 const request = require('request');
 const utils = require('./testUtils');
 const consts = require('./testConsts');
-const { deleteAccessTokens } = require('../../../api/routes/accessTokens');
 
 const baseUrl = consts.BASE_URL;
-const poolId = 'wicked';
 const ACCESS_TOKEN_SCOPE = 'access_tokens';
 const ONE_HOUR = 60 * 60 * 1000;
 
@@ -18,10 +16,19 @@ if (!utils.isPostgres()) {
 }
 
 const baseToken = {
+    client_id: 'acbacbacbacbabcbacbabcbacbac',
+    expires_in: 1800,
     api_id: 'superduper',
-    subscription_id: 'unimportant',
     plan_id: 'basic',
-    application_id: 'some-application'
+    application_id: 'some-application',
+    profile: {
+        sub: 'someid',
+        first_name: 'Herbert',
+        last_name: 'Feuerstein'
+    },
+    auth_method: 'default:local',
+    grant_type: 'authorization_code',
+    token_type: 'bearer',
 };
 
 describe('/accesstokens', function () {
@@ -299,7 +306,7 @@ describe('/accesstokens', function () {
             });
         });
 
-        it('should accept querying for access token (and returns things)', function (done) {
+        it('should accept querying for access token (and returns all things)', function (done) {
             request({
                 uri: baseUrl + 'accesstokens?access_token=token8',
                 headers: utils.makeHeaders(adminUserId, ACCESS_TOKEN_SCOPE)
@@ -310,8 +317,24 @@ describe('/accesstokens', function () {
                 assert.equal(jsonBody.count, 1);
                 assert.isArray(jsonBody.items);
                 assert.equal(jsonBody.items.length, 1);
-                assert.equal(jsonBody.items[0].access_token, 'token8');
-                assert.equal(jsonBody.items[0].scope, 'some_scope hello_world');
+                const token = jsonBody.items[0];
+                assert.equal(token.access_token, 'token8');
+                assert.isOk(token.expires);
+                assert.equal(token.refresh_token, 'refresh8');
+                assert.isOk(token.expires_refresh);
+                assert.equal(token.scope, 'some_scope hello_world');
+                assert.equal(token.api_id, baseToken.api_id);
+                assert.equal(token.plan_id, baseToken.plan_id);
+                assert.equal(token.application_id, baseToken.application_id);
+                assert.isOk(token.profile);
+                assert.equal(token.profile.sub, baseToken.profile.sub);
+                assert.equal(token.profile.first_name, baseToken.profile.first_name);
+                assert.equal(token.profile.last_name, baseToken.profile.last_name);
+                assert.equal(token.token_type, baseToken.token_type);
+                assert.equal(token.grant_type, baseToken.grant_type);
+                assert.equal(token.auth_method, baseToken.auth_method);
+                assert.equal(token.client_id, baseToken.client_id);
+                assert.equal(token.expires_in, baseToken.expires_in);
                 done();
             });
         });

@@ -621,17 +621,31 @@ export enum WickedEventEntityType {
 }
 
 export interface WickedAccessToken {
+    /** The id of the API for which this token was created */
     api_id: string,
+    /** The subscribed plan for the API this token was created via */
     plan_id: string,
+    /** The wicked application ID this token was created for */
     application_id: string,
-    subscription_id: string,
+    /** The auth method this token was created with */
+    auth_method: string,
+    /** The actual access token; opaque string */
     access_token: string,
+    /** The date by which this access token expires (approximately; Kong decides, but this is pretty decent); DateTime milliseconds epoch */
     expires: number,
+    /** The number of seconds this token was initially valid for */
+    expires_in: number;
+    /** The (optional) refresh token for this access token; whether this is available or not depends on the authorization flow */
     refresh_token?: string,
-    expires_refresh?: string,
+    /** The date by which the refresh token expires (approximately; Kong decides); DateTime milliseconds epoch */
+    expires_refresh?: number,
+    /** The authenticated user ID for which this token was created */
     authenticated_userid?: string,
+    /** The authenticated scope of this access token */
     scope?: string,
-    users_id?: string
+    /** Future use: Currently not used (wicked user id) */
+    users_id?: string,
+    profile?: OidcProfile
 }
 
 // OPTION TYPES

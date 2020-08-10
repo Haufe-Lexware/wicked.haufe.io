@@ -69,6 +69,16 @@ export class ProfileStore {
         }
     };
 
+    public registerTokenOrCodeAsync = async (tokenResponse: TokenResponse, apiId: string, profile: OidcProfileEx): Promise<any> => {
+        debug(`registerTokenOrCode(${apiId})`);
+        const instance = this;
+        return new Promise((resolve, reject) => {
+            instance.registerTokenOrCode(tokenResponse, apiId, profile, (err) => {
+                err ? reject(err) : resolve();
+            });
+        });
+    }
+
     public deleteTokenOrCode(token: string, callback?: SimpleCallback) {
         debug(`deleteTokenOrCode(${token})`);
         const redis = redisConnection.getRedis();
@@ -109,6 +119,14 @@ export class ProfileStore {
                 return callback(err);
             const profileJson = JSON.parse(result);
             return callback(null, profileJson);
+        });
+    };
+
+    public retrieveAsync = async (token: string): Promise<OidcProfileEx> => {
+        return new Promise((resolve, reject) => {
+            this.retrieve(token, (err, result) => {
+                err ? reject(err) : resolve(result);
+            });
         });
     };
 

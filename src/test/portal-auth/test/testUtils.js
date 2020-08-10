@@ -610,4 +610,20 @@ utils.assertUserRegistration = function (poolId, userId, callback) {
     });
 };
 
+utils.assertAccessTokensMatch = function (token1, token2) {
+    for (let k in token1) {
+        if (k === 'access_token' || k === 'expires' || k === 'refresh_token' || k === 'expires_refresh' || k === 'changedDate') {
+            // These have to exist, but not be equal
+            assert.isOk(token2[k]);
+        } else {
+            // The rest actually has to be equal
+            assert.isDefined(token2[k], `key ${k} on access token is not defined`);
+            if (k !== 'profile')
+                assert.equal(token1[k], token2[k]);
+            else
+                assert.deepEqual(token1[k], token2[k]);
+        }
+    }
+};
+
 module.exports = utils;

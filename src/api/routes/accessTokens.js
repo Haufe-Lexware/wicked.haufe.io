@@ -75,6 +75,7 @@ accessTokens.post('/', verifyAccessTokensScope, function (req, res, next) {
     const {
         access_token,
         expires,
+        expires_in, // Informational purposes only; expires is the index
         refresh_token,
         expires_refresh,
         authenticated_userid,
@@ -83,12 +84,16 @@ accessTokens.post('/', verifyAccessTokensScope, function (req, res, next) {
         api_id,
         plan_id,
         application_id,
-        subscription_id
+        profile,
+        auth_method,
+        grant_type,
+        token_type,
+        client_id,
     } = req.body;
     if (!access_token || !expires) {
         return utils.fail(res, 400, 'access_token and expires are mandatory properties');
     }
-    if (!api_id || !plan_id || !application_id || !subscription_id) {
+    if (!api_id || !plan_id || !application_id) {
         return utils.fail(res, 400, 'api_id, plan_id, application_id and subscription_id are mandatory properties');
     }
     if (refresh_token && !expires_refresh) {
@@ -97,11 +102,20 @@ accessTokens.post('/', verifyAccessTokensScope, function (req, res, next) {
     accessTokens.addAccessToken(res, accessTokens._usersModule, req.apiUserId, {
         access_token,
         expires,
+        expires_in,
         refresh_token,
         expires_refresh,
         authenticated_userid,
         scope,
-        users_id
+        users_id,
+        api_id,
+        plan_id,
+        application_id,
+        profile,
+        auth_method,
+        grant_type,
+        token_type,
+        client_id
     });
 });
 
