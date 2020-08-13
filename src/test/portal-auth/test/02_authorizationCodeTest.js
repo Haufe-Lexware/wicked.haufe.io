@@ -848,7 +848,17 @@ describe('Authorization Code Grant', function () {
             });
         });
 
+        let tokenInfo;
+        it('should be possible to get info on the token from the wicked API', async function () {
+            const tokenList = await wicked.getAccessTokenByRefreshToken(refreshToken);
+            assert.equal(tokenList.count, 1);
+            tokenInfo = tokenList.items[0];
+            // console.log(JSON.stringify(tokenInfo, null, 2));
+        });
+
+        let oldRefreshToken;
         it('should be possible to refresh a token (with a granted scope)', function (done) {
+            oldRefreshToken = refreshToken;
             utils.authPost('local/api/echo/token', {
                 grant_type: 'refresh_token',
                 client_id: ids.confidential.echo.clientId,
@@ -862,6 +872,35 @@ describe('Authorization Code Grant', function () {
                 refreshToken = body.refresh_token;
                 done();
             });
+        });
+
+        it('should not be possible to use the same refresh token twice', function (done) {
+            utils.authPost('local/api/echo/token', {
+                grant_type: 'refresh_token',
+                client_id: ids.confidential.echo.clientId,
+                client_secret: ids.confidential.echo.clientSecret,
+                refresh_token: oldRefreshToken
+            }, function (err, res, body) {
+                assert.isNotOk(err);
+                // console.log(body);
+                assert.equal(res.statusCode, 400);
+                assert.isDefined(body.error);
+                assert.equal(body.error, 'invalid_request');
+                done();
+            });
+        });
+
+        it('should not be possible to retrieve information on a used refresh token', async function () {
+            const tokenList = await wicked.getAccessTokenByRefreshToken(oldRefreshToken);
+            assert.equal(tokenList.count, 0);
+        });
+
+        it('should have a refreshed token which contains the same information as before', async function () {
+            const tokenList = await wicked.getAccessTokenByRefreshToken(refreshToken);
+            assert.equal(tokenList.count, 1);
+            const newTokenInfo = tokenList.items[0];
+            // console.log(JSON.stringify(newTokenInfo, null, 2));
+            utils.assertAccessTokensMatch(tokenInfo, newTokenInfo);
         });
 
         it('should not be possible to refresh a token after the scope has been revoked by the user', function (done) {

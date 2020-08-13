@@ -93,6 +93,9 @@
                     },
                     "restart_api": {
                         "description": "Restart the API components"
+                    },
+                    "access_tokens": {
+                        "description": "Administer access tokens"
                     }
                 }
             },

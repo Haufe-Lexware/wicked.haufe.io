@@ -117,6 +117,8 @@ export class UtilsOAuth2 {
             }
             if (!subsInfo.application || !subsInfo.application.id)
                 throw makeOAuthError(500, 'server_error', 'Subscription information does not contain a valid application id');
+            if (!subsInfo.subscription || !subsInfo.subscription.plan)
+                throw makeOAuthError(500, 'server_error', 'Subscription information does not contain a valid plan');
             subsInfo.subscription.trusted = trusted;
 
             oauthRequest.app_id = subsInfo.application.id;
@@ -361,7 +363,7 @@ export class UtilsOAuth2 {
         });
     }
 
-    public getProfile(req, res, next) {
+    public async getProfile(req, res, next) {
         debug(`/profile`);
         // OIDC profile end point, we need this. This is nice. Yeah.
         // res.status(500).json({ message: 'Not yet implemented.' });
@@ -382,12 +384,30 @@ export class UtilsOAuth2 {
         }
         accessToken = accessToken.trim();
 
-        // Read from profile store.
-        profileStore.retrieve(accessToken, (err, profile) => {
-            if (err || !profile)
-                return failOAuth(404, 'invalid_request', 'Not found', next);
-            return res.status(200).json(profile);
-        });
+        // Attempt to read from profile store.
+        let profile;
+        try {
+            profile = await profileStore.retrieveAsync(accessToken);
+        } catch (err) {
+            // Ignore for now
+        }
+        if (!profile) {
+            // Let's try the wicked access token store as well
+            try {
+                const tokenList = await wicked.getAccessToken(accessToken);
+                if (tokenList.count === 1) {
+                    const tokenInfo = tokenList.items[0];
+                    profile = tokenInfo.profile;
+                }
+            } catch (err) {
+                warn(`Could not retrieve profile by access token.`);
+                warn(err.stack);
+            }
+        }
+        if (!profile) {
+            return failOAuth(404, 'invalid_request', 'Not found', next);
+        }
+        return res.status(200).json(profile);
     }
 
     public wickedUserInfoToOidcProfile(userInfo: WickedUserInfo): OidcProfile {

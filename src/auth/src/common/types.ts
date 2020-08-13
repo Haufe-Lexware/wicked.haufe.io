@@ -15,6 +15,7 @@ export interface OAuth2Request {
     
     scope?: any,
     app_id?: string,
+    plan_id?: string,
     app_name?: string,
     app_url?: string,
     // Hmm
@@ -309,7 +310,10 @@ export interface OidcProfileEx extends OidcProfile {
     code_challenge?: string,
     code_challenge_method?: string,
     // Remember whether the scope differed when making it
-    scope_differs?: boolean
+    scope_differs?: boolean,
+    // Store the exact authenticated_userid and authenticated_scope
+    authenticated_userid?: string,
+    authenticated_scope?: string,
 }
 
 export interface WickedApiScopesCallback {

@@ -7,7 +7,7 @@ const { debug, info, warn, error } = require('portal-env').Logger('portal-api:da
 const path = require('path');
 const utils = require('../../routes/utils');
 
-const CURRENT_DATABASE_VERSION = 5;
+const CURRENT_DATABASE_VERSION = 6;
 
 class PgMeta {
     constructor(pgUtils) {

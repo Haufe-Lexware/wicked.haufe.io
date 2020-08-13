@@ -2,7 +2,7 @@
 
 import { GenericOAuth2Router } from '../common/generic-router';
 import { AuthRequest, AuthResponse, IdentityProvider, EndpointDefinition, IdpOptions, CheckRefreshDecision, BooleanCallback, ExternalIdpConfig, TokenInfo, ErrorLink } from '../common/types';
-import { OidcProfile, WickedUserInfo, Callback } from 'wicked-sdk';
+import { OidcProfile, WickedUserInfo, WickedAccessToken, Callback } from 'wicked-sdk';
 const { debug, info, warn, error } = require('portal-env').Logger('portal-auth:external');
 import * as wicked from 'wicked-sdk';
 const Router = require('express').Router;
@@ -63,7 +63,7 @@ export class ExternalIdP implements IdentityProvider {
         }
     }
 
-    public checkRefreshToken(tokenInfo: TokenInfo, apiInfo: WickedApi, callback: Callback<CheckRefreshDecision>) {
+    public checkRefreshToken(tokenInfo: WickedAccessToken, apiInfo: WickedApi, callback: Callback<CheckRefreshDecision>) {
         debug('checkRefreshToken()');
         const instance = this;
 

@@ -22,11 +22,26 @@ export KONG_TRUSTED_IPS="0.0.0.0/0,::/0"
 export KONG_ADMIN_LISTEN="0.0.0.0:8001"
 
 /usr/local/bin/wtfc.sh -T 30 "nc -z ${KONG_PG_HOST} ${KONG_PG_PORT}"
-if ! kong migrations list; then
-  kong migrations bootstrap -y
-else
-  kong migrations up -y
-fi
+kong migrations list
+migrations_exit_code=$?
+case ${migrations_exit_code} in
+  0)
+    echo "All migrations have run."
+    ;;
+  3)
+    echo "Bootstrapping needed."
+    kong migrations bootstrap -y
+    ;;
+  4)
+    echo "There are pending migrations."
+    kong migrations finish -y
+    ;;
+  *)
+    # Typically 5
+    echo "Starting migrations."
+    kong migrations up -y
+    ;;
+esac
 
 if [[ "$1" != "prepare" ]]; then
   kong start

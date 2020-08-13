@@ -127,6 +127,27 @@ const model = {
     audit_log: {
         properties: {}
     },
+
+
+    access_tokens: {
+        properties: {
+            access_token: {},
+            refresh_token: {
+                optional: true
+            },
+            authenticated_userid: {
+                optional: true
+            },
+            users_id: {
+                optional: true
+            },
+            expires: {},
+            expires_refresh: {
+                optional: true
+            },
+        }
+    },
+
 };
 
 module.exports = model;

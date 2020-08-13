@@ -1,7 +1,7 @@
 'use strict';
 
 import * as async from 'async';
-import { AuthRequest, AuthResponse, EmailMissingHandler, ExpressHandler, IdentityProvider, TokenRequest, AccessToken, CheckRefreshDecision, TokenInfo } from './types';
+import { AuthRequest, AuthResponse, EmailMissingHandler, ExpressHandler, IdentityProvider, TokenRequest, AccessToken, CheckRefreshDecision, TokenInfo, OidcProfileEx } from './types';
 import { profileStore } from './profile-store'
 const { debug, info, warn, error } = require('portal-env').Logger('portal-auth:generic-router');
 import * as wicked from 'wicked-sdk';
@@ -15,7 +15,6 @@ const Router = require('express').Router;
 const qs = require('querystring');
 
 import { utils } from './utils';
-import { kongUtils } from '../kong-oauth2/kong-utils';
 import { utilsOAuth2 } from './utils-oauth2';
 import { failMessage, failError, failOAuth, failRedirect, makeError, failJson, makeOAuthError } from './utils-fail';
 import { OidcProfile, WickedApiScopes, WickedGrant, WickedUserInfo, WickedUserCreateInfo, WickedScopeGrant, WickedNamespace, WickedCollection, WickedRegistration, PassthroughScopeResponse, Callback, PassthroughScopeRequest, WickedApi, WickedSubscriptionInfo, WickedUserShortInfo, WickedSubscription, WickedSubscriptionScopeModeType } from 'wicked-sdk';
@@ -483,32 +482,34 @@ export class GenericOAuth2Router {
             let isLoggedIn = utils.isLoggedIn(req, instance.authMethodId);
             // Borrowed from OpenID Connect, check for prompt request
             // http://openid.net/specs/openid-connect-implicit-1_0.html#RequestParameters
-            switch (authRequest.prompt) {
-                case 'none':
-                    if (!isLoggedIn) {
-                        // Check whether we can delegate the "prompt" to the idp
-                        if (!instance.idp.supportsPrompt()) {
-                            // Nope. We will fail now, as the user is not logged in with the authorization server
-                            // at the moment.
-                            return failRedirect('login_required', 'user must be logged in interactively, cannot authorize without logged in user.', authRequest.redirect_uri, next);
+            if (authRequest.prompt) {
+                switch (authRequest.prompt) {
+                    case 'none':
+                        if (!isLoggedIn) {
+                            // Check whether we can delegate the "prompt" to the idp
+                            if (!instance.idp.supportsPrompt()) {
+                                // Nope. We will fail now, as the user is not logged in with the authorization server
+                                // at the moment.
+                                return failRedirect('login_required', 'user must be logged in interactively, cannot authorize without logged in user.', authRequest.redirect_uri, next);
+                            }
+                            // We will continue with authorizeWithUi below, and as the IDP
+                            // claims to know how to deal with "prompt=none", we assume it does.
+                        } else {
+                            return instance.authorizeFlow(req, res, next);
                         }
-                        // We will continue with authorizeWithUi below, and as the IDP
-                        // claims to know how to deal with "prompt=none", we assume it does.
-                    } else {
-                        return instance.authorizeFlow(req, res, next);
-                    }
-                    warn(`Delegating prompt=none login to identity provider implementation.`);
-                    break;
-                case 'login':
-                    // Force login; wipe session data
-                    if (isLoggedIn) {
-                        delete req.session[instance.authMethodId].authResponse;
-                        isLoggedIn = false;
-                    }
-                    break;
-                default:
-                    warn(`Unsupported prompt parameter '${authRequest.prompt}'`);
-                    break;
+                        warn(`Delegating prompt=none login to identity provider implementation.`);
+                        break;
+                    case 'login':
+                        // Force login; wipe session data
+                        if (isLoggedIn) {
+                            delete req.session[instance.authMethodId].authResponse;
+                            isLoggedIn = false;
+                        }
+                        break;
+                    default:
+                        warn(`Unsupported prompt parameter '${authRequest.prompt}'`);
+                        break;
+                }
             }
             // We're fine. Check for pre-existing sessions.
             if (isLoggedIn) {
@@ -543,6 +544,7 @@ export class GenericOAuth2Router {
                 return next(err);
             }
 
+            let refreshTokenToDelete = null;
             try {
                 let accessToken: AccessToken;
                 switch (tokenRequest.grant_type) {
@@ -561,6 +563,7 @@ export class GenericOAuth2Router {
                     case 'refresh_token':
                         // This as well
                         accessToken = await instance.tokenRefreshToken(tokenRequest);
+                        refreshTokenToDelete = tokenRequest.refresh_token;
                         break;
                     default:
                         // This should not be possible
@@ -570,16 +573,20 @@ export class GenericOAuth2Router {
                 // Ok, we know we have something which could work (all data)
                 if (accessToken.error)
                     return failOAuth(400, accessToken.error, accessToken.error_description, next);
+                let profile = null;
                 if (accessToken.session_data) {
-                    profileStore.registerTokenOrCode(accessToken, tokenRequest.api_id, accessToken.session_data, (err) => {
-                        if (err)
-                            return failError(500, err, next);
-                        delete accessToken.session_data;
-                        return res.status(200).json(accessToken);
-                    });
-                } else {
-                    return res.status(200).json(accessToken);
+                    profile = accessToken.session_data;
+                    try {
+                        await profileStore.registerTokenOrCodeAsync(accessToken, tokenRequest.api_id, accessToken.session_data);
+                    } catch (err) {
+                        return failError(500, err, next);
+                    }
+                    delete accessToken.session_data;
                 }
+                if (refreshTokenToDelete)
+                    await wicked.deleteAccessTokenByRefreshToken(refreshTokenToDelete);
+                await instance.registerTokenWithWickedApi(tokenRequest, accessToken, profile);
+                return res.status(200).json(accessToken);
             } catch (err) {
                 return failError(400, err, next);
             }
@@ -655,6 +662,49 @@ export class GenericOAuth2Router {
             return instance.idp.authorizeWithUi(req, res, next, authRequest);
         });
     }
+
+    private registerTokenWithWickedApi = async (tokenRequest: TokenRequest, accessToken: AccessToken, profile: OidcProfileEx) => {
+        debug('registerTokenWithWickedApi()');
+        debug(JSON.stringify(tokenRequest, null, 2));
+        debug(JSON.stringify(accessToken, null, 2));
+        debug(JSON.stringify(profile, null, 2));
+        const apiInfo = await utils.getApiInfoAsync(tokenRequest.api_id);
+        const tokenExpirationMs = 1000 * (apiInfo.settings.token_expiration ? Number(apiInfo.settings.token_expiration) : accessToken.expires_in);
+        const refreshTokenTtlMs = 1000 * (apiInfo.settings.refresh_token_ttl ? Number(apiInfo.settings.refresh_token_ttl) : 14 * 24 * 60 * 60); // Two weeks in ms
+        const now = Date.now();
+
+        const strippedProfile = { ...profile };
+        // The following are internal temporary storage properties which
+        // should not be part of the profile when presented to the user.
+        delete strippedProfile.authenticated_userid;
+        delete strippedProfile.authenticated_scope;
+        delete strippedProfile.scope_differs;
+        delete strippedProfile.code_challenge;
+        delete strippedProfile.code_challenge_method;
+
+        const subsInfo = await wicked.getSubscriptionByClientId(tokenRequest.client_id, tokenRequest.api_id);
+        const tokenData: wicked.WickedAccessToken = {
+            api_id: tokenRequest.api_id,
+            plan_id: subsInfo.subscription.plan,
+            application_id: subsInfo.application.id,
+            auth_method: tokenRequest.auth_method,
+            access_token: accessToken.access_token,
+            expires: now + tokenExpirationMs,
+            expires_in: accessToken.expires_in,
+            refresh_token: accessToken.refresh_token,
+            expires_refresh: now + refreshTokenTtlMs,
+            // If the data is on the tokenRequest, it will be correct; otherwise try to look it
+            // up from the profile, or, worst case, from the access token directly.
+            authenticated_userid: tokenRequest.authenticated_userid ? tokenRequest.authenticated_userid : (profile ? profile.authenticated_userid : null),
+            // If there was no difference between the scope which was requested and the scope
+            // which was granted, the actual returned access token will *not* contain the
+            // scope. This is why we need to grab it from somewhere else, where it was stored.
+            scope: tokenRequest.scope ? tokenRequest.scope : ((profile && profile.authenticated_scope) ? profile.authenticated_scope : accessToken.scope),
+            users_id: null, // TODO: THIS IS NEVER AVAILABLE, IS IT?
+            profile: strippedProfile
+        }
+        await wicked.registerAccessToken(tokenData);
+    };
 
     public continueAuthorizeFlow = async (req, res, next, authResponse: AuthResponse) => {
         debug('continueAuthorizeFlow()');
@@ -1219,6 +1269,16 @@ export class GenericOAuth2Router {
         return returnScope;
     }
 
+    private static makeScopeString(scope: any): string {
+        if (!scope)
+            return '';
+        if (typeof (scope) === 'string')
+            return scope;
+        if (Array.isArray(scope))
+            return scope.join(' ');
+        throw new Error(`scope is neither empty, a string, nor an Array: ${typeof(scope)}`);
+    }
+
     private makeAuthenticatedUserId(authRequest: AuthRequest, authResponse: AuthResponse) {
         debug(`makeAuthenticatedUserId()`);
         if (authRequest.authenticated_userid && authRequest.authenticated_userid_is_verbose)
@@ -1237,9 +1297,10 @@ export class GenericOAuth2Router {
         debug('/authorize/login: Calling authorization end point.');
         debug(userProfile);
         const scope = GenericOAuth2Router.mergeUserGroupScope(authRequest.scope, authResponse.groups);
+        const authenticatedUserId = this.makeAuthenticatedUserId(authRequest, authResponse);
         oauth2.authorize({
             response_type: authRequest.response_type,
-            authenticated_userid: this.makeAuthenticatedUserId(authRequest, authResponse),
+            authenticated_userid: authenticatedUserId,
             api_id: authRequest.api_id,
             client_id: authRequest.client_id,
             redirect_uri: authRequest.redirect_uri,
@@ -1260,6 +1321,10 @@ export class GenericOAuth2Router {
             // This is also a small hack to remember whether we need to send the scopes with the
             // access token response (because the scope has changed to what was requested).
             userProfile.scope_differs = authRequest.scope_differs;
+            // Additionally, also store the exact authenticated_userid and authenticated_scope
+            // which will be passed on:
+            userProfile.authenticated_userid = authenticatedUserId;
+            userProfile.authenticated_scope = GenericOAuth2Router.makeScopeString(scope);
 
             // For this redirect_uri, which can contain either a code or an access token,
             // associate the profile (userInfo).
@@ -1578,6 +1643,7 @@ export class GenericOAuth2Router {
     }
 
     private static extractUserId(authUserId: string): string {
+        debug(`extractUserId(${authUserId})`);
         if (!authUserId.startsWith('sub='))
             return authUserId;
         // Does it look like this: "sub=<user id>;namespace=<whatever>"
@@ -1613,21 +1679,24 @@ export class GenericOAuth2Router {
         // but we still need to verify that the user for which the refresh token was
         // created is still a valid user.
         const refreshToken = tokenRequest.refresh_token;
-        let tokenInfo: TokenInfo;
+        let tokenInfo: wicked.WickedAccessToken;
         try {
-            tokenInfo = await tokens.getTokenDataByRefreshTokenAsync(refreshToken);
+            debug(`Retrieve token data for refresh_token ${refreshToken}`);
+            const tokenCollection = await wicked.getAccessTokenByRefreshToken(refreshToken);
+            debug(JSON.stringify(tokenCollection));
+            if (tokenCollection.count !== 1) {
+                throw makeOAuthError(400, 'invalid_request', `could not retrieve information on the given refresh token; token count ${tokenCollection.count}.`);
+            }
+            tokenInfo = tokenCollection.items[0];
+            debug(JSON.stringify(tokenInfo, null, 2));
         } catch (err) {
-            throw makeOAuthError(400, 'invalid_request', 'could not retrieve information on the given refresh token.', err);
+            throw makeOAuthError(400, 'invalid_request', 'could not retrieve information on the given refresh token (unexpected error).', err);
         }
-        debug('refresh token info:');
-        debug(tokenInfo);
 
         let apiInfo: WickedApi;
-        let applicationId: string;
+        let applicationId = tokenInfo.application_id;
         try {
-            const credentialInfo = await kongUtils.lookupApiAndApplicationFromKongCredentialAsync(tokenInfo.credential_id);
-            apiInfo = await utils.getApiInfoAsync(credentialInfo.apiId);
-            applicationId = credentialInfo.applicationId;
+            apiInfo = await utils.getApiInfoAsync(tokenInfo.api_id);
         } catch (err) {
             throw makeOAuthError(500, 'server_error', 'could not lookup API from given refresh token.', err);
         }
@@ -1699,6 +1768,10 @@ export class GenericOAuth2Router {
 
             const oidcProfile = utilsOAuth2.wickedUserInfoToOidcProfile(userInfo);
             tokenRequest.session_data = oidcProfile;
+
+            // Store the previous values so we still have them around
+            tokenRequest.authenticated_userid = tokenInfo.authenticated_userid;
+            tokenRequest.scope = tokenInfo.scope;            
             // Now delegate to oauth2 adapter:
             return await oauth2.tokenAsync(tokenRequest);
         } else {

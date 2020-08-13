@@ -44,6 +44,7 @@ securityDefinitions:
       write_grants: Write user API grants
       webhooks: Access and change webhooks
       restart_api: Restart the API components
+      access_tokens: Administer access tokens
   
   implicit:
     type: oauth2
@@ -75,6 +76,7 @@ securityDefinitions:
       read_grants: Read user API grants
       write_grants: Write user API grants
       webhooks: Access and change webhooks
+      access_tokens: Administer access tokens
 
   password:
     type: oauth2
@@ -106,6 +108,7 @@ securityDefinitions:
       read_grants: Read user API grants
       write_grants: Write user API grants
       webhooks: Access and change webhooks
+      access_tokens: Administer access tokens
 
   # For anonymous access to data
   clientCredentials:
@@ -155,6 +158,8 @@ tags:
     description: Email verification functionality
   - name: registrations
     description: Registration pool functionality
+  - name: accesstokens
+    description: Access and Refresh token functonality
 paths:
   '/ping':
     get:
@@ -1916,6 +1921,84 @@ paths:
         '404':
           description: Not Found
 
+  '/accesstokens':
+    post:
+      security:
+      - accessCode: ['access_tokens']
+      - implicit: ['access_tokens']
+      - password: ['access_tokens']
+      tags:
+      - accesstokens
+      description: Add an access token registration
+      parameters:
+      - name: body
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/accessTokenType'
+      responses:
+        '201':
+          description: Success, created
+        '403':
+          description: Forbidden
+        '400':
+          description: Bad request
+    get:
+      security:
+      - accessCode: ['access_tokens']
+      - implicit: ['access_tokens']
+      - password: ['access_tokens']
+      tags:
+      - accesstokens
+      description: Get access tokens by access token, refresh token or authenticated user id
+      parameters:
+      - name: access_token
+        in: query
+        required: false
+        type: string
+      - name: refresh_token
+        in: query
+        required: false
+        type: string
+      - name: authenticated_userid
+        in: query
+        required: false
+        type: string
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/accessTokenCollection'
+        '403':
+          description: Forbidden
+
+    delete:
+      security:
+      - accessCode: ['access_tokens']
+      - implicit: ['access_tokens']
+      - password: ['access_tokens']
+      tags:
+      - accesstokens
+      description: Delete access tokens by access token, refresh token or authenticated user id
+      parameters:
+      - name: access_token
+        in: query
+        required: false
+        type: string
+      - name: refresh_token
+        in: query
+        required: false
+        type: string
+      - name: authenticated_userid
+        in: query
+        required: false
+        type: string
+      responses:
+        '204':
+          description: Success
+        '403':
+          description: Forbidden
+
 definitions:
   apiType:
     title: Api
@@ -2198,7 +2281,7 @@ definitions:
           id:
             type: string
           name:
-            type: string //  const filterFields = ['activity', 'user', 'email','plan', 'api', 'role', 'application'];
+            type: string
   auditlogType:
     type: object
     properties:
@@ -2411,3 +2494,91 @@ definitions:
       - id
       - poolId
       - description
+
+  accessTokenType:
+    type: object
+    properties:
+      access_token:
+        type: string
+        example: 'abc76afF898a8ADopiaHDS987s79dsd'
+      expires:
+        type: number
+        example: 1628267233252
+      expires_in:
+        type: number
+        example: 1800
+      refresh_token:
+        type: string
+        example: 'JK8a6sf98ljDFDFkjlhgjASDf813912'
+      expires_refresh:
+        type: number
+        example: 1628267233252
+      authenticated_userid:
+        type: string
+        example: 'sub=e8ac050b4019405218fa5d51521e0697768fe63d;namespace=wicked'
+      users_id:
+        type: string
+        example: 'e8ac050b4019405218fa5d51521e0697768fe63d'
+      scope:
+        type: string
+        example: 'access_tokens read_apis write_users'
+      application_id:
+        type: string
+        example: 'some-application'
+      api_id:
+        type: string
+        example: 'petstore-oauth'
+      plan_id:
+        type: string
+        example: 'basic'
+      subscription_id:
+        type: string
+        example: '940521801521e0697768fe63dfa5d51e8ac050b4'
+      auth_method:
+        type: string
+        example: 'default:local'
+      grant_type:
+        type: string
+        example: 'authorization_code'
+      token_type:
+        type: string
+        example: bearer
+      client_id:
+        type: string
+        example: 'b401e0697768fe94052e8ac05018fa5d5152163d'
+      profile:
+        type: object
+        properties:
+          sub:
+            type: string
+          email:
+            type: string
+            example: 'user@domain.com'
+          email_verified:
+            type: boolean
+          given_name:
+            type: string
+            example: 'John'
+          surname:
+            type: string
+            example: 'Doe'
+
+  accessTokenCollection:
+    type: object
+    properties:
+      items:
+        type: array
+        items:
+          $ref: '#/definitions/accessTokenType'
+      count:
+        type: number
+        example: 1
+      count_cached:
+        type: boolean
+        example: 'false'
+      offset:
+        type: number
+        example: 0
+      limit:
+        type: number
+        example: 1
