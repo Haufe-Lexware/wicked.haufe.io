@@ -24,7 +24,7 @@
     "kongversion": "0.14.1"
   },
   "devDependencies": {
-    "@types/node": "^10.11.3",
+    "@types/node": "10.11.3",
     "typescript": "3.4.1"
   }
 }
