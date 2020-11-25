@@ -9,7 +9,7 @@
     "debug": "3.1.0",
     "express": "4.16.3",
     "fs-extra": "7.0.1",
-    "highlight.js": "9.3.0",
+    "highlight.js": "10.1.2",
     "jquery": "^3.5.1",
     "js-yaml": "3.13.1",
     "marked": "^0.7.0",
