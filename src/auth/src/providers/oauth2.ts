@@ -125,13 +125,24 @@ export class OAuth2IdP implements IdentityProvider {
         return this.genericFlow.getRouter();
     }
 
-    private verifyProfile = (req, accessToken, refreshTokenNotUsed, profile, done) => {
+    private verifyProfile = (req, accessToken, refreshTokenNotUsed, tokenResponse, profile, done) => {
         debug(`verifyProfile(${this.authMethodId})`);
+        debug(`- tokenResponse: ${JSON.stringify(tokenResponse)}`);
+
+        let hopefullyJwtToken = accessToken;
 
         if (!this.authMethodConfig.retrieveProfile) {
+            // Special case for OpenID Connect; if the scope contains "openid", and there is a "id_token" property in the tokenResponse,
+            // use the id_token as the JWT token.
+            if (tokenResponse && tokenResponse.scope && tokenResponse.id_token) {
+                if (tokenResponse.scope.indexOf('openid') >= 0) {
+                    debug(`- detected OpenID id_token; using that`)
+                    hopefullyJwtToken = tokenResponse.id_token;
+                }
+            }
             // Verify signing?
             try {
-                profile = this.verifyJWT(accessToken);
+                profile = this.verifyJWT(hopefullyJwtToken);
                 debug(`verifyProfile(${this.authMethodId}): Decoded JWT Profile:`);
             } catch (ex) {
                 error(`verifyProfile(${this.authMethodId}): JWT decode/verification failed.`);
@@ -288,7 +299,7 @@ export class OAuth2IdP implements IdentityProvider {
                         err.internalError = new Error(`Error: ${jsonResponse.error}, description. ${jsonResponse.error_description || '<no description>'}`);
                     return callback(err);
                 }
-                return instance.verifyProfile(null, jsonResponse.access_token, null, null, callback);
+                return instance.verifyProfile(null, jsonResponse.access_token, null, jsonResponse, null, callback);
             } catch (err) {
                 error(err);
                 return callback(err);
