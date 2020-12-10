@@ -11,6 +11,21 @@ namespace: default
 # other containers/pods to start).
 useRbac: false
 
+## Node selector for nodes.
+##
+nodeSelector: {}
+
+## Tolerations for the nodes.
+##
+## Example:
+##   - key: "toleration=key"
+##     operator: "Equal"
+##     value: "value"
+##     effect: "NoSchedule"
+##
+tolerations: []
+
+
 # Deadline for all pods to come up successfully (in seconds)
 deployDeadline: 300
 
