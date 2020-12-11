@@ -150,6 +150,8 @@ Setting | Must Override | Default | Description
 `persistence.storageClass` | - | `""` | **ONLY APPLIES TO JSON STORAGE TYPE**: If your cluster supports dynamic provisioning of volumes (provision volumes for volume claims automatically), specify the storage class for the volume here. Mutually exclusive with `persistence.existingClaim` (use either).
 `persistence.accessMode` | - | `ReadWriteOnce` | **ONLY APPLIES TO JSON STORAGE TYPE**: The volume is mounted to the `portal-api` container using this access mode.
 `persistence.size` | - | `1Gi` | **ONLY APPLIES TO JSON STORAGE TYPE**: The size of the volume for dynamic data persistence. 1 GB is usually more than enough for this (probably also 100 MB would suffice, depending on your needs).
+`nodeSelector` | - | `""` | **Available for all pods**: For the pod to be eligible to run on a node, the node must have each of the indicated key-value pairs as labels (it can have additional labels as well). The most common usage is one key-value pair..
+`tolerations` | - | `""` | **Available for all pods**: Tolerations are applied to pods, and allow (but do not require) the pods to schedule onto nodes with matching taints.
 
 For a complete description, please see the [`values.yaml`](values.yaml) file itself; it contains even more information on the various options, and also information on how to set resources of all containers (if necessary).
 
