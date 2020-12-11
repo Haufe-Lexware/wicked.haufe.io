@@ -19,7 +19,7 @@ fi
 
 docker build -f Dockerfile-publish -t wicked-sdk-tmp \
     --build-arg NPM_USER=${NPM_USER} \
-    --build-arg NPM_PASS=${NPM_PASS} \
+    --build-arg NPM_PASS="${NPM_PASS}" \
     --build-arg NPM_EMAIL=${NPM_EMAIL} \
     .
 docker rmi wicked-sdk-tmp

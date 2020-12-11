@@ -153,7 +153,8 @@ export class OAuth2IdP implements IdentityProvider {
         debug(profile);
 
         try {
-            const authResponse = this.createAuthResponse(profile);
+            const authResponse = this.createAuthResponse(profile, tokenResponse);
+            debug(`authResponse: ${JSON.stringify(authResponse)}`);
             return done(null, authResponse);
         } catch (err) {
             return done(null, false, { message: err });
@@ -370,7 +371,7 @@ export class OAuth2IdP implements IdentityProvider {
     };
 
     // HELPER METHODS
-    private createAuthResponse(profile: any): AuthResponse {
+    private createAuthResponse(profile: any, tokenResponse: any): AuthResponse {
         debug(`createAuthResponse(${this.authMethodId})`);
 
         const defaultProfile = this.createDefaultProfile(profile);
@@ -381,7 +382,8 @@ export class OAuth2IdP implements IdentityProvider {
             userId: null,
             customId: customId,
             defaultGroups: defaultGroups,
-            defaultProfile: defaultProfile
+            defaultProfile: defaultProfile,
+            data: tokenResponse
         };
     }
 

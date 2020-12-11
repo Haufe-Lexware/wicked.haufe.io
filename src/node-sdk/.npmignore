@@ -14,3 +14,5 @@ publish.sh
 Jenkinsfile
 .eslint*
 .scannerwork
+.env
+env.sh

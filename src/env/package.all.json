@@ -4,7 +4,7 @@
   "author": "Martin Danielsson",
   "description": "Base package for the portal; contains all package dependencies to speed up Docker build.",
   "dependencies": {
-    "@types/node": "^10.3.2",
+    "@types/node": "10.17.35",
     "async": "2.6.2",
     "bcrypt-nodejs": "0.0.3",
     "body-parser": "1.18.3",
@@ -37,7 +37,7 @@
     "nocache": "^2.0.0",
     "node-uuid": "1.4.8",
     "nodemailer": "4.6.8",
-    "openid-client": "2.5.0",
+    "openid-client": "4.2.2",
     "passport": "0.3.2",
     "passport-facebook": "2.1.1",
     "passport-github2": "0.1.10",
@@ -76,7 +76,7 @@
   "name": "portal-env",
   "devDependencies": {
     "@types/async": "2.0.49",
-    "@types/node": "^10.11.3",
+    "@types/node": "10.17.35",
     "chai": "^4.1.2",
     "semver": "^6.0.0",
     "typescript": "3.4.1"
