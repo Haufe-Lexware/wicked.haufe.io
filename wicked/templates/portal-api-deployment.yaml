@@ -27,7 +27,7 @@ spec:
         prometheus.io/port:  '3001'
     spec:
 {{- if .Values.useRbac }}
-      serviceAccountName: {{ template "fullname" . }}-role
+      serviceAccountName: {{ template "fullname" . }}-role 
 {{- end }}
       containers:
       - name: {{ template "fullname" . }}-api
@@ -184,6 +184,13 @@ spec:
           timeoutSeconds: 2
         resources:
 {{ toYaml .Values.resources.api | indent 10 }}
+{{- if .Values.nodeSelector }}
+      nodeSelector: {{- .Values.nodeSelector | toYaml | nindent 8 }}
+{{- end }}
+{{- if .Values.tolerations }}
+      tolerations:
+{{ toYaml .Values.tolerations | indent 8 }}
+{{- end }}
       volumes:
       - name: portal-api-data-dynamic
 {{- if not .Values.persistence.enabled }}

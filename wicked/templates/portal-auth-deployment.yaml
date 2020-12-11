@@ -27,7 +27,7 @@ spec:
         prometheus.io/port:  '3010'
     spec:
 {{- if .Values.useRbac }}
-      serviceAccountName: {{ template "fullname" . }}-role
+      serviceAccountName: {{ template "fullname" . }}-role 
 {{- end }}
       initContainers:
       - name: {{ template "fullname" . }}-auth-init
@@ -73,6 +73,13 @@ spec:
         resources:
 {{ toYaml .Values.resources.auth | indent 10 }}
       restartPolicy: Always
+{{- if .Values.nodeSelector }}
+      nodeSelector: {{- .Values.nodeSelector | toYaml | nindent 8 }}
+{{- end }}
+{{- if .Values.tolerations }}
+      tolerations:
+{{ toYaml .Values.tolerations | indent 8 }}
+{{- end }}
 {{- if .Values.imagePullSecrets }}
       imagePullSecrets:
 {{ toYaml .Values.imagePullSecrets | indent 8 }}
