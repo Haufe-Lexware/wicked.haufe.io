@@ -17,7 +17,7 @@ if [ ! -d ./docs-git ]; then
 fi
 if [ ! -d ./docs-git/wicked.node-sdk ]; then
     pushd docs-git
-    git clone https://github.com/apim-haufe-io/wicked.node-sdk
+    git clone git@github.com:apim-haufe-io/wicked.node-sdk.git
     popd
 fi
 
