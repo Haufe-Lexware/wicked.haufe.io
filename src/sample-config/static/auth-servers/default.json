@@ -11,6 +11,31 @@
       "config": {
         "trustUsers": true
       }
+    },
+    {
+      "enabled": true,
+      "type": "oauth2",
+      "name": "atlantic",
+      "friendlyShort": "Atlantic SSO",
+      "friendlyLong": "FS oauth2",
+      "config": {
+        "clientId": "sucasa-integration",
+        "clientSecret": "Sucasa-integration123!",
+        "endpoints": {
+          "authorizeEndpoint": "https://integration.login.haufe-lexware.com/auth/oauth2/authorize",
+          "authorizeScope": "openid profile email",
+          "tokenEndpoint": "https://integration.login.haufe-lexware.com/auth/oauth2/access_token",
+          "profileEndpoint": "https://integration.login.haufe-lexware.com/auth/oauth2/userinfo",
+          "redirectURIValidationEndpoint": "http://192.168.0.249:9001/logout"
+        },
+        "params": {},
+        "customIdField": "sub",
+        "firstNameField": "given_name",
+        "lastNameField": "family_name",
+        "emailField": "email",
+        "retrieveProfile": false,
+        "nameField": "name"
+      }
     }
   ],
   "config": {

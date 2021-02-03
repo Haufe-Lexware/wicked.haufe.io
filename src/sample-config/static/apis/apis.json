@@ -30,12 +30,16 @@
         "unlimited"
       ],
       "settings": {
-        "token_expiration": 3600,
-        "enable_client_credentials": true,
-        "scopes": {}
+        "enable_implicit_grant": true,
+        "token_expiration": "3600",
+        "scopes": {
+          "upn": {
+            "description": "upn"
+          }
+        }
       },
       "authMethods": [
-        "default:local"
+        "default:atlantic"
       ],
       "registrationPool": ""
     },

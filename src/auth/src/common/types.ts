@@ -103,6 +103,20 @@ export interface EndpointDefinition {
     middleware?: ExpressHandler
 };
 
+export interface LogoutHookResponse {
+    hasHandledRequest: boolean,
+    isRedirectUriAccepted?: boolean
+};
+
+export interface RedirectURIValidationResponse {
+    isRedirectUriAccepted: boolean
+};
+
+export interface RedirectURIValidationRequest {
+    redirectUri: string,
+    profile: OidcProfile
+};
+
 export interface CheckRefreshDecision {
     allowRefresh: boolean
 };
@@ -117,7 +131,7 @@ export interface IdentityProvider {
     supportsPrompt: () => boolean,
     getRouter: () => any,
     authorizeWithUi: (req, res, next, authRequest: AuthRequest) => void,
-    logoutHook?: (req, res, next, redirect_uri: string) => boolean,
+    logoutHook?: (req, res, next, redirect_uri: string) => Promise<LogoutHookResponse>,
     endpoints: () => EndpointDefinition[],
     authorizeByUserPass: (user: string, pass: string, callback: Callback<AuthResponse>) => void,
     checkRefreshToken: (tokenInfo, apiInfo: WickedApi, callback: Callback<CheckRefreshDecision>) => void,
@@ -160,6 +174,7 @@ export interface OAuth2IdpConfig extends OAuth2IdpConfigBase {
         authorizeScope: string,
         tokenEndpoint: string,
         profileEndpoint: string,
+        redirectURIValidationEndpoint: string
     },
     resource?: string, // Needed for ADFS
     // Defaults to upn

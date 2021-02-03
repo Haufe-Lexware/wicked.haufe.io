@@ -1,7 +1,7 @@
 'use strict';
 
 import { GenericOAuth2Router } from '../common/generic-router';
-import { AuthRequest, EndpointDefinition, AuthResponse, IdentityProvider, IdpOptions, SamlIdpConfig, CheckRefreshDecision, SamlAuthResponse, ErrorLink } from '../common/types';
+import { AuthRequest, EndpointDefinition, AuthResponse, IdentityProvider, IdpOptions, SamlIdpConfig, CheckRefreshDecision, SamlAuthResponse, ErrorLink, LogoutHookResponse } from '../common/types';
 import { OidcProfile, Callback, WickedApi } from 'wicked-sdk';
 const { debug, info, warn, error } = require('portal-env').Logger('portal-auth:saml');
 const Router = require('express').Router;
@@ -126,10 +126,14 @@ export class SamlIdP implements IdentityProvider {
      * 
      * @param redirect_uri 
      */
-    public logoutHook(req, res, next, redirect_uri: string): boolean {
+    public async logoutHook(req, res, next, redirect_uri: string): Promise<LogoutHookResponse> {
         debug('logoutHook()');
         if (!req.session || !req.session[this.authMethodId])
-            return false; // Nothing to do, not logged in.
+            // Nothing to do, not logged in.
+            return {
+                hasHandledRequest: false,
+                isRedirectUriAccepted: true
+            };
         debug('Trying to SAML Logout.');
         const instance = this;
         try {
@@ -142,7 +146,10 @@ export class SamlIdP implements IdentityProvider {
             // Check that the identityProvider is correctly configured
             if (!instance.identityProvider.sso_logout_url) {
                 next(makeError('The SAML configuration does not contain an sso_logout_url.', 500));
-                return true;
+                return {
+                    hasHandledRequest: true,
+                    isRedirectUriAccepted: true
+                };
             }
 
             // Now we kill our session state.
@@ -150,7 +157,7 @@ export class SamlIdP implements IdentityProvider {
 
             if (redirect_uri)
                 options.relay_state = Buffer.from(redirect_uri).toString('base64');
-            instance.serviceProvider.create_logout_request_url(
+                instance.serviceProvider.create_logout_request_url(
                 instance.identityProvider,
                 options,
                 function (err, logoutUrl) {
@@ -168,11 +175,17 @@ export class SamlIdP implements IdentityProvider {
             // This means this method will handle returning something to res; the 
             // app.get(/logout) endpoint will not do anything more as of the first
             // IdP returning true here.
-            return true;
+            return {
+                hasHandledRequest: true,
+                isRedirectUriAccepted: true
+            };
         } catch (ex) {
             error(ex);
             // Silently just kill all sessions, or at least this one.
-            return false;
+            return {
+                hasHandledRequest: false,
+                isRedirectUriAccepted: true
+            };
         }
     }
 

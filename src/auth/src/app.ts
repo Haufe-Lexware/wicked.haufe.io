@@ -27,7 +27,7 @@ import { ExternalIdP } from './providers/external';
 import { LdapIdP } from './providers/ldap';
 
 import { StatusError } from './common/utils-fail';
-import { SimpleCallback } from './common/types';
+import { LogoutHookResponse, SimpleCallback } from './common/types';
 import { WickedAuthServer } from 'wicked-sdk';
 
 import { utils } from './common/utils';
@@ -232,27 +232,33 @@ app.initApp = function (authServerConfig: WickedAuthServer, callback: SimpleCall
     app.get(basePath + '/userinfo', nocache(), utilsOAuth2.getProfile);
     app.post(basePath + '/userinfo', nocache(), utilsOAuth2.getProfile);
 
-    app.get(basePath + '/logout', nocache(), function (req, res, next) {
+    app.get(basePath + '/logout', nocache(), async function (req, res, next) {
         debug(basePath + '/logout');
 
-        const redirect_uri = req.query && req.query.redirect_uri ? req.query.redirect_uri : null;
+        let redirect_uri = req.query && req.query.redirect_uri ? req.query.redirect_uri : null;
         // Iterate over the IdPs and see if they need to do a logout hook
         for (let authMethodId in app.idpMap) {
             const idp = app.idpMap[authMethodId];
             if (idp.logoutHook) {
-                const hasHandledRequest = idp.logoutHook(req, res, next, redirect_uri);
-                if (!hasHandledRequest) {
-                    // Then just delete the session data for this auth Method
-                    utils.deleteSession(req, authMethodId);
-                } else {
-                    // One IDP has taken over; let's quit here. The IdP must make
-                    // sure that this end point is called again after it is done
-                    // with whatever it does when logging out. Plus it must delete
-                    // its own session state. The reason why it's not done here yet
-                    // is that the IdP may need the session data to be able to correctly
-                    // log the user out (e.g. user_id and session_index for SAML).
-                    debug(`IdP ${authMethodId} has taken over, quitting /logout`);
-                    return;
+                const logoutHookResponse: LogoutHookResponse = await idp.logoutHook(req, res, next, redirect_uri);
+                if (logoutHookResponse){
+                    if(!logoutHookResponse.hasHandledRequest) {
+                        // Then just delete the session data for this auth Method
+                        utils.deleteSession(req, authMethodId);
+                        if(!logoutHookResponse.isRedirectUriAccepted){
+                            // The provided redirect URI is not on the accepted URIs list, thus ignore it
+                            redirect_uri = null;
+                        }
+                    } else {
+                        // One IDP has taken over; let's quit here. The IdP must make
+                        // sure that this end point is called again after it is done
+                        // with whatever it does when logging out. Plus it must delete
+                        // its own session state. The reason why it's not done here yet
+                        // is that the IdP may need the session data to be able to correctly
+                        // log the user out (e.g. user_id and session_index for SAML).
+                        debug(`IdP ${authMethodId} has taken over, quitting /logout`);
+                        return;
+                    }
                 }
             }
         }

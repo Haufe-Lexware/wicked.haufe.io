@@ -1,7 +1,7 @@
 'use strict';
 
 import { GenericOAuth2Router } from '../common/generic-router';
-import { AuthRequest, EndpointDefinition, AuthResponse, IdentityProvider, IdpOptions, OAuth2IdpConfig, ExpressHandler, CheckRefreshDecision, ErrorLink } from '../common/types';
+import { AuthRequest, EndpointDefinition, AuthResponse, IdentityProvider, IdpOptions, OAuth2IdpConfig, ExpressHandler, CheckRefreshDecision, ErrorLink, LogoutHookResponse, RedirectURIValidationResponse, RedirectURIValidationRequest } from '../common/types';
 import { OidcProfile, Callback, WickedApi } from 'wicked-sdk';
 const { debug, info, warn, error } = require('portal-env').Logger('portal-auth:oauth2');
 
@@ -14,6 +14,7 @@ var jwt = require('jsonwebtoken');
 
 import { utils } from '../common/utils';
 import { failMessage, failError, failOAuth, makeError } from '../common/utils-fail';
+import async = require('async');
 
 /**
  * This is a sample of how an IdP must work to be able to integrate into
@@ -109,6 +110,100 @@ export class OAuth2IdP implements IdentityProvider {
         };
 
         this.genericFlow.initIdP(this);
+    }
+
+    /**
+     * When a user logs out using the /logout endpoint, and the user has an oAuth2
+     * session running, send the redirect_uri to a hook service to validate it 
+     * against an accepted redirect URLs list, thus prevent open redirect attacks.
+     * 
+     * @param redirect_uri 
+     */
+    public async logoutHook(req, res, next, redirect_uri: string): Promise<LogoutHookResponse> {
+        debug('logoutHook()');
+        if (!req.session || !req.session[this.authMethodId])
+            // Nothing to do, not logged in.
+            return {
+                hasHandledRequest: false,
+                isRedirectUriAccepted: true
+            };
+        debug('Validating redirect_uri');
+        const instance = this;
+        try {
+            // Check that the redirect_uri valiodation service is configured
+            if (!instance.authMethodConfig.endpoints.redirectURIValidationEndpoint) {
+                next(makeError('The redirectURIValidationEndpoint configuration is not set', 500));
+                return {
+                    hasHandledRequest: false,
+                    isRedirectUriAccepted: true
+                };
+            }
+
+            const redirUriValidationResponse: RedirectURIValidationResponse =
+                await this.validateRedirectURIAsync(redirect_uri, 
+                        utils.getProfile(req, this.authMethodId),
+                        instance.authMethodConfig.endpoints.redirectURIValidationEndpoint)
+
+            if(redirUriValidationResponse) {
+                return {
+                    hasHandledRequest: false,
+                    isRedirectUriAccepted: redirUriValidationResponse.isRedirectUriAccepted
+                }
+            }
+            
+            return {
+                hasHandledRequest: false,
+                isRedirectUriAccepted: true
+            }
+        } catch (ex) {
+            error(ex);
+            // Silently just kill all sessions, or at least this one.
+            return {
+                hasHandledRequest: false,
+                isRedirectUriAccepted: true
+            };
+        }
+    }
+
+    private validateRedirectURIAsync = async (scope: any, profile: OidcProfile, url: string): Promise<RedirectURIValidationResponse> => {
+        const instance = this;
+        return new Promise<RedirectURIValidationResponse>(function (resolve, reject) {
+            instance.validateRedirectURI(scope, profile, url, function (err, result) {
+                err ? reject(err) : resolve(result);
+            });
+        })
+    }
+
+    private validateRedirectURI(redirectUri: string, profile: OidcProfile ,url: string, callback: Callback<RedirectURIValidationResponse>): void {
+        debug(`validateRedirectURI()`);
+        const validateURIRequest: RedirectURIValidationRequest = {
+            redirectUri,
+            profile
+        };
+        debug(JSON.stringify(validateURIRequest));
+        async.retry({
+            times: this.getRouter().EXTERNAL_URL_RETRIES | 10,
+            interval: this.getRouter().EXTERNAL_URL_INTERVAL | 500
+        }, function (callback) {
+            debug(`validateRedirectURI: Attempting to validate redirect URL ${redirectUri} at ${url}`);
+            request.post({
+                url: url,
+                body: validateURIRequest,
+                json: true,
+                timeout: 5000
+            }, (err, res, body) => {
+                if (err)
+                    return callback(err);
+                if (res.statusCode < 200 || res.statusCode > 299)
+                    return callback(makeError('Redirect URI validation via external service failed with unexpected status code.', res.statusCode));
+                const redirectUriValidationResponse = utils.getJson(body) as RedirectURIValidationResponse;
+                return callback(null, redirectUriValidationResponse)
+            });
+        }, function (err, redirectUriValidationResponse) {
+            if (err)
+                return callback(err);
+            return callback(null, redirectUriValidationResponse);
+        });
     }
 
     public getType() {
