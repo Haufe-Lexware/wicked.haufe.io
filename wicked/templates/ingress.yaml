@@ -1,5 +1,5 @@
 {{- if .Values.ingress.enabled -}}
-apiVersion: extensions/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: {{ template "fullname" . }}-portal-ingress
@@ -24,11 +24,14 @@ spec:
     http:
       paths:
       - path: /
+        pathType: Prefix
         backend:
-          serviceName: {{ template "fullname" . }}-portal
-          servicePort: 3000
+          service:
+            name: {{ template "fullname" . }}-portal
+            port:
+              number: 3000
 ---
-apiVersion: extensions/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: {{ template "fullname" . }}-gateway-ingress
@@ -53,7 +56,10 @@ spec:
     http:
       paths:
       - path: /
+        pathType: Prefix
         backend:
-          serviceName: {{ template "fullname" . }}-kong
-          servicePort: 8000
+          service:
+            name: {{ template "fullname" . }}-kong
+            port:
+              number: 8000
 {{- end -}}

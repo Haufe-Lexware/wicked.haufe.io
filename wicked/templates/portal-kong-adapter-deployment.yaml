@@ -22,6 +22,10 @@ spec:
         service: {{ template "fullname" . }}-kong-adapter
         wicked: "true"
     spec:
+{{- if .Values.nodeSelector }}
+      nodeSelector:
+      {{ toYaml .Values.nodeSelector | indent 10 }}
+{{- end }}
 {{- if .Values.useRbac }}
       serviceAccountName: {{ template "fullname" . }}-role
 {{- end }}
