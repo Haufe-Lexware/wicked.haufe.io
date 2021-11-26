@@ -23,7 +23,7 @@ spec:
         wicked: "true"
     spec:
 {{- if .Values.useRbac }}
-      serviceAccountName: {{ template "fullname" . }}-role
+      serviceAccountName: {{ template "fullname" . }}-role 
 {{- end }}
       initContainers:
       - name: {{ template "fullname" . }}-kong-adapter-init1
@@ -75,6 +75,13 @@ spec:
         resources:
 {{ toYaml .Values.resources.kongAdapter | indent 10 }}
       restartPolicy: Always
+{{- if .Values.nodeSelector }}
+      nodeSelector: {{- .Values.nodeSelector | toYaml | nindent 8 }}
+{{- end }}
+{{- if .Values.tolerations }}
+      tolerations:
+{{ toYaml .Values.tolerations | indent 8 }}
+{{- end }}
 {{- if .Values.imagePullSecrets }}
       imagePullSecrets:
 {{ toYaml .Values.imagePullSecrets | indent 8 }}

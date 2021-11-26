@@ -1,6 +1,6 @@
 {
   "name": "wicked.portal-auth",
-  "version": "1.0.0-rc.14",
+  "version": "1.0.0-rc.15",
   "description": "wicked.haufe.io Authorization Server",
   "main": "dist/authz.js",
   "scripts": {
@@ -36,7 +36,7 @@
   },
   "homepage": "https://github.com/Haufe-Lexware/wicked.portal-auth",
   "dependencies": {
-    "@types/node": "^10.3.2",
+    "@types/node": "10.17.35",
     "async": "2.6.2",
     "body-parser": "1.18.3",
     "bootstrap": "3.4.1",
@@ -52,7 +52,7 @@
     "morgan": "1.9.1",
     "mustache": "2.2.1",
     "nocache": "^2.0.0",
-    "openid-client": "2.5.0",
+    "openid-client": "4.2.2",
     "passport": "0.3.2",
     "passport-facebook": "2.1.1",
     "passport-github2": "0.1.10",

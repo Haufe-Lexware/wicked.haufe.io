@@ -1,5 +1,5 @@
 {
-  "version": "1.0.0-rc.14",
+  "version": "1.0.0-rc.15",
   "private": true,
   "main": "bin/api",
   "dependencies": {
@@ -14,7 +14,7 @@
     "mustache": "2.2.1",
     "ncp": "2.0.0",
     "node-uuid": "1.4.8",
-    "pg": "7.18.1",
+    "pg": "8.5.1",
     "request": "2.88.0",
     "rimraf": "2.6.2",
     "semver": "6.3.0"

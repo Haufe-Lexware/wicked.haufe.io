@@ -21,7 +21,7 @@ spec:
         wicked: "true"
     spec:
 {{- if .Values.useRbac }}
-      serviceAccountName: {{ template "fullname" . }}-role
+      serviceAccountName: {{ template "fullname" . }}-role 
 {{- end }}
       containers:
       - name: {{ template "fullname" . }}-redis
@@ -31,4 +31,12 @@ spec:
           containerPort: 6379
           protocol: TCP
       restartPolicy: Always
+{{- if .Values.nodeSelector }}
+      nodeSelector: {{- .Values.nodeSelector | toYaml | nindent 8 }}
+{{- end }}
+{{- if .Values.tolerations }}
+      tolerations:
+{{ toYaml .Values.tolerations | indent 8 }}
+{{- end }}
 {{- end -}}
+

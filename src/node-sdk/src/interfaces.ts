@@ -726,7 +726,12 @@ export interface PassthroughScopeRequest {
      * The OpenID Connect compatible profile of the authenticated user. You will find a unique ID in the `sub` property, 
      * plus other properties, depending on the type of identity provider which was used.
      */
-    profile: OidcProfile
+    profile: OidcProfile,
+    /**
+     * In some cases, this property may contain additional data. For the OIDC/OAuth2 case, this will contain the response of the token endpoint of
+     * the upstream identity provider.
+     */
+    data?: any
 }
 
 /**

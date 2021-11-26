@@ -70,7 +70,12 @@ export interface AuthResponse {
     defaultProfile: OidcProfile,
     defaultGroups: string[],
     registrationPool?: string,
-    profile?: OidcProfileEx
+    profile?: OidcProfileEx,
+    // This can contain additional data which is passed on when doing the
+    // scope request to a third party. Needs to be filled by the identity
+    // provider type implementation; oauth2.ts uses this to pass on the token
+    // response to the scope resolver.
+    data?: any,
 }
 
 export interface SamlAuthResponse extends AuthResponse {

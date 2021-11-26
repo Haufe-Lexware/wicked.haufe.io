@@ -11,6 +11,21 @@ namespace: default
 # other containers/pods to start).
 useRbac: false
 
+## Node selector for nodes.
+##
+nodeSelector: {}
+
+## Tolerations for the nodes.
+##
+## Example:
+##   - key: "toleration=key"
+##     operator: "Equal"
+##     value: "value"
+##     effect: "NoSchedule"
+##
+tolerations: []
+
+
 # Deadline for all pods to come up successfully (in seconds)
 deployDeadline: 300
 
@@ -55,7 +70,7 @@ image:
   # need to pull your company's version of wicked.
   repository: "haufelexware/wicked."
   # The docker image tag to use; usually you don't change this.
-  tag: "1.0.0-rc.14"
+  tag: "1.0.0-rc.15"
   pullPolicy: IfNotPresent
 
 # Add imagePullSecrets like this in an override.yaml to pass in with helm install

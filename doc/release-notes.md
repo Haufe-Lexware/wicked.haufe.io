@@ -14,6 +14,18 @@ Official Release of the API Portal.
 
 ## 1.0.0 (release candidates)
 
+### 1.0.0-rc.15 - Notable changes
+
+**Maintenance release**
+
+Some fixes and updates of node packages; pinning the TypeScript type definitions. Enabling interacting with not fully compliant OpenID identity providers (leveraging `id_token` of token response). Addition of tolerations and node selectors in the Kubernetes Helm chart.
+
+* [Deployments are missing NodeSelectors and Tolerations](https://github.com/Haufe-Lexware/wicked.haufe.io/issues/295)
+* [OpenID IdPs which do not support userinfo endpoint are not supported correctly](https://github.com/Haufe-Lexware/wicked.haufe.io/issues/291)
+* [Typescript compile failing due to @types/node update](https://github.com/Haufe-Lexware/wicked.haufe.io/issues/285)
+
+Thanks to shreyas-segu and MariusDume for the contributions!
+
 ### 1.0.0-rc.14 - Notable changes
 
 **Maintenance release**

@@ -507,7 +507,9 @@ export class GenericOAuth2Router {
                     }
                     break;
                 default:
-                    warn(`Unsupported prompt parameter '${authRequest.prompt}'`);
+                    if (authRequest.prompt) {
+                        warn(`Unsupported prompt parameter '${authRequest.prompt}'`);
+                    }
                     break;
             }
             // We're fine. Check for pre-existing sessions.
@@ -951,7 +953,7 @@ export class GenericOAuth2Router {
         // OK, interesting, let's ask an upstream for the scope...
         let scopeResponse;
         try {
-            scopeResponse = await instance.resolvePassthroughScopeAsync(authRequest.scope, authResponse.profile, apiInfo.passthroughScopeUrl);
+            scopeResponse = await instance.resolvePassthroughScopeAsync(authRequest.scope, authResponse.profile, authResponse.data, apiInfo.passthroughScopeUrl);
         } catch (err) {
             return failError(500, err, next);
         }
@@ -976,22 +978,24 @@ export class GenericOAuth2Router {
         return instance.authorizeFlow_Step2(req, res, next);
     }
 
-    private resolvePassthroughScopeAsync = async (scope: any, profile: OidcProfile, url: string): Promise<PassthroughScopeResponse> => {
+    private resolvePassthroughScopeAsync = async (scope: any, profile: OidcProfile, data: any, url: string): Promise<PassthroughScopeResponse> => {
         const instance = this;
         return new Promise<PassthroughScopeResponse>(function (resolve, reject) {
-            instance.resolvePassthroughScope(scope, profile, url, function (err, result) {
+            instance.resolvePassthroughScope(scope, profile, data, url, function (err, result) {
                 err ? reject(err) : resolve(result);
             });
         })
     }
 
-    private resolvePassthroughScope(scope: any, profile: OidcProfile, url: string, callback: Callback<PassthroughScopeResponse>): void {
+    private resolvePassthroughScope(scope: any, profile: OidcProfile, data: any, url: string, callback: Callback<PassthroughScopeResponse>): void {
         debug(`resolvePassthroughScope()`);
         const scopeRequest: PassthroughScopeRequest = {
             scope: scope,
             auth_method: this.authMethodId,
-            profile: profile
-        }
+            profile: profile,
+            data: data
+        };
+        debug(JSON.stringify(scopeRequest));
         async.retry({
             times: EXTERNAL_URL_RETRIES,
             interval: EXTERNAL_URL_INTERVAL
@@ -1369,7 +1373,7 @@ export class GenericOAuth2Router {
         } else if (apiInfo.passthroughUsers && apiInfo.passthroughScopeUrl) {
             // Passthrough users and passthrough scopes
             try {
-                const passthroughScopes = await instance.resolvePassthroughScopeAsync(tokenRequest.scope, authResponse.defaultProfile, apiInfo.passthroughScopeUrl);
+                const passthroughScopes = await instance.resolvePassthroughScopeAsync(tokenRequest.scope, authResponse.defaultProfile, authResponse.data, apiInfo.passthroughScopeUrl);
                 if (!passthroughScopes.allow) {
                     let msg = 'Scope validation with external system disallowed login (property "allow" is not present or not set to true)';
                     if (passthroughScopes.error_message)
@@ -1720,7 +1724,8 @@ export class GenericOAuth2Router {
             const scopes = GenericOAuth2Router.cleanupScopeString(tokenInfo.scope);
             let scopeResponse: PassthroughScopeResponse;
             try {
-                scopeResponse = await instance.resolvePassthroughScopeAsync(scopes, tempProfile, apiInfo.passthroughScopeUrl);
+                // Here, we do not have any token response information, as we normally do not check again.
+                scopeResponse = await instance.resolvePassthroughScopeAsync(scopes, tempProfile, null, apiInfo.passthroughScopeUrl);
             } catch (err) {
                 throw makeOAuthError(500, 'server_error', 'Could not resolve passthrough scope via external service.', err);
             }
