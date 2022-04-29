@@ -3,7 +3,7 @@
   "private": true,
   "main": "bin/api",
   "dependencies": {
-    "async": "2.6.2",
+    "async": "2.6.4",
     "bcrypt-nodejs": "0.0.3",
     "body-parser": "1.18.3",
     "chai": "3.5.0",
