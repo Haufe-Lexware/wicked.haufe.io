@@ -21,7 +21,7 @@
   },
   "homepage": "https://github.com/Haufe-Lexware/wicked.test#readme",
   "dependencies": {
-    "async": "2.6.2",
+    "async": "2.6.4",
     "chai": "3.5.0",
     "mocha": "5.2.0",
     "request": "2.88.0"
