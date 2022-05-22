@@ -81,6 +81,9 @@ export PORTAL_KONG_ADAPTER_TAG=${DOCKER_TAG}
 export PORTAL_AUTH_TAG=${DOCKER_TAG}
 export KONG_TAG=${DOCKER_TAG}
 
+# Needed to build the right images on macOS with M1 processors
+export DOCKER_DEFAULT_PLATFORM=linux/amd64
+
 echo "INFO: Docker logs go into logs/docker-auth-${wickedStorage}${BUILD_ALPINE}.log."
 
 if [ ! -z "$buildLocal" ]; then

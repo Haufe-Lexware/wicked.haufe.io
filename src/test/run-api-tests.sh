@@ -72,6 +72,9 @@ echo "INFO: Docker logs go into logs/docker-api-${wickedStorage}${BUILD_ALPINE}.
 export PORTAL_ENV_TAG=${DOCKER_TAG}-onbuild
 export PORTAL_API_TAG=${DOCKER_TAG}
 
+# Needed to build the right images on macOS with M1 processors
+export DOCKER_DEFAULT_PLATFORM=linux/amd64
+
 if [ ! -z "$buildLocal" ]; then
 
     # echo "INFO: Building images locally."

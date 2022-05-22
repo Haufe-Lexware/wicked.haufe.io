@@ -3,7 +3,6 @@ version: '2'
 services:
   kong-database:
     image: postgres:11-alpine
-    platform: linux/amd64
     environment:
     - "POSTGRES_USER=kong"
     - "POSTGRES_PASSWORD=kong"
@@ -16,7 +15,6 @@ services:
 
   kong:
     image: wicked.kong:local
-    platform: linux/amd64
     depends_on:
     - "kong-database"
     links:
@@ -34,13 +32,11 @@ services:
 
   redis:
     image: redis:6
-    platform: linux/amd64
     ports:
     - "6379:6379"
     restart: unless-stopped
 
   prometheus-config:
-    platform: linux/amd64
     build: 
       context: prometheus
     volumes:
@@ -49,7 +45,6 @@ services:
 
   prometheus:
     image: prom/prometheus:v2.35.0
-    platform: linux/amd64
     ports:
     - "9090:9090"
     restart: unless-stopped

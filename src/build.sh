@@ -41,11 +41,14 @@ fi
     docker pull ${BASE_IMAGE_UBUNTU}
 )
 
+# Needed to build the right images on macOS with M1 processors
+export DOCKER_DEFAULT_PLATFORM=linux/amd64
+
 docker-compose --file=docker-compose.build.yml build --parallel node-sdk kong k8s-tool
-#docker-compose --file=docker-compose.build.yml build --parallel env env-alpine k8s-init
-docker-compose --file=docker-compose.build.yml build env env-alpine k8s-init
-#docker-compose --file=docker-compose.build.yml build --parallel
-docker-compose --file=docker-compose.build.yml build
+docker-compose --file=docker-compose.build.yml build --parallel env env-alpine k8s-init
+# docker-compose --file=docker-compose.build.yml build env env-alpine k8s-init
+docker-compose --file=docker-compose.build.yml build --parallel
+# docker-compose --file=docker-compose.build.yml build
 
 echo "======================================================"
 echo "FINISHED BUILDING BRANCH ${branch}"

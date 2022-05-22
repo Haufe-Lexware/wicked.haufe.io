@@ -2,13 +2,11 @@ version: "3.7"
 services:
   kong:
     image: wicked.kong:${TAG}
-    platform: linux/amd64
     build:
       context: kong
 
   k8s-tool:
     image: wicked.k8s-tool:${TAG}
-    platform: linux/amd64
     build:
       context: k8s-tool/src
       args:
@@ -16,7 +14,6 @@ services:
 
   node-sdk:
     image: wicked.sdk:${TAG}
-    platform: linux/amd64
     build:
       context: node-sdk
       args:
@@ -24,7 +21,6 @@ services:
   
   k8s-init:
     image: wicked.k8s-init:${TAG}
-    platform: linux/amd64
     build:
       context: k8s-init
       args:
@@ -35,7 +31,6 @@ services:
 
   env:
     image: wicked.env:${TAG}-onbuild
-    platform: linux/amd64
     build:
       context: env
       args:
@@ -46,7 +41,6 @@ services:
 
   env-alpine:
     image: wicked.env:${TAG}-onbuild-alpine
-    platform: linux/amd64
     build:
       context: env
       dockerfile: Dockerfile-alpine
@@ -58,7 +52,6 @@ services:
 
   api:
     image: wicked.api:${TAG}
-    platform: linux/amd64
     build:
       context: api
       args:
@@ -68,7 +61,6 @@ services:
 
   api-alpine:
     image: wicked.api:${TAG}-alpine
-    platform: linux/amd64
     build:
       context: api
       args:
@@ -78,7 +70,6 @@ services:
 
   ui:
     image: wicked.ui:${TAG}
-    platform: linux/amd64
     build:
       context: ui
       args:
@@ -88,7 +79,6 @@ services:
 
   ui-alpine:
     image: wicked.ui:${TAG}-alpine
-    platform: linux/amd64
     build:
       context: ui
       args:
@@ -98,7 +88,6 @@ services:
 
   auth:
     image: wicked.auth:${TAG}
-    platform: linux/amd64
     build:
       context: auth
       args:
@@ -108,7 +97,6 @@ services:
 
   auth-alpine:
     image: wicked.auth:${TAG}-alpine
-    platform: linux/amd64
     build:
       context: auth
       args:
@@ -118,7 +106,6 @@ services:
 
   kong-adapter:
     image: wicked.kong-adapter:${TAG}
-    platform: linux/amd64
     build:
       context: kong-adapter
       args:
@@ -128,7 +115,6 @@ services:
 
   kong-adapter-alpine:
     image: wicked.kong-adapter:${TAG}-alpine
-    platform: linux/amd64
     build:
       context: kong-adapter
       args:
@@ -138,7 +124,6 @@ services:
 
   mailer:
     image: wicked.mailer:${TAG}
-    platform: linux/amd64
     build:
       context: mailer
       args:
@@ -148,7 +133,6 @@ services:
 
   mailer-alpine:
     image: wicked.mailer:${TAG}-alpine
-    platform: linux/amd64
     build:
       context: mailer
       args:
@@ -158,7 +142,6 @@ services:
 
   chatbot:
     image: wicked.chatbot:${TAG}
-    platform: linux/amd64
     build:
       context: chatbot
       args:
@@ -168,7 +151,6 @@ services:
 
   chatbot-alpine:
     image: wicked.chatbot:${TAG}-alpine
-    platform: linux/amd64
     build:
       context: chatbot
       args:
@@ -178,7 +160,6 @@ services:
 
   kickstarter:
     image: wicked.kickstarter:${TAG}
-    platform: linux/amd64
     build:
       context: kickstarter
       args:
@@ -188,7 +169,6 @@ services:
 
   kickstarter-alpine:
     image: wicked.kickstarter:${TAG}-alpine
-    platform: linux/amd64
     build:
       context: kickstarter
       args:

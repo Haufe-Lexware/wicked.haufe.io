@@ -72,6 +72,8 @@ export PORTAL_API_TAG=${DOCKER_TAG}
 export PORTAL_KONG_ADAPTER_TAG=${DOCKER_TAG}
 export KONG_TAG=${DOCKER_TAG}
 
+export DOCKER_DEFAULT_PLATFORM=linux/amd64
+
 echo "INFO: Docker logs go into logs/docker-kong-adapter-${wickedStorage}${BUILD_ALPINE}.log."
 
 if [ ! -z "$buildLocal" ]; then
