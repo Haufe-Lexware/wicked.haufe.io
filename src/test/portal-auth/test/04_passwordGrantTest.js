@@ -25,6 +25,7 @@ describe('Resource Owner Password Grant', function () {
     });
 
     after(function (done) {
+        this.timeout(20000);
         utils.destroyAppsAndSubcriptions(done);
     });
 

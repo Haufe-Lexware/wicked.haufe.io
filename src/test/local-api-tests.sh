@@ -141,9 +141,9 @@ popd
 pushd portal-api
 node node_modules/portal-env/await.js http://localhost:${apiPort}/ping
 if [[ -z "$grepFilter" ]]; then
-    mocha
+    ./node_modules/mocha/bin/mocha.js
 else
-    mocha --grep "${grepFilter}"
+    ./node_modules/mocha/bin/mocha.js --grep "${grepFilter}"
 fi
 popd
 

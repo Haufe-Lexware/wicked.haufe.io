@@ -9,7 +9,8 @@ import { WickedSessionStoreType } from 'wicked-sdk';
 interface RedisSettings {
     host: string,
     port: number,
-    password?: string
+    password?: string,
+    legacyMode: boolean
 }
 
 export const redisConnection = {
@@ -60,10 +61,13 @@ function resolveRedis(): RedisSettings {
 
     const settings = {
         host: globals.sessionStore.host || 'portal-redis',
-        port: globals.sessionStore.port || 6379
+        port: globals.sessionStore.port || 6379,
+        legacyMode: true
     } as RedisSettings;
     if (globals.sessionStore.password)
         settings.password = globals.sessionStore.password;
+
+    debug(`resolveRedis(): settings = ${JSON.stringify(settings)}`);
 
     return settings;
 }

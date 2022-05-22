@@ -185,18 +185,18 @@ export interface KongPluginRateLimiting extends KongPlugin {
 export interface KongPluginWhiteBlackList extends KongPlugin {
     config: {
         /** Comma-separated list of IP addresses */
-        whitelist?: string,
+        allow?: string,
         /** Comma-separated list of IP addresses */
-        blacklist?: string
+        deny?: string
     }
 }
 
 export interface KongPluginBotDetection extends KongPlugin {
     config: {
         /** A comma separated array of regular expressions that should be whitelisted. The regular expressions will be checked against the User-Agent header. */
-        whitelist?: string,
+        allow?: string,
         /** A comma separated array of regular expressions that should be blacklisted. The regular expressions will be checked against the User-Agent header. */
-        blacklist?: string
+        deny?: string
     }
 }
 

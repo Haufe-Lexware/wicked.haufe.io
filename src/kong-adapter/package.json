@@ -1,8 +1,8 @@
 {
-  "version": "1.0.0-rc.14",
+  "version": "1.0.0-rc.15",
   "private": true,
   "dependencies": {
-    "async": "2.6.2",
+    "async": "2.6.4",
     "body-parser": "1.18.3",
     "express": "4.16.3",
     "morgan": "1.9.1",
@@ -21,10 +21,10 @@
   },
   "name": "portal-kong-adapter",
   "config": {
-    "kongversion": "1.5.1"
+    "kongversion": "2.8.1"
   },
   "devDependencies": {
-    "@types/node": "^10.11.3",
+    "@types/node": "10.17.35",
     "typescript": "3.4.1"
   }
 }

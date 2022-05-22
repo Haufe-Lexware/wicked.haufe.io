@@ -24,6 +24,7 @@ function initSessionStore(globals, session){
             // Set options for Redis session store, see https://www.npmjs.com/package/connect-redis
             sessionStoreOptions.host = globals.sessionStore.host || 'portal-redis';
             sessionStoreOptions.port = globals.sessionStore.port || 6379;
+            sessionStoreOptions.legacyMode = true;
             if (globals.sessionStore.password)
                 sessionStoreOptions.pass = globals.sessionStore.password;
             break;

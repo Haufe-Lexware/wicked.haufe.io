@@ -23,6 +23,7 @@ describe('Basic use cases', function () {
     let clientSecret;
 
     after(function (done) {
+        this.timeout(10000);
         async.series([
             callback => utils.awaitEmptyAdapterQueue(callback),
             callback => wicked.deleteApplication(appId, callback),

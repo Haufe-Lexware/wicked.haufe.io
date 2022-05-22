@@ -33,7 +33,7 @@ It is also assumed that you have some knowledge of Helm, and that you have run `
 If that is set and done, you may now install wicked using the Helm chart. Move into a suitable directory, and then download the chart using `helm fetch`:
 
 ```
-$ export WICKED_VERSION=1.0.0-rc.14 # Possibly adapt to the latest version
+$ export WICKED_VERSION=1.0.0-rc.15 # Possibly adapt to the latest version
 $ helm fetch --untar https://github.com/Haufe-Lexware/wicked.haufe.io/releases/download/v${WICKED_VERSION}/wicked-${WICKED_VERSION}.tgz
 ```
 
@@ -150,6 +150,8 @@ Setting | Must Override | Default | Description
 `persistence.storageClass` | - | `""` | **ONLY APPLIES TO JSON STORAGE TYPE**: If your cluster supports dynamic provisioning of volumes (provision volumes for volume claims automatically), specify the storage class for the volume here. Mutually exclusive with `persistence.existingClaim` (use either).
 `persistence.accessMode` | - | `ReadWriteOnce` | **ONLY APPLIES TO JSON STORAGE TYPE**: The volume is mounted to the `portal-api` container using this access mode.
 `persistence.size` | - | `1Gi` | **ONLY APPLIES TO JSON STORAGE TYPE**: The size of the volume for dynamic data persistence. 1 GB is usually more than enough for this (probably also 100 MB would suffice, depending on your needs).
+`nodeSelector` | - | `""` | **Available for all pods**: For the pod to be eligible to run on a node, the node must have each of the indicated key-value pairs as labels (it can have additional labels as well). The most common usage is one key-value pair..
+`tolerations` | - | `""` | **Available for all pods**: Tolerations are applied to pods, and allow (but do not require) the pods to schedule onto nodes with matching taints.
 
 For a complete description, please see the [`values.yaml`](values.yaml) file itself; it contains even more information on the various options, and also information on how to set resources of all containers (if necessary).
 

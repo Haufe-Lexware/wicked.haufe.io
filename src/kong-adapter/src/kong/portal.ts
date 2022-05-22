@@ -545,7 +545,7 @@ function injectKeyAuth(api: ApiDescription): ApiDescription {
         name: 'acl',
         enabled: true,
         config: {
-            whitelist: [groupName]
+            allow: [groupName]
         }
     });
     return api;
@@ -627,7 +627,7 @@ function injectOAuth2Auth(api: ApiDescription): void {
         name: 'acl',
         enabled: true,
         config: {
-            whitelist: [groupName]
+            allow: [groupName]
         }
     });
 }

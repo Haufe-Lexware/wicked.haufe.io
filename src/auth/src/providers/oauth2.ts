@@ -125,13 +125,24 @@ export class OAuth2IdP implements IdentityProvider {
         return this.genericFlow.getRouter();
     }
 
-    private verifyProfile = (req, accessToken, refreshTokenNotUsed, profile, done) => {
+    private verifyProfile = (req, accessToken, refreshTokenNotUsed, tokenResponse, profile, done) => {
         debug(`verifyProfile(${this.authMethodId})`);
+        debug(`- tokenResponse: ${JSON.stringify(tokenResponse)}`);
+
+        let hopefullyJwtToken = accessToken;
 
         if (!this.authMethodConfig.retrieveProfile) {
+            // Special case for OpenID Connect; if the scope contains "openid", and there is a "id_token" property in the tokenResponse,
+            // use the id_token as the JWT token.
+            if (tokenResponse && tokenResponse.scope && tokenResponse.id_token) {
+                if (tokenResponse.scope.indexOf('openid') >= 0) {
+                    debug(`- detected OpenID id_token; using that`)
+                    hopefullyJwtToken = tokenResponse.id_token;
+                }
+            }
             // Verify signing?
             try {
-                profile = this.verifyJWT(accessToken);
+                profile = this.verifyJWT(hopefullyJwtToken);
                 debug(`verifyProfile(${this.authMethodId}): Decoded JWT Profile:`);
             } catch (ex) {
                 error(`verifyProfile(${this.authMethodId}): JWT decode/verification failed.`);
@@ -142,7 +153,8 @@ export class OAuth2IdP implements IdentityProvider {
         debug(profile);
 
         try {
-            const authResponse = this.createAuthResponse(profile);
+            const authResponse = this.createAuthResponse(profile, tokenResponse);
+            debug(`authResponse: ${JSON.stringify(authResponse)}`);
             return done(null, authResponse);
         } catch (err) {
             return done(null, false, { message: err });
@@ -288,7 +300,7 @@ export class OAuth2IdP implements IdentityProvider {
                         err.internalError = new Error(`Error: ${jsonResponse.error}, description. ${jsonResponse.error_description || '<no description>'}`);
                     return callback(err);
                 }
-                return instance.verifyProfile(null, jsonResponse.access_token, null, null, callback);
+                return instance.verifyProfile(null, jsonResponse.access_token, null, jsonResponse, null, callback);
             } catch (err) {
                 error(err);
                 return callback(err);
@@ -359,7 +371,7 @@ export class OAuth2IdP implements IdentityProvider {
     };
 
     // HELPER METHODS
-    private createAuthResponse(profile: any): AuthResponse {
+    private createAuthResponse(profile: any, tokenResponse: any): AuthResponse {
         debug(`createAuthResponse(${this.authMethodId})`);
 
         const defaultProfile = this.createDefaultProfile(profile);
@@ -370,7 +382,8 @@ export class OAuth2IdP implements IdentityProvider {
             userId: null,
             customId: customId,
             defaultGroups: defaultGroups,
-            defaultProfile: defaultProfile
+            defaultProfile: defaultProfile,
+            data: tokenResponse
         };
     }
 

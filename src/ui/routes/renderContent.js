@@ -1,7 +1,7 @@
 'use strict';
 
 const { debug, info, warn, error } = require('portal-env').Logger('portal:renderMarkdown');
-const marked = require('marked');
+const { marked } = require('marked');
 const highlightJs = require('highlight.js');
 const pug = require('pug');
 

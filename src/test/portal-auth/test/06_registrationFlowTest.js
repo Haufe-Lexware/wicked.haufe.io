@@ -29,6 +29,7 @@ describe('Registration Flow', function () {
     });
 
     after(function (done) {
+        this.timeout(20000);
         utils.destroyAppsAndSubcriptions(done);
     });
 

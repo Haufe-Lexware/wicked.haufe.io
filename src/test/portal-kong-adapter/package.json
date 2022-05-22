@@ -1,6 +1,6 @@
 {
   "name": "test-api",
-  "version": "1.0.0-rc.14",
+  "version": "1.0.0-rc.15",
   "description": "Tests for portal-kong-adapter",
   "main": "index.js",
   "directories": {
@@ -21,9 +21,9 @@
   },
   "homepage": "https://github.com/Haufe-Lexware/wicked.test#readme",
   "dependencies": {
-    "async": "2.6.2",
+    "async": "2.6.4",
     "chai": "3.5.0",
-    "mocha": "5.2.0",
+    "mocha": "10.0.0",
     "request": "2.88.0",
     "server-destroy": "1.0.1"
   },

@@ -28,7 +28,7 @@ spec:
         prometheus.io/port:  '8001'
     spec:
 {{- if .Values.useRbac }}
-      serviceAccountName: {{ template "fullname" . }}-role
+      serviceAccountName: {{ template "fullname" . }}-role 
 {{- end }}
 {{- if .Values.postgres.deployPostgres }}
       initContainers:
@@ -94,6 +94,13 @@ spec:
         resources:
 {{ toYaml .Values.kong.resources | indent 10 }}
       restartPolicy: Always
+{{- if .Values.nodeSelector }}
+      nodeSelector: {{- .Values.nodeSelector | toYaml | nindent 8 }}
+{{- end }}
+{{- if .Values.tolerations }}
+      tolerations:
+{{ toYaml .Values.tolerations | indent 8 }}
+{{- end }}
 {{- if .Values.imagePullSecrets }}
       imagePullSecrets:
 {{ toYaml .Values.imagePullSecrets | indent 8 }}

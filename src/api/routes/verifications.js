@@ -106,7 +106,10 @@ verifications.addVerification = function (app, res, users, loggedInUserId, body)
                 webhooks.logEvent(app, {
                     action: webhooks.ACTION_ADD,
                     entity: entityName,
-                    data: persistedVerif
+                    data: {
+                        userId: loggedInUserId,
+                        verification: persistedVerif
+                    }
                 });
 
                 res.status(204).jsonp({ message: 'No content.' });
@@ -188,7 +191,10 @@ verifications.deleteVerification = function (app, res, users, loggedInUserId, ve
             webhooks.logEvent(app, {
                 action: webhooks.ACTION_DELETE,
                 entity: webhooks.ENTITY_VERIFICATION,
-                data: deletedVerif
+                data: {
+                    userId: loggedInUserId,
+                    verification: deletedVerif
+                }
             });
         });
     });

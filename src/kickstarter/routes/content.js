@@ -2,7 +2,7 @@
 
 const fs = require('fs');
 const path = require('path');
-const marked = require('marked');
+const { marked } = require('marked');
 const express = require('express');
 const router = express.Router();
 const pug = require('pug');

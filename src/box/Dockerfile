@@ -1,4 +1,4 @@
-FROM node:10-alpine AS env_builder
+FROM node:16-alpine AS env_builder
 
 RUN apk update && \
     apk add jq bash
@@ -30,10 +30,11 @@ RUN npm run build
 
 # ======================================================
 
-FROM node:10-alpine
+FROM node:16-alpine
 
-ENV KONG_VERSION 0.14.1
-ENV KONG_SHA256 e29937c5117ac2debcffe0d0016996dd5f0c516ef628f1edc029138715981387
+ENV KONG_VERSION 2.8.1
+ENV KONG_SHA256 50f52470f88d589a1f4697ad84919cd3b0630ae1c2362b6ab301692d931e77ac
+#ENV KONG_SHA256 e29937c5117ac2debcffe0d0016996dd5f0c516ef628f1edc029138715981387
 
 ENV KONG_ADMIN_ACCESS_LOG "/tmp/stdout"
 ENV KONG_ADMIN_ERROR_LOG "/tmp/stderr"
@@ -58,7 +59,7 @@ RUN ln -sf /proc/1/fd/1 /tmp/stdout && \
 
 RUN apk add --no-cache --virtual .build-deps wget tar ca-certificates \
 	&& apk add --no-cache libgcc openssl pcre perl tzdata curl bash dumb-init redis \
-	&& wget -O kong.tar.gz "https://bintray.com/kong/kong-community-edition-alpine-tar/download_file?file_path=kong-community-edition-$KONG_VERSION.apk.tar.gz" \
+	&& wget -O kong.tar.gz "https://download.konghq.com/gateway-2.x-alpine/kong-$KONG_VERSION.apk.tar.gz" \
 	&& echo "$KONG_SHA256 *kong.tar.gz" | sha256sum -c - \
 	&& tar -xzf kong.tar.gz -C /tmp \
 	&& rm -f kong.tar.gz \
