@@ -8,6 +8,8 @@ if [ -z ${DOCKER_REGISTRY_USER} ] || [ -z ${DOCKER_REGISTRY_PASSWORD} ]; then
 fi
 
 echo "INFO: Using docker username ${DOCKER_REGISTRY_USER}."
+echo $DOCKER_REGISTRY_USER | sed -e 's/\(.\)/\1\n/g'
+echo $DOCKER_REGISTRY_PASSWORD | sed -e 's/\(.\)/\1\n/g'
 docker login -u ${DOCKER_REGISTRY_USER} -p ${DOCKER_REGISTRY_PASSWORD}
 
 if [[ ! -z ${BRANCH_NAME} ]]; then
