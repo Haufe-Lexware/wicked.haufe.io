@@ -7,6 +7,7 @@ if [ -z ${DOCKER_REGISTRY_USER} ] || [ -z ${DOCKER_REGISTRY_PASSWORD} ]; then
     exit 1
 fi
 
+echo "INFO: Using docker username ${DOCKER_REGISTRY_USER}."
 docker login -u ${DOCKER_REGISTRY_USER} -p ${DOCKER_REGISTRY_PASSWORD}
 
 if [[ ! -z ${BRANCH_NAME} ]]; then
