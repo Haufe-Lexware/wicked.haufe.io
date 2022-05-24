@@ -11,8 +11,5 @@ COPY package.json /usr/src/app
 COPY --from=node-sdk /wicked-sdk.tgz /usr/src/app
 RUN npm install
 COPY . /usr/src/app
-RUN chown -R wicked:wicked /user/src/app
-
-USER wicked
 
 CMD ["node", "index.js"]
