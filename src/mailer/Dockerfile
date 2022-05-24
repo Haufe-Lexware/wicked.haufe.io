@@ -1,4 +1,6 @@
 ARG ENV_TAG
 FROM wicked.env:${ENV_TAG}
 
+USER wicked
+
 EXPOSE 3003

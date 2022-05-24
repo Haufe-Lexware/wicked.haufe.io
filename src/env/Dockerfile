@@ -11,7 +11,6 @@ RUN groupadd -r wicked --gid=888 && useradd -r -g wicked --uid=888 wicked \
     && mkdir -p /usr/src/portal-env /usr/src/app && chown -R wicked:wicked /usr/src \
     && mkdir -p /home/wicked && chown -R wicked:wicked /home/wicked
 
-USER wicked
 COPY . /usr/src/portal-env
 COPY package.all.json /usr/src/app/package.json
 COPY --from=node-sdk /wicked-sdk.tgz /usr/src/app/wicked-sdk.tgz
@@ -28,6 +27,7 @@ RUN cd /usr/src/portal-env \
 # We install all node_modules in this base image; no need to do it later
 ONBUILD RUN date -u "+%Y-%m-%d %H:%M:%S" > /usr/src/app/build_date
 ONBUILD COPY . /usr/src/app
+ONBUILD RUN chown -R wicked:wicked /usr/src/app
 
 ENTRYPOINT ["/usr/bin/dumb-init", "--"]
 CMD ["./forever.sh", "npm", "start" ]

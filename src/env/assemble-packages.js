@@ -13,6 +13,7 @@ const dirs = [
     'mailer',
     'kickstarter',
     'auth',
+    'node-sdk',
     'test/portal-api',
     'test/portal-kong-adapter',
     'test/portal-auth'

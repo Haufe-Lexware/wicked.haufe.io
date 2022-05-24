@@ -10,4 +10,6 @@ RUN chown -R wicked:wicked /usr/src/app
 FROM wicked.env:${ENV_TAG}
 COPY --from=builder /usr/src/app/dist /usr/src/app/dist
 
+USER wicked
+
 EXPOSE 3002
