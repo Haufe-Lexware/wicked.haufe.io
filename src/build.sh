@@ -35,14 +35,19 @@ if [ ! -z "${DOCKER_TAG}" ]; then
     export TAG=${DOCKER_TAG}
 fi
 
+if [ "$(uname -m)" = "arm64" ] && [ -z "${DOCKER_DEFAULT_PLATFORM}" ]; then
+    echo "WARNING: Using native arm64 builds. Override by setting DOCKER_DEFAULT_PLATFORM=linux/amd64."
+    export DOCKER_DEFAULT_PLATFORM=linux/arm64
+else
+    export DOCKER_DEFAULT_PLATFORM=linux/amd64
+fi
+echo "INFO: Using '${DOCKER_DEFAULT_PLATFORM}' as a target platform."
+
 (
     source .env
     docker pull ${BASE_IMAGE_ALPINE}
     docker pull ${BASE_IMAGE_UBUNTU}
 )
-
-# Needed to build the right images on macOS with M1 processors
-export DOCKER_DEFAULT_PLATFORM=linux/amd64
 
 docker-compose --file=docker-compose.build.yml build --parallel node-sdk kong k8s-tool
 docker-compose --file=docker-compose.build.yml build --parallel env env-alpine k8s-init
