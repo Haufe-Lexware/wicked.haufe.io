@@ -17,6 +17,7 @@ fi
 echo "INFO: Using '${DOCKER_DEFAULT_PLATFORM}' as a target platform."
 
 docker-compose build prometheus-config
+docker-compose pull kong-database redis prometheus
 
 mkdir -p ./pg_data
 
