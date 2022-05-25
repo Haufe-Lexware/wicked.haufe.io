@@ -59,6 +59,9 @@ for repo in ${repos}; do
 done
 popd
 
+# Needed to build the right images on macOS with M1 processors
+export DOCKER_DEFAULT_PLATFORM=linux/amd64
+
 alpineImageName=${DOCKER_PREFIX}box:${DOCKER_TAG}
 docker build -t ${alpineImageName} .
 
