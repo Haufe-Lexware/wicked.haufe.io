@@ -111,7 +111,7 @@ if (fixDependencies) {
                 continue;
             const newVersion = allDependencies[depName];
             if (!newVersion) {
-                console.error('*** Dependency ${depName} not found. This should not be possible');
+                console.error(`*** Dependency ${depName} not found. This should not be possible`);
                 continue;
             }
             if (newVersion !== depVersion) {
@@ -127,7 +127,7 @@ if (fixDependencies) {
                     continue;
                 const newVersion = allDevDependencies[depName];
                 if (!newVersion) {
-                    console.error('*** Dependency ${depName} not found. This should not be possible');
+                    console.error(`*** Dependency ${depName} not found. This should not be possible`);
                     continue;
                 }
                 if (newVersion !== depVersion) {

@@ -17,11 +17,10 @@ echo "node_modules"
 echo "============"
 echo ""
 
-
 ls -la node_modules
 
 mkdir test_results
-mocha > test_results/api-test.log || echo "Integration tests failed. See log. > test_results/API_FAILED"
+./node_modules/mocha/bin/mocha > test_results/api-test.log || echo "Integration tests failed. See log." > test_results/API_FAILED
 
 echo "Trying to kill portal-api..."
 

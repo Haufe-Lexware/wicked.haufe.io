@@ -247,9 +247,9 @@ if [[ -z "$onlyEnv" ]]; then
     export KONG_ADMIN_URL=http://localhost:8101
     export KONG_GATEWAY_URL=http://localhost:8100
     if [[ -z "$grepFilter" ]]; then
-        mocha
+        ./node_modules/mocha/bin/mocha
     else
-        mocha --grep "${grepFilter}"
+        ./node_modules/mocha/bin/mocha --grep "${grepFilter}"
     fi
     popd &> /dev/null
 

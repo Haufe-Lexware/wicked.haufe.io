@@ -256,9 +256,9 @@ node node_modules/portal-env/await.js http://localhost:${kongProxyPort}/auth/pin
 
 if [[ -z "$onlyEnv" ]]; then
     if [[ -z "$grepFilter" ]]; then
-        mocha
+        ./node_modules/mocha/bin/mocha
     else
-        mocha --grep "${grepFilter}"
+        ./node_modules/mocha/bin/mocha --grep "${grepFilter}"
     fi
     popd &> /dev/null
 

@@ -1,4 +1,5 @@
 # These are linked locally; we must use the ones from
 # the base image.
-node_modules/portal-env
-node_modules/wicked-sdk
+#node_modules/portal-env
+#node_modules/wicked-sdk
+node_modules

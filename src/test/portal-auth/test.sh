@@ -14,7 +14,7 @@ node node_modules/portal-env/await.js http://portal-auth:3010/ping
 echo "Ping returned 200 for portal-auth"
 
 mkdir test_results
-mocha > test_results/auth-test.log || echo Integration tests failed. See log. > test_results/KONG_FAILED 
+./node_modules/mocha/bin/mocha > test_results/auth-test.log || echo "Integration tests failed. See log." > test_results/KONG_FAILED 
 
 echo "Trying to kill portal-kong-adapter..."
 

@@ -30,7 +30,7 @@
     "jsonwebtoken": "5.7.0",
     "ldapts": "1.9.0",
     "marked": "4.0.16",
-    "mocha": "10.0.0",
+    "mocha": "5.2.0",
     "morgan": "1.9.1",
     "mustache": "2.2.1",
     "ncp": "2.0.0",
@@ -77,8 +77,6 @@
   "devDependencies": {
     "@types/async": "2.0.49",
     "@types/node": "10.17.35",
-    "chai": "^4.1.2",
-    "semver": "^6.0.0",
     "typescript": "3.4.1"
   }
 }

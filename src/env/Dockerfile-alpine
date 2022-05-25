@@ -12,6 +12,7 @@ RUN addgroup -S -g 888 wicked && adduser -S -G wicked -u 888 wicked \
         bash \
         dumb-init \
         su-exec \
+        curl \
         jq \
     && mkdir -p /usr/src/portal-env /usr/src/app \
     && chown -R wicked:wicked /usr/src \

@@ -2,4 +2,4 @@ FROM ${DOCKER_PREFIX}env:${PORTAL_ENV_TAG}${BUILD_ALPINE}
 
 USER root
 
-RUN npm install -g mocha@5.2.0
+# RUN npm install -g mocha@5.2.0
