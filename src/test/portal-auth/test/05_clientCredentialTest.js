@@ -10,6 +10,7 @@ const utils = require('./testUtils');
 describe('Client Credentials', function () {
 
     this.slow(500);
+    this.timeout(5000);
 
     let ids;
     before(function (done) {

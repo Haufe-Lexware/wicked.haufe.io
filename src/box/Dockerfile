@@ -59,7 +59,7 @@ RUN ln -sf /proc/1/fd/1 /tmp/stdout && \
 
 RUN apk add --no-cache --virtual .build-deps wget tar ca-certificates \
 	&& apk add --no-cache libgcc openssl pcre perl tzdata curl bash dumb-init redis \
-	&& wget -O kong.tar.gz "https://download.konghq.com/gateway-2.x-alpine/kong-$KONG_VERSION.apk.tar.gz" \
+	&& wget -O kong.tar.gz "https://download.konghq.com/gateway-2.x-alpine/kong-$KONG_VERSION.amd64.apk.tar.gz" \
 	&& echo "$KONG_SHA256 *kong.tar.gz" | sha256sum -c - \
 	&& tar -xzf kong.tar.gz -C /tmp \
 	&& rm -f kong.tar.gz \
