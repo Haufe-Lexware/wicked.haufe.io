@@ -1,6 +1,7 @@
 #!/bin/bash
 
-echo Running as `whoami`
+echo "Running as $(whoami)"
+echo "Mocha version: $(mocha --version)"
 
 node node_modules/portal-env/await.js http://portal-api:3001/ping
 
