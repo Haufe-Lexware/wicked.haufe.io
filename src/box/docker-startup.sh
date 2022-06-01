@@ -17,6 +17,8 @@ redis-server &
 sleep 3
 /usr/src/app/resources/wtfc.sh -T 30 "nc -z ${KONG_PG_HOST} ${KONG_PG_PORT}"
 
+pushd /usr/local/kong
+
 kong migrations list
 migrations_exit_code=$?
 case ${migrations_exit_code} in
@@ -39,6 +41,8 @@ case ${migrations_exit_code} in
 esac
 
 kong start
+
+popd
 
 pm2 start /usr/src/app/pm2.config.js
 # This will be the foreground process keeping the container going:
