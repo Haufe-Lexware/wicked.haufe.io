@@ -1,0 +1,14 @@
+FROM node:16-alpine
+
+RUN mkdir -p /usr/src/app
+WORKDIR /usr/src/app
+
+RUN npm install -g npm-cli-login
+COPY . /usr/src/app
+
+ARG NPM_USER
+ARG NPM_PASS
+ARG NPM_EMAIL
+
+RUN echo User: $NPM_USER, Email: $NPM_EMAIL
+RUN npm-cli-login -u $NPM_USER -p $NPM_PASS -e $NPM_EMAIL && npm publish && npm logout

@@ -1,0 +1,12 @@
+*envkey
+.DS_Store
+certs
+dynamic
+node_modules
+env.sh
+tmp
+*.tgz
+Dockerfile*
+publish.sh
+Jenkinsfile
+.eslint*
