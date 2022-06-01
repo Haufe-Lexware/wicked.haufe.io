@@ -12,7 +12,7 @@ services:
 
   portal-api:
     env_file: ../variables.env  
-    image: ${DOCKER_PREFIX}api:${PORTAL_API_TAG}${BUILD_ALPINE}
+    image: ${DOCKER_PREFIX}api:${PORTAL_API_TAG}${BUILD_ALPINE}-${DOCKER_ARCH}
     links:
     - postgres:postgres
     volumes_from:
@@ -29,14 +29,14 @@ services:
 
   portal-kong-adapter:
     env_file: ../variables.env
-    image: ${DOCKER_PREFIX}kong-adapter:${PORTAL_KONG_ADAPTER_TAG}${BUILD_ALPINE}
+    image: ${DOCKER_PREFIX}kong-adapter:${PORTAL_KONG_ADAPTER_TAG}${BUILD_ALPINE}-${DOCKER_ARCH}
     depends_on:
     - portal-api
     - kong
 
   portal-auth:
     env_file: ../variables.env
-    image: ${DOCKER_PREFIX}auth:${PORTAL_AUTH_TAG}${BUILD_ALPINE}
+    image: ${DOCKER_PREFIX}auth:${PORTAL_AUTH_TAG}${BUILD_ALPINE}-${DOCKER_ARCH}
     depends_on:
     - redis
     - portal-api
@@ -56,7 +56,7 @@ services:
     - "max_connections=500"
     
   kong:
-    image: ${DOCKER_PREFIX}kong:${KONG_TAG}
+    image: ${DOCKER_PREFIX}kong:${KONG_TAG}-${DOCKER_ARCH}
     depends_on:
     - "postgres"
     links:

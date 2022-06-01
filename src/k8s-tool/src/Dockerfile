@@ -1,14 +1,14 @@
-FROM alpine:3.7
-
+FROM alpine:3.16
 
 LABEL maintainer="Michal Orzechowski <orzechowski.michal@gmail.com>, Martin Danielsson <martin.danielsson@haufe-lexware.com>"
 
 ARG KUBE_LATEST_VERSION
+ARG DOCKER_ARCH
 
 RUN echo "Installing kubectl ${KUBE_LATEST_VERSION}"
 RUN apk add --update ca-certificates \
  && apk add --update -t deps curl\
- && curl -L https://storage.googleapis.com/kubernetes-release/release/${KUBE_LATEST_VERSION}/bin/linux/amd64/kubectl -o /usr/local/bin/kubectl \
+ && curl -L https://dl.k8s.io/release/${KUBE_LATEST_VERSION}/bin/linux/${DOCKER_ARCH}/kubectl -o /usr/local/bin/kubectl \
  && chmod +x /usr/local/bin/kubectl \
  && apk del --purge deps \
  && apk add --update jq \

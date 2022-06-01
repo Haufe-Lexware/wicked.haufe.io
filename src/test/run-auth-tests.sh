@@ -53,41 +53,44 @@ else
     docker login -u ${DOCKER_REGISTRY_USER} -p ${DOCKER_REGISTRY_PASSWORD} ${DOCKER_REGISTRY}
 fi
 
-if [ -z "$BUILD_ALPINE" ]; then
-    echo "INFO: Env var BUILD_ALPINE is not set, not building Alpine images."
-    export BUILD_ALPINE=""
-else 
-    echo "INFO: Env var BUILD_ALPINE is set, building Alpine images."
-    if [ ! "$BUILD_ALPINE" = "-alpine" ]; then
+# if [ -z "$BUILD_ALPINE" ]; then
+#     echo "INFO: Env var BUILD_ALPINE is not set, not building Alpine images."
+#     export BUILD_ALPINE=""
+# else 
+#     echo "INFO: Env var BUILD_ALPINE is set, building Alpine images."
+#     if [ ! "$BUILD_ALPINE" = "-alpine" ]; then
         export BUILD_ALPINE="-alpine"
-    fi
-fi
+#     fi
+# fi
 
-wickedStorage="json"
-if [ ! -z "$BUILD_POSTGRES" ]; then
-    echo "INFO: Env var BUILD_POSTGRES is set, running tests with Postgres"
+# wickedStorage="json"
+# if [ ! -z "$BUILD_POSTGRES" ]; then
+#     echo "INFO: Env var BUILD_POSTGRES is set, running tests with Postgres"
     wickedStorage="postgres" 
-else
-    echo "INFO: Env var BUILD_POSTGRES is not set, running tests with JSON storage"
-fi
+# else
+#     echo "INFO: Env var BUILD_POSTGRES is not set, running tests with JSON storage"
+# fi
 export WICKED_STORAGE=${wickedStorage}
 
 rm -f logs/docker-auth-${wickedStorage}${BUILD_ALPINE}.log
 thisPath=`pwd`
+
+if [ "$(uname -m)" = "arm64" ] && [ -z "${DOCKER_DEFAULT_PLATFORM}" ]; then
+    echo "WARNING: Using native arm64 builds. Override by setting DOCKER_DEFAULT_PLATFORM=linux/amd64."
+    export DOCKER_DEFAULT_PLATFORM=linux/arm64
+elif [ -z "${DOCKER_DEFAULT_PLATFORM}" ]; then
+    export DOCKER_DEFAULT_PLATFORM=linux/amd64
+else
+    echo "INFO: Using given DOCKER_DEFAULT_PLATFORM value: ${DOCKER_DEFAULT_PLATFORM}"
+fi
+export DOCKER_ARCH=$(echo ${DOCKER_DEFAULT_PLATFORM} | cut -d '/' -f 2)
+echo "INFO: Using '${DOCKER_DEFAULT_PLATFORM}' (Architecture ${DOCKER_ARCH}) as a target platform."
 
 export PORTAL_ENV_TAG=${DOCKER_TAG}-onbuild
 export PORTAL_API_TAG=${DOCKER_TAG}
 export PORTAL_KONG_ADAPTER_TAG=${DOCKER_TAG}
 export PORTAL_AUTH_TAG=${DOCKER_TAG}
 export KONG_TAG=${DOCKER_TAG}
-
-if [ "$(uname -m)" = "arm64" ] && [ -z "${DOCKER_DEFAULT_PLATFORM}" ]; then
-    echo "WARNING: Using native arm64 builds. Override by setting DOCKER_DEFAULT_PLATFORM=linux/amd64."
-    export DOCKER_DEFAULT_PLATFORM=linux/arm64
-else
-    export DOCKER_DEFAULT_PLATFORM=linux/amd64
-fi
-echo "INFO: Using '${DOCKER_DEFAULT_PLATFORM}' as a target platform."
 
 echo "INFO: Docker logs go into logs/docker-auth-${wickedStorage}${BUILD_ALPINE}.log."
 

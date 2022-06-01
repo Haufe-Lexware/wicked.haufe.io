@@ -1,19 +1,20 @@
 version: "3.7"
 services:
   kong:
-    image: wicked.kong:${TAG}
+    image: wicked.kong:${TAG}-${DOCKER_ARCH}
     build:
       context: kong
 
   k8s-tool:
-    image: wicked.k8s-tool:${TAG}
+    image: wicked.k8s-tool:${TAG}-${DOCKER_ARCH}
     build:
       context: k8s-tool/src
       args:
         KUBE_LATEST_VERSION: ${KUBE_LATEST_VERSION}
+        DOCKER_ARCH: ${DOCKER_ARCH}
 
   node-sdk:
-    image: wicked.sdk:${TAG}
+    image: wicked.sdk:${TAG}-${DOCKER_ARCH}
     build:
       context: node-sdk
       args:
@@ -25,153 +26,153 @@ services:
       context: k8s-init
       args:
         BASE_IMAGE_ALPINE: ${BASE_IMAGE_ALPINE}
-        SDK_TAG: ${TAG}
+        SDK_TAG: ${TAG}-${DOCKER_ARCH}
     depends_on:
       - node-sdk
 
-  env:
-    image: wicked.env:${TAG}-onbuild
-    build:
-      context: env
-      args:
-        BASE_IMAGE_UBUNTU: ${BASE_IMAGE_UBUNTU}
-        SDK_TAG: ${TAG}
-    depends_on:
-      - node-sdk
+  # env:
+  #   image: wicked.env:${TAG}-onbuild
+  #   build:
+  #     context: env
+  #     args:
+  #       BASE_IMAGE_UBUNTU: ${BASE_IMAGE_UBUNTU}
+  #       SDK_TAG: ${TAG}
+  #   depends_on:
+  #     - node-sdk
 
   env-alpine:
-    image: wicked.env:${TAG}-onbuild-alpine
+    image: wicked.env:${TAG}-onbuild-alpine-${DOCKER_ARCH}
     build:
       context: env
       dockerfile: Dockerfile-alpine
       args:
         BASE_IMAGE_ALPINE: ${BASE_IMAGE_ALPINE}
-        SDK_TAG: ${TAG}
+        SDK_TAG: ${TAG}-${DOCKER_ARCH}
     depends_on:
       - node-sdk
 
-  api:
-    image: wicked.api:${TAG}
-    build:
-      context: api
-      args:
-        ENV_TAG: ${TAG}-onbuild
-    depends_on:
-      - env
+  # api:
+  #   image: wicked.api:${TAG}
+  #   build:
+  #     context: api
+  #     args:
+  #       ENV_TAG: ${TAG}-onbuild
+  #   depends_on:
+  #     - env
 
   api-alpine:
-    image: wicked.api:${TAG}-alpine
+    image: wicked.api:${TAG}-alpine-${DOCKER_ARCH}
     build:
       context: api
       args:
-        ENV_TAG: ${TAG}-onbuild-alpine
+        ENV_TAG: ${TAG}-onbuild-alpine-${DOCKER_ARCH}
     depends_on:
       - env-alpine
 
-  ui:
-    image: wicked.ui:${TAG}
-    build:
-      context: ui
-      args:
-        ENV_TAG: ${TAG}-onbuild
-    depends_on:
-      - env
+  # ui:
+  #   image: wicked.ui:${TAG}
+  #   build:
+  #     context: ui
+  #     args:
+  #       ENV_TAG: ${TAG}-onbuild
+  #   depends_on:
+  #     - env
 
   ui-alpine:
-    image: wicked.ui:${TAG}-alpine
+    image: wicked.ui:${TAG}-alpine-${DOCKER_ARCH}
     build:
       context: ui
       args:
-        ENV_TAG: ${TAG}-onbuild-alpine
+        ENV_TAG: ${TAG}-onbuild-alpine-${DOCKER_ARCH}
     depends_on:
       - env-alpine
 
-  auth:
-    image: wicked.auth:${TAG}
-    build:
-      context: auth
-      args:
-        ENV_TAG: ${TAG}-onbuild
-    depends_on:
-      - env
+  # auth:
+  #   image: wicked.auth:${TAG}
+  #   build:
+  #     context: auth
+  #     args:
+  #       ENV_TAG: ${TAG}-onbuild
+  #   depends_on:
+  #     - env
 
   auth-alpine:
-    image: wicked.auth:${TAG}-alpine
+    image: wicked.auth:${TAG}-alpine-${DOCKER_ARCH}
     build:
       context: auth
       args:
-        ENV_TAG: ${TAG}-onbuild-alpine
+        ENV_TAG: ${TAG}-onbuild-alpine-${DOCKER_ARCH}
     depends_on:
       - env-alpine
 
-  kong-adapter:
-    image: wicked.kong-adapter:${TAG}
-    build:
-      context: kong-adapter
-      args:
-        ENV_TAG: ${TAG}-onbuild
-    depends_on:
-      - env
+  # kong-adapter:
+  #   image: wicked.kong-adapter:${TAG}
+  #   build:
+  #     context: kong-adapter
+  #     args:
+  #       ENV_TAG: ${TAG}-onbuild
+  #   depends_on:
+  #     - env
 
   kong-adapter-alpine:
-    image: wicked.kong-adapter:${TAG}-alpine
+    image: wicked.kong-adapter:${TAG}-alpine-${DOCKER_ARCH}
     build:
       context: kong-adapter
       args:
-        ENV_TAG: ${TAG}-onbuild-alpine
+        ENV_TAG: ${TAG}-onbuild-alpine-${DOCKER_ARCH}
     depends_on:
       - env-alpine
 
-  mailer:
-    image: wicked.mailer:${TAG}
-    build:
-      context: mailer
-      args:
-        ENV_TAG: ${TAG}-onbuild
-    depends_on:
-      - env
+  # mailer:
+  #   image: wicked.mailer:${TAG}
+  #   build:
+  #     context: mailer
+  #     args:
+  #       ENV_TAG: ${TAG}-onbuild
+  #   depends_on:
+  #     - env
 
   mailer-alpine:
-    image: wicked.mailer:${TAG}-alpine
+    image: wicked.mailer:${TAG}-alpine-${DOCKER_ARCH}
     build:
       context: mailer
       args:
-        ENV_TAG: ${TAG}-onbuild-alpine
+        ENV_TAG: ${TAG}-onbuild-alpine-${DOCKER_ARCH}
     depends_on:
       - env-alpine
 
-  chatbot:
-    image: wicked.chatbot:${TAG}
-    build:
-      context: chatbot
-      args:
-        ENV_TAG: ${TAG}-onbuild
-    depends_on:
-      - env
+  # chatbot:
+  #   image: wicked.chatbot:${TAG}
+  #   build:
+  #     context: chatbot
+  #     args:
+  #       ENV_TAG: ${TAG}-onbuild
+  #   depends_on:
+  #     - env
 
   chatbot-alpine:
-    image: wicked.chatbot:${TAG}-alpine
+    image: wicked.chatbot:${TAG}-alpine-${DOCKER_ARCH}
     build:
       context: chatbot
       args:
-        ENV_TAG: ${TAG}-onbuild-alpine
+        ENV_TAG: ${TAG}-onbuild-alpine-${DOCKER_ARCH}
     depends_on:
       - env-alpine
 
-  kickstarter:
-    image: wicked.kickstarter:${TAG}
-    build:
-      context: kickstarter
-      args:
-        ENV_TAG: ${TAG}-onbuild
-    depends_on:
-      - env
+  # kickstarter:
+  #   image: wicked.kickstarter:${TAG}
+  #   build:
+  #     context: kickstarter
+  #     args:
+  #       ENV_TAG: ${TAG}-onbuild
+  #   depends_on:
+  #     - env
 
   kickstarter-alpine:
-    image: wicked.kickstarter:${TAG}-alpine
+    image: wicked.kickstarter:${TAG}-alpine-${DOCKER_ARCH}
     build:
       context: kickstarter
       args:
-        ENV_TAG: ${TAG}-onbuild-alpine
+        ENV_TAG: ${TAG}-onbuild-alpine-${DOCKER_ARCH}
     depends_on:
       - env-alpine

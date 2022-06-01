@@ -20,7 +20,7 @@ services:
     - WICKED_STORAGE
     - PORTAL_STORAGE_PGHOST=postgres
     - PORTAL_STORAGE_PGPORT=5432
-    image: ${DOCKER_PREFIX}api:${PORTAL_API_TAG}${BUILD_ALPINE}
+    image: ${DOCKER_PREFIX}api:${PORTAL_API_TAG}${BUILD_ALPINE}-${DOCKER_ARCH}
     volumes_from:
     - "api-test-data"
 

@@ -38,19 +38,23 @@ fi
 if [ "$(uname -m)" = "arm64" ] && [ -z "${DOCKER_DEFAULT_PLATFORM}" ]; then
     echo "WARNING: Using native arm64 builds. Override by setting DOCKER_DEFAULT_PLATFORM=linux/amd64."
     export DOCKER_DEFAULT_PLATFORM=linux/arm64
-else
+elif [ -z "${DOCKER_DEFAULT_PLATFORM}" ]; then
     export DOCKER_DEFAULT_PLATFORM=linux/amd64
+else
+    echo "INFO: Using given DOCKER_DEFAULT_PLATFORM value: ${DOCKER_DEFAULT_PLATFORM}"
 fi
-echo "INFO: Using '${DOCKER_DEFAULT_PLATFORM}' as a target platform."
+export DOCKER_ARCH=$(echo ${DOCKER_DEFAULT_PLATFORM} | cut -d '/' -f 2)
+echo "INFO: Using '${DOCKER_DEFAULT_PLATFORM}' (Architecture ${DOCKER_ARCH}) as a target platform."
 
 (
     source .env
     docker pull ${BASE_IMAGE_ALPINE}
-    docker pull ${BASE_IMAGE_UBUNTU}
+    # docker pull ${BASE_IMAGE_UBUNTU}
 )
 
-docker-compose --file=docker-compose.build.yml build --parallel node-sdk kong k8s-tool
-docker-compose --file=docker-compose.build.yml build --parallel env env-alpine k8s-init
+docker-compose --file=docker-compose.build.yml build node-sdk kong k8s-tool
+# docker-compose --file=docker-compose.build.yml build --parallel env env-alpine k8s-init
+docker-compose --file=docker-compose.build.yml build --parallel env-alpine k8s-init
 # docker-compose --file=docker-compose.build.yml build env env-alpine k8s-init
 docker-compose --file=docker-compose.build.yml build --parallel
 # docker-compose --file=docker-compose.build.yml build

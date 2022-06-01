@@ -29,7 +29,8 @@ elif [ -z "${DOCKER_DEFAULT_PLATFORM}" ]; then
 else
     echo "INFO: Using given DOCKER_DEFAULT_PLATFORM value: ${DOCKER_DEFAULT_PLATFORM}"
 fi
-echo "INFO: Using '${DOCKER_DEFAULT_PLATFORM}' as a target platform."
+export DOCKER_ARCH=$(echo ${DOCKER_DEFAULT_PLATFORM} | cut -d '/' -f 2)
+echo "INFO: Using '${DOCKER_DEFAULT_PLATFORM}' (Architecture ${DOCKER_ARCH}) as a target platform."
 
 branch=$1
 build_date=$(date -u "+%Y-%m-%d %H:%M:%S")
@@ -69,7 +70,7 @@ for repo in ${repos}; do
 done
 popd
 
-alpineImageName=${DOCKER_PREFIX}box:${DOCKER_TAG}
+alpineImageName=${DOCKER_PREFIX}box:${DOCKER_TAG}-${DOCKER_ARCH}
 docker build -t ${alpineImageName} --pull .
 
 if [ "$2" = "--push" ]; then

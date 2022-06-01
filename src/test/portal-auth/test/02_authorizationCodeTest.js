@@ -44,7 +44,7 @@ describe('Authorization Code Grant', function () {
     let ids;
 
     before(function (done) {
-        this.timeout(20000);
+        this.timeout(60000);
         const now = new Date();
         utils.initAppsAndSubscriptions(function (err, idsAndSecrets) {
             assert.isNotOk(err);
@@ -57,7 +57,7 @@ describe('Authorization Code Grant', function () {
     });
 
     after(function (done) {
-        this.timeout(20000);
+        this.timeout(60000);
         utils.destroyAppsAndSubcriptions(done);
     });
 
