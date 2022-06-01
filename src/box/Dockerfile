@@ -33,8 +33,8 @@ RUN npm run build
 FROM node:16-alpine
 
 ENV KONG_VERSION 2.8.1
-ENV KONG_SHA256 ccda33bf02803b6b8dd46b22990f92265fe61d900ba94e3e0fa26db0433098c0
-#ENV KONG_SHA256 e29937c5117ac2debcffe0d0016996dd5f0c516ef628f1edc029138715981387
+ENV KONG_AMD64_SHA ccda33bf02803b6b8dd46b22990f92265fe61d900ba94e3e0fa26db0433098c0
+ENV KONG_ARM64_SHA d21690332a89adf9900f7266e083f41f565eb009f2771ef112f3564878eeff53
 
 ENV KONG_ADMIN_ACCESS_LOG "/tmp/stdout"
 ENV KONG_ADMIN_ERROR_LOG "/tmp/stderr"
@@ -57,9 +57,13 @@ ENV ALLOW_ANY_REDIRECT_URI ""
 RUN ln -sf /proc/1/fd/1 /tmp/stdout && \
     ln -sf /proc/1/fd/2 /tmp/stderr
 
-RUN apk add --no-cache --virtual .build-deps wget tar ca-certificates \
+RUN arch="$(apk --print-arch)"; \
+    case "${arch}" in \
+      x86_64) arch='amd64'; KONG_SHA256=$KONG_AMD64_SHA ;; \
+      aarch64) arch='arm64'; KONG_SHA256=$KONG_ARM64_SHA ;; \
+    apk add --no-cache --virtual .build-deps wget tar ca-certificates \
 	&& apk add --no-cache libstdc++ libgcc openssl pcre perl tzdata libcap zip curl bash dumb-init redis zlib zlib-dev git ca-certificates \
-	&& wget -O kong.tar.gz "https://download.konghq.com/gateway-2.x-alpine/kong-$KONG_VERSION.amd64.apk.tar.gz" \
+	&& wget -O kong.tar.gz "https://download.konghq.com/gateway-2.x-alpine/kong-$KONG_VERSION.$arch.apk.tar.gz" \
 	&& echo "$KONG_SHA256 *kong.tar.gz" | sha256sum -c - \
 	&& tar -xzf kong.tar.gz -C /tmp \
 	&& rm -f kong.tar.gz \

@@ -1,5 +1,5 @@
+# Note: This base image is multi-arch; supports both x86_64 and aarch64 (ARMv8)
 FROM kong:2.8.1-alpine
-#FROM kong:0.14.1-centos
 
 ENV KONG_PG_HOST kong-database
 ENV KONG_PG_PORT 5432
