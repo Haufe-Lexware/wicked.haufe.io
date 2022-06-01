@@ -61,6 +61,7 @@ RUN arch="$(apk --print-arch)"; \
     case "${arch}" in \
       x86_64) arch='amd64'; KONG_SHA256=$KONG_AMD64_SHA ;; \
       aarch64) arch='arm64'; KONG_SHA256=$KONG_ARM64_SHA ;; \
+    esac; \
     apk add --no-cache --virtual .build-deps wget tar ca-certificates \
 	&& apk add --no-cache libstdc++ libgcc openssl pcre perl tzdata libcap zip curl bash dumb-init redis zlib zlib-dev git ca-certificates \
 	&& wget -O kong.tar.gz "https://download.konghq.com/gateway-2.x-alpine/kong-$KONG_VERSION.$arch.apk.tar.gz" \
