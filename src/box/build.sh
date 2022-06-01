@@ -21,6 +21,16 @@ if [ -z "$DOCKER_TAG" ]; then
     export DOCKER_TAG=dev
 fi
 
+if [ "$(uname -m)" = "arm64" ] && [ -z "${DOCKER_DEFAULT_PLATFORM}" ]; then
+    echo "WARNING: Using native arm64 builds. Override by setting DOCKER_DEFAULT_PLATFORM=linux/amd64."
+    export DOCKER_DEFAULT_PLATFORM=linux/arm64
+elif [ -z "${DOCKER_DEFAULT_PLATFORM}" ]; then
+    export DOCKER_DEFAULT_PLATFORM=linux/amd64
+else
+    echo "INFO: Using given DOCKER_DEFAULT_PLATFORM value: ${DOCKER_DEFAULT_PLATFORM}"
+fi
+echo "INFO: Using '${DOCKER_DEFAULT_PLATFORM}' as a target platform."
+
 branch=$1
 build_date=$(date -u "+%Y-%m-%d %H:%M:%S")
 printf "$build_date" > ./build_date
@@ -58,14 +68,6 @@ for repo in ${repos}; do
     popd
 done
 popd
-
-if [ "$(uname -m)" = "arm64" ] && [ -z "${DOCKER_DEFAULT_PLATFORM}" ]; then
-    echo "WARNING: Using native arm64 builds. Override by setting DOCKER_DEFAULT_PLATFORM=linux/amd64."
-    export DOCKER_DEFAULT_PLATFORM=linux/arm64
-else
-    export DOCKER_DEFAULT_PLATFORM=linux/amd64
-fi
-echo "INFO: Using '${DOCKER_DEFAULT_PLATFORM}' as a target platform."
 
 alpineImageName=${DOCKER_PREFIX}box:${DOCKER_TAG}
 docker build -t ${alpineImageName} --pull .

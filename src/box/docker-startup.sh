@@ -1,6 +1,6 @@
 #!/usr/bin/dumb-init /bin/bash
 
-set -e
+#set -e
 
 echo "Using kong database host: ${KONG_PG_HOST}"
 if [ -z $KONG_PG_PORT ]; then
