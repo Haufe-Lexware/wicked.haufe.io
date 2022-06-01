@@ -68,7 +68,7 @@ fi
 echo "INFO: Using '${DOCKER_DEFAULT_PLATFORM}' as a target platform."
 
 alpineImageName=${DOCKER_PREFIX}box:${DOCKER_TAG}
-docker build -t ${alpineImageName} .
+docker build -t ${alpineImageName} --pull .
 
 if [ "$2" = "--push" ]; then
     echo "============================================"
