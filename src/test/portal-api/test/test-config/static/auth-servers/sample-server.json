@@ -11,7 +11,9 @@
             "config": {
                 "authorizeEndpoint": "/{{name}}/api/{{api}}/authorize",
                 "tokenEndpoint": "/{{name}}/api/{{api}}/token",
-                "profileEndpoint": "/profile"
+                "profileEndpoint": "/profile",
+                "clientId": "abcdef-ghijkl-mnoopq",
+                "clientSecret": "123456-78912-37988"
             }
         }
     ],

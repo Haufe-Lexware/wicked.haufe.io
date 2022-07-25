@@ -71,6 +71,9 @@ describe('/auth-server', function () {
                 const jsonBody = utils.getJson(body);
                 assert.equal(jsonBody.name, 'sample-auth');
                 assert.isOk(jsonBody.authMethods, 'Missing property authMethods');
+                assert.isOk(jsonBody.authMethods[0].config, 'Missing config property of authMethods[0]');
+                assert.isNotOk(jsonBody.authMethods[0].config.clientId, 'Property authMethods[0].config.clientId is returned, must not be');
+                assert.isNotOk(jsonBody.authMethods[0].config.clientSecret, 'Property authMethods[0].config.clientSecret is returned, must not be');
                 assert.isOk(jsonBody.config, 'Missing config property');
                 assert.isOk(jsonBody.config.api, 'Missing config.api property');
                 assert.isOk(jsonBody.config.api.routes, 'Missing config.api.routes property');

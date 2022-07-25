@@ -76,6 +76,20 @@ authServers.getAuthServer = function (app, res, loggedInUserId, serverId) {
             } else {
                 authServer.data.config = {};
             }
+
+            // The above was the API configuration of the auth server itself,
+            // now we also want to remove the configuration of the auth methods.
+            if (authServer.data.authMethods && Array.isArray(authServer.data.authMethods)) {
+                for (let i = 0; i < authServer.data.authMethods.length; ++i) {
+                    const authMethod = authServer.data.authMethods[i];
+                    if (authMethod.config) {
+                        authMethod.config = {};
+                    }
+                }
+            } else {
+                // Let's default to something really not containing anything at all.
+                authServer.data.authMethods = [];
+            }
         } else {
             debug(`getAuthServer(${serverId}), logged in User is ADMIN, returning all data`);
         }
