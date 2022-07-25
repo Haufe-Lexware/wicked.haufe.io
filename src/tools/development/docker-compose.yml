@@ -14,7 +14,7 @@ services:
     - ./pg_data:/var/lib/postgresql/data
 
   kong:
-    image: wicked.kong:local
+    image: wicked.kong:local-${DOCKER_ARCH}
     depends_on:
     - "kong-database"
     links:
