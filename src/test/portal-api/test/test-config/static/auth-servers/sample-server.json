@@ -10,6 +10,16 @@
             "friendlyLong": "Log in using a local username and password.",
             "config": {
                 "authorizeEndpoint": "/{{name}}/api/{{api}}/authorize",
+                "tokenEndpoint": "/{{name}}/api/{{api}}/token"
+            }
+        },
+        {
+            "name": "azure",
+            "type": "oauth2",
+            "friendlyShort": "Azure AD",
+            "friendlyLong": "Log in using Azure AD",
+            "config": {
+                "authorizeEndpoint": "/{{name}}/api/{{api}}/authorize",
                 "tokenEndpoint": "/{{name}}/api/{{api}}/token",
                 "profileEndpoint": "/profile",
                 "clientId": "abcdef-ghijkl-mnoopq",

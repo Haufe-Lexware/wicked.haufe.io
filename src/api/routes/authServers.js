@@ -83,7 +83,11 @@ authServers.getAuthServer = function (app, res, loggedInUserId, serverId) {
                 for (let i = 0; i < authServer.data.authMethods.length; ++i) {
                     const authMethod = authServer.data.authMethods[i];
                     if (authMethod.config) {
-                        authMethod.config = {};
+                        authMethod.config = {
+                            authorizeEndpoint: authMethod.config.authorizeEndpoint,
+                            tokenEndpoint: authMethod.config.tokenEndpoint,
+                            profileEndpoint: authMethod.config.profileEndpoint,
+                        };
                     }
                 }
             } else {

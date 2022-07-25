@@ -71,9 +71,16 @@ describe('/auth-server', function () {
                 const jsonBody = utils.getJson(body);
                 assert.equal(jsonBody.name, 'sample-auth');
                 assert.isOk(jsonBody.authMethods, 'Missing property authMethods');
+                assert.isArray(jsonBody.authMethods, 'authMethods is not an array');
                 assert.isOk(jsonBody.authMethods[0].config, 'Missing config property of authMethods[0]');
-                assert.isNotOk(jsonBody.authMethods[0].config.clientId, 'Property authMethods[0].config.clientId is returned, must not be');
-                assert.isNotOk(jsonBody.authMethods[0].config.clientSecret, 'Property authMethods[0].config.clientSecret is returned, must not be');
+                assert.isOk(jsonBody.authMethods[0].config.authorizeEndpoint, 'Missing config property of authMethods[0].config.authorizeEndpoint');
+                assert.isOk(jsonBody.authMethods[0].config.tokenEndpoint, 'Missing config property of authMethods[0].config.authorizeEndpoint');
+                assert.isOk(jsonBody.authMethods[1].config, 'Missing config property of authMethods[1]');
+                assert.isOk(jsonBody.authMethods[1].config.authorizeEndpoint, 'Missing config property of authMethods[1].config.authorizeEndpoint');
+                assert.isOk(jsonBody.authMethods[1].config.tokenEndpoint, 'Missing config property of authMethods[1].config.authorizeEndpoint');
+                assert.isOk(jsonBody.authMethods[1].config.profileEndpoint, 'Missing config property of authMethods[1].config.authorizeEndpoint');
+                assert.isNotOk(jsonBody.authMethods[1].config.clientId, 'Property authMethods[1].config.clientId is returned, must not be');
+                assert.isNotOk(jsonBody.authMethods[1].config.clientSecret, 'Property authMethods[1].config.clientSecret is returned, must not be');
                 assert.isOk(jsonBody.config, 'Missing config property');
                 assert.isOk(jsonBody.config.api, 'Missing config.api property');
                 assert.isOk(jsonBody.config.api.routes, 'Missing config.api.routes property');
@@ -93,6 +100,9 @@ describe('/auth-server', function () {
                 const jsonBody = utils.getJson(body);
                 assert.equal(jsonBody.name, 'sample-auth');
                 assert.isOk(jsonBody.authMethods, 'Missing property authMethods');
+                assert.isOk(jsonBody.authMethods[1].config, 'Missing config property of authMethods[1]');
+                assert.isOk(jsonBody.authMethods[1].config.clientId, 'Property authMethods[0].config.clientId is returned, must not be');
+                assert.isOk(jsonBody.authMethods[1].config.clientSecret, 'Property authMethods[0].config.clientSecret is returned, must not be');
                 assert.isOk(jsonBody.config, 'Missing config property');
                 assert.isOk(jsonBody.config.api, 'Missing config.api property');
                 assert.isOk(jsonBody.config.api.routes, 'Missing config.api.routes property');
