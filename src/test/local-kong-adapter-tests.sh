@@ -181,6 +181,17 @@ else
     export WICKED_STORAGE=postgres
 fi
 
+if [ "$(uname -m)" = "arm64" ] && [ -z "${DOCKER_DEFAULT_PLATFORM}" ]; then
+    echo "WARNING: Using native arm64 builds. Override by setting DOCKER_DEFAULT_PLATFORM=linux/amd64."
+    export DOCKER_DEFAULT_PLATFORM=linux/arm64
+elif [ -z "${DOCKER_DEFAULT_PLATFORM}" ]; then
+    export DOCKER_DEFAULT_PLATFORM=linux/amd64
+else
+    echo "INFO: Using given DOCKER_DEFAULT_PLATFORM value: ${DOCKER_DEFAULT_PLATFORM}"
+fi
+export DOCKER_ARCH=$(echo ${DOCKER_DEFAULT_PLATFORM} | cut -d '/' -f 2)
+echo "INFO: Using '${DOCKER_DEFAULT_PLATFORM}' (Architecture ${DOCKER_ARCH}) as a target platform."
+
 echo "INFO: Starting postgres..."
 pgContainer=${tmpDir}_pg
 docker run -d --name ${pgContainer} -p ${pgPort}:5432 -e POSTGRES_USER=kong -e POSTGRES_PASSWORD=kong postgres:11-alpine &> /dev/null

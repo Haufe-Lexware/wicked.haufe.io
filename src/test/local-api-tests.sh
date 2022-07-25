@@ -66,6 +66,16 @@ function waitFor() {
     return 0 ## return success
 }
 
+if [ "$(uname -m)" = "arm64" ] && [ -z "${DOCKER_DEFAULT_PLATFORM}" ]; then
+    echo "WARNING: Using native arm64 builds. Override by setting DOCKER_DEFAULT_PLATFORM=linux/amd64."
+    export DOCKER_DEFAULT_PLATFORM=linux/arm64
+elif [ -z "${DOCKER_DEFAULT_PLATFORM}" ]; then
+    export DOCKER_DEFAULT_PLATFORM=linux/amd64
+else
+    echo "INFO: Using given DOCKER_DEFAULT_PLATFORM value: ${DOCKER_DEFAULT_PLATFORM}"
+fi
+export DOCKER_ARCH=$(echo ${DOCKER_DEFAULT_PLATFORM} | cut -d '/' -f 2)
+echo "INFO: Using '${DOCKER_DEFAULT_PLATFORM}' (Architecture ${DOCKER_ARCH}) as a target platform."
 
 cp -r ./portal-api/test/test-config/static ./tmp/$tmpDir/static
 mkdir -p ./tmp/$tmpDir/dynamic
@@ -141,9 +151,9 @@ popd
 pushd portal-api
 node node_modules/portal-env/await.js http://localhost:${apiPort}/ping
 if [[ -z "$grepFilter" ]]; then
-    ./node_modules/mocha/bin/mocha.js
+    ./node_modules/mocha/bin/mocha
 else
-    ./node_modules/mocha/bin/mocha.js --grep "${grepFilter}"
+    ./node_modules/mocha/bin/mocha --grep "${grepFilter}"
 fi
 popd
 
