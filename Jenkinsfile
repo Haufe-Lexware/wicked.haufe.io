@@ -5,9 +5,7 @@ pipeline {
     //     }
     // }
     agent {
-        node {
-            label 'linux'
-        }
+        label 'linux'
     }
 
     triggers {
