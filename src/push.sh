@@ -75,18 +75,18 @@ function check_image {
     fi
 }
 
-for i in ${imageBases}; do
-    if [[ $i != box ]]; then
-        suffix=""
-        if [[ $i == env ]]; then
-            suffix="-onbuild"
-        fi
-        imageTag=${TAG}${suffix}
-        image=${i}:${imageTag}
+# for i in ${imageBases}; do
+#     if [[ $i != box ]]; then
+#         suffix=""
+#         if [[ $i == env ]]; then
+#             suffix="-onbuild"
+#         fi
+#         imageTag=${TAG}${suffix}
+#         image=${i}:${imageTag}
 
-        check_image ${image} ${imageTag}
-    fi
-done
+#         check_image ${image} ${imageTag}
+#     fi
+# done
 
 for i in ${alpineImageBases}; do
     if [[ $i != box ]]; then
