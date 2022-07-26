@@ -21,7 +21,7 @@ services:
         BASE_IMAGE_ALPINE: ${BASE_IMAGE_ALPINE}
   
   k8s-init:
-    image: wicked.k8s-init:${TAG}
+    image: wicked.k8s-init:${TAG}-${DOCKER_ARCH}
     build:
       context: k8s-init
       args:

@@ -64,4 +64,8 @@ export BUILD_POSTGRES=true
 ./run-auth-tests.sh
 popd
 
+pushd src/box
+./build.sh ${branch} --push
+popd
+
 popd
