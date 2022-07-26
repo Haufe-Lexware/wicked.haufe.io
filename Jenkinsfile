@@ -5,7 +5,7 @@ pipeline {
     //     }
     // }
     agent {
-        label 'linux-dev'
+        label 'linux'
     }
 
     triggers {
