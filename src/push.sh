@@ -101,8 +101,8 @@ for i in ${alpineImageBases}; do
 done
 
 # Do the missing ones (without -alpine)
-check_image kong:${TAG}-${DOCKER_ARCH} ${TAG}-${DOCKER_ARCH}
-check_image k8s-tool:${TAG}-${DOCKER_ARCH} ${TAG}-${DOCKER_ARCH}
-check_image k8s-init:${TAG}-${DOCKER_ARCH} ${TAG}-${DOCKER_ARCH}
+check_image kong kong:${TAG}-${DOCKER_ARCH} ${TAG}-${DOCKER_ARCH}
+check_image k8s-tool k8s-tool:${TAG}-${DOCKER_ARCH} ${TAG}-${DOCKER_ARCH}
+check_image k8s-init k8s-init:${TAG}-${DOCKER_ARCH} ${TAG}-${DOCKER_ARCH}
 
 popd
