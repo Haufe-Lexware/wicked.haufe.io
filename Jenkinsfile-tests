@@ -1,0 +1,52 @@
+pipeline {
+    agent {
+        label 'linux'
+    }
+
+    triggers {
+        pollSCM "H/10 * * * *"
+    }
+
+    environment {
+        DOCKER_TAG = env.BRANCH_NAME.replaceAll('/', '-')
+        DOCKER_PREFIX = 'haufelexware/wicked.'
+    }
+
+    stages {
+        stage('API Tests (postgres, alpine)') {
+            environment {
+                BUILD_POSTGRES = 'true';
+                BUILD_ALPINE = '-alpine';
+            }
+            steps {
+                script {
+                    sh './src/test/run-api-tests.sh'
+                }
+            }
+        }
+
+        stage('Kong Adapter Tests (postgres, alpine)') {
+            environment {
+                BUILD_ALPINE = '-alpine'
+                BUILD_POSTGRES = 'true'
+            }
+            steps {
+                script {
+                    sh './src/test/run-kong-adapter-tests.sh'
+                }
+            }
+        }
+
+        stage('Auth Server Tests (postgres, alpine)') {
+            environment {
+                BUILD_ALPINE = '-alpine'
+                BUILD_POSTGRES = 'true'
+            }
+            steps {
+                script {
+                    sh './src/test/run-auth-tests.sh'
+                }
+            }
+        }
+    }
+}
