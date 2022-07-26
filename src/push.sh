@@ -48,8 +48,9 @@ pushd ${this_dir}
 source ./tools/release/_repos.sh
 
 function check_image {
-    image=$1
-    imageTag=$2
+    imageName=$1
+    image=$2
+    imageTag=$3
 
     echo "INFO: Checking image haufelexware/wicked.${image}..."
     repo_digests=$(docker inspect wicked.${image} | jq .[0].RepoDigests)
@@ -60,7 +61,7 @@ function check_image {
         local_digest=$(echo $repo_digests | jq .[0] | tr -d '"' | cut -d '@' -f 2)
     fi
     echo "INFO: Local digest: ${local_digest}"
-    remote_response=$(curl -s -L -H "Authorization: JWT ${access_token}" https://hub.docker.com/v2/repositories/haufelexware/wicked.${i}/tags/${imageTag})
+    remote_response=$(curl -s -L -H "Authorization: JWT ${access_token}" https://hub.docker.com/v2/repositories/haufelexware/wicked.${imageName}/tags/${imageTag})
     errinfo=$(echo ${remote_response} | jq .errinfo)
     needs_push=""
     if [[ ${errinfo} == null ]]; then
@@ -95,7 +96,7 @@ for i in ${alpineImageBases}; do
         imageTag=${TAG}${suffix}
         image=${i}:${imageTag}
 
-        check_image ${image} ${imageTag}
+        check_image ${i} ${image} ${imageTag}
     fi
 done
 
