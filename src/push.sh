@@ -112,7 +112,8 @@ for i in ${alpineImageBases}; do
     fi
 done
 
-# Do the missing one (without -alpine)
+# Do the missing ones (without -alpine)
+check_image kong:${TAG}-${DOCKER_ARCH} ${TAG}-${DOCKER_ARCH}
 check_image k8s-tool:${TAG}-${DOCKER_ARCH} ${TAG}-${DOCKER_ARCH}
 
 popd
