@@ -86,19 +86,6 @@ function check_image {
     fi
 }
 
-# for i in ${imageBases}; do
-#     if [[ $i != box ]]; then
-#         suffix=""
-#         if [[ $i == env ]]; then
-#             suffix="-onbuild"
-#         fi
-#         imageTag=${TAG}${suffix}
-#         image=${i}:${imageTag}
-
-#         check_image ${image} ${imageTag}
-#     fi
-# done
-
 for i in ${alpineImageBases}; do
     if [[ $i != box ]]; then
         suffix="-alpine-${DOCKER_ARCH}"
@@ -115,5 +102,6 @@ done
 # Do the missing ones (without -alpine)
 check_image kong:${TAG}-${DOCKER_ARCH} ${TAG}-${DOCKER_ARCH}
 check_image k8s-tool:${TAG}-${DOCKER_ARCH} ${TAG}-${DOCKER_ARCH}
+check_image k8s-init:${TAG}-${DOCKER_ARCH} ${TAG}-${DOCKER_ARCH}
 
 popd
