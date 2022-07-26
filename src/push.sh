@@ -24,6 +24,17 @@ if [ ! -z "${DOCKER_TAG}" ]; then
     export TAG=${DOCKER_TAG}
 fi
 
+if [ "$(uname -m)" = "arm64" ] && [ -z "${DOCKER_DEFAULT_PLATFORM}" ]; then
+    echo "WARNING: Using native arm64 builds. Override by setting DOCKER_DEFAULT_PLATFORM=linux/amd64."
+    export DOCKER_DEFAULT_PLATFORM=linux/arm64
+elif [ -z "${DOCKER_DEFAULT_PLATFORM}" ]; then
+    export DOCKER_DEFAULT_PLATFORM=linux/amd64
+else
+    echo "INFO: Using given DOCKER_DEFAULT_PLATFORM value: ${DOCKER_DEFAULT_PLATFORM}"
+fi
+export DOCKER_ARCH=$(echo ${DOCKER_DEFAULT_PLATFORM} | cut -d '/' -f 2)
+echo "INFO: Using '${DOCKER_DEFAULT_PLATFORM}' (Architecture ${DOCKER_ARCH}) as a target platform."
+
 echo "======================================================"
 echo "PUSHING BRANCH ${branch} / tag ${TAG}"
 echo "======================================================"
@@ -90,9 +101,9 @@ function check_image {
 
 for i in ${alpineImageBases}; do
     if [[ $i != box ]]; then
-        suffix="-alpine"
+        suffix="-alpine-${DOCKER_ARCH}"
         if [[ $i == env ]]; then
-            suffix="-onbuild-alpine"
+            suffix="-onbuild-alpine-${DOCKER_ARCH}"
         fi
         imageTag=${TAG}${suffix}
         image=${i}:${imageTag}
