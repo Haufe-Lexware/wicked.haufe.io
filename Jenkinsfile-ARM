@@ -1,0 +1,91 @@
+pipeline {
+    agent {
+        label 'linux'
+    }
+
+    triggers {
+        pollSCM "H/10 * * * *"
+    }
+
+    environment {
+        DOCKER_TAG = env.BRANCH_NAME.replaceAll('/', '-')
+        DOCKER_PREFIX = 'haufelexware/wicked.'
+        DOCKER_DEFAULT_PLATFORM = 'linux/arm64'
+    }
+
+    stages {
+        stage('Build (ARM)') {
+            steps {
+                sh './src/build.sh'
+            }
+        }
+
+        stage('Push (ARM)') {
+            steps {
+                script {
+                    withCredentials([
+                        usernamePassword(credentialsId: 'dockerhub_wicked', usernameVariable: 'DOCKER_REGISTRY_USER', passwordVariable: 'DOCKER_REGISTRY_PASSWORD')
+                    ]) {
+                        sh './src/push.sh'
+                    }
+                }
+            }
+        }
+
+        // ===========================
+
+        stage('Wicked-in-a-box (ARM)') {
+            steps {
+                script {
+                    withCredentials([
+                        usernamePassword(credentialsId: 'dockerhub_wicked', usernameVariable: 'DOCKER_REGISTRY_USER', passwordVariable: 'DOCKER_REGISTRY_PASSWORD')
+                    ]) {
+                        sh './src/box/build.sh ' + env.BRANCH_NAME + ' --push'
+                    }
+                }
+            }
+        }
+
+        // ===========================
+
+        stage('API Tests (ARM)') {
+            environment {
+                BUILD_POSTGRES = 'true';
+                BUILD_ALPINE = '-alpine';
+            }
+            steps {
+                script {
+                    sh './src/test/run-api-tests.sh'
+                }
+            }
+        }
+
+        // ===========================
+
+        stage('Kong Adapter Tests (ARM)') {
+            environment {
+                BUILD_ALPINE = '-alpine'
+                BUILD_POSTGRES = 'true'
+            }
+            steps {
+                script {
+                    sh './src/test/run-kong-adapter-tests.sh'
+                }
+            }
+        }
+
+        // ===========================
+
+        stage('Auth Server Tests (ARM)') {
+            environment {
+                BUILD_ALPINE = '-alpine'
+                BUILD_POSTGRES = 'true'
+            }
+            steps {
+                script {
+                    sh './src/test/run-auth-tests.sh'
+                }
+            }
+        }
+    }
+}

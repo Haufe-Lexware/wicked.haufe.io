@@ -1,0 +1,28 @@
+pipeline {
+    agent {
+        label 'linux'
+    }
+
+    triggers {
+        upstream(upstreamProjects: "wicked.haufe.io-ARM/" + env.BRANCH_NAME.replaceAll("/", "%2F"), threshold: hudson.model.Result.SUCCESS)
+    }
+
+    environment {
+        DOCKER_TAG = env.BRANCH_NAME.replaceAll('/', '-')
+        DOCKER_PREFIX = 'haufelexware/wicked.'
+    }
+
+    stages {
+        stage('Multi-Arch Manifests') {
+            steps {
+                script {
+                    withCredentials([
+                        usernamePassword(credentialsId: 'dockerhub_wicked', usernameVariable: 'DOCKER_REGISTRY_USER', passwordVariable: 'DOCKER_REGISTRY_PASSWORD')
+                    ]) {
+                        sh './src/ci-manifest.sh ' + env.BRANCH_NAME
+                    }
+                }
+            }
+        }
+    }
+}
