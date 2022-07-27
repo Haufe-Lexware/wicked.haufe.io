@@ -35,6 +35,10 @@ function create_multiarch_manifest {
 
     docker manifest rm \
         ${DOCKER_PREFIX}${image} || true
+    docker pull \
+        ${DOCKER_PREFIX}${image}-amd64
+    docker pull \
+        ${DOCKER_PREFIX}${image}-arm64
     docker manifest create \
         ${DOCKER_PREFIX}${image} \
         ${DOCKER_PREFIX}${image}-amd64 \
