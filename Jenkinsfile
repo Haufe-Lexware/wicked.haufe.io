@@ -15,7 +15,6 @@ pipeline {
     environment {
         DOCKER_TAG = env.BRANCH_NAME.replaceAll('/', '-')
         DOCKER_PREFIX = 'haufelexware/wicked.'
-        DOCKER_DEFAULT_PLATFORM = 'linux/arm64'
     }
 
     stages {
@@ -54,13 +53,19 @@ pipeline {
         //     }
         // }
 
-        stage('Build') {
+        stage('Build (x64)') {
+            environment {
+                DOCKER_DEFAULT_PLATFORM = 'linux/amd64'
+            }
             steps {
                 sh './src/build.sh'
             }
         }
 
-        stage('Push') {
+        stage('Push (x64)') {
+            environment {
+                DOCKER_DEFAULT_PLATFORM = 'linux/amd64'
+            }
             steps {
                 script {
                     withCredentials([
@@ -72,85 +77,36 @@ pipeline {
             }
         }
 
-        // stage('API Tests (postgres)') {
-        //     environment {
-        //         BUILD_POSTGRES = 'true';
-        //         BUILD_ALPINE = '';
-        //     }
-        //     steps {
-        //         script {
-        //             sh './src/test/run-api-tests.sh'
-        //         }
-        //     }
-        // }
-
-        stage('API Tests (postgres, alpine)') {
+        stage('Build (ARM)') {
             environment {
-                BUILD_POSTGRES = 'true';
-                BUILD_ALPINE = '-alpine';
+                DOCKER_DEFAULT_PLATFORM = 'linux/arm64'
+            }
+            steps {
+                sh './src/build.sh'
+            }
+        }
+
+        stage('Push (ARM)') {
+            environment {
+                DOCKER_DEFAULT_PLATFORM = 'linux/arm64'
             }
             steps {
                 script {
-                    sh './src/test/run-api-tests.sh'
+                    withCredentials([
+                        usernamePassword(credentialsId: 'dockerhub_wicked', usernameVariable: 'DOCKER_REGISTRY_USER', passwordVariable: 'DOCKER_REGISTRY_PASSWORD')
+                    ]) {
+                        sh './src/push.sh'
+                    }
                 }
             }
         }
 
         // ===========================
 
-        // stage('Kong Adapter Tests (postgres)') {
-        //     environment {
-        //         BUILD_ALPINE = ''
-        //         BUILD_POSTGRES = 'true'
-        //     }
-        //     steps {
-        //         script {
-        //             sh './src/test/run-kong-adapter-tests.sh'
-        //         }
-        //     }
-        // }
-
-        stage('Kong Adapter Tests (postgres, alpine)') {
+        stage('Wicked-in-a-box (x64)') {
             environment {
-                BUILD_ALPINE = '-alpine'
-                BUILD_POSTGRES = 'true'
+                DOCKER_DEFAULT_PLATFORM = 'linux/amd64'
             }
-            steps {
-                script {
-                    sh './src/test/run-kong-adapter-tests.sh'
-                }
-            }
-        }
-
-        // ===========================
-
-        // stage('Auth Server Tests (postgres)') {
-        //     environment {
-        //         BUILD_ALPINE = ''
-        //         BUILD_POSTGRES = 'true'
-        //     }
-        //     steps {
-        //         script {
-        //             sh './src/test/run-auth-tests.sh'
-        //         }
-        //     }
-        // }
-
-        stage('Auth Server Tests (postgres, alpine)') {
-            environment {
-                BUILD_ALPINE = '-alpine'
-                BUILD_POSTGRES = 'true'
-            }
-            steps {
-                script {
-                    sh './src/test/run-auth-tests.sh'
-                }
-            }
-        }
-
-        // ===========================
-
-        stage('Wicked-in-a-box') {
             steps {
                 script {
                     withCredentials([
@@ -161,88 +117,118 @@ pipeline {
                 }
             }
         }
-    }
-}
 
+        stage('Wicked-in-a-box (ARM)') {
+            environment {
+                DOCKER_DEFAULT_PLATFORM = 'linux/arm64'
+            }
+            steps {
+                script {
+                    withCredentials([
+                        usernamePassword(credentialsId: 'dockerhub_wicked', usernameVariable: 'DOCKER_REGISTRY_USER', passwordVariable: 'DOCKER_REGISTRY_PASSWORD')
+                    ]) {
+                        sh './src/box/build.sh ' + env.BRANCH_NAME + ' --push'
+                    }
+                }
+            }
+        }
 
-/*
-properties([
-    pipelineTriggers([
-        [$class: "SCMTrigger", scmpoll_spec: "H/10 * * * *"]
-    ])
-])
+        // ===========================
 
-node('docker') {
-    stage('Checkout') {
-        checkout scm
-    }
+        stage('API Tests (postgres, alpine)') {
+            environment {
+                BUILD_POSTGRES = 'true';
+                BUILD_ALPINE = '-alpine';
+                DOCKER_DEFAULT_PLATFORM = 'linux/amd64'
+            }
+            steps {
+                script {
+                    sh './src/test/run-api-tests.sh'
+                }
+            }
+        }
 
-    def dockerTag = env.BRANCH_NAME.replaceAll('/', '-')
+        stage('API Tests (ARM)') {
+            environment {
+                BUILD_POSTGRES = 'true';
+                BUILD_ALPINE = '-alpine';
+                DOCKER_DEFAULT_PLATFORM = 'linux/arm64'
+            }
+            steps {
+                script {
+                    sh './src/test/run-api-tests.sh'
+                }
+            }
+        }
 
-    echo 'Building docker tag: ' + dockerTag
-    env.DOCKER_TAG = dockerTag
-    env.DOCKER_PREFIX = 'haufelexware/wicked.'
+        // ===========================
 
-    stage('Build and Push') {
-        sh './src/build.sh'
-    }
+        stage('Kong Adapter Tests (x64)') {
+            environment {
+                BUILD_ALPINE = '-alpine'
+                BUILD_POSTGRES = 'true'
+                DOCKER_DEFAULT_PLATFORM = 'linux/amd64'
+            }
+            steps {
+                script {
+                    sh './src/test/run-kong-adapter-tests.sh'
+                }
+            }
+        }
 
-    stage('Push') {
-        withCredentials([
-            usernamePassword(credentialsId: 'dockerhub_wicked', usernameVariable: 'DOCKER_REGISTRY_USER', passwordVariable: 'DOCKER_REGISTRY_PASSWORD')
-        ]) {
-            sh './src/push.sh'
+        stage('Kong Adapter Tests (ARM)') {
+            environment {
+                BUILD_ALPINE = '-alpine'
+                BUILD_POSTGRES = 'true'
+                DOCKER_DEFAULT_PLATFORM = 'linux/arm64'
+            }
+            steps {
+                script {
+                    sh './src/test/run-kong-adapter-tests.sh'
+                }
+            }
+        }
+
+        // ===========================
+
+        stage('Auth Server Tests (x64)') {
+            environment {
+                BUILD_ALPINE = '-alpine'
+                BUILD_POSTGRES = 'true'
+                DOCKER_DEFAULT_PLATFORM = 'linux/amd64'
+            }
+            steps {
+                script {
+                    sh './src/test/run-auth-tests.sh'
+                }
+            }
+        }
+
+        stage('Auth Server Tests (ARM)') {
+            environment {
+                BUILD_ALPINE = '-alpine'
+                BUILD_POSTGRES = 'true'
+                DOCKER_DEFAULT_PLATFORM = 'linux/arm64'
+            }
+            steps {
+                script {
+                    sh './src/test/run-auth-tests.sh'
+                }
+            }
+        }
+
+        // ===========================
+
+        stage('Multi-Arch Manifests') {
+            steps {
+                script {
+                    withCredentials([
+                        usernamePassword(credentialsId: 'dockerhub_wicked', usernameVariable: 'DOCKER_REGISTRY_USER', passwordVariable: 'DOCKER_REGISTRY_PASSWORD')
+                    ]) {
+                        sh './src/ci-manifest.sh ' + env.BRANCH_NAME
+                    }
+                }
+            }
         }
     }
 }
-
-node('docker') {
-
-    stage('API Tests (postgres)') {
-        env.BUILD_POSTGRES = '';
-        env.BUILD_POSTGRES = 'true';
-        env.BUILD_ALPINE = '';
-        sh './src/test/run-api-tests.sh'
-    }
-
-    stage('API Tests (postgres, alpine)') {
-        env.BUILD_POSTGRES = 'true';
-        env.BUILD_ALPINE = '-alpine';
-        sh './src/test/run-api-tests.sh'
-    }
-
-    // ===========================
-
-    stage('Kong Adapter Tests (postgres)') {
-        env.BUILD_ALPINE = ''
-        env.BUILD_POSTGRES = 'true'
-        sh './src/test/run-kong-adapter-tests.sh'
-    }
-
-    stage('Kong Adapter Tests (postgres, alpine)') {
-        env.BUILD_ALPINE = '-alpine'
-        env.BUILD_POSTGRES = 'true'
-        sh './src/test/run-kong-adapter-tests.sh'
-    }
-
-    // ===========================
-
-    stage('Auth Server Tests (postgres)') {
-        env.BUILD_ALPINE = ''
-        env.BUILD_POSTGRES = 'true'
-        sh './src/test/run-auth-tests.sh'
-    }
-
-    stage('Auth Server Tests (postgres, alpine)') {
-        env.BUILD_ALPINE = '-alpine'
-        env.BUILD_POSTGRES = 'true'
-        sh './src/test/run-auth-tests.sh'
-    }
-
-    // ===========================
-
-    stage('Build wicked.box') {
-        echo 'Here be dragons.'
-    }
-}
-*/
