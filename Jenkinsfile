@@ -135,7 +135,7 @@ pipeline {
 
         // ===========================
 
-        stage('API Tests (postgres, alpine)') {
+        stage('API Tests (x64)') {
             environment {
                 BUILD_POSTGRES = 'true';
                 BUILD_ALPINE = '-alpine';
