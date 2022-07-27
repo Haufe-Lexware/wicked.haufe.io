@@ -4,7 +4,7 @@ pipeline {
     }
 
     triggers {
-        upstream(upstreamProjects: "wicked.haufe.io-ARM/" + env.BRANCH_NAME.replaceAll("/", "%2F"), threshold: hudson.model.Result.SUCCESS)
+        upstream(upstreamProjects: "wicked/wicked.haufe.io-ARM/" + env.BRANCH_NAME.replaceAll("/", "%2F"), threshold: hudson.model.Result.SUCCESS)
     }
 
     environment {
