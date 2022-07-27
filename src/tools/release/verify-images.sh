@@ -46,7 +46,8 @@ rm -rf tmp
 #set -x
 
 failed=0
-for alpine in "-alpine" ""; do
+alpine="-alpine"
+# for alpine in "-alpine" ""; do
   # imageRepos from _repos.sh
   for repo in ${imageRepos}; do
     if [[ "$repo" != "wicked.env" ]]; then
@@ -89,7 +90,7 @@ for alpine in "-alpine" ""; do
       rm -rf tmp
     fi
   done
-done
+# done
 
 if [[ $failed == 1 ]]; then
   echo "ERROR: Commit version check failed. See log."
