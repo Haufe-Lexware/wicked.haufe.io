@@ -15,6 +15,7 @@ pipeline {
     environment {
         DOCKER_TAG = env.BRANCH_NAME.replaceAll('/', '-')
         DOCKER_PREFIX = 'haufelexware/wicked.'
+        DOCKER_DEFAULT_PLATFORM = 'linux/arm64'
     }
 
     stages {
