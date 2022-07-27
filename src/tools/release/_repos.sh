@@ -16,7 +16,9 @@ jsRepos="${baseRepos} \
 versionDirs="${baseRepos} \
     wicked.test/portal-api \
     wicked.test/portal-auth \
-    wicked.test/portal-kong-adapter"
+    wicked.test/portal-kong-adapter \
+    wicked.node-sdk \
+    wicked.cli"
 
 repos="${jsRepos} \
     wicked.kong \
