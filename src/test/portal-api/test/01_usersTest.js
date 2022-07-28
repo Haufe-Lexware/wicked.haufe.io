@@ -672,7 +672,7 @@ describe('/users', function () {
 
     describe('with password,', function () {
         this.slow(500);
-        this.timeout(5000);
+        this.timeout(10000);
 
         let pwdUserId = '';
         let devUserId = '';

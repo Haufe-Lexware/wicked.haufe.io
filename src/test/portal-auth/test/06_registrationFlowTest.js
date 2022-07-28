@@ -13,7 +13,7 @@ const consts = require('./testConsts');
 describe('Registration Flow', function () {
 
     this.slow(500);
-    this.timeout(5000);
+    this.timeout(20000);
 
     let ids;
 

@@ -9,7 +9,7 @@ const consts = require('./testConsts');
 describe('Authorization Code Grant', function () {
 
     this.slow(500);
-    this.timeout(5000);
+    this.timeout(10000);
 
     // let trustedClientId;
     // let trustedClientSecret;

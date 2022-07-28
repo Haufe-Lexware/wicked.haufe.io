@@ -10,7 +10,7 @@ const consts = require('./testConsts');
 describe('Resource Owner Password Grant', function () {
 
     this.slow(500);
-    this.timeout(5000);
+    this.timeout(20000);
 
     let ids;
     before(function (done) {

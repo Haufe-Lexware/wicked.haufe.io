@@ -18,7 +18,7 @@ const appId = consts.APP_ID;
 
 describe('Basic use cases', function () {
     this.slow(1000);
-    this.timeout(5000);
+    this.timeout(10000);
 
     let clientId;
     let clientSecret;

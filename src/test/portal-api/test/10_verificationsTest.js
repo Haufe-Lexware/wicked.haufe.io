@@ -17,7 +17,7 @@ const BAD_LINK = 'http://dummy.com/';
 
 describe('/verifications', function () {
 
-    this.timeout(5000);
+    this.timeout(10000);
 
     it('should return a 403 if creating a new email verification with wrong scope', function (done) {
         request.post({
