@@ -54,7 +54,9 @@ export interface AuthRequest extends OAuth2Request {
     prefill_username?: string,
     validNamespaces?: string[],
     // Used in the SAML case
-    requestId?: string
+    requestId?: string,
+    // additional parameters passed to the authorization request
+    options?: any
 }
 
 export interface AuthRequestCallback {
