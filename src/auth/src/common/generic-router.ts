@@ -24,6 +24,7 @@ import { GrantManager } from './grant-manager';
 const ERROR_TIMEOUT = 500; // ms
 const EXTERNAL_URL_INTERVAL = 500;
 const EXTERNAL_URL_RETRIES = 10;
+const ADDITIONAL_AUTHORIZE_OPTION_VALUES_REGEX = /^([a-zA-Z0-9][a-zA-Z0-9-_.]+)$/;
 
 export class GenericOAuth2Router {
 
@@ -454,8 +455,9 @@ export class GenericOAuth2Router {
 
             authRequest.options = {};
             Object.keys(req.query).forEach(key => {
-                if (key.startsWith("x_")) {
-                    authRequest.options[key.substring(2)] = req.query[key];
+                let value = req.query[key];
+                if (key.startsWith("x_") && ADDITIONAL_AUTHORIZE_OPTION_VALUES_REGEX.test(value)) {
+                    authRequest.options[key.substring(2)] = value;
                 }
             })
 
