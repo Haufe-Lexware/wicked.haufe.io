@@ -1001,7 +1001,8 @@ export class GenericOAuth2Router {
         const scopeRequest: PassthroughScopeRequest = {
             scope: scope,
             auth_method: this.authMethodId,
-            profile: profile
+            profile: profile,
+            data: data
         };
         debug(JSON.stringify(scopeRequest));
         async.retry({
