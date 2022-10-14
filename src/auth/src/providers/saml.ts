@@ -75,7 +75,7 @@ export class SamlIdP implements IdentityProvider {
 
     private getIdentityProvider(req): any {
         const authRequest = utils.getAuthRequest(req, this.authMethodId);
-        const key = authRequest.options ? JSON.stringify(authRequest.options) : "";
+        const key = (authRequest.options && Object.keys(authRequest.options).length > 0) ? JSON.stringify(authRequest.options) : "global";
         if (!this.identityProviders[key]) {
             const clonedIdpOptions = Object.assign({}, this.authMethodConfig.idpOptions);
             clonedIdpOptions.sso_login_url = mustache.render(clonedIdpOptions.sso_login_url, authRequest);
