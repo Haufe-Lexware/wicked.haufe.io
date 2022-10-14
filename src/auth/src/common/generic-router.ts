@@ -452,6 +452,13 @@ export class GenericOAuth2Router {
             // Support prefilled username
             authRequest.prefill_username = givenPrefillUsername;
 
+            authRequest.options = {};
+            Object.keys(req.query).forEach(key => {
+                if (key.startsWith("x_")) {
+                    authRequest.options[key.substring(2)] = req.query[key];
+                }
+            })
+
             // Validate parameters first now (TODO: This is pbly feasible centrally,
             // it will be the same for all Auth Methods).
             let subscriptionInfo: WickedSubscriptionInfo;
@@ -992,8 +999,7 @@ export class GenericOAuth2Router {
         const scopeRequest: PassthroughScopeRequest = {
             scope: scope,
             auth_method: this.authMethodId,
-            profile: profile,
-            data: data
+            profile: profile
         };
         debug(JSON.stringify(scopeRequest));
         async.retry({

@@ -24,7 +24,7 @@ export class SamlIdP implements IdentityProvider {
     private authMethodConfig: SamlIdpConfig;
 
     private serviceProvider: any;
-    private identityProvider: any;
+    private identityProviders: any;
 
     constructor(basePath: string, authMethodId: string, authMethodConfig: any, options: IdpOptions) {
         debug(`constructor(${basePath}, ${authMethodId},...)`);
@@ -54,7 +54,7 @@ export class SamlIdP implements IdentityProvider {
         this.authMethodConfig.spOptions.entity_id = entityUrl;
 
         this.serviceProvider = new saml2.ServiceProvider(authMethodConfig.spOptions);
-        this.identityProvider = new saml2.IdentityProvider(authMethodConfig.idpOptions);
+        this.identityProviders = {};
 
         this.genericFlow.initIdP(this);
     }
@@ -71,6 +71,20 @@ export class SamlIdP implements IdentityProvider {
 
     public getRouter() {
         return this.genericFlow.getRouter();
+    }
+
+    private getIdentityProvider(req): any {
+        const authRequest = utils.getAuthRequest(req, this.authMethodId);
+        const key = authRequest.options ? JSON.stringify(authRequest.options) : "";
+        if (!this.identityProviders[key]) {
+            const clonedIdpOptions = Object.assign({}, this.authMethodConfig.idpOptions);
+            clonedIdpOptions.sso_login_url = mustache.render(clonedIdpOptions.sso_login_url, authRequest);
+            if (clonedIdpOptions.sso_logout_url) {
+                clonedIdpOptions.sso_logout_url = mustache.render(clonedIdpOptions.sso_logout_url, authRequest);
+            }
+            this.identityProviders[key] = new saml2.IdentityProvider(clonedIdpOptions)
+        }
+        return this.identityProviders[key];
     }
 
     /**
@@ -108,7 +122,7 @@ export class SamlIdP implements IdentityProvider {
             }
             options.is_passive = true;
         }
-        this.serviceProvider.create_login_request_url(this.identityProvider, options, function (err, loginUrl, requestId) {
+        this.serviceProvider.create_login_request_url(this.getIdentityProvider(req), options, function (err, loginUrl, requestId) {
             if (err)
                 return failError(500, err, next);
             // Remember the request ID
@@ -134,13 +148,14 @@ export class SamlIdP implements IdentityProvider {
         const instance = this;
         try {
             const authResponse = utils.getAuthResponse(req, instance.authMethodId) as SamlAuthResponse;
+            const identityProvider = instance.getIdentityProvider(req);
             const options: any = {
                 name_id: authResponse.name_id,
                 session_index: authResponse.session_index
             };
 
             // Check that the identityProvider is correctly configured
-            if (!instance.identityProvider.sso_logout_url) {
+            if (!identityProvider.sso_logout_url) {
                 next(makeError('The SAML configuration does not contain an sso_logout_url.', 500));
                 return true;
             }
@@ -151,7 +166,7 @@ export class SamlIdP implements IdentityProvider {
             if (redirect_uri)
                 options.relay_state = Buffer.from(redirect_uri).toString('base64');
             instance.serviceProvider.create_logout_request_url(
-                instance.identityProvider,
+                identityProvider,
                 options,
                 function (err, logoutUrl) {
                     if (err) {
@@ -273,7 +288,7 @@ export class SamlIdP implements IdentityProvider {
                 request_body: req.query
             };
             const relay_state = req.query.RelayState;
-            instance.serviceProvider.redirect_assert(instance.identityProvider, options, function (err, response) {
+            instance.serviceProvider.redirect_assert(instance.getIdentityProvider(req), options, function (err, response) {
                 if (err)
                     return next(err);
                 debug(response);
@@ -281,7 +296,7 @@ export class SamlIdP implements IdentityProvider {
                     // IdP initiated logout
                     debug('SAML: logout_request');
                     const in_response_to = response && response.response_header ? response.response_header.in_response_to : null;
-                    instance.getLogoutResponseUrl(in_response_to, relay_state, function (err, redirectUrl) {
+                    instance.getLogoutResponseUrl(req, in_response_to, relay_state, function (err, redirectUrl) {
                         if (err)
                             return next(err);
                         info(redirectUrl);
@@ -349,14 +364,14 @@ export class SamlIdP implements IdentityProvider {
         });
     };
 
-    private getLogoutResponseUrl(inResponseTo, relayState, callback) {
+    private getLogoutResponseUrl(req, inResponseTo, relayState, callback) {
         debug('getLogoutResponseUrl');
         const instance = this;
-        if (!instance.identityProvider.sso_logout_url) {
+        const identityProvider = instance.getIdentityProvider(req);
+        if (!identityProvider.sso_logout_url) {
             return callback(makeError('The SAML configuration (identityProvider) does not contain an sso_logout_url.', 500));
         }
-        this.serviceProvider.create_logout_response_url(
-            instance.identityProvider,
+        this.serviceProvider.create_logout_response_url(identityProvider,
             { in_response_to: inResponseTo, relay_state: relayState },
             function (err, logoutResponseUrl) {
                 if (err) {
@@ -375,7 +390,7 @@ export class SamlIdP implements IdentityProvider {
             return callback(new Error('assert needs a requestId to verify the SAML assertion.'));
 
         const options = { request_body: req.body };
-        this.serviceProvider.post_assert(this.identityProvider, options, function (err, samlResponse) {
+        this.serviceProvider.post_assert(this.getIdentityProvider(req), options, function (err, samlResponse) {
             if (err) {
                 error('post_assert failed.');
                 return callback(err);
