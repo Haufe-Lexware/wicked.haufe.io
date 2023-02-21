@@ -4,3 +4,4 @@ node_modules
 git_*
 temp*
 _site
+src
