@@ -1,5 +1,5 @@
 {{- if .Values.ingress.enabled -}}
-apiVersion: extensions/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: {{ template "fullname" . }}-portal-ingress
@@ -15,6 +15,7 @@ metadata:
     release: "{{ .Release.Name }}"
     heritage: "{{ .Release.Service }}"
 spec:
+  ingressClassName: {{ default "nginx" .Values.ingress.class }}
   tls:
   - hosts:
     - {{ default "portal.com" .Values.ingress.portalHost }}
@@ -24,11 +25,14 @@ spec:
     http:
       paths:
       - path: /
+        pathType: ImplementationSpecific
         backend:
-          serviceName: {{ template "fullname" . }}-portal
-          servicePort: 3000
+          service:
+            name: {{ template "fullname" . }}-portal
+            port:
+              number: 3000
 ---
-apiVersion: extensions/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: {{ template "fullname" . }}-gateway-ingress
@@ -44,6 +48,7 @@ metadata:
     release: "{{ .Release.Name }}"
     heritage: "{{ .Release.Service }}"
 spec:
+  ingressClassName: {{ default "nginx" .Values.ingress.class }}
   tls:
   - hosts:
     - {{ default "api.portal.com" .Values.ingress.apiHost }}
@@ -53,7 +58,10 @@ spec:
     http:
       paths:
       - path: /
+        pathType: ImplementationSpecific
         backend:
-          serviceName: {{ template "fullname" . }}-kong
-          servicePort: 8000
+          service:
+            name: {{ template "fullname" . }}-kong
+            port:
+              number: 8000
 {{- end -}}
