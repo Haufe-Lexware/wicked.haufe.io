@@ -15,7 +15,6 @@ metadata:
     release: "{{ .Release.Name }}"
     heritage: "{{ .Release.Service }}"
 spec:
-  ingressClassName: {{ default "nginx" .Values.ingress.class }}
   tls:
   - hosts:
     - {{ default "portal.com" .Values.ingress.portalHost }}
@@ -48,7 +47,6 @@ metadata:
     release: "{{ .Release.Name }}"
     heritage: "{{ .Release.Service }}"
 spec:
-  ingressClassName: {{ default "nginx" .Values.ingress.class }}
   tls:
   - hosts:
     - {{ default "api.portal.com" .Values.ingress.apiHost }}
