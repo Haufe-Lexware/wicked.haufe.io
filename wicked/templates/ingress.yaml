@@ -46,7 +46,7 @@ metadata:
     release: "{{ .Release.Name }}"
     heritage: "{{ .Release.Service }}"
 spec:
-  kubernetes.io/ingress.class: {{ default "nginx" .Values.ingress.class }}
+  ingressClassName: {{ default "nginx" .Values.ingress.class }}
   tls:
   - hosts:
     - {{ default "api.portal.com" .Values.ingress.apiHost }}
