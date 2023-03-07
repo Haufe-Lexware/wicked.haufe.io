@@ -147,6 +147,10 @@ resources:
       cpu: 10m
       memory: 128Mi
 
+deployments:
+  labels: 
+    app: apim-wicked-app
+
 # Ingress specification
 ingress:
   enabled: true
