@@ -17,6 +17,9 @@ spec:
     matchLabels:
       service: {{ template "fullname" . }}-kong-database
       wicked: "true"
+      {{- with .Values.deployments.labels }}
+      {{- toYaml . | nindent 8 }}
+      {{- end }}
   template:
     metadata:
       labels:

@@ -24,6 +24,9 @@ spec:
       labels:
         service: {{ template "fullname" . }}-api
         wicked: "true"
+        {{- with .Values.deployments.labels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
       annotations:
         prometheus.io/scrape: 'true'
         prometheus.io/path: '/metrics'

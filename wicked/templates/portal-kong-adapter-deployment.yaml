@@ -24,6 +24,9 @@ spec:
       labels:
         service: {{ template "fullname" . }}-kong-adapter
         wicked: "true"
+        {{- with .Values.deployments.labels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
     spec:
 {{- if .Values.useRbac }}
       serviceAccountName: {{ template "fullname" . }}-role
