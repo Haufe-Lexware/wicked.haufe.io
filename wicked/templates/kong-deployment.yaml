@@ -5,6 +5,9 @@ metadata:
   namespace: {{ default "default" .Values.namespace }}
   labels:
     chart: "{{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}"
+    {{- with .Values.deployments.labels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
 spec:
   # Kong is scaled up in the post-install hook.
   replicas: 1
