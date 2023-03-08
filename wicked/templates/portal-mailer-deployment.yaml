@@ -43,6 +43,12 @@ spec:
       - name: {{ template "fullname" . }}-mailer
         image: "{{ .Values.image.repository }}mailer:{{ default "latest" .Values.image.tag }}{{ if .Values.image.alpine }}-alpine{{ end }}"
         imagePullPolicy: {{ default "Always" .Values.image.pullPolicy }}
+        securityContext:
+          allowPrivilegeEscalation: false
+          runAsNonRoot: true
+          runAsUser: 1000
+          seccompProfile:
+            type: RuntimeDefault
         env:
         - name: DEBUG
           valueFrom:
