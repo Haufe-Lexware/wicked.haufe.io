@@ -20,6 +20,9 @@ spec:
       labels:
         release: {{ template "fullname" . }}
         wicked: "true"
+        {{- with .Values.deployments.labels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
     spec:
       restartPolicy: "Never"
 {{- if .Values.useRbac }}
