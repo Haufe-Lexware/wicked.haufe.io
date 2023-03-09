@@ -48,12 +48,6 @@ spec:
       - name: {{ template "fullname" . }}-kong-adapter
         image: "{{ .Values.image.repository }}kong-adapter:{{ default "latest" .Values.image.tag }}{{ if .Values.image.alpine }}-alpine{{ end }}"
         imagePullPolicy: {{ default "Always" .Values.image.pullPolicy }}
-        securityContext:
-          allowPrivilegeEscalation: false
-          runAsNonRoot: true
-          runAsUser: 1000
-          seccompProfile:
-            type: RuntimeDefault
         env:
         - name: DEBUG
           valueFrom:

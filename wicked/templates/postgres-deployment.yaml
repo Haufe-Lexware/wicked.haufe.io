@@ -43,12 +43,6 @@ spec:
               key: pgPassword
         - name: POD_IP
           valueFrom: { fieldRef: { fieldPath: status.podIP } }
-        securityContext:
-          allowPrivilegeEscalation: false
-          runAsNonRoot: true
-          runAsUser: 1000
-          seccompProfile:
-            type: RuntimeDefault
         image: postgres:9.6
         name: {{ template "fullname" . }}-kong-database
         args:

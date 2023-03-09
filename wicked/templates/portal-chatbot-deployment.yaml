@@ -43,12 +43,6 @@ spec:
       - name: {{ template "fullname" . }}-chatbot
         image: "{{ .Values.image.repository }}chatbot:{{ default "latest" .Values.image.tag }}{{ if .Values.image.alpine }}-alpine{{ end }}"
         imagePullPolicy: {{ default "Always" .Values.image.pullPolicy }}
-        securityContext:
-          allowPrivilegeEscalation: false
-          runAsNonRoot: true
-          runAsUser: 1000
-          seccompProfile:
-            type: RuntimeDefault
         env:
         - name: DEBUG
           valueFrom:
