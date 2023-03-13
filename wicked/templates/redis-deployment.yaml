@@ -36,5 +36,23 @@ spec:
         - name: "redis"
           containerPort: 6379
           protocol: TCP
+        livenessProbe:
+          tcpSocket:
+            port: 6379
+          initialDelaySeconds: 30
+          timeoutSeconds: 5
+          periodSeconds: 5
+          failureThreshold: 5
+          successThreshold: 1
+        readinessProbe:
+          exec:
+            command:
+            - redis-cli
+            - ping
+          initialDelaySeconds: 20
+          timeoutSeconds: 5
+          periodSeconds: 3
       restartPolicy: Always
+      resources:
+{{ toYaml .Values.resources.redis | indent 10 }}
 {{- end -}}

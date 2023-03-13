@@ -84,6 +84,14 @@ spec:
             command:
               - kong
               - health
+        livenessProbe:
+          tcpSocket:
+            port: 8000
+          initialDelaySeconds: 30
+          timeoutSeconds: 5
+          periodSeconds: 5
+          failureThreshold: 5
+          successThreshold: 1
         ports:
         - name: "gateway"
           containerPort: 8000

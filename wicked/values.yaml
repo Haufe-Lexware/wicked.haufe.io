@@ -146,6 +146,14 @@ resources:
     requests:
       cpu: 10m
       memory: 128Mi
+  auth:
+    requests:
+      cpu: 50m
+      memory: 128Mi
+  auth:
+    requests:
+      cpu: 50m
+      memory: 128Mi
 
 deployments:
   labels: 
