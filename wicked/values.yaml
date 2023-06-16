@@ -149,6 +149,10 @@ resources:
     requests:
       cpu: 50m
       memory: 128Mi
+  post-install:
+    requests:
+      cpu: 50m
+      memory: 128Mi
 
 deployments:
   labels: 

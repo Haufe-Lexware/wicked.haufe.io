@@ -31,6 +31,8 @@ spec:
       containers:
       - name: {{ template "fullname" . }}-post-install
         image: "{{ .Values.image.repository }}k8s-tool:{{ default "latest" .Values.image.tag }}"
+        resources:
+{{ toYaml .Values.resources.post-install | indent 10 }}
         volumeMounts:
         - name: {{ template "fullname" . }}-post-install-config
           mountPath: "/config"
