@@ -6,6 +6,7 @@ metadata:
   namespace: {{ default "default" .Values.namespace }}
   annotations:
 {{- if .Values.ingress.useKubeLego }}
+    cert-manager.io/duration: 2160h
     kubernetes.io/tls-acme: "true"
 {{- end }}
   labels:
@@ -13,6 +14,7 @@ metadata:
     chart: "{{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}"
     release: "{{ .Release.Name }}"
     heritage: "{{ .Release.Service }}"
+    external-dns-exclude: "false"
 spec:
   ingressClassName: {{ default "nginx" .Values.ingress.class }}
   tls:
@@ -38,6 +40,7 @@ metadata:
   namespace: {{ default "default" .Values.namespace }}
   annotations:
 {{- if .Values.ingress.useKubeLego }}
+    cert-manager.io/duration: 2160h
     kubernetes.io/tls-acme: "true"
 {{- end }}
   labels:
@@ -45,6 +48,7 @@ metadata:
     chart: "{{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}"
     release: "{{ .Release.Name }}"
     heritage: "{{ .Release.Service }}"
+    external-dns-exclude: "false"
 spec:
   ingressClassName: {{ default "nginx" .Values.ingress.class }}
   tls:
