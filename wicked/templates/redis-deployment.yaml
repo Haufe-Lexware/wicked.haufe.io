@@ -53,6 +53,6 @@ spec:
           timeoutSeconds: 5
           periodSeconds: 3
         resources:
-{{ toYaml .Values.resources.portal | indent 10 }}
+{{ toYaml .Values.redis.resources | indent 10 }}
       restartPolicy: Always
 {{- end -}}

@@ -36,7 +36,6 @@ redis:
   host: "redis.provider.com"
   port: "6379"
   password: "some_password"
-
   # Redis resources
   resources:
     requests:
