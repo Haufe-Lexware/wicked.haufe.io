@@ -52,6 +52,8 @@ spec:
           initialDelaySeconds: 20
           timeoutSeconds: 5
           periodSeconds: 3
+        resources:
+{{ toYaml .Values.resources.api | indent 10 }}
       restartPolicy: Always
       resources:
 {{ toYaml .Values.resources.redis | indent 10 }}
