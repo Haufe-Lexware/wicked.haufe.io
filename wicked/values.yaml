@@ -149,7 +149,7 @@ resources:
     requests:
       cpu: 50m
       memory: 128Mi
-  post-install:
+  postinstall:
     requests:
       cpu: 50m
       memory: 128Mi
