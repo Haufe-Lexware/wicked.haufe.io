@@ -6,6 +6,9 @@ metadata:
   labels:
     release: {{ template "fullname" . }}
     chart: "{{.Chart.Name}}-{{.Chart.Version}}"
+    {{- with .Values.deployments.labels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
   annotations:
     "helm.sh/hook": post-install,post-upgrade
     "helm.sh/hook-delete-policy": hook-succeeded,hook-failed
@@ -17,6 +20,9 @@ spec:
       labels:
         release: {{ template "fullname" . }}
         wicked: "true"
+        {{- with .Values.deployments.labels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
     spec:
       restartPolicy: "Never"
 {{- if .Values.useRbac }}
@@ -25,6 +31,8 @@ spec:
       containers:
       - name: {{ template "fullname" . }}-post-install
         image: "{{ .Values.image.repository }}k8s-tool:{{ default "latest" .Values.image.tag }}"
+        resources:
+{{ toYaml .Values.resources.postinstall | indent 10 }}
         volumeMounts:
         - name: {{ template "fullname" . }}-post-install-config
           mountPath: "/config"
