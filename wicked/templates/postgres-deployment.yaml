@@ -29,6 +29,18 @@ spec:
 {{- if .Values.useRbac }}
       serviceAccountName: {{ template "fullname" . }}-role
 {{- end }}
+{{- if .Values.tolerations }}
+      tolerations:
+{{ toYaml .Values.tolerations | indent 8 }}
+{{- end }}
+{{- if .Values.nodeSelector }}
+      nodeSelector:
+{{ toYaml .Values.nodeSelector | indent 8 }}
+{{- end }}
+{{- if .Values.affinity }}
+      affinity:
+{{ toYaml .Values.affinity | indent 8 }}
+{{- end }}
       containers:
       - env:
         - name: POSTGRES_USER
