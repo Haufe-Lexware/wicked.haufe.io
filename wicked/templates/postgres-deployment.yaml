@@ -99,6 +99,7 @@ spec:
 {{- if .Values.postgres.securityContext }}
         securityContext:
 {{ toYaml .Values.postgres.securityContext | indent 10 }}
+{{- end }}
       restartPolicy: Always
       volumes:
       - name: kong-db-data

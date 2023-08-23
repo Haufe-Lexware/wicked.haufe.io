@@ -193,6 +193,7 @@ spec:
 {{- if .Values.api.securityContext }}
         securityContext:
 {{ toYaml .Values.api.securityContext | indent 10 }}
+{{- end }}
       volumes:
       - name: portal-api-data-dynamic
 {{- if not .Values.persistence.enabled }}

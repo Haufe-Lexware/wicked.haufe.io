@@ -94,6 +94,7 @@ spec:
 {{- if .Values.chatbot.securityContext }}
         securityContext:
 {{ toYaml .Values.chatbot.securityContext | indent 10 }}
+{{- end }}
       restartPolicy: Always
 {{- if .Values.imagePullSecrets }}
       imagePullSecrets:

@@ -110,6 +110,7 @@ spec:
 {{- if .Values.kong.securityContext }}
         securityContext:
 {{ toYaml .Values.kong.securityContext | indent 10 }}
+{{- end }}
       restartPolicy: Always
 {{- end }}
 {{- if .Values.imagePullSecrets }}

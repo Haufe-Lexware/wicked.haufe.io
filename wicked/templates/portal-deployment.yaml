@@ -77,6 +77,7 @@ spec:
 {{- if .Values.portal.securityContext }}
         securityContext:
 {{ toYaml .Values.portal.securityContext | indent 10 }}
+{{- end }}
 {{- if .Values.imagePullSecrets }}
       imagePullSecrets:
 {{ toYaml .Values.imagePullSecrets | indent 8 }}

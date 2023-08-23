@@ -83,6 +83,7 @@ spec:
 {{- if .Values.kongAdapter.securityContext }}
         securityContext:
 {{ toYaml .Values.kongAdapter.securityContext | indent 10 }}
+{{- end }}
       restartPolicy: Always
 {{- if .Values.imagePullSecrets }}
       imagePullSecrets:

@@ -73,5 +73,6 @@ spec:
 {{- if .Values.redis.securityContext }}
         securityContext:
 {{ toYaml .Values.redis.securityContext | indent 10 }}
+{{- end }}
       restartPolicy: Always
 {{- end -}}

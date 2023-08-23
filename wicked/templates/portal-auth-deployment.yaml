@@ -81,6 +81,7 @@ spec:
 {{- if .Values.auth.securityContext }}
         securityContext:
 {{ toYaml .Values.auth.securityContext | indent 10 }}
+{{- end }}
       restartPolicy: Always
 {{- if .Values.imagePullSecrets }}
       imagePullSecrets:

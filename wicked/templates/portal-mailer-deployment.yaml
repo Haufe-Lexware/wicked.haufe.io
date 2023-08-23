@@ -94,6 +94,7 @@ spec:
 {{- if .Values.mailer.securityContext }}
         securityContext:
 {{ toYaml .Values.mailer.securityContext | indent 10 }}
+{{- end }}
       restartPolicy: Always
 {{- if .Values.imagePullSecrets }}
       imagePullSecrets:
