@@ -74,6 +74,9 @@ spec:
           timeoutSeconds: 2
         resources:
 {{ toYaml .Values.resources.portal | indent 10 }}
+{{- if .Values.portal.securityContext }}
+        securityContext:
+{{ toYaml .Values.portal.securityContext | indent 10 }}
 {{- if .Values.imagePullSecrets }}
       imagePullSecrets:
 {{ toYaml .Values.imagePullSecrets | indent 8 }}

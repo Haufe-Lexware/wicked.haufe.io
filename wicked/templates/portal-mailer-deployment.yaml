@@ -91,6 +91,9 @@ spec:
           timeoutSeconds: 2
         resources:
 {{ toYaml .Values.resources.mailer | indent 10 }}
+{{- if .Values.mailer.securityContext }}
+        securityContext:
+{{ toYaml .Values.mailer.securityContext | indent 10 }}
       restartPolicy: Always
 {{- if .Values.imagePullSecrets }}
       imagePullSecrets:

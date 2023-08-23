@@ -107,7 +107,11 @@ spec:
           protocol: UDP
         resources:
 {{ toYaml .Values.kong.resources | indent 10 }}
+{{- if .Values.kong.securityContext }}
+        securityContext:
+{{ toYaml .Values.kong.securityContext | indent 10 }}
       restartPolicy: Always
+{{- end }}
 {{- if .Values.imagePullSecrets }}
       imagePullSecrets:
 {{ toYaml .Values.imagePullSecrets | indent 8 }}

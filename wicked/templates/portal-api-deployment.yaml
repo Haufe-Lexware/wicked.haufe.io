@@ -190,6 +190,9 @@ spec:
           timeoutSeconds: 2
         resources:
 {{ toYaml .Values.resources.api | indent 10 }}
+{{- if .Values.api.securityContext }}
+        securityContext:
+{{ toYaml .Values.api.securityContext | indent 10 }}
       volumes:
       - name: portal-api-data-dynamic
 {{- if not .Values.persistence.enabled }}
