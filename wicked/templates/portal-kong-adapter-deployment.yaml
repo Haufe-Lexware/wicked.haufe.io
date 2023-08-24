@@ -80,7 +80,7 @@ spec:
           timeoutSeconds: 2
         resources:
 {{ toYaml .Values.resources.kongAdapter | indent 10 }}
-{{- if .Values.kongAdapter }
+{{- if .Values.kongAdapter }}
 {{- if .Values.kongAdapter.securityContext }}
         securityContext:
 {{ toYaml .Values.kongAdapter.securityContext | indent 10 }}
