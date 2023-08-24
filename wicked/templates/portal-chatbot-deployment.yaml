@@ -91,9 +91,11 @@ spec:
           timeoutSeconds: 2
         resources:
 {{ toYaml .Values.resources.chatbot | indent 10 }}
+{{- if .Values.chatbot }}
 {{- if .Values.chatbot.securityContext }}
         securityContext:
 {{ toYaml .Values.chatbot.securityContext | indent 10 }}
+{{- end }}
 {{- end }}
       restartPolicy: Always
 {{- if .Values.imagePullSecrets }}

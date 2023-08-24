@@ -96,9 +96,11 @@ spec:
 {{- end }}
         resources:
 {{ toYaml .Values.postgres.resources | indent 10 }}
+{{- if .Values.postgres }}
 {{- if .Values.postgres.securityContext }}
         securityContext:
 {{ toYaml .Values.postgres.securityContext | indent 10 }}
+{{- end }}
 {{- end }}
       restartPolicy: Always
       volumes:

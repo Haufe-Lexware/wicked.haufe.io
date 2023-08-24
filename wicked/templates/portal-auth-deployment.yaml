@@ -78,9 +78,11 @@ spec:
           timeoutSeconds: 2
         resources:
 {{ toYaml .Values.resources.auth | indent 10 }}
+{{- if .Values.auth }}
 {{- if .Values.auth.securityContext }}
         securityContext:
 {{ toYaml .Values.auth.securityContext | indent 10 }}
+{{- end }}
 {{- end }}
       restartPolicy: Always
 {{- if .Values.imagePullSecrets }}

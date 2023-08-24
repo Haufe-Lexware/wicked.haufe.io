@@ -70,9 +70,11 @@ spec:
           periodSeconds: 3
         resources:
 {{ toYaml .Values.redis.resources | indent 10 }}
+{{- if .Values.redis }}
 {{- if .Values.redis.securityContext }}
         securityContext:
 {{ toYaml .Values.redis.securityContext | indent 10 }}
+{{- end }}
 {{- end }}
       restartPolicy: Always
 {{- end -}}
