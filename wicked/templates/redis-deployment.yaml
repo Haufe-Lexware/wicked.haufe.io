@@ -6,6 +6,9 @@ metadata:
   namespace: {{ default "default" .Values.namespace }}
   labels:
     chart: "{{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}"
+    {{- with .Values.deployments.labels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
 spec:
   replicas: 1
   strategy:
@@ -19,9 +22,28 @@ spec:
       labels:
         service: {{ template "fullname" . }}-redis
         wicked: "true"
+        {{- with .Values.deployments.labels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
     spec:
 {{- if .Values.useRbac }}
       serviceAccountName: {{ template "fullname" . }}-role
+{{- end }}
+{{- if .Values.tolerations }}
+      tolerations:
+{{ toYaml .Values.tolerations | indent 8 }}
+{{- end }}
+{{- if .Values.securityContext }}
+      securityContext:
+{{ toYaml .Values.securityContext | indent 8 }}
+{{- end }}
+{{- if .Values.nodeSelector }}
+      nodeSelector:
+{{ toYaml .Values.nodeSelector | indent 8 }}
+{{- end }}
+{{- if .Values.affinity }}
+      affinity:
+{{ toYaml .Values.affinity | indent 8 }}
 {{- end }}
       containers:
       - name: {{ template "fullname" . }}-redis
@@ -30,5 +52,29 @@ spec:
         - name: "redis"
           containerPort: 6379
           protocol: TCP
+        livenessProbe:
+          tcpSocket:
+            port: 6379
+          initialDelaySeconds: 30
+          timeoutSeconds: 5
+          periodSeconds: 5
+          failureThreshold: 5
+          successThreshold: 1
+        readinessProbe:
+          exec:
+            command:
+            - redis-cli
+            - ping
+          initialDelaySeconds: 20
+          timeoutSeconds: 5
+          periodSeconds: 3
+        resources:
+{{ toYaml .Values.redis.resources | indent 10 }}
+{{- if .Values.redis }}
+{{- if .Values.redis.securityContext }}
+        securityContext:
+{{ toYaml .Values.redis.securityContext | indent 10 }}
+{{- end }}
+{{- end }}
       restartPolicy: Always
 {{- end -}}

@@ -1,12 +1,12 @@
 {{- if .Values.ingress.enabled -}}
-apiVersion: extensions/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: {{ template "fullname" . }}-portal-ingress
   namespace: {{ default "default" .Values.namespace }}
   annotations:
-    kubernetes.io/ingress.class: {{ default "nginx" .Values.ingress.class }}
 {{- if .Values.ingress.useKubeLego }}
+    cert-manager.io/duration: 2160h
     kubernetes.io/tls-acme: "true"
 {{- end }}
   labels:
@@ -14,7 +14,9 @@ metadata:
     chart: "{{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}"
     release: "{{ .Release.Name }}"
     heritage: "{{ .Release.Service }}"
+    external-dns-exclude: "false"
 spec:
+  ingressClassName: {{ default "nginx" .Values.ingress.class }}
   tls:
   - hosts:
     - {{ default "portal.com" .Values.ingress.portalHost }}
@@ -24,18 +26,21 @@ spec:
     http:
       paths:
       - path: /
+        pathType: ImplementationSpecific
         backend:
-          serviceName: {{ template "fullname" . }}-portal
-          servicePort: 3000
+          service:
+            name: {{ template "fullname" . }}-portal
+            port:
+              number: 3000
 ---
-apiVersion: extensions/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: {{ template "fullname" . }}-gateway-ingress
   namespace: {{ default "default" .Values.namespace }}
   annotations:
-    kubernetes.io/ingress.class: {{ default "nginx" .Values.ingress.class }}
 {{- if .Values.ingress.useKubeLego }}
+    cert-manager.io/duration: 2160h
     kubernetes.io/tls-acme: "true"
 {{- end }}
   labels:
@@ -43,7 +48,9 @@ metadata:
     chart: "{{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}"
     release: "{{ .Release.Name }}"
     heritage: "{{ .Release.Service }}"
+    external-dns-exclude: "false"
 spec:
+  ingressClassName: {{ default "nginx" .Values.ingress.class }}
   tls:
   - hosts:
     - {{ default "api.portal.com" .Values.ingress.apiHost }}
@@ -53,7 +60,10 @@ spec:
     http:
       paths:
       - path: /
+        pathType: ImplementationSpecific
         backend:
-          serviceName: {{ template "fullname" . }}-kong
-          servicePort: 8000
+          service:
+            name: {{ template "fullname" . }}-kong
+            port:
+              number: 8000
 {{- end -}}

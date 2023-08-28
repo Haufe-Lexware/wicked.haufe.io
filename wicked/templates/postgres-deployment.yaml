@@ -6,6 +6,9 @@ metadata:
   namespace: {{ default "default" .Values.namespace }}
   labels:
     chart: "{{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}"
+    {{- with .Values.deployments.labels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
 spec:
   replicas: 1
   strategy:
@@ -19,9 +22,28 @@ spec:
       labels:
         service: {{ template "fullname" . }}-kong-database
         wicked: "true"
+        {{- with .Values.deployments.labels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
     spec:
 {{- if .Values.useRbac }}
       serviceAccountName: {{ template "fullname" . }}-role
+{{- end }}
+{{- if .Values.tolerations }}
+      tolerations:
+{{ toYaml .Values.tolerations | indent 8 }}
+{{- end }}
+{{- if .Values.securityContext }}
+      securityContext:
+{{ toYaml .Values.securityContext | indent 8 }}
+{{- end }}
+{{- if .Values.nodeSelector }}
+      nodeSelector:
+{{ toYaml .Values.nodeSelector | indent 8 }}
+{{- end }}
+{{- if .Values.affinity }}
+      affinity:
+{{ toYaml .Values.affinity | indent 8 }}
 {{- end }}
       containers:
       - env:
@@ -74,6 +96,12 @@ spec:
 {{- end }}
         resources:
 {{ toYaml .Values.postgres.resources | indent 10 }}
+{{- if .Values.postgres }}
+{{- if .Values.postgres.securityContext }}
+        securityContext:
+{{ toYaml .Values.postgres.securityContext | indent 10 }}
+{{- end }}
+{{- end }}
       restartPolicy: Always
       volumes:
       - name: kong-db-data

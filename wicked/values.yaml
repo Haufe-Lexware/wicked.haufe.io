@@ -36,7 +36,6 @@ redis:
   host: "redis.provider.com"
   port: "6379"
   password: "some_password"
-
   # Redis resources
   resources:
     requests:
@@ -146,6 +145,18 @@ resources:
     requests:
       cpu: 10m
       memory: 128Mi
+  auth:
+    requests:
+      cpu: 50m
+      memory: 128Mi
+  postinstall:
+    requests:
+      cpu: 50m
+      memory: 128Mi
+
+deployments:
+  labels: 
+    app: apim-wicked-app
 
 # Ingress specification
 ingress:

@@ -5,6 +5,9 @@ metadata:
   namespace: {{ default "default" .Values.namespace }}
   labels:
     chart: "{{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}"
+    {{- with .Values.deployments.labels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
 spec:
   replicas: 1
   strategy:
@@ -21,6 +24,9 @@ spec:
       labels:
         service: {{ template "fullname" . }}-portal
         wicked: "true"
+        {{- with .Values.deployments.labels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
     spec:
 {{- if .Values.useRbac }}
       serviceAccountName: {{ template "fullname" . }}-role
@@ -68,7 +74,29 @@ spec:
           timeoutSeconds: 2
         resources:
 {{ toYaml .Values.resources.portal | indent 10 }}
+{{- if .Values.portal }}
+{{- if .Values.portal.securityContext }}
+        securityContext:
+{{ toYaml .Values.portal.securityContext | indent 10 }}
+{{- end }}
+{{- end }}
 {{- if .Values.imagePullSecrets }}
       imagePullSecrets:
 {{ toYaml .Values.imagePullSecrets | indent 8 }}
 {{- end -}}
+{{- if .Values.tolerations }}
+      tolerations:
+{{ toYaml .Values.tolerations | indent 8 }}
+{{- end }}
+{{- if .Values.securityContext }}
+      securityContext:
+{{ toYaml .Values.securityContext | indent 8 }}
+{{- end }}
+{{- if .Values.nodeSelector }}
+      nodeSelector:
+{{ toYaml .Values.nodeSelector | indent 8 }}
+{{- end }}
+{{- if .Values.affinity }}
+      affinity:
+{{ toYaml .Values.affinity | indent 8 }}
+{{- end }}

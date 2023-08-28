@@ -5,6 +5,9 @@ metadata:
   namespace: {{ default "default" .Values.namespace }}
   labels:
     chart: "{{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}"
+    {{- with .Values.deployments.labels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
 spec:
   replicas: 1
   strategy:
@@ -21,6 +24,9 @@ spec:
       labels:
         service: {{ template "fullname" . }}-api
         wicked: "true"
+        {{- with .Values.deployments.labels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
       annotations:
         prometheus.io/scrape: 'true'
         prometheus.io/path: '/metrics'
@@ -184,6 +190,12 @@ spec:
           timeoutSeconds: 2
         resources:
 {{ toYaml .Values.resources.api | indent 10 }}
+{{- if .Values.api }}
+{{- if .Values.api.securityContext }}
+        securityContext:
+{{ toYaml .Values.api.securityContext | indent 10 }}
+{{- end }}
+{{- end }}
       volumes:
       - name: portal-api-data-dynamic
 {{- if not .Values.persistence.enabled }}
@@ -199,3 +211,19 @@ spec:
       imagePullSecrets:
 {{ toYaml .Values.imagePullSecrets | indent 8 }}
 {{- end -}}
+{{- if .Values.tolerations }}
+      tolerations:
+{{ toYaml .Values.tolerations | indent 8 }}
+{{- end }}
+{{- if .Values.securityContext }}
+      securityContext:
+{{ toYaml .Values.securityContext | indent 8 }}
+{{- end }}
+{{- if .Values.nodeSelector }}
+      nodeSelector:
+{{ toYaml .Values.nodeSelector | indent 8 }}
+{{- end }}
+{{- if .Values.affinity }}
+      affinity:
+{{ toYaml .Values.affinity | indent 8 }}
+{{- end }}
