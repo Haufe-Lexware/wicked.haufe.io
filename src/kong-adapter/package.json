@@ -13,7 +13,7 @@
     "build": "./build-typescript.sh",
     "build-and-start": "./build-typescript.sh && node ./dist/bin/kong-adapter.js",
     "start": "node ./dist/bin/kong-adapter.js",
-    "postinstall": "npm link wicked-sdk && npm link portal-env"
+    "postinstall": "npm link wicked-sdk portal-env"
   },
   "jshintConfig": {
     "node": true,

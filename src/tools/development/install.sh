@@ -44,7 +44,7 @@ runNpmInstall env
 # ./wicked.env/local-update-portal-env.sh --copy
 for repo in ${versionDirBases}; do
     if [[ ${repo} != env ]] && [[ ${repo} != node-sdk ]] && [[ ${repo} != k8s-init ]]; then
-        runNpmInstall ${repo}
+        runNpmInstall ${repo}        
     fi
 done
 

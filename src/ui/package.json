@@ -31,7 +31,7 @@
   },
   "scripts": {
     "start": "node ./bin/www",
-    "postinstall": "npm link wicked-sdk && npm link portal-env"
+    "postinstall": "npm link wicked-sdk portal-env"
   },
   "jshintConfig": {
     "node": true,

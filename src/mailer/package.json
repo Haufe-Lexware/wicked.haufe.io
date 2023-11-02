@@ -11,7 +11,7 @@
   },
   "scripts": {
     "start": "node ./bin/mailer",
-    "postinstall": "npm link wicked-sdk && npm link portal-env"
+    "postinstall": "npm link wicked-sdk portal-env"
   },
   "jshintConfig": {
     "node": true,

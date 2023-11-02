@@ -8,7 +8,7 @@
     "build": "./build-typescript.sh",
     "build-and-start": "./build-typescript.sh && node ./dist/authz.js",
     "start": "node ./dist/authz.js",
-    "postinstall": "npm link wicked-sdk && npm link portal-env"
+    "postinstall": "npm link wicked-sdk portal-env"
   },
   "repository": {
     "type": "git",
