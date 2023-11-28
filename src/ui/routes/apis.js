@@ -351,48 +351,73 @@ const corsOptionsDelegate = function (req, callback) {
     callback(null, corsOptions);
 };
 
+let apiList = null;
+const getApiList = function (callback) {
+    debug('getApiList()');
+    if (apiList)
+        return callback(null, apiList);
+    debug('Retrieving API list via wicked SDK.');
+    wicked.getApis((err, apis) => {
+        if (err)
+            return callback(err);
+        apiList = apis;
+        callback(null, apiList);
+    });
+};
+
 router.get('/:api/swagger', cors(corsOptionsDelegate), function (req, res, next) {
     debug("get('/:api/swagger')");
-    const apiId = req.params.api;
+    // Make sure we are asking for an existing API
+    getApiList((err, apis) => {
+        const apiId = req.params.api;
 
-    const apiCallback = function (err, swaggerJson) {
-        if (err)
+        // Does it exist?
+        if (!apis.apis.find(api => api.id === apiId)) {
+            // No, it does not. Return a 404.
+            const err = new Error(`API ${apiId} not found`);
+            err.status = 404;
             return next(err);
-        // Pipe it
-        return res.json(swaggerJson);
-    };
+        }
 
-    // Let's call the API, it has all the data we need.
-    const swaggerUri = '/apis/' + apiId + '/swagger';
-
-    // Do we have a forUser query parameter?
-    let forUser = req.query.forUser;
-    if (!/^[a-z0-9]+$/.test(forUser)) {
-        debug("get('/:api/swagger') - invalid forUser used: " + forUser);
-        forUser = null;
-    }
-    if (forUser) {
-        utils.getAsUser(req, swaggerUri, forUser, apiCallback);
-    } else {
-        utils.get(req, swaggerUri, function (err, apiResponse, apiBody) {
+        const apiCallback = function (err, swaggerJson) {
             if (err)
                 return next(err);
-            if (apiResponse.statusCode !== 200) {
-                const err = new Error(`Could not retrieve Swagger JSON, unexpected status code ${apiResponse.statusCode}`);
-                err.status = apiResponse.statusCode;
-                return next(err);
-            }
-            try {
-                const swaggerJson = utils.getJson(apiBody);
-                return apiCallback(null, swaggerJson);
-            } catch (ex) {
-                error(ex);
-                const err = new Error(`Swagger: Could not parse JSON body, error: ${ex.message}`);
-                err.status = 500;
-                return next(err);
-            }
-        });
-    }
+            // Pipe it
+            return res.json(swaggerJson);
+        };
+
+        // Let's call the API, it has all the data we need.
+        const swaggerUri = '/apis/' + apiId + '/swagger';
+
+        // Do we have a forUser query parameter?
+        let forUser = req.query.forUser;
+        if (!/^[a-z0-9]+$/.test(forUser)) {
+            debug("get('/:api/swagger') - invalid forUser used: " + forUser);
+            forUser = null;
+        }
+        if (forUser) {
+            utils.getAsUser(req, swaggerUri, forUser, apiCallback);
+        } else {
+            utils.get(req, swaggerUri, function (err, apiResponse, apiBody) {
+                if (err)
+                    return next(err);
+                if (apiResponse.statusCode !== 200) {
+                    const err = new Error(`Could not retrieve Swagger JSON, unexpected status code ${apiResponse.statusCode}`);
+                    err.status = apiResponse.statusCode;
+                    return next(err);
+                }
+                try {
+                    const swaggerJson = utils.getJson(apiBody);
+                    return apiCallback(null, swaggerJson);
+                } catch (ex) {
+                    error(ex);
+                    const err = new Error(`Swagger: Could not parse JSON body, error: ${ex.message}`);
+                    err.status = 500;
+                    return next(err);
+                }
+            });
+        }
+    });
 }); // /apis/:apiId/swagger
 
 module.exports = router;
