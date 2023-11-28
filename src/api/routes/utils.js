@@ -342,6 +342,16 @@ utils.loadAuthServer = function (serverId) {
     debug(`loadAuthServer(${serverId})`);
 
     if (!_authServers[serverId]) {
+        const authServerNames = utils.loadAuthServerNames();
+        if (authServerNames.indexOf(serverId) < 0) {
+            debug('Unknown auth-server: ' + serverId);
+            _authServers[serverId] = {
+                name: serverId,
+                exists: false
+            };
+            return _authServers[serverId];
+        }
+
         const staticDir = utils.getStaticDir();
         const authServerFileName = path.join(staticDir, 'auth-servers', serverId + '.json');
 
