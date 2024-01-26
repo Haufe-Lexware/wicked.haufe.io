@@ -26,8 +26,8 @@ block afterScripts
     
         $('#desc').on('change keyup paste', function() {
             var text = $('#desc').val();
-            $('#markdown').html(marked(text));
+            $('#markdown').html(marked.parse(text));
         });
         
         // First time
-        $('#markdown').html(marked($('#desc').val()));    
+        $('#markdown').html(marked.parse($('#desc').val()));    

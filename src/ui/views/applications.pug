@@ -57,7 +57,7 @@ block bodyScripts
 
          $(document).ready(function(){
             window.onpopstate = function (event) {
-              initializeGridFromState(grid).then(() => { grid.isGridRefreshAvailable = true }).catch(err => console.log('Error', err));
+              initializeGridFromStateServerSide(grid).then(() => { grid.isGridRefreshAvailable = true }).catch(err => console.log('Error', err));
             }
             var showSwagger = '#{showSwagger}';
             if (showSwagger) {
@@ -71,10 +71,10 @@ block bodyScripts
             }
             $('#desc').on('change keyup paste', function() {
                 var text = $('#desc').val();
-                $('#markdown').html(marked(text, { sanitize: true }));
+                $('#markdown').html(marked.parse(text, { sanitize: true }));
             });
             // First time
-            $('#markdown').html(marked($('#desc').val(), { sanitize: true }));      
+            $('#markdown').html(marked.parse($('#desc').val(), { sanitize: true }));      
       
             $('#applicationsGrid').jsGrid({
                 width: "100%", pageSize: 10, sorting: true, paging: true, filtering: true, autoload: true,
@@ -111,8 +111,10 @@ block bodyScripts
             });
             $("#applicationsGrid").jsGrid("option", "filtering", false);
             var grid = $("#applicationsGrid").data("JSGrid");
-            grid.isGridRefreshAvailable = true;
-            initializeGridFromState(grid).then(() => { grid.isGridRefreshAvailable = true }).catch(err => console.log('Error', err));
+            if (grid) {
+                grid.isGridRefreshAvailable = true;
+                initializeGridFromStateServerSide(grid).then(() => { grid.isGridRefreshAvailable = true }).catch(err => console.log('Error', err));
+            }
         });
 
 block content

@@ -158,7 +158,7 @@ router.get('/', function (req, res, next) {
                     appInfo.name = utils.sanitizeHtml(appInfo.name);
                     appInfo.description = utils.sanitizeHtml(appInfo.description);
                 }
-                const appInfosString = JSON.stringify(appInfos);
+                const appInfosString = (JSON.stringify(appInfos)).replace(/\//g, '\\/');
                 debug(appInfosString);
                 res.render('applications', {
                     authUser: req.user,

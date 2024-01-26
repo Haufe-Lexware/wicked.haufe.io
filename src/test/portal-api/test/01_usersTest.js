@@ -76,6 +76,26 @@ describe('/users', function () {
             });
         });
 
+        it('should not be possible to create a user with double quotes or brackets in email (even though strictly compliant)', (done) => {
+            const myBody = {
+                customId: 'internal:whatever',
+                email: `"<script>alert('xss');</script>"@hello2.com`,
+                validated: true,
+                groups: ["admin"]
+            };
+            request.post({
+                url: baseUrl + 'users',
+                headers: utils.makeHeaders('1', WRITE_USERS_SCOPE),
+                json: true,
+                body: myBody
+            }, function (err, res, body) {
+                assert.equal(400, res.statusCode, "status code not 400");
+                const jsonBody = utils.getJson(body);
+                assert.equal('Email address invalid (contains invalid characters)', jsonBody.message, 'Unexpected error message');
+                done();
+            });
+        });
+
         it('should be possible to add a user without a group', function (done) {
             const myBody = {
                 customId: '123',

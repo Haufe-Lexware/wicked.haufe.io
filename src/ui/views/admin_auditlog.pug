@@ -1,6 +1,9 @@
 extends layout
 block bodyScripts
   script(type='text/javascript').
+    function sanitizeHTML(text) {
+        return $('<div>').text(text).html();
+    }
     let count;
     function generateReport(){
       $('#auditlogGrid').jsGrid('loadData');
@@ -62,7 +65,10 @@ block bodyScripts
           },   
           { name: "activity", type: "text", title: "Activity"},
           { name: "user", type: "text", title: "User"},
-          { name: "email", type: "text", title: "Email"},
+          { name: "email", type: "text", title: "Email",
+                itemTemplate: function(value, item) {
+                  return sanitizeHTML(value);
+                }},
           { name: "role", type: "text", title: "Role", width:"40"},
           { type: "control", width: "30", editButton: false, deleteButton: false,
               _createFilterSwitchButton: function() {

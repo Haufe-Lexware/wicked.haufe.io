@@ -268,7 +268,7 @@ users.createUser = function (app, res, loggedInUserId, userCreateInfo, isMachine
     }
 };
 
-const emailRegex = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+const emailRegex = /(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/;
 function createUserImpl(app, res, userCreateInfo) {
     debug('createUserImpl(), user create info:');
     debug(userCreateInfo);
@@ -281,11 +281,15 @@ function createUserImpl(app, res, userCreateInfo) {
             return res.status(400).jsonp({ message: passwordResult.message });
         }
     }
-    if (userCreateInfo.email) {
-        userCreateInfo.email = userCreateInfo.email.toLowerCase();
-    }
+    userCreateInfo.email = userCreateInfo.email.toLowerCase();
     if (!emailRegex.test(userCreateInfo.email)) {
         return res.status(400).json({ message: 'Email address invalid (not RFC 5322 compliant)' });
+    }
+    // Also rule out double quotes and brackets (even though strictly speaking may be valid)
+    if (userCreateInfo.email.indexOf('"') >= 0 ||
+        userCreateInfo.email.indexOf('<') >= 0 ||
+        userCreateInfo.email.indexOf('>') >= 0) {
+        return res.status(400).json({ message: 'Email address invalid (contains invalid characters)' });
     }
 
     // Name is no longer part of the user, this goes into registrations!
@@ -553,12 +557,12 @@ users.patchUser = function (app, res, loggedInUserId, userId, userInfo) {
             if (userInfo.email) {
                 user.email = userInfo.email;
             }
-            if (userInfo.hasOwnProperty('validated') &&
+            if (userInfo.hasOwnProperty && typeof userInfo.hasOwnProperty === 'function' && userInfo.hasOwnProperty('validated') &&
                 userInfo.validated !== user.validated &&
                 !loggedInUserInfo.admin) {
                 return utils.fail(res, 403, 'Not allowed. Only admins can change a user\'s validated email status.');
             }
-            if (userInfo.hasOwnProperty('validated')) {
+            if (userInfo.hasOwnProperty && typeof userInfo.hasOwnProperty === 'function' && userInfo.hasOwnProperty('validated')) {
                 user.validated = userInfo.validated;
             }
             if (userInfo.password) {
@@ -569,7 +573,7 @@ users.patchUser = function (app, res, loggedInUserId, userId, userInfo) {
                     user.password = userInfo.password;
                 }
             }
-            if (userInfo.hasOwnProperty('mustChangePassword')) {
+            if (userInfo.hasOwnProperty && typeof userInfo.hasOwnProperty === 'function' && userInfo.hasOwnProperty('mustChangePassword')) {
                 if (!loggedInUserInfo.admin) {
                     return utils.fail(res, 403, 'Not allowed. Only admins can update the "mustChangePassword" property.');
                 }

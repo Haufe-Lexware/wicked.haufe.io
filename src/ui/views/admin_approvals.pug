@@ -27,7 +27,7 @@ block bodyScripts
 
         $(document).ready(function(){
            window.onpopstate = function (event) {
-              initializeGridFromState(grid).then(() => { grid.isGridRefreshAvailable = true }).catch(err => console.log('Error', err));
+              initializeGridFromStateServerSide(grid).then(() => { grid.isGridRefreshAvailable = true }).catch(err => console.log('Error', err));
            }
            approvals = !{approvals};     
            $('#approvalsGrid').jsGrid({
@@ -108,7 +108,7 @@ block bodyScripts
            $("#approvalsGrid").jsGrid("option", "filtering", false);
            var grid = $("#approvalsGrid").data("JSGrid");
            grid.isGridRefreshAvailable = true;
-           initializeGridFromState(grid).then(() => { grid.isGridRefreshAvailable = true }).catch(err => console.log('Error', err));
+           initializeGridFromStateServerSide(grid).then(() => { grid.isGridRefreshAvailable = true }).catch(err => console.log('Error', err));
         });
 block content
     .jumbotron.wicked-admin-title

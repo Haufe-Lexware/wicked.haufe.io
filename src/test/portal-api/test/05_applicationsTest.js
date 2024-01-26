@@ -484,6 +484,38 @@ describe('/applications', function () {
             });
         });
 
+        it('should ignore invalid order_by parameters', function (done) {
+            request.get({
+                url: baseUrl + `applications?order_by="id**ASC--%20DESC"`,
+                headers: utils.makeHeaders(adminUserId, READ_APPS_SCOPE)   
+            }, function (err, res, body) {
+                assert.isNotOk(err);
+                assert.equal(res.statusCode, 200, 'Unexpected status code');
+                const jsonBody = utils.getJson(body);
+                assert.isOk(jsonBody.items);
+                assert.isOk(jsonBody.count);
+                assert.isTrue(jsonBody.hasOwnProperty('count_cached'));
+                assert.isArray(jsonBody.items);
+                done();
+            });
+        });
+
+        it('should ignore an invalid filter parameter', function (done) {
+            request.get({
+                url: baseUrl + `applications?filter=%7B%22invalid%20field%22%3A%22content%22%7D`,
+                headers: utils.makeHeaders(adminUserId, READ_APPS_SCOPE)
+            }, function (err, res, body) {
+                assert.isNotOk(err);
+                assert.equal(res.statusCode, 200, 'Unexpected status code');
+                const jsonBody = utils.getJson(body);
+                assert.isOk(jsonBody.items);
+                assert.isOk(jsonBody.count);
+                assert.isTrue(jsonBody.hasOwnProperty('count_cached'));
+                assert.isArray(jsonBody.items);
+                done();
+            });
+        });
+
         it('should not let a non-admin retrieve a list of all applications', function (done) {
             request.get({
                 url: baseUrl + 'applications',
@@ -1080,7 +1112,7 @@ describe('/applications', function () {
 
         it('should be possible to filter for ownerEmail', function (done) {
             request.get({
-                url: baseUrl + 'applications?embed=1&' + utils.makeFilter({ ownerEmail: 'dev@random.org' }) + '&order_by=id&no_cache=1',
+                url: baseUrl + 'applications?embed=1&' + utils.makeFilter({ ownerEmail: 'dev@random.org' }) + '&order_by=id%20ASC&no_cache=1',
                 headers: utils.makeHeaders(adminUserId, 'read_applications')
             }, function (err, res, body) {
                 assert.isNotOk(err);
@@ -1097,7 +1129,7 @@ describe('/applications', function () {
 
         it('should be possible to filter for ownerEmail and id', function (done) {
             request.get({
-                url: baseUrl + 'applications?embed=1&' + utils.makeFilter({ id: appId, ownerEmail: 'dev@random.org' }) + '&order_by=id&no_cache=1',
+                url: baseUrl + 'applications?embed=1&' + utils.makeFilter({ id: appId, ownerEmail: 'dev@random.org' }) + '&order_by=id%20ASC&no_cache=1',
                 headers: utils.makeHeaders(adminUserId, 'read_applications')
             }, function (err, res, body) {
                 assert.isNotOk(err);
@@ -1114,7 +1146,7 @@ describe('/applications', function () {
 
         it('should be possible to filter for description', function (done) {
             request.get({
-                url: baseUrl + 'applications?embed=1&' + utils.makeFilter({ description: 'hello' }) + '&order_by=id&no_cache=1',
+                url: baseUrl + 'applications?embed=1&' + utils.makeFilter({ description: 'hello' }) + '&order_by=id%20ASC&no_cache=1',
                 headers: utils.makeHeaders(adminUserId, 'read_applications')
             }, function (err, res, body) {
                 assert.isNotOk(err);

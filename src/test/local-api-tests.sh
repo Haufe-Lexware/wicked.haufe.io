@@ -137,10 +137,11 @@ else
     echo "=== Postgres mode"
     docker run -d --name $tmpDir -p 6543:5432 -e POSTGRES_USER=kong -e POSTGRES_PASSWORD=kong postgres:11-alpine
     pgContainer=$tmpDir
-    # portal-api will wait for itself until Postgres is available,
-    # no need to do that from bash. We'll just give it a couple of seconds
-    # to gather itself.
     export WICKED_STORAGE=postgres
+    # Wait for Postgres to be available
+    echo "INFO: Waiting for postgres to start up..."
+    sleep 5
+    ../kong/resources/wtfc.sh -T 30 "nc -z localhost 6543"
 fi
 
 pushd ../api

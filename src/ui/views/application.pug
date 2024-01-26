@@ -27,10 +27,10 @@ block scripts
             var markedOptions = { sanitize: true };
             $('#desc').on('change keyup paste', function() {
                 var text = $('#desc').val();
-                $('#markdown').html(marked(text, markedOptions));
+                $('#markdown').html(marked.parse(text, markedOptions));
             });
             // First time
-             $('#markdown').html(marked($('#desc').val(), markedOptions));      
+             $('#markdown').html(marked.parse($('#desc').val(), markedOptions));      
         });
 
 block content

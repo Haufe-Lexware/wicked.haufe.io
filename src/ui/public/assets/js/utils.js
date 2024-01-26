@@ -33,10 +33,13 @@ function applyGridFilter(filter, item) {
 }
 
 function getStateFromHistory() {
+    if (!history || !history.state) {
+        return null;
+    }
     return {
-        filter: JSON.parse(history.state.filter),
-        sorting: JSON.parse(history.state.sorting),
-        pageIndex: history.state.pageIndex
+        filter: !!history.state.filter ? JSON.parse(history.state.filter) : null,
+        sorting: !!history.state.sorting ? JSON.parse(history.state.sorting) : null,
+        pageIndex: !!history.state.pageIndex ? history.state.pageIndex : null
     };
 }
 
@@ -85,9 +88,11 @@ function initializeGridFromStateServerSide(grid) {
     let gridSettings = getStateFromHistory();
     grid.isGridRefreshAvailable = false;
     return new Promise((resolve, reject) => {
-        setFilter(grid, gridSettings.filter);
-        setSorting(grid, gridSettings.sorting);
-        grid.pageIndex = gridSettings.pageIndex;
+        if (gridSettings) {
+            setFilter(grid, gridSettings.filter);
+            setSorting(grid, gridSettings.sorting);
+            grid.pageIndex = gridSettings.pageIndex;
+        }
         grid.loadData();
         resolve();
     });

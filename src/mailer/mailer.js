@@ -153,7 +153,8 @@ mailer.handleEvent = function (app, event, done) {
                 const text = mustache.render(templateText, viewData);
                 // Do da emailing thing
                 const from = '"' + app.mailerGlobals.mailer.senderName + '" <' + app.mailerGlobals.mailer.senderEmail + '>';
-                let to = '"' + reg.name + '" <' + userInfo.email + '>';
+                // Don't add the actual name here; not needed, and might pose a security risk
+                let to = userInfo.email;
                 if ("admin" == emailData.to)
                     to = '"' + app.mailerGlobals.mailer.adminName + '" <' + app.mailerGlobals.mailer.adminEmail + '>';
                     

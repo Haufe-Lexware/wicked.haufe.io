@@ -10,9 +10,10 @@ const renderer = function () { };
 // Synchronous highlighting with highlight.js; see also layout.jade, where
 // the client side scripts are injected. 
 marked.setOptions({
-    highlight: function (code) {
-        return highlightJs.highlightAuto(code).value;
-    },
+    // Take out hioghlighting for now - needs rework for the upgrade from highlight.js from 9.3 to 11.5
+    // highlight: function (code) {
+    //     return highlightJs.highlightAuto(code).value;
+    // },
     sanitize: true
 });
 

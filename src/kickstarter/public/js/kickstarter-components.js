@@ -722,12 +722,12 @@ Vue.component('wicked-markdown', {
     data: function () {
         return {
             internalId: randomId(),
-            initialValue: marked(this.value)
+            initialValue: marked.parse(this.value)
         };
     },
     methods: {
         updateMarkdown: function (value) {
-            $('#' + this.internalId + '_markdown').html(marked(value));
+            $('#' + this.internalId + '_markdown').html(marked.parse(value));
             this.$emit('input', value);
         }
     },

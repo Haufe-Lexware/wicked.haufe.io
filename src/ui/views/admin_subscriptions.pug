@@ -47,7 +47,7 @@ block bodyScripts
              itemTemplate: function(value, item) {
                  let resp = [];
                  item.owner_data.forEach(function(owner){
-                   resp.push("<a href=\'/users/"+owner.users_id+"\'>"+owner.email+"</a>");
+                   resp.push("<a href=\'/users/"+owner.users_id+"\'>"+sanitizeHTML(owner.email)+"</a>");
                  });
                  return resp.join(', ');
             }
