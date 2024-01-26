@@ -1,6 +1,9 @@
 extends layout
 block bodyScripts
     script(type='text/javascript').
+        function sanitizeHTML(text) {
+            return $('<div>').text(text).html();
+        }
         function deleteVerification(item) {
           if (confirm('Really delete verification?')) {
             $.post('/admin/verifications/' + item.id, {}, function (data, status) {
@@ -42,7 +45,10 @@ block bodyScripts
                     }
                  },
                  { name: "type", type: "text", title: "Type", width: "3%"},
-                 { name: "email", type: "text", title: "Email", width: "10%"},
+                 { name: "email", type: "text", title: "Email", width: "10%",
+                   itemTemplate: function(value, item) {
+                      return sanitizeHTML(value)
+                    }},
                  { name: "userId", type: "text", title: "User ID",
                    itemTemplate: function(value, item) {
                      return $("<a>").attr("href", "/users/"+item.userId)

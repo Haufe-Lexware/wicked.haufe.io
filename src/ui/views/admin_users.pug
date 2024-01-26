@@ -1,6 +1,9 @@
 extends layout
 block bodyScripts
     script(type='text/javascript').
+        function sanitizeHTML(text) {
+            return $('<div>').text(text).html();
+        }
         $(document).ready(function(){
            window.onpopstate = function (event) {
               initializeGridFromStateServerSide(grid).then(() => { grid.isGridRefreshAvailable = true }).catch(err => console.log('Error', err));
@@ -27,10 +30,14 @@ block bodyScripts
                  { name: "userId", type: "text", title: "User ID" , width: "12%"},
                  { name: "name", type: "text", title: "Name",
                    itemTemplate: function(value, item) {
-                     return $("<a>").attr("href", "/users/" + item.userId).text(value);
+                     return $("<a>").attr("href", "/users/" + item.userId).text(sanitizeHTML(value));
                     }
                  },
-                 { name: "email", type: "text", title: "Email"},
+                 { name: "email", type: "text", title: "Email",
+                   itemTemplate: function(value, item) {
+                    return sanitizeHTML(value);
+                   }
+                 },
                  { name: "customId", type: "text", title: "Custom ID", filtering: false,
                    itemTemplate: function(value, item) {
                      return (value) ? value : "---";

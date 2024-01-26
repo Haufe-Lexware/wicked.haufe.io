@@ -41,6 +41,19 @@ app.use(function (req, res, next) {
     }
     next();
 });
+
+function requestChecker(req, res, next) {
+    // If URL or any part of it contains __proto__, reject it.
+    // This is a security measure against prototype pollution.
+    const url = req.url;
+    if (url && url.indexOf('__proto__') >= 0) {
+        res.status(400).json({ code: 400, message: 'Bad request.' });
+        return;
+    }
+    return next();
+}
+
+app.use(requestChecker);
 app.use(correlationIdHandler);
 
 // Combined == Apache style logs
