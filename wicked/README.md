@@ -110,7 +110,7 @@ Setting | Must Override | Default | Description
 `config.useCustomApiImage` | - | `false` | Set to `true` if you want to deploy your own derived `portal-api` image, e.g. if you have embedded the static configuration into this image to avoid using the (recommended) `git clone` method.
 `config.customApiImage` | - | `nil` | The (fully qualified) image name of your derived `portal-api` image. Take care that you have added `imagePullSecrets` (see `values.yaml`) if appropriate.
 `ingress.enabled` | - | `true` | Specify `false` to **not** deploy an ingress resource for routing the API Portal and Gateway to the corresponding services.
-`ingress.class` | - | `nginx` | The ingress class (`kubernetes.io/ingress.class`) to apply to the ingress resources.
+`ingress.class` | - | `nginx` | The ingress class (`ingressClassName`) to apply to the ingress resources.
 `ingress.apiHost` | **X** | `api.portal.com` | The (desired) FQDN of the API Gateway; this must point to the (load balancer of the) ingress controller selected via the ingress class, preferably before the deployment.
 `ingress.portalHost` | **X** | `portal.com` | The (desired) FQDN of the API Portal; this must point to the (load balancer of the) ingress controller selected via the ingress class, preferably before the deployment.
 `ingress.useKubeLego` | - | `false` | Set to `true` to add the necessary annotations for `kube-lego`; Note that this will **not** deploy `kube-lego` on your cluster, but merely use it if present (and usable in the desired namespace)

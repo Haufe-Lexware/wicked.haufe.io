@@ -5,6 +5,9 @@ metadata:
   namespace: {{ default "default" .Values.namespace }}
   labels:
     chart: "{{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}"
+    {{- with .Values.deployments.labels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
 spec:
   replicas: 1
   strategy:
@@ -21,6 +24,9 @@ spec:
       labels:
         service: {{ template "fullname" . }}-auth
         wicked: "true"
+        {{- with .Values.deployments.labels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
       annotations:
         prometheus.io/scrape: 'true'
         prometheus.io/path: '/metrics'
@@ -72,8 +78,30 @@ spec:
           timeoutSeconds: 2
         resources:
 {{ toYaml .Values.resources.auth | indent 10 }}
+{{- if .Values.auth }}
+{{- if .Values.auth.securityContext }}
+        securityContext:
+{{ toYaml .Values.auth.securityContext | indent 10 }}
+{{- end }}
+{{- end }}
       restartPolicy: Always
 {{- if .Values.imagePullSecrets }}
       imagePullSecrets:
 {{ toYaml .Values.imagePullSecrets | indent 8 }}
 {{- end -}}
+{{- if .Values.tolerations }}
+      tolerations:
+{{ toYaml .Values.tolerations | indent 8 }}
+{{- end }}
+{{- if .Values.securityContext }}
+      securityContext:
+{{ toYaml .Values.securityContext | indent 8 }}
+{{- end }}
+{{- if .Values.nodeSelector }}
+      nodeSelector:
+{{ toYaml .Values.nodeSelector | indent 8 }}
+{{- end }}
+{{- if .Values.affinity }}
+      affinity:
+{{ toYaml .Values.affinity | indent 8 }}
+{{- end }}
